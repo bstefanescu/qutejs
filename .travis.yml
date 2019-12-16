@@ -1,4 +1,5 @@
 language: node_js
 node_js: '7'
+before_install: npm --prefix ./qub install ./qub
 install: node qub install
 script: node qub dist
