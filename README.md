@@ -9,6 +9,8 @@ It just provides a **modern component model** to facilitate working with the **D
 
 This is the root package of the Qute multi-package repository. The package is private and only serves to build the Qute packages.
 
+[![Build Status](https://travis-ci.com/bstefanescu/qutejs.svg?branch=master)](https://travis-ci.com/bstefanescu/qutejs)
+
 # Getting Started
 
 Use the Qute project generator to create a new Qute application or component project:
