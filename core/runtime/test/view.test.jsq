@@ -1,0 +1,204 @@
+
+/*
+tests:
+1. when if is true only if branch is rendered
+2. when if is false only the else branch is rendered
+3. @change callback is called when the if state changes. (but not the first time it is rendcered)
+4. nested VMs should be disconnected when the branch containing them are nbot rendered
+(we test this using the msg property) p
+-> After a branch was removed setting the msg property must not be propagated to the nested component
+*/
+
+import assert from 'assert';
+import {snapshot} from '@qutejs/test-utils';
+import window, {document} from '@qutejs/window';
+import Qute from '..';
+import { createMountPoint, runAfter } from './utils.js';
+
+
+<x-tag name='view-test'>
+<div>
+	<view is='activeView' user={user} x-change='viewChanged'>Are you fine?</view>
+</div>
+</x-tag>
+
+<x-tag name='nocache-view-test'>
+<div>
+	<view is='activeView' user={user} x-nocache  x-change='viewChanged'>Are you fine?</view>
+</div>
+</x-tag>
+
+// a func template
+<x-tag name='hello-user'>
+	<div id='hello-user'>Hello {{$attrs.user}}. <slot/></div>
+</x-tag>
+
+// a VM
+<x-tag name='bye-user'>
+	<div id='bye-user'>Bye {{user}}. <slot/></div>
+</x-tag>
+
+
+
+var VIEW_SWITCH_CNT = 0;
+var NOCACHE_VIEW_SWITCH_CNT = 0;
+
+var ViewTest = Qute('view-test', {
+	viewChanged: function() {
+		VIEW_SWITCH_CNT++;
+	},
+	init: function() {
+		return { activeView: null, user: 'John' };
+	}
+});
+var NoCacheViewTest = Qute('nocache-view-test', {
+	viewChanged: function() {
+		NOCACHE_VIEW_SWITCH_CNT++;
+	},
+	init: function() {
+		return { activeView: null, user: 'John' };
+	}
+});
+var ByeUser = Qute('bye-user', {
+	init: function() {
+		return { user: null };
+	}
+});
+
+
+describe('View Directive - cache ON', function() {
+	var root = new ViewTest();
+	var container = createMountPoint('root1');
+	root.mount(container);
+
+	it('should not render null view', function() {
+		assert.ok(!root.$el.firstElementChild); // no content since activeView is null
+		assert.ok(!document.getElementById('hello-user'));
+		assert.ok(!document.getElementById('bye-user'));
+	});
+
+	specify('view should change to hello-user', function(done) {
+		root.activeView = 'hello-user';
+		runAfter(function() {
+			assert.ok(document.getElementById('hello-user'));
+			assert.ok(!document.getElementById('bye-user'));
+			assert.equal(root.$el.textContent.trim(), 'Hello John. Are you fine?');
+			done();
+		});
+	});
+
+	specify('view should change to bye-user', function(done) {
+		root.activeView = 'bye-user';
+		runAfter(function() {
+			assert.ok(!document.getElementById('hello-user'));
+			assert.ok(document.getElementById('bye-user'));
+			assert.equal(root.$el.textContent.trim(), 'Bye John. Are you fine?');
+			done();
+		});
+	});
+
+	specify('view should refresh on model updates', function(done) {
+		// change the user name - should reflect on current rendered view and on the next one if we switch the view
+		root.user = 'Bill';
+		runAfter(function() {
+			assert.equal(root.$el.textContent.trim(), 'Bye Bill. Are you fine?');
+			done();
+		});
+	});
+
+	specify('hidden components should refresh on model updates', function(done) {
+		// change the view -> user Bill should reflect on that component too.
+		root.activeView = 'hello-user';
+		runAfter(function() {
+			assert.ok(document.getElementById('hello-user'));
+			assert.ok(!document.getElementById('bye-user'));
+			assert.equal(root.$el.textContent.trim(), 'Hello Bill. Are you fine?');
+			done();
+		});
+	});
+
+	specify('view should change to null', function(done) {
+		root.activeView = null;
+		runAfter(function() {
+			assert.ok(!root.$el.firstElementChild); // no content since activeView is null
+			assert.ok(!document.getElementById('hello-user'));
+			assert.ok(!document.getElementById('bye-user'));
+			done();
+		});
+	});
+
+	specify('view change listener invoked', function() {
+		assert.equal(VIEW_SWITCH_CNT, 4); // we switch 3 times the view
+	});
+
+});
+
+// run trhe same tests but whitout caching
+describe('View Directive - cache OFF', function() {
+	var root = new NoCacheViewTest();
+	var container = createMountPoint('root2');
+	root.mount(container);
+
+	it('should not render null view', function() {
+		assert.ok(!root.$el.firstElementChild); // no content since activeView is null
+		assert.ok(!document.getElementById('hello-user'));
+		assert.ok(!document.getElementById('bye-user'));
+	});
+
+	specify('view should change to hello-user', function(done) {
+		root.activeView = 'hello-user';
+		runAfter(function() {
+			assert.ok(document.getElementById('hello-user'));
+			assert.ok(!document.getElementById('bye-user'));
+			assert.equal(root.$el.textContent.trim(), 'Hello John. Are you fine?');
+			done();
+		});
+	});
+
+	specify('view should change to bye-user', function(done) {
+		root.activeView = 'bye-user';
+		runAfter(function() {
+			assert.ok(!document.getElementById('hello-user'));
+			assert.ok(document.getElementById('bye-user'));
+			assert.equal(root.$el.textContent.trim(), 'Bye John. Are you fine?');
+			done();
+		});
+	});
+
+	specify('view should refresh on model updates', function(done) {
+		// change the user name - should reflect on current rendered view and on the next one if we switch the view
+		root.user = 'Bill';
+		runAfter(function() {
+			assert.equal(root.$el.textContent.trim(), 'Bye Bill. Are you fine?');
+			done();
+		});
+	});
+
+	// this test doesn't really apply when cache is off snice the component is recreated
+	specify('hidden components should refresh on model updates', function(done) {
+		// change the view -> user Bill should reflect on that component too.
+		root.activeView = 'hello-user';
+		runAfter(function() {
+			assert.ok(document.getElementById('hello-user'));
+			assert.ok(!document.getElementById('bye-user'));
+			assert.equal(root.$el.textContent.trim(), 'Hello Bill. Are you fine?');
+			done();
+		});
+	});
+
+
+	specify('view should change to null', function(done) {
+		root.activeView = null;
+		runAfter(function() {
+			assert.ok(!root.$el.firstElementChild); // no content since activeView is null
+			assert.ok(!document.getElementById('hello-user'));
+			assert.ok(!document.getElementById('bye-user'));
+			done();
+		});
+	});
+
+	specify('view change listener invoked', function() {
+		assert.equal(NOCACHE_VIEW_SWITCH_CNT, 4); // we switch 3 times the view
+	});
+
+});

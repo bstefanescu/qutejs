@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<title>Table Column Resize</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+
+		<script src="https://kit.fontawesome.com/db2e085d44.js"></script>
+
+		<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.css'>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.js'></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/javascript/javascript.js'></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/xml/xml.js'></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/css/css.js'></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/mode/overlay.js'></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/mode/multiplex.js'></script>
+		<script type="text/javascript" src='cm-mode-qute.js'></script>
+		<script type="text/javascript" src='../dev/qute-dev-all.js'></script>
+
+		<style>
+			* {
+			    box-sizing: border-box;
+			}
+			a {
+			    color: #337ab7;
+			}
+
+
+			.sidebar {
+				position:fixed;
+				left:-250px;
+				width:250px;
+				top:0;
+				bottom:0;
+				background: #2c3840;
+    			color: #e6e6e6;
+    			padding: 4px 8px;
+    			border-right: 1px solid #ddd;
+    			overflow-y: auto;
+			}
+			.sidebar-title {
+				font-size: 21px;
+				height: 40px;
+				display: flex;
+				align-items: center;
+			}
+			#sidebar-toggle {
+				display: block;
+				width: 32px;
+				text-align: center;
+			}
+			#page-left {
+				border-right: 1px solid #ddd;
+				position:fixed;
+				left:0px;
+				/*right:50%;*/right:0;
+				top:0;
+				bottom:0;
+				background-color: white;
+			}
+			#page-right {
+				position:fixed;
+				/*left:50%;*/left:100%;
+				right:0;
+				top:0;
+				bottom:0;
+				background-color: white;
+			}
+			#page-right.fullscreen {
+				left: 0 !important;
+				z-index: 1000 !important;
+			}
+			.sidebar #sidebar {
+				left: 0;
+			}
+			.sidebar #page-left {
+				left: 250px;
+				/*right: 40%;*/
+			}
+
+			.preview #page-left {
+				right: 50%;
+			}
+			.sidebar.preview #page-left {
+				right: 40%;
+			}
+			.preview #page-right {
+				left: 50%;
+			}
+			.sidebar.preview #page-right {
+				left: 60%;
+			}
+
+ 			#sidebar-toggle-on {
+ 				z-index: 10000;
+ 				font-size: 21px;
+ 				display:flex;
+ 				position: fixed;
+ 				left:0;
+ 				top:0;
+ 				height:40px;
+ 				width: 32px;
+ 				text-align: center;
+				align-items: center;
+				opacity: 0.7;
+ 			}
+			.sidebar #sidebar-toggle-on {
+				left:-32px;
+			}
+			#sidebar-toggle-on a {
+				color: #2c3840;
+			}
+
+
+			.menu-title {
+				margin: 8px 0;
+				font-size: 120%;
+				font-weight: bold;
+			}
+			.menu {
+  				list-style-type: none;
+				margin: 0 0 0 12px;
+				padding: 0;
+			}
+			.menu > li {
+				padding: 4px 0;
+			}
+			#sidebar a {
+				color: inherit;
+				text-decoration: none;
+			}
+			#sidebar a:hover {
+				text-decoration: none;
+				color: white;
+			}
+
+			.push {
+    			margin-left: auto;
+			}
+
+			#code-editor-tbar {
+				height:40px;
+				/*background-color: #f7f7f7;*/
+				border-bottom: 1px solid #ddd;
+				font-size: 16px;
+  				list-style-type: none;
+				margin: 0;
+				padding: 0;
+				display: flex;
+				align-items: center;
+				padding-left: 32px;
+				padding-right: 8px;
+			}
+
+			#code-editor-tbar > li {
+				display: inline-block;
+				padding-right: 8px;
+			}
+
+		</style>
+	</head>
+	<body class='sidebar preview' style='font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px; color: #333;background-color:white'>
+
+		<div id='sidebar-toggle-on'>
+			<a href="#sidebar"><i class="fas fa-chevron-circle-right"></i></a>
+		</div>
+		<div id='sidebar' class='sidebar'>
+			<div class='sidebar-title'>
+			<b style='font-size: 21px'>Qute Playground</b>
+			<a class='push' href="#sidebar" id='sidebar-toggle'><i class="fas fa-chevron-circle-left"></i></a>
+			</div>
+			<div class='sidebar-content'>
+			<div class='menu-title'>Local Files</div>
+			<ul class='menu' id='files'>
+			</ul>
+			<div class='menu-title'>Examples</div>
+			<ul class='menu' id='examples'>
+				<li><a href='#hello'>Hello World!</a></li>
+				<li><a href='#counter'>Counter</a></li>
+				<li><a href='#time'>Time</a></li>
+				<li><a href='#todo'>Todo List</a></li>
+				<li><a id='examples#modal-demo' href='#modal-demo'>Modal Demo</a></li>
+				<li><a id='examples#popup-demo' href='#popup-demo'>Popup Demo</a></li>
+			</ul>
+			</div>
+		</div>
+		<div id='page-left'>
+			<ul id='code-editor-tbar'>
+				<li id='doc-title'></li>
+
+				<li class='push'></li>
+				<li><a title='Rename the local file' id='rename' href='#rename'><i class="fas fa-pencil-alt"></i></a></li>
+				<li><a title='Remove the local file' id='remove' href='#remove'><i class="far fa-trash-alt"></i></a></li>
+
+				<li style='margin-left:16px'><a id='newDraft' href='#draft'><i class='far fa-sticky-note'></i></a></li>
+				<li><a title='Save' id='save' href='#save'><i class='fas fa-save'></i></a></li>
+				<li><a title='Run snippet' id='play' href='#play'><i class='far fa-play-circle'></i></a></li>
+			</ul>
+			<textarea id='code-editor' style='width:100%;'></textarea>
+		</div>
+		<div id='page-right'>
+			<iframe id='result' name="result" sandbox="allow-modals allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation" allowfullscreen allowpaymentrequest frameborder="0" src="result.html"></iframe>
+		</div>
+
+		<script>
+
+            function createPreviewRequest(source) {
+                var msg = {};
+                msg.code = source.replace(/^\/\/@([a-z]+)\s+(\S+)$/gm, function(m, p1, p2) {
+	                var list = msg[p1];
+	                if (!list) {
+	                    msg[p1] = list = [];
+	                }
+	                list.push(p2);
+	                return '';
+                }).trim();
+                return msg;
+            }
+
+			function fetchPage(url, cb) {
+			  	var xhttp = new XMLHttpRequest();
+			  	xhttp.onreadystatechange = function() {
+			  		cb(this.responseText);
+			    	if (this.readyState == 4) {
+			    		cb(this.responseText, this.status);
+			    	}
+			  	};
+			  	xhttp.open("GET", url, true);
+			  	xhttp.send();
+			}
+
+			function Files() {
+				this.files = null;
+				this.lastOpened = null;
+
+				this.put = function(name, content) {
+					var oldContent = this.files[name];
+					if (oldContent !== content) {
+						this.files[name] = content;
+						this.save();
+					}
+				}
+
+				this.get = function(name) {
+					return this.files[name];
+				}
+
+				this.names = function() {
+					return Object.keys(this.files);
+				}
+
+				this.contains = function(name) {
+					return !!this.files[name];
+				}
+
+				this.remove = function(name) {
+					if (this.files[name]) {
+						delete this.files[name];
+						this.save();
+						return true;
+					}
+					return false;
+				}
+				this.rename = function(name, newname) {
+					if (this.files[newname]) {
+						alert('File already exists!');
+						return false;
+					}
+					var content = this.files[name];
+					if (content !== undefined) {
+						this.files[newname] = content;
+						delete this.files[name];
+						this.save();
+						return true;
+					}
+					return false;
+				}
+
+				this.write = function() {
+					localStorage.setItem('qute.playground.files', JSON.stringify(this.files));
+				}
+
+				var self = this;
+				this.save = debounce(function() {
+					self.write();
+				}, 500);
+
+				this.load = function() {
+					var files = localStorage.getItem('qute.playground.files');
+					this.files = files ? JSON.parse(files) : {};
+
+					var lastOpened = localStorage.getItem('qute.playground.lastOpened');
+					if (lastOpened) {
+						this.lastOpened = lastOpened.split(':');
+					} else {
+						this.lastOpened = ['example', '_draft', 'Draft'];
+					}
+				}
+
+				this.setLastOpened = function(type, name, title) {
+					this.lastOpened = [type, name, title || ''];
+					localStorage.setItem('qute.playground.lastOpened', this.lastOpened.join(':'));
+				}
+
+				function renderFile(filesEl, file) {
+					var li = document.createElement('li');
+					li.innerHTML = "<a href='#"+file+"'>"+file+"</a>";
+					filesEl.append(li);
+				}
+
+				this.renderFiles = function(filesEl) {
+					while (filesEl.firstChild) filesEl.removeChild(filesEl.firstChild);
+					this.names().sort().forEach(function(file) {
+						renderFile(filesEl, file);
+					});
+				}
+
+				this.load();
+			}
+			var files = new Files();
+			var filesEl = document.getElementById('files');
+
+			var isMac = navigator.platform.indexOf('Mac')>-1;
+			var runShortcut = isMac ? "(Cmd+Enter)":"(Ctrl+Enter)";
+			var saveShortcut = isMac ? "(Cmd+S)":"(Ctrl+S)";
+			var draftShortcut = isMac ? "(Cmd+D)":"(Ctrl+D)";
+			document.getElementById('play').setAttribute('title', 'Run snippet '+runShortcut);
+			document.getElementById('save').setAttribute('title', 'Save to local storage '+saveShortcut);
+			document.getElementById('newDraft').setAttribute('title', 'Create a new draft '+draftShortcut);
+
+			var iframe = document.getElementById('result');
+			var editor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
+				mode: 'jsq',//'javascript',
+    			lineNumbers: true
+  			});
+
+			// transform the first export statement in a mount code
+  			function transformSource(source) {
+  				// comment out imports
+  				source = source.replace(/^\s*import\s+/mg, '//$&');
+
+  				var m = /^(\s*export\s+default\s+)Qute\s*\(.*$/m.exec(source);
+  				if (m) {
+  					var before = source.substring(0, m.index);
+  					var after = source.substring(m.index+m[1].length);
+  					return before + "var __ROOT__ = " + after+"\nnew __ROOT__().mount('app');\n";
+  				}
+  				m = /^(\s*export\s+default\s+)[_a-zA-Z\$][_a-zA-Z\$0-9]*\s*;?$/m.exec(source);
+  				if (m) {
+  					var before = source.substring(0, m.index);
+  					var after = source.substring(m.index+m[1].length);
+  					return before + "var __ROOT__ = " + after+"\nnew __ROOT__().mount('app');\n";
+  				}
+  				return source;
+  			}
+
+			function updatePreview() {
+				document.body.classList.add('preview');
+				var source = transformSource(editor.getValue());
+				//console.log('----------------- Transformed Source ----------\n',source);
+				var req = createPreviewRequest(source);
+				iframe.contentWindow.postMessage(req, '*');
+			}
+
+			function clearPreview() {
+				iframe.contentWindow.postMessage({code: null}, '*');
+			}
+
+			window.addEventListener('keydown', function(e) {
+				if (e.metaKey || e.ctrlKey) {
+					if(e.keyCode === 13) {
+						updatePreview();
+					} else if (e.keyCode === 83) { // s
+						saveCurrent();
+					} else if (e.keyCode === 68) { // n
+						openDraft();
+					} else {
+						return;
+					}
+					e.preventDefault();
+					e.stopPropagation();
+  				}
+			});
+
+			function resizeToFillParent(el, dx, dy) {
+				var parent = el.parentNode;
+				var w = parent.clientWidth+(dx||0);
+				var h = parent.clientHeight+(dy||0);
+				el.style.width =  w+'px';
+				el.style.height = h+'px';
+			}
+
+			function onResize() {
+				resizeToFillParent(iframe);
+				resizeToFillParent(editor.getWrapperElement(), 0, -40);
+			}
+
+			onResize();
+			window.addEventListener('resize', function() {
+				onResize();
+			});
+
+
+			// Returns a function, that, as long as it continues to be invoked, will not
+			// be triggered. The function will be called after it stops being called for
+			// N milliseconds. If `immediate` is passed, trigger the function on the
+			// leading edge, instead of the trailing.
+			function debounce(func, wait, immediate) {
+				var timeout;
+				return function() {
+					var context = this, args = arguments;
+					var later = function() {
+						timeout = null;
+						if (!immediate) func.apply(context, args);
+					};
+					var callNow = immediate && !timeout;
+					clearTimeout(timeout);
+					timeout = setTimeout(later, wait);
+					if (callNow) func.apply(context, args);
+				};
+			}
+
+			window.addEventListener('message', function(event) {
+				if (event.data === 'fullscreen') {
+					document.getElementById("page-right").classList.toggle('fullscreen');
+					resizeToFillParent(iframe);
+				} else if (event.data === 'run') {
+					updatePreview();
+				} else if (event.data === 'closePreview') {
+					document.body.classList.remove('preview');
+				}
+			});
+
+			function toggleSidebar(e) {
+				//document.getElementById("page-right").classList.remove('fullscreen');
+				document.body.classList.toggle('sidebar');
+				onResize();
+				e.preventDefault();
+				e.stopPropagation();
+			}
+			document.getElementById('sidebar-toggle').addEventListener('click', toggleSidebar);
+			document.getElementById('sidebar-toggle-on').addEventListener('click', toggleSidebar);
+
+			function openExample(name, title) {
+				fetchPage('examples/'+name+'.jsq', function(data) {
+					files.setLastOpened('example', name, title);
+					document.getElementById('rename').style.display = 'none';
+					document.getElementById('remove').style.display = 'none';
+					editor.__qute_file__ = null;
+					document.getElementById('doc-title').textContent = title;
+	  				editor.setValue(data);
+	  				clearPreview();
+				});
+			}
+
+			function openDraft() {
+				openExample('_draft', 'Draft');
+			}
+
+			function openFile(name) {
+				files.setLastOpened('file', name);
+				document.getElementById('rename').style.display = '';
+				document.getElementById('remove').style.display = '';
+				editor.__qute_file__ = name;
+				document.getElementById('doc-title').textContent = name;
+				editor.setValue(files.get(name));
+				clearPreview();
+			}
+
+			function openSnippet(name, content) {
+				document.getElementById('rename').style.display = 'none';
+				document.getElementById('remove').style.display = 'none';
+				editor.__qute_file__ = null;
+				document.getElementById('doc-title').textContent = name;
+				editor.setValue(content);
+				clearPreview();
+			}
+
+			document.getElementById('examples').addEventListener('click', function(e) {
+	  			var a = e.target.closest('a');
+	  			if (a) {
+		  			href = a.getAttribute('href');
+		  			if (href) {
+		  				var example = href.substring(1);
+		  				openExample(example, a.textContent.trim());
+						e.preventDefault();
+						e.stopPropagation();
+		  			}
+	  			}
+	  		});
+
+			document.getElementById('files').addEventListener('click', function(e) {
+	  			var a = e.target.closest('a');
+	  			if (a) {
+		  			href = a.getAttribute('href');
+		  			if (href) {
+		  				var file = href.substring(1);
+		  				openFile(file);
+						e.preventDefault();
+						e.stopPropagation();
+		  			}
+	  			}
+	  		});
+
+
+  			document.getElementById('code-editor-tbar').addEventListener('click', function(e) {
+  				var a = e.target.closest('a');
+  				if (a) {
+  					var href = a.getAttribute('href');
+  					if (href === '#draft') {
+  						openDraft();
+  					} else if (href === '#save') {
+  						saveCurrent();
+  					} else if (href === '#play') {
+						updatePreview();
+					} else if (href === '#rename') {
+						var name = document.getElementById('doc-title').textContent.trim();
+						var filename = prompt('rename', name);
+						if (filename) {
+							if (files.rename(name, filename)) {
+								document.getElementById('doc-title').textContent = filename;
+								files.renderFiles(filesEl);
+							}
+						}
+
+					} else if (href === '#remove') {
+						if (files.remove(document.getElementById('doc-title').textContent.trim())) {
+							files.renderFiles(filesEl);
+							openDraft();
+						}
+  					} else {
+  						return;
+  					}
+					e.preventDefault();
+					e.stopPropagation();
+  				}
+  			});
+
+		function saveCurrent() {
+			if (editor.__qute_file__) { // save an example or draft
+				files.put(editor.__qute_file__, editor.getValue());
+			} else {
+				var filename = prompt('Enter a file name');
+				if (filename) {
+					filename = filename.trim();
+					if (filename && filename !== '_draft') {
+						files.put(filename, editor.getValue());
+						files.renderFiles(filesEl);
+						openFile(filename);
+						return;
+					}
+				}
+				if (filename != null) alert('Invalid file name');
+			}
+		}
+
+		files.renderFiles(filesEl);
+
+		var openlast = true;
+		var snippet = localStorage.getItem('qute.playground.snippet');
+		if (snippet) {
+			localStorage.removeItem('qute.playground.snippet');
+			openSnippet('Doc Snippet', snippet);
+			openlast = false;
+		} else if (document.location.hash) {
+			var link = document.getElementById('examples'+document.location.hash);
+			if (link) {
+				openExample(document.location.hash.substring(1), link.textContent.trim());
+				openlast = false;
+			}
+		}
+		if (openlast) {
+			var lastOpened = files.lastOpened;
+			if (lastOpened[0] === 'example') {
+				openExample(lastOpened[1], lastOpened[2]);
+			} else {
+				openFile(lastOpened[1]);
+			}
+		}
+
+		</script>
+
+
+	</body>
+</html>

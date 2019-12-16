@@ -1,0 +1,134 @@
+/*
+tests:
+1. when if is true only if branch is rendered
+2. when if is false only the else branch is rendered
+3. x-change callback is called when the if state changes. (but not the first time it is rendcered)
+4. nested VMs should be disconnected when the branch containing them are nbot rendered
+(we test this using the msg property) p
+-> After a branch was removed setting the msg property must not be propagated to the nested component
+*/
+
+import assert from 'assert';
+import {snapshot} from '@qutejs/test-utils';
+import window, {document} from '@qutejs/window';
+import Qute from '..';
+import { createMountPoint, runAfter } from './utils.js';
+
+
+<x-tag name='if-else-test'>
+<div>
+	<if value='user'>
+		<nested-vm user={user} msg={msg} />
+	</if>
+	<if value='user' x-change='userChanged'>
+		<div id='if-else-true'>Hello {{user}}</div>
+	<else>
+		<div id='if-else-false'>Hello anonymous</div>
+	</if>
+</div>
+</x-tag>
+
+<x-tag name='nested-vm'>
+	<div id='if-true'>Hello {{user}}</div>
+</x-tag>
+
+
+var NESTED_MSG = null;
+
+var NestedVm = Qute('nested-vm', {
+	init: function() {
+		return { user: null, msg: null }
+	}
+}).watch('msg', function(val) {
+	NESTED_MSG = val;
+});
+
+var IfElseTest = Qute('if-else-test', {
+	init: function() {
+		this.changes = 0;
+		return { user: null, msg: null };
+	},
+	// change user value using a channel
+	channel: function(userValue) {
+		this.user = userValue;
+	},
+	userChanged: function(value) {
+		this.changes++;
+	}
+});
+
+
+
+describe('If / Else Directive', function() {
+	var root = new IfElseTest();
+	var container = createMountPoint('root');
+	root.mount(container);
+
+	it('should not render the true branch', function(done) {
+		// default value for user is null
+		assert.equal(root.changes, 0);
+		assert.ok(!document.getElementById('if-true'));
+		assert.ok(document.getElementById('if-else-false'));
+		assert.ok(!document.getElementById('if-else-true'));
+		snapshot('if-else-false', container.innerHTML);
+		done();
+
+	});
+
+	specify('nested VM should not be connected', function(done) {
+		root.msg = 'MSG1';
+		runAfter(function() {
+			assert.ok(!NESTED_MSG);
+			done();
+		});
+	});
+
+
+	it('should render the true branch', function(done) {
+		// assign a value to user reactive prop
+		root.user = 'John';
+		// execute after the VM updated the DOM
+		runAfter(function() {
+			assert.equal(root.changes, 1);
+	 		assert.ok(document.getElementById('if-true'));
+			assert.ok(!document.getElementById('if-else-false'));
+			assert.ok(document.getElementById('if-else-true'));
+			snapshot('if-else-true', container.innerHTML);
+
+			done();
+			root.msg = 'Bla';
+
+		});
+	});
+
+	specify('nested VM should be connected', function(done) {
+		root.msg = 'MSG2';
+		runAfter(function() {
+			assert.equal(NESTED_MSG, 'MSG2');
+			done();
+		});
+	});
+
+	it('should not render the true branch', function(done) {
+		root.user = null;
+
+		// execute after the VM updated the DOM
+		runAfter(function() {
+			assert.equal(root.changes, 2);
+	 		assert.ok(!document.getElementById('if-true'));
+			assert.ok(document.getElementById('if-else-false'));
+			assert.ok(!document.getElementById('if-else-true'));
+			done();
+		});
+	});
+
+	specify('nested VM should not be connected', function(done) {
+		root.msg = 'MSG3';
+		runAfter(function() {
+			assert.equal(NESTED_MSG, 'MSG2');
+			done();
+		});
+	});
+
+
+});

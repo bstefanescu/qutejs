@@ -1,0 +1,209 @@
+import {stopEvent, filterKeys} from './utils.js';
+
+function addClassMap(cl, value) {
+	var keys = Object.keys(value);
+	for (var i=0,l=keys.length; i<l; i++) {
+		var key = keys[i];
+		var val = value[key];
+		if (val) cl.add(key); else cl.remove(key);
+	}
+}
+
+function bindClass(elt, value) {
+	if (!value) return;
+	var cl = elt.classList;
+	if (Array.isArray(value)) {
+		for (var i=0,l=value.length; i<l; i++) {
+			var val = value[i];
+			if (val) {
+				if (typeof val === 'string') {
+					cl.add(val);
+				} else { // an object?
+					addClassMap(cl, val);
+				}
+			}
+		}
+	} else { // an object
+		addClassMap(cl, value);
+	}
+}
+
+function bindStyle(elt, value) {
+	if (!value) return;
+	var style = elt.style;
+	if (Array.isArray(value)) {
+		for (var i=0,l=value.length; i<l; i++) {
+			Object.assign(style, value[i]);
+		}
+	} else { // an object
+		Object.assign(style, value);
+	}
+
+}
+
+// the listeners injected from a vm to a nested functional view
+// must run in parent vm, context not in fucntional view context!
+// This is why we need to use the vm from the closure scope when the listener was created
+export function createListener(vm, fn) {
+	return function(e) {
+		if (fn.call(vm, e) === false) {
+			stopEvent(e);
+		}
+	};
+}
+
+export function createListeners(vm, $listeners) {
+	if ($listeners) {
+		for (var key in $listeners) {
+			$listeners[key] = createListener(vm, $listeners[key]);
+		}
+	}
+	return $listeners;
+}
+
+export function SetText(el, model, expr) {
+	return function() {
+		var val = expr(model);
+		if (val !== el.nodeValue) {
+			el.nodeValue = val;
+		}
+	}
+}
+
+export function SetAttr(el, model, key, valFn) {
+	return function(changedKey) {
+		//if (!changedKey || changedKey === key) {
+			var val = valFn(model);
+			if (el.getAttribute(key) !== val) {
+				if (val == null) {
+					el.removeAttribute(key);
+				} else {
+					el.setAttribute(key, val);
+				}
+			}
+		//}
+	}
+}
+
+/*
+export function SetBindings(el, model, bindFn) {
+	return function(changedKey) {
+		var bindings = bindFn(model);
+		for (var key in bindings) {
+			var val = bindings[key];
+			if (el.getAttribute(key) !== val) {
+				el.setAttribute(key, val);
+			}
+		}
+	}
+}
+*/
+export function SetInnerHTML(el, model, valFn) {
+	return function() {
+		var val = valFn(model);
+		if (el.innerHTML !== val) {
+			el.innerHTML = val || '';
+		}
+	}
+}
+
+export function SetDisplay(el, model, valFn) {
+	return function() {
+		var val = valFn(model);
+		var display = el.style.display;
+		// backup the current diaply when toggliong OFF to be able to restore if needed
+		if (val) {
+			if (display === 'none') {
+				el.style.display = el.__qute_display || ''; // remove 'none'
+			}
+		} else if (display !== 'none') {
+			if (el.__qute_display == null) el.__qute_display = display;
+			el.style.display = 'none';
+		}
+	}
+}
+
+
+export function SetToggle(el, model, valFn) {
+	// valFn returns a map of attr keys to values
+	return function() {
+		var attrs = valFn(model);
+		var keys = Object.keys(attrs);
+		for (var i=0,l=keys.length;i<l;i++) {
+			var key = keys[i];
+			if (attrs[key]) {
+				el.setAttribute(key, key);
+			} else {
+				el.removeAttribute(key);
+			}
+		}
+	}
+}
+
+export function SetClass(el, model, valFn) {
+	return function() {
+		//TODO only if modified
+		bindClass(el, valFn(model));
+	}
+}
+
+export function SetStyle(el, model, valFn) {
+	return function() {
+		//TODO only if modified
+		bindStyle(el, valFn(model));
+	}
+}
+
+export function SetProp(vm, model, key, valFn) {
+	return function(changedKey) {
+		//if (!changedKey || changedKey === key) {
+			vm.$set(key, valFn(model));
+		//}
+	}
+}
+
+export function SetDOMAttrs(el, model, filter) {
+	return function() {
+		var $attrs = model.$attrs;
+		if ($attrs) {
+			var keys = filterKeys($attrs, filter);
+			for (var i=0,l=keys.length; i<l; i++) {
+				var key = keys[i];
+				el.setAttribute(key, $attrs[key]);
+			}
+		}
+	}
+}
+
+export function SetFuncAttrs($attrs, vm, filter) { // vm is the parent vm (i.e. current model)
+	return function() {
+		var vmAttrs = vm.$attrs;
+		if (vmAttrs) {
+			var keys = filterKeys(vmAttrs, filter);
+			for (var i=0,l=keys.length; i<l; i++) {
+				var key = keys[i];
+				$attrs[key] = vmAttrs[key];
+			}
+		}
+	}
+}
+
+export function SetFuncAttr($attrs, vm, key, val) { // vm is the parent vm (i.e. current model)
+	return function() {
+		$attrs[key] = val(vm);
+	}
+}
+// TODO set $attrs on VMs
+export function SetVMAttrs(vm, parentVM, filter) {
+	return function() {
+		var parentAttrs = parentVM.$attrs;
+		if (parentAttrs) {
+			var keys = filterKeys(parentAttrs, filter);
+			for (var i=0,l=keys.length; i<l; i++) {
+				var key = keys[i];
+				vm.$set(key, parentAttrs[key]);
+			}
+		}
+	}
+}
+

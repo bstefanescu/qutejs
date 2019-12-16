@@ -1,0 +1,110 @@
+import assert from 'assert';
+import {snapshot} from '@qutejs/test-utils';
+import window, {document} from '@qutejs/window';
+import Qute from '..';
+import { createMountPoint, runAfter } from './utils.js';
+
+
+<x-tag name='for-test'>
+<div>
+
+<ul>
+	<for value='item in items'>
+		<li><a href={item.href}>{{item.title}}</a></li>
+	</for>
+</ul>
+<ul>
+	<for value='item,index in items'>
+		<li>{{index+1}}. <a href={item.href}>{{item.title}}</a></li>
+	</for>
+</ul>
+<ul>
+	<for value='item,index,hasNext in items'>
+		<li>{{index+1}}. <a href={item.href}>{{item.title}}</a></li> <if value='hasNext'><hr></if>
+	</for>
+</ul>
+
+<ul>
+	<for value='key,index,hasNext in Object.keys(map)'>
+		<li>{{index+1}}. {{key}} = {{map[key]}}</li> <if value='hasNext'>,</if>
+	</for>
+</ul>
+
+</div>
+</x-tag>
+
+<x-tag name='for-expr-compact'>
+<ul>
+	<for value='it,i,next in items'>
+		<li>{{i+1}}. <a href={it.href}>{{it.title}}</a></li><if value='next'>,</if>
+	</for>
+</ul>
+</x-tag>
+<x-tag name='for-expr-spaces'>
+<ul>
+	<for value='   item    ,    index   ,   	hasNext     in     items   '>
+		<li>{{index+1}}. <a href={item.href}>{{item.title}}</a></li><if value='hasNext'>,</if>
+	</for>
+</ul>
+</x-tag>
+
+
+var ForTest = Qute('for-test', {
+	init: function() {
+		return { items: [
+				{ href:'item1', title: 'Item 1' },
+				{ href:'item2', title: 'Item 2' },
+				{ href:'item3', title: 'Item 3' }
+			],
+			map: { key1: 'val1', key2: 'val2', key3: 'val3' }
+		};
+	}
+});
+
+
+<x-tag name='for-test-reactivity'>
+<div><for value='item in list'>{{item}} </for></div>
+</x-tag>
+
+var ForTestReactivity = Qute('for-test-reactivity', {
+	changeList() {
+		this.list = this.list === this.list1 ? this.list2 : this.list1;
+	},
+	init() {
+		return {
+			list: ["a", "b", "c", "d"]
+		}
+	}
+});
+
+describe('For Directive', function() {
+	var root = new ForTest();
+	var container = createMountPoint('root');
+	root.mount(container);
+
+	it('should match snapshot', function(done) {
+		snapshot('for', container.innerHTML);
+		done();
+
+	});
+
+	it('expression extra spaces are ignored', function() {
+		var r1 = Qute.render('for-expr-compact', root).innerHTML;
+		var r2 = Qute.render('for-expr-spaces', root).innerHTML;
+		assert.equal(r1, r2);
+	});
+
+	it('updates the dom when list instance changes', function(done) {
+		var root = new ForTestReactivity();
+		var container = createMountPoint('root2');
+		root.mount(container);
+		assert.equal(container.textContent.trim(), 'a b c d');
+		container.firstChild.__qute__.list = [1,2,3];
+		runAfter(function() {
+			assert.equal(container.textContent.trim(), '1 2 3');
+			done();
+		});
+	});
+
+});
+

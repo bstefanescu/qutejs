@@ -1,0 +1,249 @@
+import assert from 'assert';
+import {snapshot} from '@qutejs/test-utils';
+import window, {document} from '@qutejs/window';
+import Qute from '..';
+import { mountTest, runAfter } from './utils.js';
+
+
+<x-tag name='dom-test-root'>
+	<div>
+		<span x-for='item in list'>{{item}} </span>
+	</div>
+</x-tag>
+
+
+<x-tag name='fn-comp-vm'><span><slot/></span> </x-tag>
+<x-tag name='fn-comp'><fn-comp-vm><template name='default'><slot/></template></fn-comp-vm></x-tag>
+
+<x-tag name='func-test-root'>
+	<div>
+		<fn-comp x-for='item in list'>{{item}} </fn-comp>
+	</div>
+</x-tag>
+
+<x-tag name='vm-comp'><span><slot/></span> </x-tag>
+
+<x-tag name='vm-test-root'>
+	<div>
+		<vm-comp x-for='item in list'>{{item}} </vm-comp>
+	</div>
+</x-tag>
+
+
+<x-tag name='vm-comp-2'><span>{{id}}:{{text}} </span> </x-tag>
+
+<x-tag name='vm-test-root-2'>
+	<div>
+		<vm-comp-2 x-for='item in list' text={item.text} id={item.id} />
+	</div>
+</x-tag>
+
+var DomTestRoot = Qute('dom-test-root', {
+	init() {
+		this.list = new Qute.List(['item1', 'item2', 'item3']);
+	}
+});
+
+var FuncTestRoot = Qute('func-test-root', {
+	init() {
+		this.list = new Qute.List(['item1', 'item2', 'item3']);
+	}
+});
+
+var VmTestRoot = Qute('vm-test-root', {
+	init() {
+		this.list = new Qute.List(['item1', 'item2', 'item3']);
+	}
+});
+
+var vmFnCompCnt = 0;
+var vmCompCnt = 0;
+var vmComp2Cnt = 0;
+Qute('fn-comp-vm', {
+	connected: function() {
+		vmFnCompCnt++;
+	},
+	disconnected: function() {
+		vmFnCompCnt--;
+	}
+});
+
+Qute('vm-comp', {
+	connected: function() {
+		vmCompCnt++;
+	},
+	disconnected: function() {
+		vmCompCnt--;
+	}
+});
+
+var VmTestRoot2 = Qute('vm-test-root-2', {
+	init() {
+		this.list = new Qute.List([{id:1, text:'item1'}, {id:2, text:'item2'}, {id:3, text:'item3'}]);
+	}
+});
+
+Qute('vm-comp-2', {
+	connected: function() {
+		vmComp2Cnt++;
+	},
+	disconnected: function() {
+		vmComp2Cnt--;
+	},
+	init() {
+		return {
+			id: null, text: null
+		}
+	}
+});
+
+describe('x-for attribute', function() {
+
+	context('x-for works on DOM elements', function() {
+		var test = mountTest(DomTestRoot);
+		it('renders the element as many times as the list size', function() {
+			assert.equal(test.textContent.trim(), "item1 item2 item3");
+		});
+
+		var vm = test.firstChild.__qute__;
+		it('updates on insertion', function(done) {
+			vm.list.push('item4');
+			runAfter(function() {
+				assert.equal(test.textContent.trim(), "item1 item2 item3 item4");
+				done();
+			});
+		});
+
+		it('updates on removal', function(done) {
+			vm.list.remove('item2');
+			runAfter(function() {
+				assert.equal(test.textContent.trim(), "item1 item3 item4");
+				done();
+			});
+		});
+
+		it('updates on move', function(done) {
+			vm.list.move(0, 1);
+			runAfter(function() {
+				assert.equal(test.textContent.trim(), "item3 item1 item4");
+				done();
+			});
+		});
+
+	});
+
+	context('x-for works on func components', function() {
+		var test = mountTest(FuncTestRoot);
+		it('renders the element as many times as the list size', function() {
+			assert.equal(test.textContent.trim(), "item1 item2 item3");
+			assert.equal(vmFnCompCnt, 3);
+		});
+
+		var vm = test.firstChild.__qute__;
+		it('updates on insertion', function(done) {
+			vm.list.push('item4');
+			runAfter(function() {
+				assert.equal(test.textContent.trim(), "item1 item2 item3 item4");
+				assert.equal(vmFnCompCnt, 4);
+				done();
+			});
+		});
+
+		it('updates on removal', function(done) {
+			vm.list.remove('item2');
+			runAfter(function() {
+				assert.equal(test.textContent.trim(), "item1 item3 item4");
+				assert.equal(vmFnCompCnt, 3);
+				done();
+			});
+		});
+
+		it('updates on move', function(done) {
+			vm.list.move(0, 1);
+			runAfter(function() {
+				assert.equal(test.textContent.trim(), "item3 item1 item4");
+				assert.equal(vmFnCompCnt, 3);
+				done();
+			});
+		});
+
+	});
+
+	context('x-for works on vm components', function() {
+		var test = mountTest(VmTestRoot);
+		it('renders the element as many times as the list size', function() {
+			assert.equal(test.textContent.trim(), "item1 item2 item3");
+			assert.equal(vmCompCnt, 3);
+		});
+
+		var vm = test.firstChild.__qute__;
+		it('updates on insertion', function(done) {
+			vm.list.push('item4');
+			runAfter(function() {
+				assert.equal(test.textContent.trim(), "item1 item2 item3 item4");
+				assert.equal(vmCompCnt, 4);
+				done();
+			});
+		});
+
+		it('updates on removal', function(done) {
+			vm.list.remove('item2');
+			runAfter(function() {
+				assert.equal(test.textContent.trim(), "item1 item3 item4");
+				assert.equal(vmCompCnt, 3);
+				done();
+			});
+		});
+
+		it('updates on move', function(done) {
+			vm.list.move(0, 1);
+			runAfter(function() {
+				assert.equal(test.textContent.trim(), "item3 item1 item4");
+				assert.equal(vmCompCnt, 3);
+				done();
+			});
+		});
+
+	});
+
+	context('x-for items are reactive', function() {
+		var test = mountTest(VmTestRoot2);
+		it('renders the element as many times as the list size', function() {
+			assert.equal(test.textContent.trim(), "1:item1 2:item2 3:item3");
+			assert.equal(vmComp2Cnt, 3);
+		});
+
+		var vm = test.firstChild.__qute__;
+		it('updates on insertion', function(done) {
+			vm.list.push({id: 4, text: 'item4'});
+			runAfter(function() {
+				assert.equal(test.textContent.trim(), "1:item1 2:item2 3:item3 4:item4");
+				assert.equal(vmComp2Cnt, 4);
+				done();
+			});
+		});
+
+		it('updates on removal', function(done) {
+			var i = vm.list.findIndex(function(item) {
+				return item.id === 2;
+			});
+			vm.list.splice(i, 1);
+			runAfter(function() {
+				assert.equal(test.textContent.trim(), "1:item1 3:item3 4:item4");
+				assert.equal(vmComp2Cnt, 3);
+				done();
+			});
+		});
+
+		it('updates on move', function(done) {
+			vm.list.move(0, 1);
+			runAfter(function() {
+				assert.equal(test.textContent.trim(), "3:item3 1:item1 4:item4");
+				assert.equal(vmComp2Cnt, 3);
+				done();
+			});
+		});
+
+	});
+
+});

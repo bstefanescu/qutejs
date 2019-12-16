@@ -1,0 +1,26 @@
+
+<x-tag name='todo-item'>
+	<div>ss</div>
+</x-tag>
+
+<x-tag name='todos'>
+	<div>
+        <ol>
+          <li x-for='item in list'>{{item.text}}</li>
+        </ol>
+		<button @click='addItem'>Add</button>
+	</div>
+</x-tag>
+
+export default Qute('todos', {
+	addItem() {
+		var text = prompt('TODO');
+		this.list.push({text: text});
+	},
+	init() {
+		return {
+			list: new Qute.List([{text:'text1'}, {text:'text2'}])
+		}
+	}
+});
+

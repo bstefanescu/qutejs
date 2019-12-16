@@ -1,0 +1,9 @@
+<x-tag name='counter'>
+	<button @click='counter++'>Counter is {{counter}}</button>
+</x-tag>
+
+export default Qute('counter', {
+	init() {
+		return { counter: 0};
+	}
+});

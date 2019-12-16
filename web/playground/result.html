@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta charset="utf-8"/>
+  	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+
+	<script src="https://kit.fontawesome.com/db2e085d44.js"></script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css" integrity="sha256-77qGXu2p8NpfcBpTjw4jsMeQnz0vyh74f5do0cWjQ/Q=" crossorigin="anonymous" />
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js" integrity="sha256-HWJnMZHGx7U1jmNfxe4yaQedmpo/mtxWSIXvcJkLIf4=" crossorigin="anonymous" data-manual></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-javascript.min.js" integrity="sha256-Fck6LA/qj8sXp1+RQhukXSoj2T3EBrl69L4QUV74Co8=" crossorigin="anonymous"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+	<script type="text/javascript" src='../dev/qute-dev-all.js'></script>
+	<script type="text/javascript" src='hh.js'></script>
+	<script type="text/javascript" src='buble-browser-deps.umd.js'></script>
+
+	<script>
+		Qute.converters.markdown = marked;
+	</script>
+	<style>
+
+		.hh-key { color: blue; }
+		.hh-val { color: brown; }
+		.hh-tag { color: green; }
+		.hh-name { color: green; }
+
+		* {
+		    box-sizing: border-box;
+		}
+		a {
+		    color: #337ab7 !important;
+		}
+
+		#main {
+			padding: 8px;
+		}
+		#app {
+			display: block;
+		}
+		.view-source  #preview {
+			display: none;
+		}
+		#source {
+			display: none;
+		}
+		.view-source  #source {
+			display: block;
+		}
+
+			.playground-navbar {
+  				list-style-type: none;
+				margin: 0;
+				padding: 0 4px;
+    			height:40px;
+    			display: flex;
+    			align-items: center;
+    			font-size: 16px;
+    			border-bottom:1px solid #ddd;
+			}
+			.playground-navbar > li {
+				margin-right: 14px;
+			}
+			.playground-navbar a {
+				text-decoration: none;
+			}
+			.playground-navbar a:hover {
+				text-decoration: none;
+			}
+
+			.push {
+    			margin-left: auto;
+			}
+
+			#compress {
+				display: none;
+			}
+
+			.fullscreen #compress {
+				display: inline-block;
+			}
+
+			.fullscreen #expand {
+				display: none;
+			}
+
+			.fullscreen #close {
+				display: none;
+			}
+
+ul.playground-navbar > li.active {
+    border-bottom: 1px solid #f00;
+}
+
+
+ul.playground-navbar > li {
+	height:40px;
+	line-height: 40px;
+    padding: 0 4px;
+}
+
+
+#content {
+	display:none;
+}
+	</style>
+  </head>
+
+  <body style='font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px;color:#333;padding:0;margin:0'>
+  	<div id='content'>
+	  	<ul class='playground-navbar' id='tabs'>
+	  		<li class='active'><a id='preview-btn' href='#preview'>Preview</a></li>
+			<li><a title='View generated HTML source' id='source-btn' href='#view-source'>HTML</a></li>
+			<li><a title='View generated Javascript code' id='code-btn' href='#view-code'>Javascript</a></li>
+			<li id='expand' class='push'><a title='Expand' href='#fullscreen'><i class='fas fa-expand'></i></a></li>
+			<li id='compress' class='push'><a title='Collapse' href='#fullscreen'><i class='fas fa-compress'></i></a></li>
+			<li><a id='close' href='#close'><i title='Close Preview' class="fa fa-times"></i></a></li>
+	  	</ul>
+	  	<div id='main'>
+	  	  	<p id='run-panel' style='text-align: center; font-size: 64pt'>
+	  	  		<a href='#play' id='play'><i class='far fa-play-circle'></i></a>
+	  	  	</p>
+	  		<div id='app'>
+	  		</div>
+	  		<div id='source' style='display:none'></div>
+	  		<div id='code' style='display:none'></div>
+	  	</div>
+  	</div>
+  	<script>
+  		var PREVIEW_PENDING_KEY='qute-playground-preview-pending';
+
+  		var toLoad = window.localStorage.getItem(PREVIEW_PENDING_KEY);
+  		if (toLoad) {
+  			window.localStorage.removeItem(PREVIEW_PENDING_KEY);
+  			var data = JSON.parse(toLoad);
+  			initWithData(data);
+  		} else {
+  			document.getElementById('content').style.display = 'block';
+  		}
+
+  		function initWithData(data) {
+  			var scripts = data.script || [];
+  			var styles = data.style || [];
+  			for (var i=0,l=styles.length; i<l; i++) {
+  				insertStyle(styles[i]);
+  			}
+  			for (var i=0,l=scripts.length; i<l; i++) {
+  				insertScript(scripts[i]);
+  			}
+  			window.setTimeout(function() {
+  				updatePreview(data.code);
+  				document.getElementById('content').style.display = 'block';
+  			}, 100);
+
+  		}
+
+  		function insertScript(url) {
+  			console.log('insert script', url);
+  			var script = document.createElement('script');
+  			script.setAttribute('src', url);
+			document.head.appendChild(script);
+  		}
+
+  		function insertStyle(url) {
+  			console.log('insert style', url);
+  			var link = document.createElement('link');
+  			link.setAttribute('rel', 'stylesheet');
+  			link.setAttribute('href', url);
+  			document.head.appendChild(link);
+  		}
+
+  		function testES6() {
+  			try {
+				eval("function x(...args) { return {	get x() { return 1; }, init() {}, arrow: () => { return 'arrow'; } }; }");
+				return true;
+			} catch (e) {
+				return false;
+			}
+  		}
+
+  		var ES6 = testES6();
+  		var initialQuteRegistry = Qute.snapshotRegistry();
+		var appEl = document.getElementById('app');
+		var sourceEl = document.getElementById('source');
+		var codeEl = document.getElementById('code');
+		var previewBtn = document.getElementById('preview-btn');
+		var sourceBtn = document.getElementById('source-btn');
+		var codeBtn = document.getElementById('code-btn');
+		var tabs = document.getElementById('tabs');
+
+		function updatePreview(source) {
+  			appEl.__qute__ && appEl.__qute__.disconnect();
+  			Qute.restoreRegistry(initialQuteRegistry); // restore initial registry
+
+  			// remove current content
+  			while (appEl.firstChild) appEl.removeChild(appEl.firstChild);
+  			while (sourceEl.firstChild) sourceEl.removeChild(sourceEl.firstChild);
+  			while (codeEl.firstChild) codeEl.removeChild(codeEl.firstChild);
+
+  			if (!source) {
+  				document.getElementById('run-panel').style.display = '';
+  				return;
+  			}
+
+  			document.getElementById('run-panel').style.display = 'none';
+
+  			var code;
+  			try {
+	  			code  = new Qute.Compiler().transpile(source, {removeNewLines: true}); // rmeove new lines is on
+	  			//TODO we need to use buble to transform es6 syntax if IE
+	  			if (!ES6) {
+	  				code = window.buble.transform(code).code;
+	  			}
+				new Function(code)();
+			} catch (e) {
+			 	console.error(code);
+			 	appEl.innerHTML = "<pre style='color:red'>Error: "+e.stack+"</pre><p>You may find out more details by looking in the javascript console";
+			 	//throw e;
+			 	// retwroing exception wiull loose stack trace code source info so we execute again the failing code
+			 	new Function(code)();
+			}
+
+			// upodate code view
+			var preEl = document.createElement('PRE');
+			var langEl = document.createElement('CODE');
+			langEl.className = 'language-javascript';
+			langEl.textContent = code;
+			preEl.appendChild(langEl);
+			codeEl.appendChild(preEl);
+			Prism.highlightElement(langEl);
+
+			//TODO use post exec
+			// update html source view
+			window.setTimeout(function() {
+				var source = hh(appEl.innerHTML);
+				sourceEl.innerHTML = source;
+			}, 100);
+		}
+
+  		window.addEventListener('message', function(event) {
+  			if (event.data.style || event.data.script) { // reload page to inject styles and scripts
+  				window.localStorage.setItem(PREVIEW_PENDING_KEY, JSON.stringify(event.data));
+  				document.location.reload();
+  			} else {
+  				updatePreview(event.data.code);
+  			}
+  		});
+
+  		tabs.addEventListener('click', function(e) {
+  			var a = e.target.closest('a');
+  			if (a) {
+	  			href = a.getAttribute('href');
+	  			if (href) {
+	  				if (href === '#preview') {
+	  					showPreview();
+	  				} else if (href === '#view-source') {
+						showSource();
+	  				} else if (href === '#view-code') {
+	  					showCode();
+	  				} else if (href === '#fullscreen') {
+	  					fullScreen();
+	  				} else {
+	  					return;
+	  				}
+	  				e.preventDefault();
+	  				e.stopPropagation();
+	  			}
+  			}
+  		});
+
+  		document.getElementById('play').addEventListener('click', function(e) {
+  			runScript();
+			e.preventDefault();
+			e.stopPropagation();
+  		});
+
+  		document.getElementById('close').addEventListener('click', function(e) {
+  			updatePreview(null);
+  			closePreview();
+			e.preventDefault();
+			e.stopPropagation();
+  		});
+
+  		function showPreview() {
+  			previewBtn.parentNode.classList.add('active');
+  			sourceBtn.parentNode.classList.remove('active');
+  			codeBtn.parentNode.classList.remove('active');
+
+  			appEl.style.display = 'block';
+  			sourceEl.style.display = 'none';
+  			codeEl.style.display = 'none';
+  		}
+  		function showSource() {
+  			// always update the output
+  			var source = hh(appEl.innerHTML);
+			sourceEl.innerHTML = source;
+
+  			previewBtn.parentNode.classList.remove('active');
+  			sourceBtn.parentNode.classList.add('active');
+  			codeBtn.parentNode.classList.remove('active');
+
+  			appEl.style.display = 'none';
+  			sourceEl.style.display = 'block';
+  			codeEl.style.display = 'none';
+  		}
+  		function showCode() {
+  			previewBtn.parentNode.classList.remove('active');
+  			sourceBtn.parentNode.classList.remove('active');
+  			codeBtn.parentNode.classList.add('active');
+
+  			appEl.style.display = 'none';
+  			sourceEl.style.display = 'none';
+  			codeEl.style.display = 'block';
+  		}
+
+  		function closePreview() {
+  			window.parent.postMessage('closePreview', '*');
+  		}
+
+  		function fullScreen() {
+  			document.body.classList.toggle('fullscreen');
+  			window.parent.postMessage('fullscreen', '*');
+  		}
+
+  		function runScript() {
+  			window.parent.postMessage('run', '*');
+  		}
+
+  	</script>
+  <body>
+
+</html>

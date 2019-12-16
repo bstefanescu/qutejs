@@ -1,0 +1,67 @@
+{
+  "name": "@qutejs/create",
+  "version": "0.9.0",
+  "description": "Init a qute project",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "files": [
+    "lib",
+    "bin",
+    "templates"
+  ],
+  "bin": "./bin/create",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bogdan Stefanescu <bogdan@quandora.com>",
+  "license": "MIT",
+  "keywords": [
+    "component",
+    "model",
+    "reactive",
+    "reactivity",
+    "development",
+    "application",
+    "framework",
+    "web",
+    "model",
+    "dom",
+    "qute",
+    "template",
+    "jsq",
+    "render",
+    "rendering",
+    "dynamic",
+    "message",
+    "bus",
+    "channel",
+    "custom",
+    "extend",
+    "element",
+    "tag",
+    "view",
+    "x-tag",
+    "vue",
+    "react",
+    "virtual",
+    "init",
+    "create"
+  ],
+  "homepage": "https://qutejs.org",
+  "repository": {
+    "url": "https://github.com/bstefanescu/qute",
+    "type": "git"
+  },
+  "dependencies": {
+    "progress": "^2.0.3",
+    "prompts": "^2.3.0"
+  },
+  "build": {
+    "config": "lib",
+    "nodeDeps": [
+      "path",
+      "fs",
+      "child_process"
+    ]
+  }
+}

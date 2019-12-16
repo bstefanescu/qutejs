@@ -1,0 +1,31 @@
+
+.qute-popup.qute-effect-fade .qute-popup-content {
+	opacity: 0;
+	-webkit-transition: opacity 0.3s;
+	-moz-transition: opacity 0.3s;
+	-ms-transition: opacity 0.3s;
+	transition: opacity 0.3s;
+}
+.qute-popup.qute-effect-fade.qute-show .qute-popup-content {
+	opacity: 1;
+}
+
+
+.qute-popup.qute-effect-slide .qute-popup-content {
+	-webkit-transform: translateY(-20%);
+	-moz-transform: translateY(-20%);
+	-ms-transform: translateY(-20%);
+	transform: translateY(-20%);
+	opacity: 0;
+	-webkit-transition: opacity 0.3s, transform 0.3s;
+	-moz-transition: opacity 0.3s, transform 0.3s;
+	-ms-transition: opacity 0.3s, transform 0.3s;
+	transition: opacity 0.3s, transform 0.3s;
+}
+.qute-popup.qute-effect-slide.qute-show .qute-popup-content {
+	-webkit-transform: translateY(0);
+	-moz-transform: translateY(0);
+	-ms-transform: translateY(0);
+	transform: translateY(0);
+	opacity: 1;
+}

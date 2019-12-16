@@ -1,0 +1,26 @@
+<x-tag name='hello'>
+	<div>{{message}}</div>
+</x-tag>
+
+<x-tag name='root'>
+	<hello message="Hello World!" />
+</x-tag>
+
+// atach a ViewModel to the hello template
+Qute('hello', {
+	init() {
+		return {
+			message: 'Hello!'
+		}
+	}
+});
+
+// create and export the root component
+export default Qute('root', {
+	init() {
+		return {
+			message: null
+		}
+	}
+});
+

@@ -1,0 +1,24 @@
+{
+  "name": "@qutejs/polyfill",
+  "version": "0.9.0",
+  "keywords": [],
+  "author": "Bogdan Stefanescu <bogdan@quandora.com>",
+  "license": "MIT",
+  "description": "Polyfills required by Qute to run on IE >= 9",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "files": [
+    "lib"
+  ],
+  "homepage": "https://qutejs.org",
+  "repository": {
+    "url": "https://github.com/bstefanescu/qute",
+    "type": "git"
+  },
+  "dependencies": {
+    "@qutejs/window": "0.9.0"
+  },
+  "build": {
+    "config": "weblib"
+  }
+}

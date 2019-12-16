@@ -1,0 +1,11 @@
+// Define your templates here
+<x-tag name='root'>
+	<div>Let's start {{verb}}</div>
+</x-tag>
+
+// Define the ViewModels (i.e. components) here
+// You must export using 'export default' the root component
+// 	to be mounted by the Preview panel
+export default Qute('root', {
+	verb: 'coding'
+});

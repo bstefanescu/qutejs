@@ -1,0 +1,119 @@
+import assert from 'assert';
+import {snapshot} from '@qutejs/test-utils';
+import window, {document} from '@qutejs/window';
+import Qute from '..';
+import { mountTest, runAfter } from './utils.js';
+
+<x-tag name='test-show'>
+	<div x-show='isVisible'>Is Visible</div>
+</x-tag>
+
+<x-tag name='test-show-2'>
+	<div x-show='isVisible' style='display:inline-block'>Is Visible</div>
+</x-tag>
+
+var Test = Qute('test-show', {
+	init() {
+		return {
+			isVisible: false
+		}
+	}
+});
+
+var Test2 = Qute('test-show-2', {
+	init() {
+		return {
+			isVisible: true
+		}
+	}
+});
+
+
+<x-tag name='test-show-vm'>
+    <div><slot/></div>
+</x-tag>
+
+<x-tag name='test-show-vm-root'>
+    <test-show x-show="showIt">Hello!</test-show>
+</x-tag>
+
+
+var TestShowVM = Qute('test-show-vm-root', {
+	init() {
+		return {
+			showIt: false
+		}
+	}
+});
+
+Qute('test-show-vm');
+
+
+describe('x-show attribute', function() {
+	var test = mountTest(Test);
+
+	it('should not be visible', function(done) {
+		assert.equal(test.firstChild.style.display, 'none');
+		done();
+	});
+
+	it('should become visible', function(done) {
+		test.firstChild.__qute__.isVisible = true;
+		runAfter(function() {
+			assert.ok(!test.firstChild.style.display || test.firstChild.style.display!=='none');
+			done();
+		});
+	});
+
+	it('should toggle visibility to none', function(done) {
+		test.firstChild.__qute__.isVisible = false;
+		runAfter(function() {
+			assert.equal(test.firstChild.style.display, 'none');
+			done();
+		});
+	});
+
+	var test2 = mountTest(Test2);
+	context('should restore original display', function(done) {
+
+		it('should be visible', function(done) {
+			assert.equal(test2.firstChild.style.display, 'inline-block');
+			done();
+		});
+
+		it('should not be visible', function(done) {
+			test2.firstChild.__qute__.isVisible = false;
+			runAfter(function() {
+				assert.equal(test2.firstChild.style.display, 'none');
+				done();
+			});
+		});
+
+		it('should restore display', function(done) {
+			test2.firstChild.__qute__.isVisible = true;
+			runAfter(function() {
+				assert.equal(test2.firstChild.style.display, 'inline-block');
+				done();
+			});
+		});
+
+	});
+
+	context('works on VM components', function(done) {
+		var testVM = mountTest(TestShowVM);
+
+		it('should not be visible', function(done) {
+			assert.equal(testVM.firstChild.style.display, 'none');
+			done();
+		});
+
+		it('should restore display', function(done) {
+			testVM.firstChild.__qute__.showIt = true;
+			runAfter(function() {
+				assert.equal(testVM.firstChild.style.display, '');
+				done();
+			});
+		});
+
+	});
+});

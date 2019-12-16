@@ -1,0 +1,46 @@
+%YAML 1.2
+---
+# See http://www.sublimetext.com/docs/3/syntax.html
+file_extensions:
+  - jsq, qute
+scope: source.js.qute
+
+contexts:
+  # The prototype context is prepended to all contexts but those setting
+  # meta_include_prototype: false.
+  prototype:
+    - include: comments
+
+  main:
+    - match: <x-tag\s+
+      scope: storage.type.js
+      push: xtag_attrs
+
+    - include: "Packages/JavaScript/JavaScript.sublime-syntax"
+
+  xtag_attrs:
+    - match: (name)\s*=\s*(?:(?:'([a-zA-Z]+[a-zA-Z0-9-]*)')|(?:"([a-zA-Z]+[a-zA-Z0-9-]*)")|([a-zA-Z]+[a-zA-Z0-9-]*))
+      captures:
+        1: entity.other.attribute-name.html
+        2: storage.type.js
+        3: storage.type.js
+        4: storage.type.js
+    - match: export|default|functional
+      scope: keyword.control.import-export.js
+    - match: '\s*>'
+      scope: storage.type.js
+      set: "Packages/HTML/HTML.sublime-syntax"
+      with_prototype:
+        - match: </x-tag>
+          scope: storage.type.js
+          pop: true
+        - match: "{{"
+          scope: constant.character.entity.named.html
+          push: expr
+
+
+  expr:
+    - match: "}}"
+      scope: constant.character.entity.named.html
+      pop: true
+    - include: Packages/JavaScript/JavaScript.sublime-syntax

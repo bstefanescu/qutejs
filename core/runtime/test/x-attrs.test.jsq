@@ -1,0 +1,133 @@
+import assert from 'assert';
+import {snapshot} from '@qutejs/test-utils';
+import window, {document} from '@qutejs/window';
+import Qute from '..';
+import { mountTest, runAfter } from './utils.js';
+
+<x-tag name='test-fn-attrs'>
+	<div>
+		<span x-attrs><slot/></span>
+		<span x-attrs='class, msg'>Include test</span>
+		<span x-attrs='!class msg'>Exclude test</span>
+	</div>
+</x-tag>
+
+<x-tag name='test-fn-root'>
+	<test-fn-attrs class={theClass} title='Some tooltip' msg='hello'>Hello!</test-fn-attrs>
+</x-tag>
+
+<x-tag name='func-comp'>
+    <div x-attrs='class'>
+        A <a x-attrs='!class'>functional</a> component
+    </div>
+</x-tag>
+
+<x-tag name='func-comp-wrapper'><func-comp x-attrs /></x-tag>
+<x-tag name='test-func-comp'><func-comp-wrapper class={theClass} title='Some tooltip' href='#action' /></x-tag>
+
+<x-tag name='vm-comp'>
+    <div x-attrs='class'>
+        A <a x-attrs='!class'>VM</a> component: {{someProp}}
+    </div>
+</x-tag>
+
+<x-tag name='vm-comp-wrapper'><vm-comp x-attrs /></x-tag>
+<x-tag name='test-vm-comp'><vm-comp-wrapper class={theClass} title='Some tooltip' href='#action' some-prop='the injected prop' /></x-tag>
+
+
+
+var TestFnRoot = Qute('test-fn-root', {
+	init() {
+		return {
+			theClass: 'the_class'
+		};
+	}
+});
+
+var TestFuncComp = Qute('test-func-comp', {
+	init() {
+		return {
+			theClass: 'the_class'
+		};
+	}
+});
+
+var TestVMComp = Qute('test-vm-comp', {
+	init() {
+		return {
+			theClass: 'the_class'
+		};
+	}
+});
+var VMComp = Qute('vm-comp', {
+	init() {
+		return {
+			someProp: 'the_value'
+		};
+	}
+});
+
+describe('x-attrs attribute', function() {
+
+	context('x-attrs works in DOM elements', function() {
+		var test = mountTest(TestFnRoot);
+		it('functional component is injecting x-attrs to nested elements', function() {
+			assert.equal(test.querySelectorAll('.the_class').length, 2);
+			assert.equal(test.querySelectorAll('.the_changed_class').length, 0);
+			snapshot('x-attrs-dom', test.innerHTML);
+		});
+
+		it('injected attributes are reactive', function(done) {
+			test.firstChild.__qute__.theClass = 'the_changed_class';
+			runAfter(function() {
+				assert.equal(test.querySelectorAll('.the_class').length, 0);
+				assert.equal(test.querySelectorAll('.the_changed_class').length, 2);
+				done();
+			});
+		});
+
+	});
+
+	context('x-attrs works on functional components', function() {
+		var test = mountTest(TestFuncComp);
+
+		it('functional component is injecting x-attrs to nested elements', function() {
+			assert.equal(test.querySelectorAll('.the_class').length, 1);
+			assert.equal(test.querySelectorAll('.the_changed_class').length, 0);
+			snapshot('x-attrs-func', test.innerHTML);
+		});
+
+		it('injected attributes are reactive', function(done) {
+			test.firstChild.__qute__.theClass = 'the_changed_class';
+			runAfter(function() {
+				assert.equal(test.querySelectorAll('.the_class').length, 0);
+				assert.equal(test.querySelectorAll('.the_changed_class').length, 1);
+				done();
+			});
+		});
+
+	});
+
+	context('x-attrs works on VM components', function() {
+
+		var test = mountTest(TestVMComp);
+
+		it('VM component is injecting x-attrs to nested elements', function() {
+			assert.equal(test.querySelectorAll('.the_class').length, 1);
+			assert.equal(test.querySelectorAll('.the_changed_class').length, 0);
+			snapshot('x-attrs-vm', test.innerHTML);
+		});
+
+		it('injected attributes are reactive', function(done) {
+			test.firstChild.__qute__.theClass = 'the_changed_class';
+			runAfter(function() {
+				assert.equal(test.querySelectorAll('.the_class').length, 0);
+				assert.equal(test.querySelectorAll('.the_changed_class').length, 1);
+				done();
+			});
+		});
+
+	});
+
+
+});

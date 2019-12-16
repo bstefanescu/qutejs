@@ -1,0 +1,49 @@
+import { document } from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+import css from './ellipsis.css';
+
+Qute.css(css);
+
+/*
+<x-tag name='loader-ellipsis' static>
+<div class="spinner">
+  <div class="bounce1"></div>
+  <div class="bounce2"></div>
+  <div class="bounce3"></div>
+</div>
+</x-tag>
+*/
+
+function updateStyle(div, color, size) {
+	var style = div.style;
+	if (color) style.backgroundColor = color;
+	if (size) {
+		style.width = size;
+		style.height = size;
+	}
+}
+
+export default Qute('spinner', function(r, xattrs) {
+	var color = xattrs && xattrs.color;
+	var size = xattrs && xattrs.size;
+
+	var loader = document.createElement('DIV');
+	loader.className = 'spinner';
+
+	var div = document.createElement('DIV');
+	updateStyle(div, color, size);
+	div.className = 'bounce1';
+	loader.appendChild(div);
+
+	div = document.createElement('DIV');
+	updateStyle(div, color, size);
+	div.className = 'bounce2';
+	loader.appendChild(div);
+
+	div = document.createElement('DIV');
+    updateStyle(div, color, size);
+	div.className = 'bounce3';
+	loader.appendChild(div);
+
+	return loader;
+})

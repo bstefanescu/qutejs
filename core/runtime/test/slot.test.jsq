@@ -1,0 +1,179 @@
+import assert from 'assert';
+import {snapshot} from '@qutejs/test-utils';
+import window, {document} from '@qutejs/window';
+import Qute from '..';
+import { mountTest } from './utils.js';
+
+<x-tag name='single-wrapper'>
+	<blockquote><slot/></blockquote>
+</x-tag>
+
+<x-tag name='single-wrapper-with-default'>
+	<blockquote><slot>Default content</slot></blockquote>
+</x-tag>
+
+
+<x-tag name='multi-wrapper'>
+	<div>
+		<h3><slot name='title'>The default title</slot></h3>
+		<div><slot name='content'>The default content</slot></div>
+		<div><slot name='optional'>The default optional content</slot></div>
+	</div>
+</x-tag>
+
+<x-tag name='my-title'>
+    <h3><slot/></h3>
+</x-tag>
+
+<x-tag name='my-content'>
+    <div class='content'><slot/></div>
+</x-tag>
+
+<x-tag name='my-panel'>
+    <div class='panel'>
+        <my-title>
+            <nested><slot name='title'/></nested>
+        </my-title>
+        <my-content>
+            <nested><slot name='content'/></nested>
+        </my-content>
+    </div>
+</x-tag>
+
+
+<x-tag name='test-single-wrapper'>
+	<div>
+		<single-wrapper>The <b>wrapped</b> content</single-wrapper>
+	</div>
+</x-tag>
+<x-tag name='test-single-wrapper-override'>
+	<div>
+		<single-wrapper-with-default>The <b>wrapped</b> content</single-wrapper-with-default>
+	</div>
+</x-tag>
+<x-tag name='test-single-wrapper-default'>
+	<div>
+		<single-wrapper-with-default>
+
+		</single-wrapper-with-default>
+	</div>
+</x-tag>
+<x-tag name='test-multi-wrapper'>
+	<div>
+		<multi-wrapper>
+			<nested name='title'>The <b>named</b> title</nested>
+			<nested name='content'>The <b>named</b> content</nested>
+		</multi-wrapper>
+	</div>
+</x-tag>
+<x-tag name='test-multi-wrapper-extra-content'>
+	<div>
+		<multi-wrapper>
+			some <b>ingored</b> content
+			<nested name='title'>The <b>named</b> title</nested>
+			<nested name='content'>The <b>named</b> content</nested>
+		</multi-wrapper>
+	</div>
+</x-tag>
+<x-tag name='test-multi-wrapper-override'>
+	<div>
+		<multi-wrapper>
+			<nested name='title'>The <b>named</b> title</nested>
+			<nested name='content'>The <b>named</b> content</nested>
+			<nested name='optional'>The <b>named</b> optional content</nested>
+		</multi-wrapper>
+	</div>
+</x-tag>
+
+<x-tag name='test-nested-context'>
+	<div>
+		<multi-wrapper>
+			<nested name='title'>The <b>{{title}}</b> title</nested>
+		</multi-wrapper>
+	</div>
+</x-tag>
+
+
+<x-tag name='test-nested-propagation'>
+	<my-panel>
+    	<nested name='title'>{{title}}</nested>
+    	<nested name='content'>The panel content</nested>
+	</my-panel>
+</x-tag>
+
+
+<x-tag name='test-variable-content'>
+	<my-panel>
+    	<nested name='title' x-html='title' />
+    	<nested name='content'>The panel content</nested>
+	</my-panel>
+</x-tag>
+
+var TestSingleWrapper = Qute('test-single-wrapper');
+var TestSingleWrapperOverride = Qute('test-single-wrapper-override');
+var TestSingleWrapperDefault = Qute('test-single-wrapper-default');
+var TestMultiWrapper = Qute('test-multi-wrapper');
+var TestMultiWrapperExtraContent = Qute('test-multi-wrapper-extra-content');
+var TestMultiWrapperOverride = Qute('test-multi-wrapper-override');
+var TestNestedContext = Qute('test-nested-context', {
+	get title() {
+		return "The Context Title!";
+	}
+});
+var TestNestedPropagation = Qute('test-nested-propagation', {
+	get title() {
+		return "The panel title";
+	}
+});
+var TestVariableContent = Qute('test-variable-content', {
+	get title() {
+		return "The panel title";
+	}
+});
+
+describe('Slot Directive', function() {
+	it('should wrap single content', function() {
+		var root = mountTest(TestSingleWrapper);
+		snapshot('slot-should-wrap-single-content', root.innerHTML, true);
+	});
+	it('should wrap single content and override defaults', function() {
+		var root = mountTest(TestSingleWrapperOverride);
+		snapshot('slot-should-wrap-single-content-and-override-defaults', root.innerHTML, true);
+	});
+	it('should wrap single content and use defaults', function() {
+		var root = mountTest(TestSingleWrapperDefault);
+		snapshot('slot-should-wrap-single-content-and-use-defaults', root.innerHTML, true);
+	});
+
+	it('should wrap multi-content', function() {
+		var root = mountTest(TestMultiWrapper);
+		snapshot('slot-should-wrap-multi-content', root.innerHTML, true);
+	});
+
+	// the same as before
+	it('should ignore non "nested" content', function() {
+		var root = mountTest(TestMultiWrapperExtraContent);
+		snapshot('slot-should-ignoree-non-nested-content', root.innerHTML, true);
+	});
+
+	it('should wrap multi-content and override defaults', function() {
+		var root = mountTest(TestMultiWrapperOverride);
+		snapshot('slot-should-wrap-multi-content-and-override-defaults', root.innerHTML, true);
+	});
+
+	it('should use caller context on nested content', function() {
+		var root = mountTest(TestNestedContext);
+		snapshot('slot-should-use-caller-context-on-nested-content', root.innerHTML, true);
+	});
+
+	it('should propagate to wrapped component', function() {
+		var root = mountTest(TestNestedPropagation);
+		snapshot('slot-should-propagate-to-wrapped-component', root.innerHTML, true);
+	});
+
+	it('should inject variable content', function() {
+		var root = mountTest(TestVariableContent);
+		snapshot('slot-should-inject-variable-content', root.innerHTML, true);
+	});
+
+});

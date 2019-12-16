@@ -1,0 +1,1 @@
+<div> <span title="Some tooltip" msg="hello" class="the_class">Hello!</span> <span msg="hello" class="the_class">Include test</span> <span title="Some tooltip">Exclude test</span> </div>

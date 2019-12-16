@@ -1,0 +1,83 @@
+
+import assert from 'assert';
+import {snapshot} from '@qutejs/test-utils';
+import window, {document} from '@qutejs/window';
+import Qute from '..';
+import { createMountPoint } from './utils.js';
+
+
+<x-tag name='entities'>
+	<div>{{htmlCode}}</div>
+</x-tag>
+
+var Entities = Qute('entities', {
+	init: function() {
+		this.htmlCode = '<a href="#">John & Doe</a>';
+	}
+});
+
+<x-tag name='symbols'>
+	<div>
+	<div>Hello {{this.firstName}} {{this.lastName}}!</div>
+	<div>{{JSON.stringify(this)}}</div>
+	</div>
+</x-tag>
+
+
+var Symbols = Qute('symbols', {
+	init: function() {
+		this.firstName = 'John';
+		return {
+			lastName: 'Doe'
+		};
+	}
+});
+
+
+<x-tag name='root'>
+	<div>
+	<div>Hello {{firstName}} {{lastName}}!</div>
+	<div>Hello {{this.firstName}} {{this.lastName}}!</div>
+	<div>Hello {{firstName + ' ' + lastName}}!</div>
+	<div>Hello {{fullName}}!</div>
+	<div>Hello {{getFullName()}}!</div>
+	</div>
+</x-tag>
+
+
+var Root = Qute('root', {
+	get fullName() {
+		return this.firstName + ' ' + this.lastName;
+	},
+	getFullName: function() {
+		return this.firstName + ' ' + this.lastName;
+	},
+	init: function() {
+		this.firstName = 'John';
+		return {
+			lastName: 'Doe'
+		};
+	}
+});
+
+
+describe('Mustache expressions', function() {
+	var root = createMountPoint('root');
+	new Root().mount(root);
+	it('should resolve functions, properties and getters', function() {
+		snapshot('expr-resolve', root.innerHTML, true);
+	});
+
+	var symbols = createMountPoint('symbols');
+	new Symbols().mount(symbols);
+	it('should preserve built-in symbols ', function() {
+		snapshot('expr-symbols', symbols.innerHTML, true);
+	});
+
+	var entities = createMountPoint('symbols');
+	new Entities().mount(entities);
+	it('should escape HTML entities ', function() {
+		snapshot('expr-entities', entities.innerHTML, true);
+	});
+
+});

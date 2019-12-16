@@ -1,0 +1,164 @@
+import assert from 'assert';
+import {snapshot} from '@qutejs/test-utils';
+import window, {document} from '@qutejs/window';
+import Qute from '..';
+import { mountTest, runAfter } from './utils.js';
+
+<x-tag name='test-style-0'>
+	<span style={"max-width:300px;flex:"+theFlex}></span>
+</x-tag>
+
+<x-tag name='test-style-1'>
+	<span x-style='theStyle'></span>
+</x-tag>
+
+<x-tag name='test-style-2'>
+	<div x-style='getStyle()'>Is Visible</div>
+</x-tag>
+
+<x-tag name='test-style-3'>
+	<span x-style='{textDecoration: "underline", maxWidth: "100px", flex: 1}'></span>
+</x-tag>
+
+<x-tag name='test-style-4'>
+	<span x-style='{maxWidth: "100px"}' style='max-width: 200px; max-height: 200px'></span>
+</x-tag>
+
+
+<x-tag name='test-style-5'>
+	<div x-style='[{maxWidth: "100px", maxHeight: "100px"}, {flex: 1}, {maxHeight:"300px"}]'>Is Visible</div>
+</x-tag>
+
+var Test0 = Qute('test-style-0', {
+	init() {
+		return {
+			theFlex: 1
+		}
+	}
+})
+
+var Test1 = Qute('test-style-1', {
+	init() {
+		return {
+			theStyle: {
+				maxWidth: '300px',
+				flex: 1,
+				border: '1px solid red'
+			}
+		}
+	}
+});
+
+var Test2 = Qute('test-style-2', {
+	getStyle() {
+		return {
+			maxWidth: '300px',
+			flex: 1,
+			border: '1px solid red'
+		}
+	}
+});
+
+var Test3 = Qute('test-style-3');
+var Test4 = Qute('test-style-4');
+var Test5 = Qute('test-style-5');
+
+// vm components test
+<x-tag name='test-style-vm'>
+    <div><slot/></div>
+</x-tag>
+
+<x-tag name='test-style-vm-root'>
+    <test-style-vm x-style="{textAlign: align}">Hello!</test-style-vm>
+</x-tag>
+
+
+Qute('test-style-vm');
+var TestStyleVM = Qute('test-style-vm-root', {
+	init() {
+    	return {align: 'center'};
+	}
+});
+
+
+
+
+describe('x-style attribute', function() {
+
+	it('style set using HTML style attribute is reactive', function(done) {
+		var test1 = mountTest(Test0);
+		assert.equal(test1.firstChild.style.maxWidth, '300px');
+		assert.equal(test1.firstChild.style.flex, 1);
+
+		test1.firstChild.__qute__.theFlex = 2;
+		test1.firstChild.__qute__.update();
+		runAfter(function() {
+			assert.equal(test1.firstChild.style.maxWidth, '300px');
+			assert.equal(test1.firstChild.style.flex, 2);
+			done();
+		});
+
+	});
+
+
+	it('style set from property is reactive', function(done) {
+		var test1 = mountTest(Test1);
+		assert.equal(test1.firstChild.style.maxWidth, '300px');
+		assert.equal(test1.firstChild.style.flex, 1);
+		assert.equal(test1.firstChild.style.border, '1px solid red');
+
+		test1.firstChild.__qute__.theStyle.maxWidth = '100px';
+		test1.firstChild.__qute__.update();
+		runAfter(function() {
+			assert.equal(test1.firstChild.style.maxWidth, '100px');
+			assert.equal(test1.firstChild.style.flex, 1);
+			assert.equal(test1.firstChild.style.border, '1px solid red');
+			done();
+		});
+
+	});
+
+	it('style can be set from model function', function(done) {
+		var test2 = mountTest(Test2);
+		assert.equal(test2.firstChild.style.maxWidth, '300px');
+		assert.equal(test2.firstChild.style.flex, 1);
+		assert.equal(test2.firstChild.style.border, '1px solid red');
+		done();
+	});
+
+	it('style can be set from inline object', function(done) {
+		var test3 = mountTest(Test3);
+		assert.equal(test3.firstChild.style.maxWidth, '100px');
+		assert.equal(test3.firstChild.style.flex, 1);
+		assert.equal(test3.firstChild.style.textDecoration, 'underline');
+		done();
+	});
+
+	it('overrides the HTML style attribute', function(done) {
+		var test4 = mountTest(Test4);
+		assert.equal(test4.firstChild.style.maxWidth, '100px');
+		assert.equal(test4.firstChild.style.maxHeight, '200px');
+		done();
+	});
+
+	it('style can be set from array', function(done) {
+		var test5 = mountTest(Test5);
+		assert.equal(test5.firstChild.style.maxWidth, '100px');
+		assert.equal(test5.firstChild.style.maxHeight, '300px');
+		assert.equal(test5.firstChild.style.flex, 1);
+		done();
+	});
+
+	it('works on VM components', function(done) {
+		var test = mountTest(TestStyleVM);
+		assert.equal(test.firstChild.style.textAlign, 'center');
+
+		test.firstChild.__qute__.align = 'left';
+		runAfter(function() {
+			assert.equal(test.firstChild.style.textAlign, 'left');
+			done();
+		});
+
+	});
+
+});

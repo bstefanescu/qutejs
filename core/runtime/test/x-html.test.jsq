@@ -1,0 +1,95 @@
+import assert from 'assert';
+import {snapshot} from '@qutejs/test-utils';
+import window, {document} from '@qutejs/window';
+import Qute from '..';
+import { mountTest, runAfter } from './utils.js';
+
+<x-tag name='test-html'>
+	<div x-html='content'/>
+</x-tag>
+
+<x-tag name='test-static-html'>
+	<div x-html>
+		Some <b>static</b> HTML
+	</div>
+</x-tag>
+
+<x-tag name='test-static-markdown'>
+	<div x-markdown>
+		# Header
+
+		Some markdown
+	</div>
+</x-tag>
+
+<x-tag name='test-static-text'>
+	<div x-content-text>
+		bla bla
+	</div>
+</x-tag>
+
+var TestHtml = Qute('test-html', {
+	init() {
+		return {
+			content: "<div id='theDiv'>Some <b>HTML</b> content</div>"
+		}
+	}
+});
+var TestStaticHtml = Qute('test-static-html');
+var TestStaticMarkdown = Qute('test-static-markdown');
+var TestStaticText = Qute('test-static-text');
+
+
+describe('x-html attribute', function() {
+	var test = mountTest(TestHtml);
+
+	it('should render variable HTML content', function() {
+		var theDiv = test.querySelector('#theDiv');
+		assert.equal(theDiv.innerHTML, 'Some <b>HTML</b> content');
+		var theB = theDiv.querySelector('b');
+		assert.equal(theB.innerHTML, 'HTML');
+	});
+
+	it('should render nothing on falsy', function() {
+		test.firstChild.__qute__.content = null;
+		runAfter(function() {
+			assert.ok(!test.firstChild.firstChild);
+		});
+	});
+
+	var testStatic = mountTest(TestStaticHtml);
+	it('should render static HTML content', function() {
+		assert.equal(testStatic.firstChild.innerHTML.trim(), "Some <b>static</b> HTML");
+		assert.equal(testStatic.firstChild.querySelector("b").innerHTML, "static");
+	});
+
+});
+
+describe('x-markdown attribute', function() {
+	Qute.converters.markdown = function(content) {
+		// we don't use a real convevter for testing
+		assert.ok(content.trim().startsWith('# Header'));
+		return "<h1>Header</h1><p>Some markdown</p>";
+	}
+
+	var test = mountTest(TestStaticMarkdown);
+
+	it('should render static markdown content', function() {
+		assert.equal(test.firstChild.innerHTML.trim(), "<h1>Header</h1><p>Some markdown</p>");
+		assert.equal(test.firstChild.querySelector("h1").innerHTML, "Header");
+	});
+});
+
+describe('x-content attribute', function() {
+	Qute.converters.text = function(content) {
+		assert.equal(content.trim(), 'bla bla');
+		return "Some <b>generated</b> HTML";
+	}
+
+	var test = mountTest(TestStaticText);
+
+	it('should render static markdown content', function() {
+		assert.equal(test.firstChild.innerHTML.trim(), "Some <b>generated</b> HTML");
+		assert.equal(test.firstChild.querySelector("b").innerHTML, "generated");
+	});
+});

@@ -1,0 +1,219 @@
+import assert from 'assert';
+import {snapshot} from '@qutejs/test-utils';
+import window, {document} from '@qutejs/window';
+import Qute from '..';
+import { mountTest, runAfter } from './utils.js';
+
+<x-tag name='test-class-0'>
+	<span class = { (isActive ? "active " : "")+"link" }></span>
+</x-tag>
+
+<x-tag name='test-class-1'>
+	<span x-class='["active", "link", null]'></span>
+</x-tag>
+
+<x-tag name='test-class-2'>
+	<span x-class='{"active": isActive, "link": true}'></span>
+</x-tag>
+
+<x-tag name='test-class-3'>
+	<span x-class='theClass'></span>
+</x-tag>
+
+<x-tag name='test-class-5'>
+	<span class='link' x-class='{active: isActive}'></span>
+</x-tag>
+
+<x-tag name='test-class-6'>
+	<span x-class='[ isActive && "active", "link" ]'></span>
+</x-tag>
+
+var Test0 = Qute('test-class-0', {
+	init() {
+		return {
+			isActive: true
+		}
+	}
+});
+
+var Test1 = Qute('test-class-1');
+
+
+var Test2 = Qute('test-class-2', {
+	init() {
+		return {
+			isActive: true
+		}
+	}
+});
+
+var Test3 = Qute('test-class-3', {
+	init() {
+		return {
+			theClass: { active: true, link: true }
+		}
+	}
+});
+
+// we need to use computed properties to compute dynamic class bindings
+// Note that the array notation [this.isActive && 'active', 'link'] is not reactive (it will work only for the first rendering)
+var Test4 = Qute('test-class-3', {
+	get theClass() {
+		return [ {active: this.isActive}, "link" ];
+	},
+	init() {
+		return {
+			isActive: true
+		}
+	}
+});
+
+var Test5 = Qute('test-class-5', {
+	init() {
+		return {
+			isActive: true
+		}
+	}
+});
+
+var Test6 = Qute('test-class-6', {
+	init() {
+		return {
+			isActive: true
+		}
+	}
+});
+
+// x-class on components
+
+<x-tag name='test-x-class-vm'>
+    <div><slot/></div>
+</x-tag>
+
+<x-tag name='test-x-class-on-vm-root'>
+    <test-x-class-vm x-class='{active: selected}'>Hello!</test-x-class-vm>
+</x-tag>
+
+
+Qute('test-x-class-on-vm-root');
+var TestXClassOnVM = Qute('test-x-class-on-vm-root', {
+    init() {
+    	return {
+    		selected: true
+    	}
+    }
+});
+
+
+
+describe('x-class attribute', function() {
+
+	it('dynamic class set using class attribute', function(done) {
+		var test = mountTest(Test0);
+		var cl = test.firstChild.classList;
+		assert.ok(cl.contains('active'));
+		assert.ok(cl.contains('link'));
+
+		test.firstChild.__qute__.isActive = false;
+		test.firstChild.__qute__.update();
+		runAfter(function() {
+			assert.ok(!cl.contains('active'));
+			assert.ok(cl.contains('link'));
+			done();
+		});
+	});
+
+	it('class set from inline array', function() {
+		var test = mountTest(Test1);
+		var cl = test.firstChild.classList;
+		assert.ok(cl.contains('active'));
+		assert.ok(cl.contains('link'));
+	});
+
+	it	('class set from inline object and is reactive', function(done) {
+		var test = mountTest(Test2);
+		var cl = test.firstChild.classList;
+		assert.ok(cl.contains('active'));
+		assert.ok(cl.contains('link'));
+
+		test.firstChild.__qute__.isActive = false;
+		runAfter(function() {
+			assert.ok(!cl.contains('active'));
+			assert.ok(cl.contains('link'));
+			done();
+		});
+
+	});
+
+	it('class set from property object and is reactive', function(done) {
+		var test = mountTest(Test3);
+		var cl = test.firstChild.classList;
+		assert.ok(cl.contains('active'));
+		assert.ok(cl.contains('link'));
+
+		test.firstChild.__qute__.theClass.active = false;
+		test.firstChild.__qute__.update();
+		runAfter(function() {
+			assert.ok(!cl.contains('active'));
+			assert.ok(cl.contains('link'));
+			done();
+		});
+	});
+
+	it('class set from array / object mix and is reactive', function(done) {
+		var test = mountTest(Test4);
+		var cl = test.firstChild.classList;
+		assert.ok(cl.contains('active'));
+		assert.ok(cl.contains('link'));
+
+		test.firstChild.__qute__.isActive = false;
+		runAfter(function() {
+			assert.ok(!cl.contains('active'));
+			assert.ok(cl.contains('link'));
+			done();
+		});
+	});
+
+
+	it('using both class and x-class', function(done) {
+		var test = mountTest(Test5);
+		var cl = test.firstChild.classList;
+		assert.ok(cl.contains('active'));
+		assert.ok(cl.contains('link'));
+
+		test.firstChild.__qute__.isActive = false;
+		runAfter(function() {
+			assert.ok(!cl.contains('active'));
+			assert.ok(cl.contains('link'));
+			done();
+		});
+	});
+
+	it('using dynamic array items is not reactive', function(done) {
+		var test = mountTest(Test6);
+		var cl = test.firstChild.classList;
+		assert.ok(cl.contains('active'));
+		assert.ok(cl.contains('link'));
+
+		test.firstChild.__qute__.isActive = false;
+		runAfter(function() {
+			assert.ok(cl.contains('active'));
+			assert.ok(cl.contains('link'));
+			done();
+		});
+	});
+
+	it('works on vm components', function(done) {
+		var test = mountTest(TestXClassOnVM);
+		var cl = test.firstChild.classList;
+		assert.ok(cl.contains('active'));
+
+		test.firstChild.__qute__.selected = false;
+		runAfter(function() {
+			assert.ok(!cl.contains('active'));
+			done();
+		});
+	});
+
+
+});

@@ -1,0 +1,1 @@
+<div> <!--[if]--> <div id="if-true">Hello John</div> <!--[/if]--> <!--[if]--> <div id="if-else-true">Hello John</div> <!--[/if]--> </div>

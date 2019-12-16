@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<title>Qute.js - A Javascript Component Model for the DOM</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+
+		<link rel='stylesheet' href='./markdown.css'>
+		<link href="https://fonts.googleapis.com/css?family=Raleway|Source+Sans+Pro|Ubuntu&display=swap" rel="stylesheet">
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css" integrity="sha256-77qGXu2p8NpfcBpTjw4jsMeQnz0vyh74f5do0cWjQ/Q=" crossorigin="anonymous" />
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js" integrity="sha256-HWJnMZHGx7U1jmNfxe4yaQedmpo/mtxWSIXvcJkLIf4=" crossorigin="anonymous" data-manual></script>
+
+		<script src="https://kit.fontawesome.com/db2e085d44.js"></script>
+		<!--link rel="stylesheet" href="qute-modal.css"/-->
+		<!--link ref='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/foundation/6.5.3/css/foundation.min.css'/-->
+
+
+		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+		<script type="text/javascript" src='../dev/qute-dev-all.js'></script>
+
+		<style>
+			body{
+				padding: 0;
+				margin: 0;
+				/*font-family: "Lucida Sans", sans-serif;*/
+				/*font-family: 'Raleway', sans-serif;*/
+				/*font-family: 'Ubuntu', sans-serif;*/
+				/*font-family: 'Source Sans Pro', sans-serif;*/
+				/*font-size: 12pt;*/
+			}
+
+			.topbar {
+				position: fixed;
+				left: 0;
+				top: 0;
+				right: 0;
+				height: 45px;
+				background: #2c3840;
+				color: #e6e6e6;
+				line-height: 31px;
+				padding: 8px 20px;
+				z-index: 1000;
+			}
+
+			.logo {
+				font-weight: bold;
+				font-size: 150%;
+			}
+
+			.topbar a, .topbar span {
+				color: #e6e6e6;
+			}
+			.topbar a:hover {
+				color: white;
+				text-decoration:none;
+			}
+			.topbar a:focus {
+				color: white;
+				text-decoration:none;
+			}
+
+			.sidebar {
+				position: fixed;
+				left: 0;
+				top: 45px;
+				bottom: 0;
+				width:20%;
+				background: #f7f7f7;
+				border-right: #e7e7e7;
+				padding: 10px 20px;
+				overflow-y: scroll;
+			}
+
+			.main {
+				margin-top: 55px;
+				margin-left: 20%;
+				padding-left: 20px;
+				padding-right: 20px;
+				padding-bottom: 10px;
+			}
+
+			ul.toc {
+				list-style-type: none;
+				padding:0;
+				margin:0;
+			}
+
+			.toc-section {
+				margin-bottom: 6px;
+			}
+
+			.toc-section > a {
+				display: block;
+				font-weight: 500;
+				font-size: 110%;
+				cursor: pointer;
+				text-decoration: none;
+				padding: 2px 0;
+				color: #337ab7;
+			}
+
+			.toc-section > a:hover {
+				text-decoration: none;
+				color: #23527c;
+			}
+
+			.toc-items > ul {
+				list-style-type: none;
+				padding:0 0 0 1em;
+				margin:0;
+			}
+
+			.toc-section > .toc-items.expanded {
+				height: auto;
+			}
+
+			.toc-section > .toc-items {
+				position: relative;
+				overflow-y: hidden;
+				height: 0px;
+
+				-webkit-transition: flex 0.3s ease-out;
+				-moz-transition: flex 0.3s ease-out;
+				-ms-transition: flex 0.3s ease-out;
+				transition: flex 0.3s ease-out;
+			}
+
+			.toc-item {
+				padding: 1px 0;
+			}
+
+			.toc-item > a {
+				color: #717171;
+			}
+
+			.toc-item > a:hover {
+				text-decoration: none;
+				color: #337ab7;
+			}
+
+			.toc-item > a:focus {
+				text-decoration: none;
+			}
+
+			li.toc-item.active > a {
+				color: #337ab7;
+			}
+
+			body {
+				font-size: 14px;
+				color: #333;
+			}
+		</style>
+
+	</head>
+	<body>
+		<div id='app'></div>
+		<div id='xtoc'></div>
+
+		<script id='templates' type='text/plain'>
+
+			<x-tag name='toc-item'>
+				<li class='toc-item' :id='"toc_item:/"+$attrs.href'>
+					<a :href='$attrs.href' x-html='$attrs.title'></a>
+				</li>
+			</x-tag>
+
+			<x-tag name='toc-section'>
+				<li class='toc-section'>
+					<a href='#' x-html='$attrs.title'></a>
+					<div class='toc-items' x-class='{expanded: $attrs.expand}'>
+						<ul>
+						<for value='item in $attrs.items'>
+							<if value='item.items'>
+								<toc-section :title='item.title' :items='item.items' :expand='item.expand' />
+							<else/>
+								<toc-item :href='item.href' :title='item.title' />
+							</if>
+						</for>
+						</ul>
+					</div>
+				</li>
+			</x-tag>
+
+			<x-tag name='toc'>
+			<ul class='toc'>
+				<for value='item in $attrs.items'>
+					<if value='item.items'>
+						<toc-section :title='item.title' :items='item.items' :expand='item.expand' />
+					<else/>
+						<toc-item :href='item.href' :title='item.title' />
+					</if>
+				</for>
+			</ul>
+			</x-tag>
+
+			<x-tag name='app'>
+			<div class='app'>
+				<div class='topbar clearfix'>
+					<div class='pull-left logo'>Qute.js</div>
+					<div class='pull-right'>
+						<a href='../playground/index.html' target='_blank'>playground</a>
+						/
+						<a href='https://github.com/bstefanescu/qutejs' target='_blank'>github</a>
+						/
+						<a href='../download' target='_blank'>download</a>
+					</div>
+				</div>
+				<div class='sidebar'>
+					<toc :items='toc' @select='openTocItem' x-channel='toc' />
+				</div>
+				<div class='main'>
+					<if docPageContent>
+						<div x-html='docPageContent' class='markdown-body' />
+					<else>
+						<spinner/>
+					</if>
+				</div>
+			</div>
+
+			</x-tag>
+
+		</script>
+		<script>
+
+			function fetchPage(url, cb) {
+			  	var xhttp = new XMLHttpRequest();
+			  	xhttp.onreadystatechange = function() {
+			    	if (this.readyState == 4) {
+			    		cb(this.responseText, this.status);
+			    	}
+			  	};
+			  	xhttp.open("GET", url, true);
+			  	xhttp.send();
+			}
+
+			Qute.converters.markdown = marked;
+			Qute.load('#templates');
+
+			var TOC = [
+				{ title: 'Overview', expand: true, items: [
+					{ title: 'Introduction', href: 'introduction'},
+					{ title: 'Getting Started', href: 'getting-started'},
+					{ title: 'Templates', href: 'templates'},
+					{ title: 'Components', href: 'components'},
+					{ title: 'JSQ File Format', href: 'advanced/jsq'},
+				]},
+
+				{ title: 'Component Model', expand: true, items: [
+					{ title: 'Properties', href: 'model/properties'},
+					{ title: 'Watchers', href: 'model/watchers'},
+					{ title: 'Events', href: 'model/events'},
+					{ title: 'Life Cycle', href: 'model/lifecycle'},
+					{ title: 'Context', href: 'model/context'},
+					{ title: 'Message Bus', href: 'model/bus'},
+					{ title: 'Class Syntax', href: 'model/class'},
+				]},
+				{ title: 'Directives', expand: true, items: [
+					{ title: 'if', href: 'directives/if' },
+					{ title: 'for', href: 'directives/for' },
+					{ title: 'slot', href: 'directives/slot' },
+					{ title: 'nested', href: 'directives/nested' },
+					{ title: 'tag', href: 'directives/tag' },
+					{ title: 'view', href: 'directives/view' },
+
+					{ title: 'x-class', href: 'attributes/x-class' },
+					{ title: 'x-style', href: 'attributes/x-style' },
+					{ title: 'x-show', href: 'attributes/x-show' },
+					{ title: 'x-for', href: 'attributes/x-for' },
+					{ title: 'x-toggle', href: 'attributes/x-toggle' },
+					{ title: 'x-html', href: 'attributes/x-html' },
+					{ title: 'x-markdown', href: 'attributes/x-markdown' },
+					{ title: 'x-attrs', href: 'attributes/x-attrs' },
+					{ title: 'x-listeners', href: 'attributes/x-listeners' },
+					{ title: 'x-channel', href: 'attributes/x-channel' },
+					{ title: 'x-change', href: 'attributes/x-change' },
+					{ title: 'x-bind', href: 'attributes/x-bind' },
+					{ title: 'x-on', href: 'attributes/x-on' }
+				]},
+				{ title: 'Advanced', expand: true, items: [
+					{ title: 'Routing', href: 'advanced/routing'},
+					{ title: 'Using Existing Libraries', href: 'advanced/using-existing-libs'},
+					{ title: 'Qute API', href: 'advanced/api'},
+				]},
+				{ title: 'Basic Components', expand: true, items: [
+					{ title: 'modal', href: 'components/modal' },
+					{ title: 'popup', href: 'components/popup' },
+					{ title: 'spinner', href: 'components/spinner' },
+				]}
+
+			]
+
+			function toggleSection(target) {
+				var items = target.querySelector('.toc-items');
+				items.classList.toggle('expanded');
+			}
+			function expandSection(target) {
+				var items = target.querySelector('.toc-items');
+				items.classList.add('expanded');
+			}
+
+			function highlightItem(root, target) {
+				//console.log('HIGHLIGHT', target);
+				var active = root.querySelector('li.toc-item.active');
+				active && active.classList.remove('active');
+				target.classList.add('active');
+			}
+			var Toc = new Qute('toc').on('click', 'a', function(e) {
+					var parentNode = e.target.parentNode;
+					if (parentNode.matches('li.toc-section')) {
+						var href = e.target.getAttribute('href');
+						if (href && href !== '#') {
+							this.emit('select', href);
+						} else {
+							toggleSection(parentNode);
+						}
+					} else {
+						highlightItem(this.$el, parentNode);
+						this.emit('select', e.target.getAttribute('href'));
+					}
+					return false;
+			}).channel(function(msg, data) {
+				if (msg === 'select') {
+					var item = document.getElementById('toc_item:'+data);
+					if (item) {
+						var cl = item.classList;
+						if (!cl.contains('active')) {
+							var section = item.closest('.toc-section');
+							section && expandSection(section);
+							highlightItem(this.$el, item);
+							item.scrollIntoView();
+						}
+					}
+				}
+			});
+
+			var App = new Qute('app', {
+				get docPageContent() {
+					return this.docPage ? this.docPages[this.docPage] : '';
+				},
+				init: function() {
+					var self = this;
+					this.docPages = {};
+					this.toc = TOC;
+					this.router = new Qute.Router({
+						'*': function(path) {
+							self.updateDocPage(path);
+						},
+						'/': 'introduction'
+					}).start();
+
+					this.router.onChange(function(path) {
+						self.postAsync('toc', 'select', path);
+					});
+//TODO
+					this.subscribe('app#page', function(page) {
+						this.router.navigate(page);
+						//this.updateDocPage(page); // no need to use self
+					});
+					//this.updateDocPage('overview')
+				},
+				connected: function() {
+					function runSnippet(btn) {
+						var code = btn.closest('pre').querySelector('code.language-jsq').textContent;
+						localStorage.setItem('qute.playground.snippet', code);
+						window.open("../playground/index.html", 'qute.playground');
+					}
+					this.$on('click', 'button.run-snippet', function(e) {
+						runSnippet(e.target);
+						return false;
+					});
+					this.$on('click', 'button.run-snippet > i', function(e) {
+						runSnippet(e.target.parentNode);
+						return false;
+					});
+				},
+				updateDocPage: function(page) {
+					var pageKey = 'docs/'+page+'.md';
+					if (this.docPage === pageKey) return;
+					var self = this;
+					this.docPage = pageKey;
+					this.update(); // force an update - the spinner will be shown if no content is available
+					Qute.UpdateQueue.runAfter(function() {
+						createRunSnippets();
+					});
+					if (!(pageKey in this.docPages)) {
+						//console.log('FETCH',pageKey)
+						fetchPage(pageKey, function(data, status) {
+							self.docPages[pageKey] = marked(data);
+							self.update(); // force an update
+							Qute.UpdateQueue.runAfter(function() {
+								createRunSnippets();
+							});
+						});
+					}
+				},
+				openTocItem: function(e) {
+					this.router.navigate(e.detail);
+				}
+			});
+			new App().mount('app');
+
+
+			function parseJsq(text, textHandler, tagHandler) {
+				var START_TAG = /\s*<\s*(?:(x-tag)|(x-style))(?:\s[^>]*)?>/;
+				var END_XTAG = /\s*<\/\s*x-tag\s*>/;
+				var END_STYLE = /\s*<\/\s*x-style\s*>/;
+
+				while (text) {
+					var m = START_TAG.exec(text);
+					if (!m) break;
+					var i = m.index, l = m[0].length;
+					textHandler(text.substring(0, i));
+					var tag, stag = m[0];
+					text = text.substring(i+l);
+					if (m[1]) { // x-tag
+						m = END_XTAG.exec(text);
+						tag = 'x-tag';
+					} else if (m[2]) { // style
+						m = END_STYLE.exec(text);
+						tag = 'x-style';
+					} else { // cannot happen
+						throw new Error('cannot happen');
+					}
+					if (m) {
+						var i = m.index, l = m[0].length;
+						tagHandler(tag, stag, text.substring(0, i), text.substring(i, i+l));
+						text = text.substring(i+l);
+					} else { // unclosed tag?
+						console.log('unclosed tag', tag);
+						tagHandler(tag, stag, text, '');
+						text = null;
+					}
+				}
+				if (text) {
+					textHandler(text);
+				}
+			}
+
+			function highlighJsq(code) {
+				var out = '';
+				parseJsq(code, function(text) {
+					if (text.trim()) {
+						out += Prism.highlight(text, Prism.languages.javascript, 'javascript');
+					} else {
+						out += text;
+					}
+				}, function(tag, start, text, end) {
+					if (tag === 'x-tag') {
+						out += Prism.highlight(start+text+end, Prism.languages.markup, 'xml');
+					} else if (tag === 'x-style') {
+						out += Prism.highlight(start+text+end, Prism.languages.markup, 'xml');
+					}
+				});
+				return out;
+			}
+
+			function createRunSnippets() {
+				var codeEls = document.querySelectorAll('pre > code');
+				for (var i=0,l=codeEls.length; i<l; i++) {
+					var codeEl = codeEls[i];
+					if (codeEl.className === 'language-jsq') {
+						createRunSnippetButton(codeEl);
+						codeEl.innerHTML = highlighJsq(codeEl.textContent);
+					} else if (codeEl.className === 'language-jsq-norun') {
+						codeEl.innerHTML = highlighJsq(codeEl.textContent);
+					} else {
+						Prism.highlightElement(codeEl);
+					}
+
+				}
+			}
+			function createRunSnippetButton(codeEl) {
+				var snippet = codeEl.textContent;
+				var pre = codeEl.parentNode;
+				pre.style.position = 'relative';
+				var btn = document.createElement('button');
+				btn.className = 'btn btn-success run-snippet';
+				var btnStyle = btn.style;
+				btnStyle.position = 'absolute';
+				btnStyle.top = '10px';
+				btnStyle.right = '20px';
+				btn.innerHTML = "<i class='far fa-play-circle'></i> Run";
+				btn.setAttribute('title', 'Run snippet in Qute Playground');
+				pre.appendChild(btn);
+			}
+
+		</script>
+	</body>
+</html>

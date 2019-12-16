@@ -1,0 +1,16 @@
+
+import Qute from '../..';
+import './fn-item.jsq';
+import './vm-item.jsq';
+import './js-item.js';
+
+<x-tag name='root'>
+	<ul>
+		<vm-item text='ViewModel' href='#vm'/>
+		<fn-item text='Functional' href='#functional'/>
+		<js-item text='Javascript' href='#js'/>
+	</ul>
+</x-tag>
+
+
+export default Qute('root');

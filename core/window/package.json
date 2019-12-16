@@ -1,0 +1,24 @@
+{
+  "name": "@qutejs/window",
+  "version": "0.9.0",
+  "keywords": [],
+  "author": "Bogdan Stefanescu <bogdan@quandora.com>",
+  "license": "MIT",
+  "description": "Browser window abstraction for Qute projects",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "files": [
+    "lib"
+  ],
+  "homepage": "https://qutejs.org",
+  "repository": {
+    "url": "https://github.com/bstefanescu/qute",
+    "type": "git"
+  },
+  "dependencies": {
+    "window": "^4.2.6"
+  },
+  "build": {
+    "config": "lib"
+  }
+}

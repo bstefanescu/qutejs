@@ -1,0 +1,25 @@
+0. MOVE qub outside
+1. remove 'm' from compiler vars .. use '$$' for current model? ($ is the rendering instance)
+2. impl if / else if / else
+3. Be able to use {} for special expr attributes (and not only '' and "")
+4. Be able to declare private templates in JSQ files?
+5. Should we support something like x-html but for jsq?
+
+Tests:
+- x-toggle
+- x-bind: and x-on: and :attr
+- event listener & emit & x-listeners
+- watch
+- properties binding
+- expressions
+- styles
+- lifecycle
+- context
+- message bus
+- Qute facade - creating new components
+- router
+
+- move more functions to @qutejs/test-utils
+
+Use Fonts:
+- Montsserat alternates (header) + Raleway (text)

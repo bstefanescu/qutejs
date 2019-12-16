@@ -1,0 +1,62 @@
+{
+  "name": "@qutejs/popup",
+  "version": "0.9.0",
+  "description": "Popup component",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bogdan Stefanescu <bogdan@quandora.com>",
+  "license": "MIT",
+  "keywords": [
+    "component",
+    "model",
+    "reactive",
+    "reactivity",
+    "development",
+    "application",
+    "framework",
+    "web",
+    "model",
+    "dom",
+    "qute",
+    "template",
+    "jsq",
+    "render",
+    "rendering",
+    "dynamic",
+    "message",
+    "bus",
+    "channel",
+    "custom",
+    "extend",
+    "element",
+    "tag",
+    "view",
+    "x-tag",
+    "vue",
+    "react",
+    "virtual",
+    "popup",
+    "dropdown"
+  ],
+  "homepage": "https://qutejs.org",
+  "repository": {
+    "url": "https://github.com/bstefanescu/qute",
+    "type": "git"
+  },
+  "dependencies": {
+    "@qutejs/runtime": "0.9.0",
+    "@qutejs/window": "0.9.0"
+  },
+  "devDependencies": {
+    "@qutejs/rollup-plugin-qute": "0.9.0"
+  },
+  "build": {
+    "config": "component"
+  }
+}
