@@ -14,30 +14,32 @@ import Qute from '@qutejs/runtime';
 
 // the component template
 <x-tag name='my-component'>
-<div x-class='{authenticated:user}'>
-  <if value='!user'>
-    Click <a href='#' @click='doLogin' class='common-link'>here</a> to login
-  <else />
-    Hello {{user.firstName}}. <a href='#' @click='doLogout'>Logout</a>
-  </if>
-</div>
+  <div x-class='{authenticated:user}'>
+    <if value='!user'>
+      Click <a href='#' @click='doLogin' class='common-link'>here</a> to login
+    <else />
+      Hello {{user.firstName}}. <a href='#' @click='doLogout'>Logout</a>
+    </if>
+  </div>
 </x-tag>
 
 // the component ViewModel definition
 export default Qute('my-component', {
-	init() {
-		this.loginUrl = './login';
-		return {
-			user: {
-				firstName: 'John', lastName: 'Doe'
-			}
-		};
-	},
+    init() {
+        this.loginUrl = './login';
+        // return the reactive model
+        return {
+            user: {
+                firstName: 'John',
+                lastName: 'Doe'
+            }
+        };
+    },
     doLogin() {
-	    this.user = {firstName: 'John', lastName: 'Doe'};
+        this.user = {firstName: 'John', lastName: 'Doe'};
     },
     doLogout() {
-    	this.user = null;
+        this.user = null;
     }
 });
 ```

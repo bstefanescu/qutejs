@@ -17,6 +17,20 @@
 		<script type="text/javascript" src='cm-mode-qute.js'></script>
 		<script type="text/javascript" src='../dev/qute-dev-all.js'></script>
 
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154681738-1"></script>
+		<script>
+			// only if we are live
+			if (window.location.host.indexOf('qutejs.org') > -1) {
+			  console.log('Enabling GA');
+			  window.dataLayer = window.dataLayer || [];
+			  function gtag(){dataLayer.push(arguments);}
+			  gtag('js', new Date());
+
+			  gtag('config', 'UA-154681738-1');
+			}
+		</script>
+
 		<style>
 			* {
 			    box-sizing: border-box;

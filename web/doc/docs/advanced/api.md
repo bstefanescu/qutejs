@@ -30,9 +30,9 @@ Find the closest Qute ViewModel Component containing the given DOM element.
 
 Register a callback to be invoked after all the tasks in the update queue are run. If the queue is empty then the callback is immediately run.
 
-Because the updates are run asynchronously you cannot now when the updates related to a reactive property change are done. Using this function you can be notified after all the current updates were done.
+Because the updates are run asynchronously you cannot know when the update job related to a reactive property change is done. Using this function you can be notified after the current update is done.
 
-This is usefull when writing tests, to make assertions after all the uopdates where done.
+This is usefull when writing tests, to make assertions after the DOM changed in response to model change.
 
 #### `Qute.css(cssRules)`
 
