@@ -29,8 +29,6 @@
 
 		<script type="text/javascript" src='../dev/qute-dev-all.js'></script>
 
-		<script type="text/javascript" src='./bodyScrollLock.js'></script>s
-
 		<!-- Global site tag (gtag.js) - Google Analytics -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154681738-1"></script>
 		<script>
@@ -295,6 +293,18 @@
 
 		</script>
 		<script>
+
+			var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+
+			function lockBodyScroll() {
+				document.body.style.overflow = 'hidden';
+				if (iOS) document.body.style.position = 'fixed';
+			}
+
+			function unlockBodyScroll() {
+				document.body.style.overflow = '';
+				if (iOS) document.body.style.position = '';
+			}
 
 			function fetchPage(url, cb) {
 			  	var xhttp = new XMLHttpRequest();
@@ -573,7 +583,7 @@
 				sidebar.style.width = '250px';
 				//main.style.marginLeft = '250px';
 				window.SIDEBAR_ON = true;
-				bodyScrollLock.disableBodyScroll(document.body);
+				lockBodyScroll();
 			}
 
 			function hideSidebar(container) {
@@ -583,7 +593,7 @@
 				sidebar.style.width = '0px';
 				main.style.marginLeft = '0px';
 				window.SIDEBAR_ON = false;
-				bodyScrollLock.enableBodyScroll(document.body);
+				unlockBodyScroll();
 			}
 
 			function toggleSidebar() {
@@ -616,6 +626,7 @@
 					distance.right <= (window.innerWidth || document.documentElement.clientWidth)
 				);
 			};
+
 
 		</script>
 	</body>
