@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/polyfill",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "keywords": [],
   "author": "Bogdan Stefanescu <bogdan@quandora.com>",
   "license": "MIT",
@@ -16,7 +16,7 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/window": "0.9.0"
+    "@qutejs/window": "0.9.1"
   },
   "build": {
     "config": "weblib"

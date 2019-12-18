@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/runtime",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Qute runtime (for production)",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
@@ -49,12 +49,12 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/commons": "0.9.0",
-    "@qutejs/window": "0.9.0"
+    "@qutejs/commons": "0.9.1",
+    "@qutejs/window": "0.9.1"
   },
   "devDependencies": {
-    "@qutejs/register": "0.9.0",
-    "@qutejs/test-utils": "0.9.0"
+    "@qutejs/register": "0.9.1",
+    "@qutejs/test-utils": "0.9.1"
   },
   "build": {
     "config": "runtime",
