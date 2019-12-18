@@ -14,7 +14,7 @@
   "license": "MIT",
   "homepage": "https://qutejs.org",
   "repository": {
-    "url": "https://github.com/bstefanescu/qute",
+    "url": "https://github.com/bstefanescu/qutejs",
     "type": "git"
   },
   "build": {
