@@ -20,6 +20,3 @@ Tests:
 - router
 
 - move more functions to @qutejs/test-utils
-
-Use Fonts:
-- Montsserat alternates (header) + Raleway (text)
