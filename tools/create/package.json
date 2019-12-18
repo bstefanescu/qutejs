@@ -53,6 +53,7 @@
     "type": "git"
   },
   "dependencies": {
+    "mkdirp": "^0.5.1",
     "progress": "^2.0.3",
     "prompts": "^2.3.0"
   },
@@ -61,7 +62,8 @@
     "nodeDeps": [
       "path",
       "fs",
-      "child_process"
+      "child_process",
+      "mkdirp"
     ]
   }
 }

@@ -2,7 +2,13 @@ import fs from 'fs';
 import path from 'path';
 import prompts from 'prompts';
 import Progress from 'progress';
+import mkdirp from 'mkdirp';
 import { spawnSync } from 'child_process';
+
+// fs.mkdirSync recursive is not supported on earlier node versions
+function mkdirSync(dir) {
+  mkdirp.sync(dir);
+}
 
 var VAR_RX = /%%\s*([a-zA-Z_$][0-9a-zA-Z_$]*)\s*%%/g;
 function evalTemplate(content, vars) {
@@ -36,7 +42,7 @@ function copyTree(src, dst, vars) {
 function _copyTree(src, dst, vars) {
     var stats = fs.lstatSync(src);
     if (stats.isDirectory()) {
-      fs.mkdirSync(dst, {recursive:true});
+      mkdirSync(dst);
       fs.readdirSync(src).forEach(file => {
         _copyTree(path.join(src, file), path.join(dst, file), vars);
       });
