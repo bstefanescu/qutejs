@@ -165,6 +165,12 @@ To start a **Qute Project**, type the following in a terminal:
 npm init @qutejs
 ```
 
+or if your **node version** is older than **10.3.0**, you must run the `npx` command:
+
+```
+npx @qutejs/creates
+```
+
 It will ask you a bunch of questions, and then generate a directoy with a `package.json` file and all the other files needed to build and test your product.
 
 It will also ask you the project type. There are 2 project types:

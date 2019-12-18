@@ -14,6 +14,12 @@ Go here for the **[Qute documentation](https://qutejs.org)**.
 npm init @qutejs
 ```
 
+or (on **node versions** older than **10.3.0**)
+
+```
+npx @qutejs/create
+```
+
 # Building
 
 Qute packages are built from the Qute multi-package repository root.

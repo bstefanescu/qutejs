@@ -19,6 +19,12 @@ Use the Qute project generator to create a new Qute application or component pro
 npm init @qutejs
 ```
 
+or if your **node version** is older than **10.3.0** you must use the `npx` command:
+
+```
+npx @qutejs/create
+```
+
 Go here for the **[Qute documentation](https://qutejs.org)**.
 
 # Installing
