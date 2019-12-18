@@ -48,9 +48,13 @@
     "url": "https://github.com/bstefanescu/qute",
     "type": "git"
   },
-   "dependencies": {
+  "dependencies": {
     "@qutejs/commons": "0.9.0",
     "@qutejs/window": "0.9.0"
+  },
+  "devDependencies": {
+    "@qutejs/register": "0.9.0",
+    "@qutejs/test-utils": "0.9.0"
   },
   "build": {
     "config": "runtime",
