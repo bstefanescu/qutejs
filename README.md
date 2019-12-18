@@ -31,7 +31,8 @@ node qub install
 
 # Building
 
-The build is done using **[qub)(qub)**.
+The build is done using **[qub)(qub)**.  \
+[Node](https://nodejs.org) version 10 is required to build.
 
 ## Running the build
 
