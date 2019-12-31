@@ -4,11 +4,10 @@ import commonjs from 'rollup-plugin-commonjs'
 import nodeResolve from 'rollup-plugin-node-resolve'
 import buble from 'rollup-plugin-buble'
 import {uglify} from 'rollup-plugin-uglify'
-import serve from 'rollup-plugin-serve'
-import livereload from 'rollup-plugin-livereload'
 import postcss from 'rollup-plugin-postcss'
+import devServer from 'rollup-plugin-koa-devserver'
 
-import pkg from '../package.json';
+import pkg from '../package.json'
 
 const devMode = process.env.NODE_ENV === 'development';
 
@@ -42,14 +41,14 @@ if (devMode) { // dev mode
 	    external: ['@qutejs/window'],
     	plugins: [
 	    	...plugins,
-		    serve({
-		        port: 8090,
-		        contentBase: '.',
-		        openPage: '/build/dev/index.html',
-		        open: true,
-		        headers: { 'Access-Control-Allow-Origin': '*' }
-		    }),
-		    livereload('.')
+		    devServer({
+		    	port: 8090,
+		    	root: '.',
+		    	open: '/build/dev/index.html',
+		    	livereload: {
+		    		watch: 'build/dev'
+		    	}
+		    })
 	    ]
 	};
 } else { // build for production
