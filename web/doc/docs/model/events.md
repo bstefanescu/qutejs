@@ -209,10 +209,6 @@ For more on the `create` event on functional components see the **[Life Cycle](#
 #### Get a reference to the instance of a regular DOM element:
 
 ```jsq
-<x-tag name='my-button'>
-	<button @click='emitAsync("action")'><slot/></button>
-</x-tag>
-
 <x-tag name='root'>
 	<div>
 		<input type='text' @create='el=>this.textInput=el' />
@@ -230,10 +226,6 @@ export default Qute('root', {
 #### Do some initialization on a regular DOM element
 
 ```jsq
-<x-tag name='my-button'>
-	<button @click='emitAsync("action")'><slot/></button>
-</x-tag>
-
 <x-tag name='root'>
 	<div>
 		<input type='text' @create='initTextInput' />
