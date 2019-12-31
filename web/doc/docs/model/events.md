@@ -192,3 +192,61 @@ export default Qute('root', {
 });
 ```
 
+## The `create` event
+
+The `create` event is a special Qute event that is triggered when a DOM element is created and attached to the DOM.
+
+You can use this special event to do some initialization on regular DOM element or to retrieve the element instance.  \
+This event is also working on functional components, in that case the `create` event will be related to the root element of the functional component.
+
+The create event handler gets as argument the DOM element and the call target (i.e. the `this` variable) is the current component instance.
+
+For more on the `create` event on functional components see the **[Life Cycle](#/model/lifecycle)** section.
+
+
+### Examples
+
+#### Get a reference to the instance of a regular DOM element:
+
+```jsq
+<x-tag name='my-button'>
+	<button @click='emitAsync("action")'><slot/></button>
+</x-tag>
+
+<x-tag name='root'>
+	<div>
+		<input type='text' @create='el=>this.textInput=el' />
+		<button @click='showInputValue'>Click me</button>
+	</div>
+</x-tag>
+
+export default Qute('root', {
+	showInputValue() {
+		alert('Text input is:' + this.textInput.value);
+		return false;
+	}
+});
+```
+#### Do some initialization on a regular DOM element
+
+```jsq
+<x-tag name='my-button'>
+	<button @click='emitAsync("action")'><slot/></button>
+</x-tag>
+
+<x-tag name='root'>
+	<div>
+		<input type='text' @create='initTextInput' />
+	</div>
+</x-tag>
+
+export default Qute('root', {
+	init() {
+		this.text = 'bla';
+	},
+	initTextInput(element) {
+		element.value = this.text;
+	}
+});
+```
+

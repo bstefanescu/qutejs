@@ -151,8 +151,7 @@ function installDeps(target) {
       ['-D', 'rollup-plugin-buble'],
       ['-D', 'rollup-plugin-uglify'],
       ['-D', 'rollup-plugin-postcss'],
-      ['-D', 'rollup-plugin-serve'],
-      ['-D', 'rollup-plugin-livereload'],
+      ['-D', 'rollup-plugin-koa-devserver'],
       // test deps
       ['-D', 'mocha'],
       ['-D', '@babel/core'],

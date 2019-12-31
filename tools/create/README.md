@@ -1,4 +1,4 @@
-# Qute: A Javascript Component Model.
+# Qute: A Javascript Component Model for the DOM.
 
 Qute is a **reactive component model** designed for **plain old javascript** lovers.
 

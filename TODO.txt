@@ -1,9 +1,15 @@
+-1. @create - change args: this is vm and arg is element.
+
 0. MOVE qub outside
 1. remove 'm' from compiler vars .. use '$$' for current model? ($ is the rendering instance)
 2. impl if / else if / else
-3. Be able to use {} for special expr attributes (and not only '' and "")
-4. Be able to declare private templates in JSQ files?
-5. Should we support something like x-html but for jsq?
+3. impl switch / case?
+4. if, view etc should be aliases to x-view x-if etc (or q:if q:view ?)
+5. Be able to use {} for special expr attributes (and not only '' and "")
+6. Be able to declare private templates in JSQ files?
+7. Should we support something like x-html but for jsq?
+8. use setAsap instead of setTimeout in update queue?
+9. update queue must split jobs in async parts - one async part per child component
 
 Tests:
 - x-toggle

@@ -1,4 +1,4 @@
-# Qute: A JavaScript Component Model
+# Qute: A JavaScript Component Model for the DOM
 
 Qute is a **reactive component model** designed for **plain old javascript** lovers.
 
@@ -21,11 +21,11 @@ Some quick facts:
 
 * **Quickly design components** using the playground or browser inlined components.
 * Provides a **project generator** tool for a modern development experience.
-* Accepts both xml and jsx like attribute binding notations.
+* You can reuse any plain javascript UI component (e.g. jQuey UI etc.).
 * You are free to design your application how it's better suits you.  \
 Remember **Qute** is not a constraining framework. It just provides a component model.
-* You can use any traditional javascript library inside a Qute component (e.g. JQuery, jQuey UI etc.).
 * Components can work in traditional javascript sites, no need to code the entire application as a Qute component (although you can).
+* Accepts both xml and jsx like attribute binding notations.
 * Qute is providing a message bus between components: components can interact with each other even if they are belonging to different component trees.
 * DOM updates are optimized. In theory, updates should be very fast - no reconciliation is needed. Only nodes listening for changes are updated.  \
 Though, no benchmarks are available yet.

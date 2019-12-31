@@ -1,10 +1,10 @@
 {
   "name": "@qutejs/window",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "keywords": [],
   "author": "Bogdan Stefanescu <bogdan@quandora.com>",
   "license": "MIT",
-  "description": "Browser window abstraction for Qute projects",
+  "description": "Browser window abstraction for Qute components",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
   "files": [

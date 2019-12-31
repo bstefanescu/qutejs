@@ -56,27 +56,27 @@ Here is an example:
 
 ```jsq
 <x-tag name='functional' import='handleFuncLoad'>
-  <div @create='handleFuncLoad'>I am a functional component</div>
+    <div @create='handleFuncLoad'>I am a functional component</div>
 </x-tag>
 
 <x-tag name='root'>
-  <functional />
+    <functional />
 </x-tag>
 
 function _disconnected(vm) {
-  console.log('Parent VM disconnected');
+    console.log('Parent VM disconnected');
 }
 function _connected(vm) {
-  console.log('Parent VM connected');
+    console.log('Parent VM connected');
 }
-function handleFuncLoad(ctx) {
-	ctx.$parent.setup(function() {
-      // called when parent vm connected
-      // register cleanup on disconnect
-      _connected(ctx.$parent);
-      ctx.$parent.cleanup(function() {
-        _disconnected(ctx.$parent);
-      });
+function handleFuncLoad(el) {
+    var ctx = this;
+    ctx.$parent.setup(function() {
+        // called when parent vm connected register cleanup on disconnect
+        _connected(ctx.$parent);
+        ctx.$parent.cleanup(function() {
+            _disconnected(ctx.$parent);
+        });
     });
 }
 
