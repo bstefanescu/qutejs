@@ -138,7 +138,7 @@ function applyListeners(el, vm, listeners, doNotWrap) {
 	for (var key in listeners) {
 		var fn = listeners[key];
 		if (key === 'create') {
-			fn.call(el, vm);
+			fn.call(vm, el);
 		} else {
 			el.addEventListener(key, doNotWrap ? fn : createListener(vm, fn));
 		}
