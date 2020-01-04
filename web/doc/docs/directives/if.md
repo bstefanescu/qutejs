@@ -5,7 +5,7 @@ The if directive can be used to conditionally insert an HTML fragment.
 The if directive supports 2 attributes:
 * **value** - *required* - define the conditional expression (which will be evaluated in the current model context).
 * **x-change** - *optional* - listener function which will be invoked when the if expression changes.
-	The listener will be called in the context of the ViewModel containing the **if** directive (the `this` variable will point to the container component instance) and the current state (true of false) will be passed as the first argument.
+	The listener will be called in the context of the ViewModel containing the **if** directive (the `this` variable will point to the container component instance) and the active if branch index (0 for the if branch, 1 - for the next else-if branch, and so on) will be passed as the first argument. If no if branch is active then -1 is passed as argument (this happens when you are not using an `else` statement and any of the if conditions are met).
 
 	The first time the **if** directive is rendered the listener will not be notified.
 
@@ -22,7 +22,7 @@ If you want to conditionaly hide or show an element then use the **[x-show](#/at
 
 ```jsq
 <x-tag name='root'>
-<if value='hasSection2' x-change='onSection2Toggle'>
+<if value='hasSection2'>
   <h1>Section 2</h1>
   <div>
   	Section content here
@@ -77,4 +77,57 @@ export default Qute('root', {
 	}
 });
 ```
+
+# Else-if directive
+
+The else-if directive allows you to create conditional if / else if / else chains.
+
+**Usage:**
+
+```xml
+<if value='expression1'>
+	...
+<else-if value='expression2' />
+    ...
+<else-if value='expression3' />
+	...
+</else>
+	...
+</if>
+```
+
+### Example
+
+```jsq
+<x-tag name='root'>
+	<div>
+		Select status:
+		<select @change='updateStatus'>
+			<option value='active'>Active</option>
+			<option value='closed'>Closed</option>
+			<option value='other'>Unknown</option>
+		</select>
+		<hr/>
+		<if value="status=='active'">
+		Content for <i>active</i> status
+		<else-if value="status=='closed'" />
+		Content for <i>closed</i> status
+		<else />
+		Content for <i>unknown</i> status
+		</if>
+	</div>
+</x-tag>
+
+export default Qute('root', {
+	init() {
+		return {
+			status: 'active'
+		}
+	},
+	updateStatus(e) {
+		this.status = e.target.value;
+	}
+});
+```
+
 

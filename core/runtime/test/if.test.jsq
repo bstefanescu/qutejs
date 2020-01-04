@@ -32,6 +32,27 @@ import { createMountPoint, runAfter } from './utils.js';
 	<div id='if-true'>Hello {{user}}</div>
 </x-tag>
 
+<x-tag name='if-elseif-test'>
+<div>
+	<if value='state===0' x-change='stateChanged'>
+		<div id='if-state-0'>State {{state}}</div>
+	<else-if value='state===1'/>
+		<div id='if-state-1'>State {{state}}</div>
+	</if>
+</div>
+</x-tag>
+
+<x-tag name='if-elseif-else-test'>
+<div>
+	<if value='state===0' x-change='stateChanged'>
+		<div id='ifeie-state-0'>State {{state}}</div>
+	<else-if value='state===1'/>
+		<div id='ifeie-state-1'>State {{state}}</div>
+	<else />
+		<div id='ifeie-state-other'>State {{state}}</div>
+	</if>
+</div>
+</x-tag>
 
 var NESTED_MSG = null;
 
@@ -57,6 +78,25 @@ var IfElseTest = Qute('if-else-test', {
 	}
 });
 
+var IfElseIfTest = Qute('if-elseif-test', {
+	init: function() {
+		this.lastChange = 0;
+		return { state: 0 };
+	},
+	stateChanged(val) {
+		this.lastChange = val;
+	}
+});
+
+var IfElseIfElseTest = Qute('if-elseif-else-test', {
+	init: function() {
+		this.lastChange = 0;
+		return { state: 0 };
+	},
+	stateChanged(val) {
+		this.lastChange = val;
+	}
+});
 
 
 describe('If / Else Directive', function() {
@@ -130,5 +170,104 @@ describe('If / Else Directive', function() {
 		});
 	});
 
+});
+
+describe("If / Else-if Directive", function() {
+	var root = new IfElseIfTest();
+	var container = createMountPoint('root2');
+	root.mount(container);
+
+	it('should render default branch', function(done) {
+		assert.equal(root.lastChange, 0);
+		assert.equal(root.state, 0);
+		assert.ok(document.getElementById('if-state-0'));
+		assert.ok(!document.getElementById('if-state-1'));
+		done();
+	});
+
+	it('should render the else-if branch', function(done) {
+		root.state = 1;
+		runAfter(function() {
+			assert.equal(root.lastChange, 1);
+			assert.equal(root.state, 1);
+			assert.ok(!document.getElementById('if-state-0'));
+			assert.ok(document.getElementById('if-state-1'));
+			done();
+		});
+	});
+
+	it('should render no branch', function(done) {
+		root.state = 123;
+		runAfter(function() {
+			assert.equal(root.lastChange, -1);
+			assert.equal(root.state, 123);
+			assert.ok(!document.getElementById('if-state-0'));
+			assert.ok(!document.getElementById('if-state-1'));
+			done();
+		});
+	});
+
+	it('should render the if branch', function(done) {
+		root.state = 0;
+		runAfter(function() {
+			assert.equal(root.lastChange, 0);
+			assert.equal(root.state, 0);
+			assert.ok(document.getElementById('if-state-0'));
+			assert.ok(!document.getElementById('if-state-1'));
+			done();
+		});
+	});
+
+});
+
+describe("If / Else-if / Else Directive", function() {
+	var root = new IfElseIfElseTest();
+	var container = createMountPoint('root3');
+	root.mount(container);
+
+	it('should render default branch', function(done) {
+		assert.equal(root.lastChange, 0);
+		assert.equal(root.state, 0);
+		assert.ok(document.getElementById('ifeie-state-0'));
+		assert.ok(!document.getElementById('ifeie-state-1'));
+		assert.ok(!document.getElementById('ifeie-state-other'));
+		done();
+	});
+
+	it('should render the else-if branch', function(done) {
+		root.state = 1;
+		runAfter(function() {
+			assert.equal(root.lastChange, 1);
+			assert.equal(root.state, 1);
+			assert.ok(!document.getElementById('ifeie-state-0'));
+			assert.ok(document.getElementById('ifeie-state-1'));
+			assert.ok(!document.getElementById('ifeie-state-other'));
+			done();
+		});
+	});
+
+	it('should render the else branch', function(done) {
+		root.state = 123;
+		runAfter(function() {
+			assert.equal(root.lastChange, 2);
+			assert.equal(root.state, 123);
+			assert.ok(!document.getElementById('ifeie-state-0'));
+			assert.ok(!document.getElementById('ifeie-state-1'));
+			assert.ok(document.getElementById('ifeie-state-other'));
+			done();
+		});
+	});
+
+	it('should render the if branch', function(done) {
+		root.state = 0;
+		runAfter(function() {
+			assert.equal(root.lastChange, 0);
+			assert.equal(root.state, 0);
+			assert.ok(document.getElementById('ifeie-state-0'));
+			assert.ok(!document.getElementById('ifeie-state-1'));
+			assert.ok(!document.getElementById('ifeie-state-other'));
+			done();
+		});
+	});
 
 });
