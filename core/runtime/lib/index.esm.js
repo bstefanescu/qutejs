@@ -434,11 +434,22 @@ function ViewRenderingContext(model, marker, isExpr, changeCb, noCache, xattrs, 
 	}
 }
 
-function IfRenderingContext(model, start, end, expr, changeCb, _if, _else) {
-	var r = null; // the IF / ELSE rendering context
-	var state = undefined; // the current IF / ELSE value
+function evalIfChain(exprs, model) {
+	var i = 0;
+	for (var l=exprs.length-1; i<l; i++) {
+		if (exprs[i](model)) { return i; }
+	}
+	var lastExpr = exprs[i];
+	// if lastExpr is null is is corresponding to an else statement
+	return !lastExpr || lastExpr(model) ? i : -1;
+}
+
+
+function IfRenderingContext(model, start, end, exprs, kids, changeCb) {
+	var r = null; // the IF / ELSE-IF / ELSE rendering context
+	var state = -1; // the current case of IF / ELSE-IF / ELSE as the zero based index of the chain (0 for if, 1 for next else-if, ...)
 	return function(propKey, initialUpdate) {
-		var newState = !!expr(model);
+		var newState = evalIfChain(exprs, model);
 		if (newState !== state) {
 			r && r.$disconnect();
 			var parent = start.parentNode;
@@ -448,9 +459,11 @@ function IfRenderingContext(model, start, end, expr, changeCb, _if, _else) {
 			}
 			r = new Rendering(model); // create the IF / ELSE rendering context
 			state = newState;
-			var children = state ? _if(r) : (_else ? _else(r) : []); //_else may not be defined
-			for (var i=0,l=children.length; i<l; i++) {
-				parent.insertBefore(children[i], end);
+			if (state > -1) {
+				var children = kids[state](r);
+				for (var i=0,l=children.length; i<l; i++) {
+					parent.insertBefore(children[i], end);
+				}
 			}
 			r.$connect();
 			if (changeCb && !initialUpdate) { // avoid calling changeCb the first time the if is rendered
@@ -696,13 +709,17 @@ var RenderingProto = {
 		this.up(viewFrag);
 		return frag;
 	},
-	i: function(expr, changeCb, _if, _else) { // if / else
+	i: function(ifChain, kidsChain, changeCb) { // if / else-if / else
+		// ifChain is a list of if expression functions corresponding to if / if-else else chain.
+		// When 'else' is present - the last expression corresponding to the else will be null
+		// kidsChain is a list of children functions corresponding to if / else-if / else chain
+		// both lists have the same when length. When only 'if' is present the list is of length 1.
 		var start = document.createComment('[if]');
 		var end = document.createComment('[/if]');
 		var frag = document.createDocumentFragment();
 		frag.appendChild(start);
 		frag.appendChild(end);
-		var ieFrag = IfRenderingContext(this.vm, start, end, expr, changeCb, _if, _else);
+		var ieFrag = IfRenderingContext(this.vm, start, end, ifChain, kidsChain, changeCb);
 		start.__qute__ = ieFrag;
 		ieFrag(null, true);
 		this.up(ieFrag);

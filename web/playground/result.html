@@ -216,7 +216,8 @@ ul.playground-navbar > li {
 	  			}
 				new Function(code)();
 			} catch (e) {
-			 	console.error(code);
+				console.error(e);
+			 	console.error('Transpileld code:\n', code);
 			 	appEl.innerHTML = "<pre style='color:red'>Error: "+e.stack+"</pre><p>You may find out more details by looking in the javascript console";
 			 	//throw e;
 			 	// retwroing exception wiull loose stack trace code source info so we execute again the failing code

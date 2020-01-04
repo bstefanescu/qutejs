@@ -856,7 +856,7 @@ function ForNode(tag, attrs) {
 
 function IfNode(tag, attrs) {
 	this.children = [];
-	this._else = null;
+	this.cases = null; // array of if-else / if nodes.
 	this.change = null; // onchange event handler if any
 	this.expr = null;
 
@@ -878,27 +878,51 @@ function IfNode(tag, attrs) {
 
 	this.append = function(node) {
 		if (node instanceof ElseNode) {
-			this._else = [];
-		} else if (this._else) {
-			this._else.push(node);
+			if (this.cases) {
+				var lastCase = this.cases[this.cases.length-1];
+				if (lastCase.expr === null) { ERR('Invalid if/else-id/else tags: else must be the last one in the chain.'); }
+			} else {
+				this.cases = [];
+			}
+			this.cases.push(node);
+		} else if (this.cases) {
+			var lastCase = this.cases[this.cases.length-1];
+			lastCase.children.push(node);
 		} else {
 			this.children.push(node);
 		}
 	};
 
 	this.compile = function(ctx) {
+		// if/else-if/else signature: 'i', list_of_exprs, list_of_children, changeCb
+		// else expr is null
+		// if only if is present the a list of size is used.
 		var change = this.change ? _cb(this.change, ctx) : 'null';
-		if (this._else) {
-			return _fn('i', _v(_x(this.expr, ctx)), change, _r(_nodes(this.children, ctx)), _r(_nodes(this._else, ctx)));
-		} else {
-			return _fn('i', _v(_x(this.expr, ctx)), change, _r(_nodes(this.children, ctx)));
+
+		var exprs = [ _v(_x(this.expr, ctx)) ], kids = [ _r(_nodes(this.children, ctx)) ];
+		if (this.cases) {
+			var cases = this.cases;
+			for (var i=0,l=cases.length; i<l; i++) {
+				var ifCase = cases[i];
+				exprs.push(ifCase.expr ? _v(_x(ifCase.expr, ctx)) : 'null');
+				kids.push(_r(_nodes(ifCase.children, ctx)));
+			}
 		}
+		return _fn('i', '['+exprs.join(',')+']', '['+kids.join(',')+']', change);
 	};
 }
 
-function ElseNode() {
+function ElseNode(tag, attrs) {
+	this.children = [];
+	this.expr === null;
+	if (tag === 'else-if') {
+		if (attrs.length !== 1) {
+			ERR("the else-if tag must have a 'value' attribute");
+		}
+		// we don't check the attr name...
+		this.expr = attrValue(attrs[0]);
+	} //else the else tag: no attributes
 }
-
 
 //TODO
 function SlotNode(tagName, attrs) {
@@ -930,6 +954,7 @@ var MUSTACHE_RX = /\{\{([^\}]+)\}\}/g;
 var NODES = {
 	'if':  IfNode,
 	'else':  ElseNode,
+	'else-if': ElseNode,
 	'for':  ForNode,
 	'slot': SlotNode
 };
