@@ -168,14 +168,36 @@ var Qute = (function (window) {
 	var VMS = {};
 	var XTAGS = {};
 
+	function QName(tag) {
+		var i = tag.indexOf(':');
+		if (i > -1) {
+			var prefix = tag.substring(0, i);
+			this.prefix = prefix;
+			this.localName = tag.substring(i+1);
+			this.name = tag;
+			this.defaultNs = prefix === 'q';
+		} else {
+			this.prefix = 'q';
+			this.localName = tag;
+			this.name = 'q:'+tag;
+			this.defaultNs = true;
+		}
+	}
+
 	function getTag(tag) {
 		return XTAGS[tag];
 	}
 
+
 	function registerTag(tag, templateFn, isCompiled) {
-		XTAGS[tag] = templateFn;
+		var qname = new QName(tag);
+		templateFn.$qname = qname;
 		templateFn.$compiled = !!isCompiled;
 		templateFn.$tag = tag;
+		XTAGS[qname.name] = templateFn;
+		if (qname.defaultNs) {
+			XTAGS[qname.localName] = templateFn;
+		}
 		return templateFn;
 	}
 
@@ -184,7 +206,12 @@ var Qute = (function (window) {
 	}
 
 	function registerVM(tag, vm) {
-		VMS[tag] = vm;
+		var qname = new QName(tag);
+		VMS[qname.name] = vm;
+		if (qname.defaultNs) {
+			VMS[qname.localName] = vm;
+		}
+		return qname;
 	}
 
 	function getVMOrTag(tag) {
@@ -1591,8 +1618,7 @@ var Qute = (function (window) {
 		}
 		// add the tag meta property
 		VMProto.$tag = tag;
-
-		registerVM(tag, VMType);
+		VMProto.$qname = registerVM(tag, VMType);
 
 		VMType.watch = function(prop, fn) {
 			if (!VMProto.$watch) { Object.defineProperty(VMProto, '$watch', {value:{}}); }
@@ -2517,7 +2543,6 @@ var Qute = (function (window) {
 	function IfNode(tag, attrs) {
 		this.children = [];
 		this.cases = null; // array of if-else / if nodes.
-		this._else = null;
 		this.change = null; // onchange event handler if any
 		this.expr = null;
 
@@ -2613,11 +2638,12 @@ var Qute = (function (window) {
 	//var BLANK_RX = /^\s*$/;
 
 	var NODES = {
-		'if':  IfNode,
-		'else':  ElseNode,
-		'else-if': ElseNode,
-		'for':  ForNode,
-		'slot': SlotNode
+		'if':  IfNode, 'q:if': IfNode,
+		'else':  ElseNode, 'q:else': ElseNode,
+		'else-if': ElseNode, 'q:else-if': ElseNode,
+		'for':  ForNode, 'q:for':  ForNode,
+		'slot': SlotNode, 'q:slot': SlotNode,
+
 	};
 
 	var SYMBOLS = {

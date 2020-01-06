@@ -145,14 +145,36 @@ Context.prototype = {
 var VMS = {};
 var XTAGS = {};
 
+function QName(tag) {
+	var i = tag.indexOf(':');
+	if (i > -1) {
+		var prefix = tag.substring(0, i);
+		this.prefix = prefix;
+		this.localName = tag.substring(i+1);
+		this.name = tag;
+		this.defaultNs = prefix === 'q';
+	} else {
+		this.prefix = 'q';
+		this.localName = tag;
+		this.name = 'q:'+tag;
+		this.defaultNs = true;
+	}
+}
+
 function getTag(tag) {
 	return XTAGS[tag];
 }
 
+
 function registerTag(tag, templateFn, isCompiled) {
-	XTAGS[tag] = templateFn;
+	var qname = new QName(tag);
+	templateFn.$qname = qname;
 	templateFn.$compiled = !!isCompiled;
 	templateFn.$tag = tag;
+	XTAGS[qname.name] = templateFn;
+	if (qname.defaultNs) {
+		XTAGS[qname.localName] = templateFn;
+	}
 	return templateFn;
 }
 
@@ -161,7 +183,12 @@ function getVM(tag) {
 }
 
 function registerVM(tag, vm) {
-	VMS[tag] = vm;
+	var qname = new QName(tag);
+	VMS[qname.name] = vm;
+	if (qname.defaultNs) {
+		VMS[qname.localName] = vm;
+	}
+	return qname;
 }
 
 function getVMOrTag(tag) {
@@ -1568,8 +1595,7 @@ function Qute(tag, def, BaseVm) {
 	}
 	// add the tag meta property
 	VMProto.$tag = tag;
-
-	registerVM(tag, VMType);
+	VMProto.$qname = registerVM(tag, VMType);
 
 	VMType.watch = function(prop, fn) {
 		if (!VMProto.$watch) { Object.defineProperty(VMProto, '$watch', {value:{}}); }

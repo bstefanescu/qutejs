@@ -952,11 +952,12 @@ var MUSTACHE_RX = /\{\{([^\}]+)\}\}/g;
 //var BLANK_RX = /^\s*$/;
 
 var NODES = {
-	'if':  IfNode,
-	'else':  ElseNode,
-	'else-if': ElseNode,
-	'for':  ForNode,
-	'slot': SlotNode
+	'if':  IfNode, 'q:if': IfNode,
+	'else':  ElseNode, 'q:else': ElseNode,
+	'else-if': ElseNode, 'q:else-if': ElseNode,
+	'for':  ForNode, 'q:for':  ForNode,
+	'slot': SlotNode, 'q:slot': SlotNode,
+
 };
 
 var SYMBOLS = {
