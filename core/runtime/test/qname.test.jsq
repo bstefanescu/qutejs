@@ -1,0 +1,108 @@
+
+import assert from 'assert';
+import window, {document} from '@qutejs/window';
+import Qute from '..';
+import { createMountPoint } from './utils.js';
+
+
+<x-tag name='my:component'>
+	<div id='my-component'>My Component</div>
+</x-tag>
+<x-tag name='q:component'>
+	<div id='q-component'><q:if value='true'>Q Component</q:if></div>
+</x-tag>
+<x-tag name='x-component'>
+	<div id='x-component'><if value='true'>X Component</if></div>
+</x-tag>
+
+<x-tag name='my:vmcomp'>
+	<div id='my-vmcomp'><if value='true'>My VM Component</if></div>
+</x-tag>
+<x-tag name='q:vmcomp'>
+	<div id='q-vmcomp'><if value='true'>Q VM Component</if></div>
+</x-tag>
+
+<x-tag name='root'>
+	<div>
+		<my:component />
+		<q:component />
+		<q:x-component />
+		<x-component />
+
+		<component />
+		<my:vmcomp />
+		<vmcomp />
+		<q:vmcomp />
+	</div>
+</x-tag>
+
+Qute('q:vmcomp');
+Qute('my:vmcomp');
+var Root = Qute('root');
+
+
+describe('Components are part of a namespace', function() {
+	var root = createMountPoint('root');
+	new Root().mount(root);
+/*
+	it('default vm namespace is q', function() {
+		var root1 = Qute.vm('q:root');
+		var root2 = Qute.vm('root');
+		var qname = root1.prototype.$qname;
+		assert.ok(root1 === root2);
+		assert.equal(qname.name, 'q:root');
+		assert.equal(qname.localName, 'root');
+		assert.equal(qname.prefix, 'q');
+		assert.equal(qname.defaultNs, true);
+	});
+
+	it('qute vm namespace works', function() {
+		var root1 = Qute.vm('q:vmcomp');
+		var root2 = Qute.vm('vmcomp');
+		var qname = root1.prototype.$qname;
+		assert.ok(root1 === root2);
+		assert.equal(qname.name, 'q:vmcomp');
+		assert.equal(qname.localName, 'vmcomp');
+		assert.equal(qname.prefix, 'q');
+		assert.equal(qname.defaultNs, true);
+	});
+
+
+	it('custom vm namespace works', function() {
+		var root = Qute.vm('my:vmcomp');
+		var qname = root.prototype.$qname;
+		assert.equal(qname.name, 'my:vmcomp');
+		assert.equal(qname.localName, 'vmcomp');
+		assert.equal(qname.prefix, 'my');
+		assert.equal(qname.defaultNs, false);
+	});
+*/
+
+	it('custom template namespace works', function() {
+		var qname = Qute.template('my:component').$qname;
+		assert.equal(qname.name, 'my:component');
+		assert.equal(qname.localName, 'component');
+		assert.equal(qname.prefix, 'my');
+		assert.equal(qname.defaultNs, false);
+		assert.equal(document.getElementById('my-component').textContent.trim(), "My Component");
+	});
+
+	it('qute template namespace works', function() {
+		var qname = Qute.template('q:component').$qname;
+		assert.equal(qname.name, 'q:component');
+		assert.equal(qname.localName, 'component');
+		assert.equal(qname.prefix, 'q');
+		assert.equal(qname.defaultNs, true);
+		assert.equal(document.getElementById('q-component').textContent.trim(), "Q Component");
+	});
+
+	it('default template namespace works', function() {
+		var qname = Qute.template('q:x-component').$qname;
+		assert.equal(qname.name, 'q:x-component');
+		assert.equal(qname.localName, 'x-component');
+		assert.equal(qname.prefix, 'q');
+		assert.equal(qname.defaultNs, true);
+		assert.equal(document.getElementById('x-component').textContent.trim(), "X Component");
+	});
+
+});

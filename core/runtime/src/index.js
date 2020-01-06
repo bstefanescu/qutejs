@@ -61,8 +61,7 @@ function Qute(tag, def, BaseVm) {
 	}
 	// add the tag meta property
 	VMProto.$tag = tag;
-
-	registerVM(tag, VMType);
+	VMProto.$qname = registerVM(tag, VMType);
 
 	VMType.watch = function(prop, fn) {
 		if (!VMProto.$watch) Object.defineProperty(VMProto, '$watch', {value:{}});

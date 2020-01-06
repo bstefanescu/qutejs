@@ -147,6 +147,21 @@ var MyComponent = Qute('my-component');
 new MyComponent().mount();
 ```
 
+## Component Namespace
+
+To isolate user defined components and avoid name clashes with external components you can use a namespace. To define a component in a namespace just prefix the compnent name with the namespace prefix.  \
+**Example:** `<x-tag name='my:select'>` will define a component named `select` in the `my` namespace.
+To use such components in templates you need to specify the qualified name (including the prefix).
+
+All components which are not explicitely prefixed with a namespace, will be part of the default Qute namespace which is using the `q` prefix.  \
+**Example:** `<x-tag name='popup'>` is equivalent to `<x-tag name='q:popup'>`.
+
+Components inside the default namespace can be specified with both the qualified name or the local name (i.e. non prefixed name) when used in other templates.
+
+Also note that **Qute built-in directives** are all part of the default namespace, so for example you can write either `<q:if value='expr'>`, either `<if value='expr'>` to use an if directive. Both forms are equivalent.
+
+In the rest of the documentation we will use the local name (i.e. without prefix) for all Qute built-in directives.
+
 Go to **[Templates](#/templates)** and **[Components](#/components)** sections to find out more about Qute Components.
 
 ## Qute Project Generator

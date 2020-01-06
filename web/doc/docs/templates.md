@@ -63,10 +63,10 @@ If you want to insert unescaped HTML content then use the **[x-html](#/attribute
 ```jsq-norun
 <x-tag name='root'>
 <div>
-<div>Hello {{fullName}}!</div>
-<div>{{"Hello "+firstName}}!</div>
-<div>{{"Hello "+getFullName()}}!</div>
-<pre>{{JSON.stringify(this)}}</pre>
+  <div>Hello {{fullName}}!</div>
+  <div>{{"Hello "+firstName}}!</div>
+  <div>{{"Hello "+getFullName()}}!</div>
+  <pre>{{JSON.stringify(this)}}</pre>
 </div>
 </x-tag>
 
