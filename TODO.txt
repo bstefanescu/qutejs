@@ -1,9 +1,8 @@
 
-1. Be able to use {} for special expr attributes (and not only '' and "")
-2. Be able to declare private templates in JSQ files?
-3. Should we support something like x-html but for jsq?
-4. use setAsap instead of setTimeout in update queue?
-5. update queue must split jobs in async parts - one async part per child component
+1. Be able to declare private templates in JSQ files?
+2. Should we support something like x-html but for jsq?
+3. use setAsap instead of setTimeout in update queue?
+4. update queue must split jobs in async parts - one async part per child component
 
 Tests:
 - x-toggle

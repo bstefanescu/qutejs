@@ -893,4 +893,6 @@ function Compiler() {
 
 }
 
+Compiler.parseHTML = parseHTML;
+
 export default Compiler;
