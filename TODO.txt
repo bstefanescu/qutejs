@@ -1,13 +1,10 @@
 
-0. MOVE qub outside
-1. remove 'm' from compiler vars .. use '$$' for current model? ($ is the rendering instance)
-2. impl switch / case?
-3. if, view etc should be aliases to x-view x-if etc (or q:if q:view ?)
-4. Be able to use {} for special expr attributes (and not only '' and "")
-5. Be able to declare private templates in JSQ files?
-6. Should we support something like x-html but for jsq?
-7. use setAsap instead of setTimeout in update queue?
-8. update queue must split jobs in async parts - one async part per child component
+1. MOVE qub outside
+2. Be able to use {} for special expr attributes (and not only '' and "")
+3. Be able to declare private templates in JSQ files?
+4. Should we support something like x-html but for jsq?
+5. use setAsap instead of setTimeout in update queue?
+6. update queue must split jobs in async parts - one async part per child component
 
 Tests:
 - x-toggle
