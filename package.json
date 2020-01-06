@@ -3,10 +3,10 @@
   "version": "0.9.3",
   "private": true,
   "scripts": {
-    "build": "node qub build",
-    "dist": "node qub dist",
-    "test": "node qub test",
-    "start": "node qub bundles run 'build dev' watch 'start doc'"
+    "build": "ws build",
+    "dist": "ws dist",
+    "test": "ws test",
+    "start": "ws bundles run 'build dev' watch 'start doc'"
   },
   "keywords": [
     "component",

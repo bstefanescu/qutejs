@@ -29,16 +29,24 @@ Go here for the **[Qute documentation](https://qutejs.org)**.
 
 # Installing
 
-**Do not use** `npm install` to install dependencies. You should use instead:
+Qute is structured as a repository containing multiple inter-dependent packages and is using [ws4npm](https://www.npmjs.com/package/ws4npm) to manage the development process (build, test, publish etc.).
+
+This is why you need to install first the `ws` tool:
 
 ```
-node qub install
+npm install -g ws4npm
 ```
+
+Then install dependencies using:
+
+```
+ws install
+```
+
+**Do not use** `npm install` to install dependencies!
+
 
 # Building
-
-The build is done using **[qub](qub)**.  \
-[Node](https://nodejs.org) version 10 is required to build.
 
 ## Running the build
 
