@@ -56,12 +56,12 @@ function _key(match) {
 function __x(expr, ctx) {
     return expr.replace(EXPR_RX, function(match, p1, p2) {
     	if (!p2) return match;
-    	if (p2 === 'this') { // replace by 'm'
-    		return 'm';
+    	if (p2 === 'this') { // replace by '_'
+    		return '_';
     	} else if (p2.startsWith('this.')) {
-    		return 'm'+p2.substring(4);
+    		return '_'+p2.substring(4);
     	}
-    	return !ctx.symbols[_key(match)] ? 'm.'+p2 : match;
+    	return !ctx.symbols[_key(match)] ? '_.'+p2 : match;
     });
 }
 function _x(expr, ctx) {
@@ -71,12 +71,12 @@ function _x(expr, ctx) {
 function _o(expr, ctx) {
     return '(' + expr.replace(OBJ_RX, function(match, p1, p2) {
     	if (!p2) return match;
-    	if (p2 === 'this') { // replace by 'm'
-    		return 'm';
+    	if (p2 === 'this') { // replace by '_'
+    		return '_';
     	} else if (p2.startsWith('this.')) {
-    		return 'm'+p2.substring(4);
+    		return '_'+p2.substring(4);
     	}
-    	return !ctx.symbols[_key(match)] ? 'm.'+p2 : match;
+    	return !ctx.symbols[_key(match)] ? '_.'+p2 : match;
     }) + ')';
 }
 function _xo(expr, ctx) {
@@ -86,7 +86,7 @@ function _xo(expr, ctx) {
 }
 // used to wrap a compiled expr in a lambda function
 function _v(expr) {
-	return 'function(m){return '+expr+'}';
+	return 'function(_){return '+expr+'}';
 }
 function _f(expr) {
 	return 'function(){return '+expr+'}';
@@ -126,7 +126,7 @@ function getArrowFn(expr, ctx) {
 		var localSymbols = Object.assign({},symbols);
 		args.split(/\s*,\s*/).forEach(function (key) { localSymbols[key] = true; });
 		ctx.symbols = localSymbols;
-		var r = '(function('+args+')'+__x(body, ctx)+')($1,m)'; // call the inline fn with the m (this) and the $1 argument
+		var r = '(function('+args+')'+__x(body, ctx)+')($1,_)'; // call the inline fn with the _ (this) and the $1 argument
 		ctx.symbols = symbols; // restore symbols
 		return r;
 		// pop from ctx symbols the local vars
@@ -152,9 +152,9 @@ function _cb(expr, ctx) {
 		var arrowFn = getArrowFn(expr, ctx);
 		if (arrowFn) {
 			//return "function(this,$1){"+arrowFn+"}";
-			return "function($1){var m=this;"+arrowFn+"}";
+			return "function($1){var _=this;"+arrowFn+"}";
 		} else {
-			return "function($1){var m=this;"+_x(expr, ctx)+"}";
+			return "function($1){var _=this;"+_x(expr, ctx)+"}";
 		}
 	}
 }
@@ -578,9 +578,8 @@ function ListNode(expr, node) {
 	this.node = node;
 	this.list = null;
 	this.item = null;
-	//TODO can we just not include them in args list? instead of using _?
-	this.index = '_';
-	this.hasNext = '__';
+	this.index = '$2';
+	this.hasNext = '$3';
 
 	// parse expr
 	parseForExpr(this, expr);
@@ -609,8 +608,8 @@ function ListNode(expr, node) {
 function ForNode(tag, attrs) {
 	this.list = null;
 	this.item = null;
-	this.index = '_';
-	this.hasNext = '__';
+	this.index = '$2';
+	this.hasNext = '$3';
 
 	this.children = [];
 	this.append = function(child) {
@@ -723,8 +722,6 @@ function SlotNode(tagName, attrs) {
 		return processor.processSlot(this);
 	}
 	this.compile = function(ctx) {
-		// we push the 'm' (current model) because the slot renderer (i.e. r.s)
-		// needs the current model to fetch the slot value
 		return _fn('s', _s(this.slotName), _nodes(this.children, ctx));
 	}
 	if (attrs.length > 1) ERR("slot node take zero or one 'name' parameter");
@@ -745,8 +742,10 @@ var NODES = {
 }
 
 var SYMBOLS = {
-	"true": true, "false": true, "undefined": true, "null":true, "$1": true,
-	"this":true, "JSON": true, "Object":true, "console":true, "window": true, "$": true
+	"true": true, "false": true, "undefined": true, "null": true, "void": true,
+	"$0": true, "$1": true, "$2": true, "$3": true,
+	"$": true, "this": true, "_": true,
+	"JSON": true, "Object": true, "console": true, "window": true
 };
 
 
