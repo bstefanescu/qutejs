@@ -1,5 +1,5 @@
 language: node_js
 node_js: '10'
-before_install: npm --prefix ./qub install ./qub
-install: node qub install
-script: node qub dist
+before_install: npm install -g npm-ws
+install: ws install
+script: ws dist
