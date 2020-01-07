@@ -4555,4 +4555,4 @@ var Qute = (function (window) {
   return Qute;
 
 }(window));
-//# sourceMappingURL=qute-dev-all.js.map
+//# sourceMappingURL=qute-dev-all-0.10.0.js.map

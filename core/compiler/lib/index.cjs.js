@@ -560,7 +560,7 @@ function DomNode(name, attrs) {
 	};
 
 	this.compile = function(ctx) {
-		if (this.name === 'tag') {
+		if (this.name === 'tag' || this.name === 'q:tag') {
 			var attrs = this.attrs;
 			if (!attrs || !attrs.is) { ERR("<tag> requires an 'is' attribute"); }
 			var isAttr = attrs.is;
@@ -570,7 +570,7 @@ function DomNode(name, attrs) {
 				_xattrs(this.attrs, this.bindings, this.xattrs, this.directives, this.events, ctx),
 				_nodes(this.children, ctx));
 		}
-		if (this.name === 'view') {
+		if (this.name === 'view' || this.name === 'q:view') {
 			var attrs = this.attrs;
 			if (!attrs || !attrs.is) { ERR("<view> requires an 'is' attribute"); }
 
@@ -954,7 +954,6 @@ var NODES = {
 	'else-if': ElseNode, 'q:else-if': ElseNode,
 	'for':  ForNode, 'q:for':  ForNode,
 	'slot': SlotNode, 'q:slot': SlotNode,
-
 };
 
 var SYMBOLS = {

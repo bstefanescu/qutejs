@@ -582,7 +582,7 @@ function extractSlots(children) {
 			var nodeType = child.nodeType;
 			switch (nodeType) {
 				case 1:
-					if (child.nodeName === 'NESTED') { // select only 'nested' elements
+					if (child.nodeName === 'NESTED' || child.nodeName === 'Q:NESTED') { // select only 'nested' elements
 						var slot = child.getAttribute('name') || 'default';
 						var slotChildren = [];
 						var node = child.firstChild;
