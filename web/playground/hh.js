@@ -5,7 +5,7 @@ var hh = (function() {
 
 var STAG_RX = /^<([-A-Za-z0-9_:]+)((?:\s+[-\w@#:]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|(?:\{.*\})|[^>\s]+))?)*)\s*(\/?)>/,
     ETAG_RX = /^<\/([-A-Za-z0-9_:]+)[^>]*>/,
-    ATTR_RX = /([-A-Za-z0-9_@#:]+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|(?:\{(.*)\})|([^>\s]+)))?/g;
+    ATTR_RX = /([-A-Za-z0-9_@#:]+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|(?:\{([^}]*)\}(?!\s*}))|([^>\s]+)))?/g;
 
 var voids = {else:true, case:true, area:true, base:true, br:true, col:true, embed:true, hr:true, img:true, input:true, link:true, meta:true, param:true, source:true, track:true, wbr:true};
 

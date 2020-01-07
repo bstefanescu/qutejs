@@ -31,12 +31,12 @@ function Cache(filename) {
 		dirty = true;
 	};
 	this.save = function() {
-		store();
+		c();
 	};
 
 	function load() {
 		try {
-		    return JSON.parse(fs.readFileSync(FILENAME));
+		    return JSON.parse(fs.readFileSync(filename));
 		} catch (err) {
 			return {};
 		}
@@ -119,12 +119,13 @@ function register(opts) {
   var useCache = !opts || opts.cache !== false;
   if (useCache && !cache) {
   	  cache = new Cache();
+  } else {
+  	  cache = null;
   }
 
   revertHook = addHook(transpileHook, { exts: exts, ignoreNodeModules: ignoreNodeModules });
   return revert;
 }
-
 
 // register with default opts
 register();
