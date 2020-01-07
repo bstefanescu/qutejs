@@ -1,6 +1,6 @@
 
-1. Be able to declare private templates in JSQ files?
-2. Should we support something like x-html but for jsq?
+1. move more functions to @qutejs/test-utils
+2. Be able to declare private templates in JSQ files?
 3. use setAsap instead of setTimeout in update queue?
 4. update queue must split jobs in async parts - one async part per child component
 
@@ -18,4 +18,6 @@ Tests:
 - Qute facade - creating new components
 - router
 
-- move more functions to @qutejs/test-utils
+
+Docs:
+- example with nesting through tag and slot
