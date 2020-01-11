@@ -1,20 +1,20 @@
 {
   "name": "@qutejs/bundles",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "private": true,
   "keywords": [],
   "author": "Bogdan Stefanescu <bogdan@quandora.com>",
   "license": "MIT",
   "description": "Qute web bundles",
   "devDependencies": {
-    "@qutejs/rollup-plugin-qute": "0.10.0",
-    "@qutejs/runtime": "0.10.0",
-    "@qutejs/dev": "0.10.0",
-    "@qutejs/router": "0.10.0",
-    "@qutejs/popup": "0.10.0",
-    "@qutejs/modal": "0.10.0",
-    "@qutejs/spinner": "0.10.0",
-    "@qutejs/polyfill": "0.10.0"
+    "@qutejs/rollup-plugin-qute": "0.11.0",
+    "@qutejs/runtime": "0.11.0",
+    "@qutejs/dev": "0.11.0",
+    "@qutejs/router": "0.11.0",
+    "@qutejs/popup": "0.11.0",
+    "@qutejs/modal": "0.11.0",
+    "@qutejs/spinner": "0.11.0",
+    "@qutejs/polyfill": "0.11.0"
   },
   "homepage": "https://qutejs.org",
   "repository": {
