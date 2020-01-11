@@ -6,6 +6,7 @@ import { getVMOrTag, getVM } from './registry.js';
 import {createListeners, createListener, SetClass, SetStyle, SetDisplay, SetToggle, SetText, SetInnerHTML, SetAttr, SetDOMAttrs, SetFuncAttrs, SetFuncAttr} from './binding.js';
 import { filterKeys } from './utils.js';
 import Emitter from './emit.js';
+import applyUserDirectives from './x-use.js';
 
 function ViewRenderingContext(model, marker, isExpr, changeCb, noCache, xattrs, childrenFn) {
 
@@ -150,11 +151,7 @@ function removeRange(from, to) {
 function applyListeners(el, vm, listeners, doNotWrap) {
 	for (var key in listeners) {
 		var fn = listeners[key];
-		if (key === 'create') {
-			fn.call(vm, el);
-		} else {
-			el.addEventListener(key, doNotWrap ? fn : createListener(vm, fn));
-		}
+		el.addEventListener(key, doNotWrap ? fn : createListener(vm, fn));
 	}
 }
 
@@ -215,6 +212,7 @@ var RenderingProto = {
 	},
 	h: function(tag, xattrs, children) { // dom node
 		var el = document.createElement(tag);
+		var userDirs = null;
 		if (xattrs) {
 			var vm = this.vm;
 			for (var key in xattrs) {
@@ -233,6 +231,8 @@ var RenderingProto = {
 						up = SetToggle(el, vm, val);
 					} else if (key === '$html') {
 						up = SetInnerHTML(el, vm, val);
+					} else if (key === '$use') { // apply extra directives
+						userDirs = val;
 					} else if (key === '$attrs') {
 						up = SetDOMAttrs(el, vm, val);
 					} else if (key === '$listeners') {
@@ -256,6 +256,10 @@ var RenderingProto = {
 			}
 		}
 		if (children) appendChildren(el, children);
+		// we should apply any user directive after the children are added.
+		if (userDirs) {
+			applyUserDirectives(el, vm, userDirs);
+		}
 		return el;
 	},
 	// element with static children (innerHTML is set from the subtree)
@@ -286,18 +290,24 @@ var RenderingProto = {
 			return vm.$create(this, xattrs, slots);
 		} else if (XTag.$compiled) { // a compiled template
 			var oldVm = this.vm;
-			this.vm = this.functx(this.vm, xattrs, slots);
+			var fnVm = this.functx(this.vm, xattrs, slots);
+			this.vm = fnVm;
 			var el = XTag(this, xattrs, slots); // pass xattrs and slots too?
-			this.vm.$el = el;
+			fnVm.$el = el;
 			// apply root bindings if any (x-class, x-style or x-show)
-			if (this.vm.$bindings) {
-				var bindings = this.vm.$bindings;
+			if (fnVm.$bindings) {
+				var bindings = fnVm.$bindings;
 				for (var i=0,l=bindings.length; i<l; i+=2) {
 					var up = bindings[i](el, oldVm, bindings[i+1]);
 					this.up(up)();
 				}
 			}
-			if (this.vm.$listeners) applyListeners(el, this.vm, this.vm.$listeners, true);
+			if (fnVm.$listeners) applyListeners(el, fnVm, fnVm.$listeners, true);
+			// call user directives if any
+			if (fnVm.$use) {
+				// use parent vm as custom directives context
+				applyUserDirectives(el, oldVm, fnVm.$use);
+			}
 			this.vm = oldVm;
 			return el;
 		} else { // a hand written function
@@ -409,6 +419,7 @@ var RenderingProto = {
 			$slots: slots,
 			$el: null,
 			$bindings: null,
+			$use: null, // user callbacks - registered through x-use
 			emit: Emitter.emit,
 			emitAsync: Emitter.emitAsync
 		}
@@ -445,6 +456,8 @@ var RenderingProto = {
 				} else if (key === '$toggle') {
 					if (!bindings) bindings = [];
 					bindings.push(SetToggle, val);
+				} else if (key === '$use') {
+					ctx.$use = val;
 				}
 			}
 		}

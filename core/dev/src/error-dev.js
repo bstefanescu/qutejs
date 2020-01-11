@@ -41,6 +41,7 @@ var errors = {
 	20: "Invalid dynamic component. Should be a ViewModel constructor or a xtag name",
 	// no more used
 	//21: "Found a 'nested' element without a 'name' attribute",
+	22: "Unknown user attribute directive: '%s'",
 	23: "Could not resolve ViewModel at runtime for tag: '%s'",
 	24: "dynamic for directive accepts only List instances and not regular arrays",
 	25: "List properties cannot be used with the static for directive",

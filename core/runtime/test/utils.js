@@ -13,7 +13,8 @@ export function createMountPoint(id) {
 
 export function mountTest(TestVM) {
 	var mountPoint = createMountPoint(TestVM.prototype.$tag);
-	new TestVM().mount(mountPoint);
+	var vm = new TestVM().mount(mountPoint);
+	mountPoint.$vm = vm;
 	return mountPoint;
 }
 

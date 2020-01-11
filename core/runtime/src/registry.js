@@ -2,6 +2,7 @@
 
 var VMS = {};
 var XTAGS = {};
+var ATTRS = {};
 
 export function QName(tag) {
 	var i = tag.indexOf(':');
@@ -51,6 +52,14 @@ export function registerVM(tag, vm) {
 
 export function getVMOrTag(tag) {
 	return VMS[tag] || XTAGS[tag];
+}
+
+export function getDirective(key) {
+	return ATTRS[key];
+}
+
+export function registerDirective(key, dirFn) {
+	ATTRS[key] = dirFn;
 }
 
 export function snapshotRegistry() {

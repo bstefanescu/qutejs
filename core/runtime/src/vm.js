@@ -8,7 +8,7 @@ import UpdateQueue from './update.js';
 import Context from './context.js';
 import {createListeners, SetProp, SetVMAttrs, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
 import Emitter from './emit.js';
-
+import applyUserDirectives from './x-use.js';
 
 function isEnumerable(key) {
 	return key.charCodeAt(0) !== 95; // keys starting with _ are not enumerable
@@ -79,6 +79,8 @@ function ViewModel(ctx, attrs) {
 	Object.defineProperty(this, '$listeners', prop);
 	// the slots injected by the caller
 	Object.defineProperty(this, '$slots', prop);
+	// custom use attr directives - should be called on component create.
+	Object.defineProperty(this, '$use', prop);
 	// the view root element
 	Object.defineProperty(this, '$el', prop);
 	// chained cleanup functions if any was registered
@@ -224,6 +226,8 @@ ViewModel.prototype = {
 						bindings.push(SetToggle, val);
 					} else if (key === '$channel') {
 						this.listen(val);
+					} else if (key === '$use') {
+						this.$use = val;
 					} else {
 						ERR(26, key);
 					}
@@ -253,6 +257,8 @@ ViewModel.prototype = {
 		this.created && this.created(el);
 		// this can trigger a connect if tree is already connected (for example when inserting a comp in a connected list)
 		parentRendering && parentRendering.$push(this);
+		// should use parent vm for as context for custom directives
+		if (this.$use) applyUserDirectives(el, parentRendering.vm, this.$use);
 		return el;
 	},
 

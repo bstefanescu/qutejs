@@ -9,7 +9,7 @@ import ViewModel from './vm.js';
 import Context from './context.js';
 import List from './list.js';
 import { createListener } from './binding.js';
-import { registerTag, registerVM, getTag, getVM, getVMOrTag, snapshotRegistry, restoreRegistry } from './registry.js';
+import { registerTag, registerVM, getTag, getVM, getVMOrTag, snapshotRegistry, restoreRegistry, registerDirective } from './registry.js';
 
 /**
  * We cannot use Object.assign since getter are lost. So we copy the prop def itself
@@ -124,6 +124,7 @@ Qute.snapshotRegistry = snapshotRegistry;
 Qute.restoreRegistry = restoreRegistry;
 Qute.vm = getVM;
 Qute.vmOrTemplate = getVMOrTag;
+Qute.registerDirective = registerDirective;
 
 Qute.runAfter = function(cb) { UpdateQueue.runAfter(cb); }
 Qute.closest = closestVM;

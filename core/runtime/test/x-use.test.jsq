@@ -1,0 +1,125 @@
+import assert from 'assert';
+import {snapshot} from '@qutejs/test-utils';
+import window, {document} from '@qutejs/window';
+import Qute from '..';
+import { mountTest, click, runAfter } from './utils.js';
+
+
+<x-tag name='color-spans-1'>
+	<div x-use:color-spans>Hello <span>world</span>!</div>
+</x-tag>
+
+<x-tag name='color-spans-2'>
+	<div x-use:color-spans='{color:"red"}'>Hello <span>world</span>!</div>
+</x-tag>
+
+Qute.registerDirective('color-spans', function(el, config) {
+	var color = (config && config.color) || 'green';
+	var spans = el.getElementsByTagName('span');
+	for (var i=0,l=spans.length; i<l; i++) spans[i].style.color = color;
+});
+
+var TestColorSpans1 = Qute('color-spans-1');
+var TestColorSpans2 = Qute('color-spans-2');
+
+// -------
+
+<x-tag name='test-lambda-1'>
+    <div>
+    <input type='text' name='name' value='Hello World!' x-use='el => this.inputEl = el'><button @click='onClick'>Click me!</button>
+    </div>
+</x-tag>
+
+var TestLambda1 = Qute('test-lambda-1', {
+	init() {
+		this.clicked = 0;
+	},
+    onClick() {
+    	assert.equal(this.inputEl.value, 'Hello World!');
+    	this.clicked++;
+    }
+});
+
+<x-tag name='test-lambda-2'>
+    <div>
+    <input type='text' name='name' value='Hello World!' x-call='el => this.inputEl = el'><button @click='onClick'>Click me!</button>
+    </div>
+</x-tag>
+
+var TestLambda2 = Qute('test-lambda-2', {
+	init() {
+		this.clicked = 0;
+	},
+    onClick() {
+    	assert.equal(this.inputEl.value, 'Hello World!');
+    	this.clicked++;
+    }
+});
+
+// -------
+
+
+<x-tag name='my-fn'>
+	<div>Hello <span>world</span>!</div>
+</x-tag>
+
+<x-tag name='test-fn'>
+	<my-fn x-use='testOnCreate' x-use:color-spans='{color:"cyan"}' />
+</x-tag>
+
+var TestFn = Qute('test-fn', {
+	testOnCreate(el) {
+		assert.equal(this.$tag, 'test-fn');
+		assert.equal(el.tagName, 'DIV');
+		assert.equal(el.textContent, 'Hello world!');
+	}
+});
+
+<x-tag name='my-vm'>
+	<div>Hello <span>world</span>!</div>
+</x-tag>
+
+<x-tag name='test-vm'>
+	<my-vm x-use='testOnCreate' x-use:color-spans='{color:"blue"}' />
+</x-tag>
+
+var TestVm = Qute('test-vm', {
+	testOnCreate(el) {
+		assert.equal(this.$tag, 'test-vm');
+		assert.equal(el.tagName, 'DIV');
+		assert.equal(el.textContent, 'Hello world!');
+	}
+});
+
+
+describe('x-use attribute', function() {
+
+	it('calls registered directives (no config)', function() {
+		var test1 = mountTest(TestColorSpans1);
+		assert.equal(test1.getElementsByTagName('span')[0].style.color, 'green');
+	});
+	it('calls registered directives (with config)', function() {
+		var test2 = mountTest(TestColorSpans2);
+		assert.equal(test2.getElementsByTagName('span')[0].style.color, 'red');
+	});
+	it('calls lambda callbacks using x-use', function() {
+		var test3 = mountTest(TestLambda1);
+		assert.equal(test3.$vm.clicked, 0);
+		click(test3.querySelector('button'));
+		assert.equal(test3.$vm.clicked, 1);
+	});
+	it('calls lambda callbacks using x-call', function() {
+		var test4 = mountTest(TestLambda2);
+		assert.equal(test4.$vm.clicked, 0);
+		click(test4.querySelector('button'));
+		assert.equal(test4.$vm.clicked, 1);
+	});
+	it('works on functional components', function() {
+		var test5 = mountTest(TestFn);
+		assert.equal(test5.getElementsByTagName('span')[0].style.color, 'cyan');
+	});
+	it('works on VM components', function() {
+		var test6 = mountTest(TestVm);
+		assert.equal(test6.getElementsByTagName('span')[0].style.color, 'blue');
+	});
+});

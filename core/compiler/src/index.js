@@ -201,6 +201,15 @@ function _events(events, ctx) {
 	}
 	return out.length ? '{'+out.join(',')+'}' : null;
 }
+function _directives(directives, ctx) { // apply custom directives
+	var out = [];
+	for (var key in directives) {
+		// @ is used as a lambda attr directive: x-use='cb', x-call='cb'
+		var val = key === '@' ? _cb(directives[key], ctx) : _xo(directives[key], ctx);
+		out.push(_s(key)+':'+val);
+	}
+	return out.length ? '{'+out.join(',')+'}' : null;
+}
 /*
 function _attrs(attrs) {
 	var out = null;
@@ -260,9 +269,8 @@ function _xattrs(attrs, bindings, xattrs, directives, events, ctx) {
 	}
 	if (directives) {
 		out || (out = []);
-		for (var key in directives) {
-			out.push(_s(key)+':'+directives[key]); // directives are already encoded
-		}
+		var v = _directives(directives, ctx);
+		if (v) out.push('"$use":'+v); // extra directives
 	}
 	if (events) {
 		out || (out = []);
@@ -331,7 +339,7 @@ function DomNode(name, attrs) {
 	}
 	this.directive = function(name, value) {
 		if (!this.directives) this.directives = {};
-		this.directives[name] = value;
+		this.directives[name] = value === true ? "true" : value;
 	}
 	this.on = function(name, value) {
 		var events = this.events || (this.events = {});
@@ -468,12 +476,17 @@ function DomNode(name, attrs) {
 	        	var ctype = name.substring('x-content-'.length);
 	        	r = new StaticNode(this, ctype !== 'html' ? ctype : null);
 	        } else if (attr.expr) {
-	        	// an expression: support { ... } as an alternative for :name
 	    		this.bind(name, attr.value);
 	    	} else if (name.startsWith('x-bind:')) {
 	    		this.bind(name.substring(7), attr.value);
 	    	} else if (name.startsWith('x-on:')) {
 	    		this.on(name.substring(5), attr.value);
+	    	} else if (name.startsWith('x-use:')) {
+	    		this.directive(name.substring(6), attr.value);
+	    	} else if (name.startsWith('x-call:')) { // an alias to x-use
+	    		this.directive(name.substring(7), attr.value);
+	    	} else if (name === 'x-use' || name === 'x-call') {
+	    		this.directive('@', attr.value);
 	        } else {
 	        	this.attr(name, attrValue(attr));
 	        }

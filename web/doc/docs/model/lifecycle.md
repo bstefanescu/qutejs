@@ -49,41 +49,6 @@ This handler can be used to cleanup resources setup by the `connected` handler.
 ## Functional Components and the Life Cycle
 
 Functional components doesn't take part to the component life cycle, these components are just rendering functions.  \
-However, there is a way to be notified at the functional component level when the component containing it is connected.
-For this, we need to use the special event `@create` which can be used on any element and is fired when the element is created.
+However, there is a way to be notified at the functional component level when the parent ViewModel component is connected to the DOM.
 
-Here is an example:
-
-```jsq
-<x-tag name='functional' import='handleFuncLoad'>
-    <div @create='handleFuncLoad'>I am a functional component</div>
-</x-tag>
-
-<x-tag name='root'>
-    <functional />
-</x-tag>
-
-function _disconnected(vm) {
-    console.log('Parent VM disconnected');
-}
-function _connected(vm) {
-    console.log('Parent VM connected');
-}
-function handleFuncLoad(el) {
-    var ctx = this;
-    ctx.$parent.setup(function() {
-        // called when parent vm connected register cleanup on disconnect
-        _connected(ctx.$parent);
-        ctx.$parent.cleanup(function() {
-            _disconnected(ctx.$parent);
-        });
-    });
-}
-
-export default Qute('root');
-```
-
-In this example, we are retrieving the closest `ViewModel` containing the functional component (for this we use the $parent property of the functional component context) and we register a setup function that will be called when the component is connected. The setup function is registering cleanup function that will be called when the component is disconnected.
-
-The `import` attribute of `x-tag` is required to access variables declared in the current file within the template.
-
+See the **[x-use](#/attributes/x-use)** page for an example.
