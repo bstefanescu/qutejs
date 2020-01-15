@@ -40,19 +40,19 @@ import { mountTest, runAfter } from './utils.js';
 
 var DomTestRoot = Qute('dom-test-root', {
 	init() {
-		this.list = new Qute.List(['item1', 'item2', 'item3']);
+		this.list = ['item1', 'item2', 'item3'];
 	}
 });
 
 var FuncTestRoot = Qute('func-test-root', {
 	init() {
-		this.list = new Qute.List(['item1', 'item2', 'item3']);
+		this.list = ['item1', 'item2', 'item3'];
 	}
 });
 
 var VmTestRoot = Qute('vm-test-root', {
 	init() {
-		this.list = new Qute.List(['item1', 'item2', 'item3']);
+		this.list = ['item1', 'item2', 'item3'];
 	}
 });
 
@@ -79,7 +79,7 @@ Qute('vm-comp', {
 
 var VmTestRoot2 = Qute('vm-test-root-2', {
 	init() {
-		this.list = new Qute.List([{id:1, text:'item1'}, {id:2, text:'item2'}, {id:3, text:'item3'}]);
+		this.list = [{id:1, text:'item1'}, {id:2, text:'item2'}, {id:3, text:'item3'}];
 	}
 });
 
@@ -97,6 +97,21 @@ Qute('vm-comp-2', {
 	}
 });
 
+function removeItem(list, value) {
+	var i = list.indexOf(value);
+	if (i > -1) {
+		return list.splice(i, 1);
+	}
+	return null;
+}
+function moveItem(list, from, to) {
+	var fromVal = list[from];
+	var toVal = list[to];
+
+	list[from] = toVal;
+	list[to] = fromVal;
+}
+
 describe('x-for attribute', function() {
 
 	context('x-for works on DOM elements', function() {
@@ -108,6 +123,7 @@ describe('x-for attribute', function() {
 		var vm = test.firstChild.__qute__;
 		it('updates on insertion', function(done) {
 			vm.list.push('item4');
+			vm.update();
 			runAfter(function() {
 				assert.equal(test.textContent.trim(), "item1 item2 item3 item4");
 				done();
@@ -115,7 +131,8 @@ describe('x-for attribute', function() {
 		});
 
 		it('updates on removal', function(done) {
-			vm.list.remove('item2');
+			removeItem(vm.list, 'item2');
+			vm.update();
 			runAfter(function() {
 				assert.equal(test.textContent.trim(), "item1 item3 item4");
 				done();
@@ -123,7 +140,8 @@ describe('x-for attribute', function() {
 		});
 
 		it('updates on move', function(done) {
-			vm.list.move(0, 1);
+			moveItem(vm.list, 0, 1);
+			vm.update();
 			runAfter(function() {
 				assert.equal(test.textContent.trim(), "item3 item1 item4");
 				done();
@@ -142,6 +160,7 @@ describe('x-for attribute', function() {
 		var vm = test.firstChild.__qute__;
 		it('updates on insertion', function(done) {
 			vm.list.push('item4');
+			vm.update();
 			runAfter(function() {
 				assert.equal(test.textContent.trim(), "item1 item2 item3 item4");
 				assert.equal(vmFnCompCnt, 4);
@@ -150,7 +169,8 @@ describe('x-for attribute', function() {
 		});
 
 		it('updates on removal', function(done) {
-			vm.list.remove('item2');
+			removeItem(vm.list, 'item2');
+			vm.update();
 			runAfter(function() {
 				assert.equal(test.textContent.trim(), "item1 item3 item4");
 				assert.equal(vmFnCompCnt, 3);
@@ -159,7 +179,8 @@ describe('x-for attribute', function() {
 		});
 
 		it('updates on move', function(done) {
-			vm.list.move(0, 1);
+			moveItem(vm.list, 0, 1);
+			vm.update();
 			runAfter(function() {
 				assert.equal(test.textContent.trim(), "item3 item1 item4");
 				assert.equal(vmFnCompCnt, 3);
@@ -179,6 +200,7 @@ describe('x-for attribute', function() {
 		var vm = test.firstChild.__qute__;
 		it('updates on insertion', function(done) {
 			vm.list.push('item4');
+			vm.update();
 			runAfter(function() {
 				assert.equal(test.textContent.trim(), "item1 item2 item3 item4");
 				assert.equal(vmCompCnt, 4);
@@ -187,7 +209,8 @@ describe('x-for attribute', function() {
 		});
 
 		it('updates on removal', function(done) {
-			vm.list.remove('item2');
+			removeItem(vm.list, 'item2');
+			vm.update();
 			runAfter(function() {
 				assert.equal(test.textContent.trim(), "item1 item3 item4");
 				assert.equal(vmCompCnt, 3);
@@ -196,7 +219,8 @@ describe('x-for attribute', function() {
 		});
 
 		it('updates on move', function(done) {
-			vm.list.move(0, 1);
+			moveItem(vm.list, 0, 1);
+			vm.update();
 			runAfter(function() {
 				assert.equal(test.textContent.trim(), "item3 item1 item4");
 				assert.equal(vmCompCnt, 3);
@@ -216,6 +240,7 @@ describe('x-for attribute', function() {
 		var vm = test.firstChild.__qute__;
 		it('updates on insertion', function(done) {
 			vm.list.push({id: 4, text: 'item4'});
+			vm.update();
 			runAfter(function() {
 				assert.equal(test.textContent.trim(), "1:item1 2:item2 3:item3 4:item4");
 				assert.equal(vmComp2Cnt, 4);
@@ -228,6 +253,7 @@ describe('x-for attribute', function() {
 				return item.id === 2;
 			});
 			vm.list.splice(i, 1);
+			vm.update();
 			runAfter(function() {
 				assert.equal(test.textContent.trim(), "1:item1 3:item3 4:item4");
 				assert.equal(vmComp2Cnt, 3);
@@ -236,7 +262,8 @@ describe('x-for attribute', function() {
 		});
 
 		it('updates on move', function(done) {
-			vm.list.move(0, 1);
+			moveItem(vm.list, 0, 1);
+			vm.update();
 			runAfter(function() {
 				assert.equal(test.textContent.trim(), "3:item3 1:item1 4:item4");
 				assert.equal(vmComp2Cnt, 3);
@@ -247,3 +274,8 @@ describe('x-for attribute', function() {
 	});
 
 });
+
+
+
+describe.skip('TODO - rewriting reactive lists!', ()=>{});
+

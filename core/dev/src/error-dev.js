@@ -43,15 +43,16 @@ var errors = {
 	//21: "Found a 'nested' element without a 'name' attribute",
 	22: "Unknown user attribute directive: '%s'",
 	23: "Could not resolve ViewModel at runtime for tag: '%s'",
-	24: "dynamic for directive accepts only List instances and not regular arrays",
-	25: "List properties cannot be used with the static for directive",
+	//24: "dynamic for directive accepts only List instances and not regular arrays",
+	//25: "List properties cannot be used with the static for directive",
 	26: "Bug? Unknown xattr name: %s",
 	27: "Unknown converter: %s",
 	28: "x-channel cannot be used on regular DOM elements: %s",
 	// update.js
 	30: "Possible infinite loop detected",
 	// vm.js
-	31: "Incompatible assign for list property: %s",
+	//31: "Incompatible assign for list property: %s",
+
 	32: "No render function defined for the ViewModel!",
 	33: "VM is already mounted!",
 	34: "VM is not mounted!",

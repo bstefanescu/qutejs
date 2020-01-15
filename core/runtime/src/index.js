@@ -7,7 +7,6 @@ import UpdateQueue from './update.js';
 import Rendering from './rendering.js';
 import ViewModel from './vm.js';
 import Context from './context.js';
-import List from './list.js';
 import { createListener } from './binding.js';
 import { registerTag, registerVM, getTag, getVM, getVMOrTag, snapshotRegistry, restoreRegistry, registerDirective } from './registry.js';
 
@@ -82,7 +81,6 @@ function Qute(tag, def, BaseVm) {
 	return VMType;
 }
 
-Qute.List = List;
 Qute.ViewModel = ViewModel;
 
 // link a viewmodel to a template. Usefull for classes where defining prototype methods is not part of the class syntax

@@ -591,29 +591,44 @@ function ListNode(expr, node) {
 	this.node = node;
 	this.list = null;
 	this.item = null;
-	this.index = '$2';
-	this.hasNext = '$3';
 
 	// parse expr
 	parseForExpr(this, expr);
+
+	if (this.index || this.hasNext) {
+		ERR("reactive lists doesn't support index and hasNext iteration properties")
+	}
 
 	this.append = function(node) {
 		this.node.append(node);
 	}
 
 	this.compile = function(ctx) {
-		// we wrap children in a inline fucntion def so that item, index and has_next are resolved inside the children nodes
-		// also, _x function must not rewrite item, index and has_next variable ...
+		// look for a x-key attr
+		var attrs = this.node.attrs;
+		var key = attrs && attrs['x-key'];
+		if (key) {
+			// encode key
+			var keyFn = getArrowFn(key, ctx);
+			if (keyFn) {
+				key = keyFn;
+			} else {
+				key = _s(key);
+			}
+			delete attrs['x-key'];
+		}
+		if (!key) {
+			key = 'null';
+		}
+
 		// 1. compile children and avoid rewriting iteration vars
 		var forCtx = ctx.push();
 		var forSymbols = forCtx.symbols;
 		forSymbols[this.item] = true;
-		forSymbols[this.index] = true;
-		forSymbols[this.hasNext] = true;
 		var children = _node(this.node, forCtx);
 		// 2. wrap children
-		var childrenFn = 'function($,'+this.item+','+this.index+','+this.hasNext+'){return '+children+'}';
-		return _fn('l', _v(_x(this.list, ctx)), childrenFn);
+		var childrenFn = 'function($,'+this.item+'){return '+children+'}';
+		return _fn('l', _v(_x(this.list, ctx)), childrenFn, key);
 	}
 
 }

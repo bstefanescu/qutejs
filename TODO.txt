@@ -1,4 +1,4 @@
-
+0. remove propKey from update functions
 1. move more functions to @qutejs/test-utils
 2. Be able to declare private templates in JSQ files?
 3. use setAsap instead of setTimeout in update queue?

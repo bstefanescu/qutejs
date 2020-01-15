@@ -7,6 +7,7 @@ import {createListeners, createListener, SetClass, SetStyle, SetDisplay, SetTogg
 import { filterKeys } from './utils.js';
 import Emitter from './emit.js';
 import applyUserDirectives from './x-use.js';
+import ListFragment from './list-fragment.js';
 
 function ViewRenderingContext(model, marker, isExpr, changeCb, noCache, xattrs, childrenFn) {
 
@@ -104,8 +105,6 @@ function ForRenderingContext(model, start, end, listFn, iterationFn) {
 			// render content
 			if (list) {
 				if (!Array.isArray(list)) {
-					//if (list instanceof List) ERR(25);
-					if (list.$createListFragment) ERR(25);
 					list = Object.keys(list);
 				}
 				if (list.length > 0) {
@@ -351,12 +350,12 @@ var RenderingProto = {
 		this.up(ieFrag);
 		return frag;
 	},
-	// dynamic lists - which is tracking changes and update itself
-	l: function(listFn, iterationFn) {
-		var list = listFn(this.vm);
-		//if (!list instanceof List)) ERR(24);
-		if (!list.$createListFragment) ERR(24);
-		return list.$createListFragment(this, iterationFn);
+	// dynamic lists - which is updating only items that changed
+	l: function(listFn, iterationFn, key) {
+		if (!key) {
+			console.warn("Reactive list used without a 'x-key' attribute: Performance will suffer!");
+		}
+		return new ListFragment(this, listFn, iterationFn, key).$create();
 	},
 	// static array variant of lists - this cannot be updated it is rendered once at creation
 	a: function(listFn, iterationFn) {
@@ -409,6 +408,10 @@ var RenderingProto = {
 		var model = this.vm, ups = this.ups;
 		for (var i=0,l=ups.length;i<l;i++) ups[i](model);
 		return this;
+	},
+	// create a new rendering instance using the same vm
+	$new: function() {
+		return new Rendering(this.vm);
 	},
 	functx: function(vm, xattrs, slots) { // functional context
 		var $attrs = {};

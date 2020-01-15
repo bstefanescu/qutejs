@@ -3,7 +3,6 @@ import ERR from './error.js';
 import { stopEvent, chainFnAfter, closestVM, kebabToCamel } from './utils.js';
 
 import Rendering from './rendering.js';
-import List from './list.js';
 import UpdateQueue from './update.js';
 import Context from './context.js';
 import {createListeners, SetProp, SetVMAttrs, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
@@ -26,36 +25,7 @@ function defProp(key) {
 				var watcher = this.$el && this.$watch && this.$watch[key]; // if not connected whatchers are not enabled
 				// avoid updating if watcher return false
 				if (watcher && watcher.call(this, value, old) === false) return;
-				this.update(key);
-			}
-		},
-		enumerable: isEnumerable(key) // keys starting with _ are not enumerable
-	}
-}
-
-function listProp(key) {
-	return {
-		get: function() {
-			return this.$data[key];
-		},
-		set: function(value) {
-			var old = this.$data[key];
-			if (old !== value) {
-				if (!value) { // remove list content
-					this.$data[key].clear();
-				} else if (Array.isArray(value)) {
-					this.$data[key].replace(value);
-				} else if (value instanceof List) {
-					//TODO should we copy the data?
-					if (old) old.$disconnect();
-					this.$data[key] = value;
-				} else {
-					ERR(31, value);
-				}
-				var watcher = this.$watch && this.$watch[key];
-				// avoid updating if watcher return false
-				if (watcher && watcher.call(this, value, old) === false) return;
-				this.update(key);
+				this.update();
 			}
 		},
 		enumerable: isEnumerable(key) // keys starting with _ are not enumerable
@@ -94,7 +64,7 @@ function ViewModel(ctx, attrs) {
 	Object.defineProperty(this, '$data', prop);
 	if (data) {
 		for (var key in data) {
-			Object.defineProperty(this, key, data[key] instanceof List ? listProp(key) : defProp(key));
+			Object.defineProperty(this, key, defProp(key));
 		}
 	}
 
@@ -289,17 +259,17 @@ ViewModel.prototype = {
 		this.$disconnect();
 		this.$el.parentNode.removeChild(this.$el);
 	},
-	$update: function(key) {
+	$update: function() {
 		if (this.$el) { // only if connected
 			this.$r.$update();
 		}
 	},
-	update: function(key) {
+	update: function() {
 		if (this.$st === 1) { // only if connected and not already scheduled to update
 			this.$st |= 2; // set updating flag
 			var self = this;
 			UpdateQueue.push(function() {
-				self.$update(key);
+				self.$update();
 				self.$st ^= 2; // remove updating flag
 			});
 		}
