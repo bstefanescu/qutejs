@@ -8,6 +8,7 @@ import Context from './context.js';
 import {createListeners, SetProp, SetVMAttrs, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
 import Emitter from './emit.js';
 import applyUserDirectives from './x-use.js';
+import {ModelProp} from './model.js'
 
 function isEnumerable(key) {
 	return key.charCodeAt(0) !== 95; // keys starting with _ are not enumerable
@@ -64,7 +65,10 @@ function ViewModel(ctx, attrs) {
 	Object.defineProperty(this, '$data', prop);
 	if (data) {
 		for (var key in data) {
-			Object.defineProperty(this, key, defProp(key));
+			var val = data[key];
+			Object.defineProperty(this, key,
+				val instanceof ModelProp ? val.bind(this, key) : defProp(key)
+			);
 		}
 	}
 
