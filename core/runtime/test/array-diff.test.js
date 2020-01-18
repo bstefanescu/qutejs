@@ -130,6 +130,7 @@ describe('Testing Array Diff', function() {
 			[3,2,1], // swap left and right
 			[4,5], // replace with another list
 			[6,7,8,9], // replace with another list
+			[6,7,8,9] // no changes
 		);
 	});
 
@@ -147,7 +148,18 @@ describe('Testing Array Diff', function() {
 		);
 	});
 
-	it('diffing on same array works', function() {
+	it('diffing on similar arrays works', function() {
+		var adiff = new ArrayDiff('.');
+
+		var diff = adiff.update([1,2,3]);
+		assert.equal(diff.length, 3);
+		assert.equal(diff[0], 1); // one set
+
+		diff = adiff.update([1,2,3]);
+		assert.equal(diff.length, 0);
+	});
+
+	it('diffing on same array instance works', function() {
 		var input = [1,2,3];
 		var adiff = new ArrayDiff('.');
 

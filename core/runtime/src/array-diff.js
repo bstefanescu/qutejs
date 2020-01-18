@@ -76,9 +76,8 @@ ArrayDiff.prototype = {
 			fromMap[keyOf(from[i])] = true;
 		}
 
-		var j = 0;
-		for (var i=0; i<l2; i++) {
-
+		var i = 0, j = 0;
+		for (; j<l1 && i<l2; i++) {
 			var it2 = from[i];
 			var key2 = keyOf(it2);
 			var key1 = keyOf(ar[j]);
@@ -98,31 +97,38 @@ ArrayDiff.prototype = {
 				// a new item - insert
 				if (j < l1) {
 					diff.push(INSERT, it2, key2, key1);
-				} else {
-					diff.push(APPEND, it2, key2);
 				}
 			} else {
 				// item already exists
-				if (j < l1) {
-					if (key1 === key2) {
-						// unchanged - continue
-						j++;
-					} else if (fromMap[key1]) {
-						// items differs - moved
-						moved[key2] = true;
-						diff.push(MOVE, key2, key1);
-					} else {
-						// item removed
-						diff.push(REMOVE, key1);
-						i--; // repeat the item
-						j++;
-					}
+				if (key1 === key2) {
+					// unchanged - continue
+					j++;
+				} else if (fromMap[key1]) {
+					// items differs - moved
+					moved[key2] = true;
+					diff.push(MOVE, key2, key1);
+				} else {
+					// item removed
+					diff.push(REMOVE, key1);
+					i--; // repeat the item
+					j++;
 				}
 			}
 		}
 
-		if (j < l1) {
-			// remove remaining items
+		if (i < l2) {
+			// 'ar' consumed but 'from' not consumed
+			// all the remaining 'from' items must be appended if not already moved
+			for (;i<l2;i++) {
+				var item = from[i];
+				var key = keyOf(item);
+				if (!map[key]) {
+					diff.push(APPEND, item, key);
+				}
+			}
+		} else if (j < l1) {
+			// 'from' consumed but 'ar' not consumed
+			// remove remaining 'ar' items if they are not in from
 			for (;j<l1;j++) {
 				var key = keyOf(ar[j]);
 				if (!fromMap[key]) {
@@ -175,4 +181,3 @@ ArrayDiff.run = function(OPS, diff) {
 		}
 	}
 }
-
