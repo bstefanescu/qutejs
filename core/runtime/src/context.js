@@ -1,16 +1,75 @@
 import window from '@qutejs/window';
 import ERR from './error.js';
-import {Model} from './model.js';
+
+function createProp(prop) {
+	return {
+		get() {
+			return prop.value;
+		},
+		set(value) {
+			prop.set(value);
+		},
+		enumerable: true
+	};
+}
+
+function ModelProp(ctx, key, defValue) {
+	this.ctx = ctx;
+	this.key = key;
+	this.value = defValue;
+}
+ModelProp.prototype = {
+	set(value) {
+		if (value !== this.value) {
+			var old = this.value;
+			this.value = value;
+			//TODO postAsync?
+			this.ctx.post('model:'+this.key, value, old);
+			// fire change event only if context is defined
+		}
+	},
+	get() {
+		return this.value;
+	},
+
+	addChangeListener(fn) {
+		this.ctx.subscribe('model:'+this.key, fn);
+		return fn;
+	},
+
+	removeChangeListener(fn) {
+		this.ctx.unsubscribe('model:'+this.key, fn);
+	},
+
+	link(target, name) {
+		var self = this;
+		Object.defineProperty(target, name, createProp(this));
+		return this;
+	},
+
+	$bindVM(vm, key) {
+		var self = this;
+		vm.setup(function() {
+			vm.subscribe('model:'+self.key, function(value, old) {
+				var watcher = this.$el && this.$watch && this.$watch[key]; // if not connected whatchers are not enabled
+				// avoid updating if watcher return false
+				if (watcher && watcher.call(this, value, old) === false) return;
+				this.update();
+			});
+		});
+		return createProp(this);
+	}
+}
+
 
 export default function Context(data) {
-	if (data) Object.assign(this, data);
 	this.topics = {};
-	this.models = {};
+	this.$data = {};
+	data && this.putAll(data);
 }
 
 Context.prototype = {
-
-	post: function(topic, msg, data) {
+	post(topic, msg, data) {
 		var listeners = this.topics[topic];
 		if (listeners) for (var i=0,l=listeners.length;i<l;i++) {
 			if (listeners[i](msg, data) === false) {
@@ -18,11 +77,11 @@ Context.prototype = {
 			}
 		}
 	},
-	postAsync: function(topic, msg, data) {
+	postAsync(topic, msg, data) {
 		var self = this;
 		window.setTimeout(function() { self.post(topic, msg, data); }, 0);
 	},
-	subscribe: function(topic, listenerFn) {
+	subscribe(topic, listenerFn) {
 		var listeners = this.topics[topic];
 		if (!listeners) {
 			this.topics[topic] = listeners = [];
@@ -30,7 +89,7 @@ Context.prototype = {
 		listeners.push(listenerFn);
 		return this;
 	},
-	subscribeOnce: function(topic, event, listenerFn) {
+	subscribeOnce(topic, event, listenerFn) {
 		var self = this;
 		var onceSubscription = function(msg, data) {
 			if (msg === event) {
@@ -41,7 +100,7 @@ Context.prototype = {
 		this.subscribe(topic, onceSubscription);
 		return onceSubscription;
 	},
-	unsubscribe: function(topic, listenerFn) {
+	unsubscribe(topic, listenerFn) {
 		var listeners = this.topics[topic];
 		if (listeners) {
 			var i = listeners.indexOf(listenerFn);
@@ -51,41 +110,32 @@ Context.prototype = {
 		}
 	},
 
-	addModel: function(key, ModelTypeOrData) {
-		var model;
-		if (ModelTypeOrData.prototype instanceof Model) {
-			model = new ModelTypeOrData(key, this);
-		} else {
-			var ModelType = Model(ModelTypeOrData);
-			model = new ModelType(key, this);
-		}
-		return (this.models[key] = model);
-	},
-
-	addModels: function(data) {
-		for (var key in data) {
-			this.addModel(key, data[key]);
-		}
-		return this;
-	},
-
-	model: function(key) {
-		return this.models[key];
-	},
-
-	prop: function(key) {
-		var prop;
-		var i = key.lastIndexOf('/');
-		if (i > -1) {
-			var model = this.models[key.substring(0,i)];
-			if (model) {
-				prop = model.$[key.substring(i+1)];
-			}
-		}
+	data(key) {
+		var prop = this.$data[key];
 		if (!prop) {
-			ERR(40, key)
+			ERR(40, key);
 		}
 		return prop;
-	}
+	},
 
+	put(key, value) {
+		var prop = new ModelProp(this, key, value);
+		this.$data[key] = prop;
+		return prop;
+	},
+
+	putAll(props) {
+		var data = this.$data;
+		for (var key in props) {
+			data[key] = new ModelProp(this, key, props[key]);
+		}
+	},
+
+	link(target, name, prop) {
+		return this.data(prop).link(target, name);
+	},
+
+	view(VM) {
+		return new VM(this);
+	}
 }

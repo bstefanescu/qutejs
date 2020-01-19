@@ -7,7 +7,6 @@ import UpdateQueue from './update.js';
 import Rendering from './rendering.js';
 import ViewModel from './vm.js';
 import Context from './context.js';
-import {Model} from './model.js';
 import { createListener } from './binding.js';
 import { registerTag, registerVM, getTag, getVM, getVMOrTag, snapshotRegistry, restoreRegistry, registerDirective } from './registry.js';
 
@@ -110,7 +109,6 @@ Qute.css = function(css) {
 Qute.converters = {};
 Context.Qute = Qute; // we need this to access globals defined in Qute like converters
 Qute.Context = Context;
-Qute.Model = Model;
 Qute.UpdateQueue = UpdateQueue;
 Qute.Rendering = Rendering;
 // render a functional template given its tag name and a model

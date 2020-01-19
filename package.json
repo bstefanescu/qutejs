@@ -6,7 +6,7 @@
     "build": "ws build",
     "dist": "ws dist",
     "test": "ws test",
-    "start": "ws bundles run 'build dev' watch 'start doc'"
+    "start": "ws bundles run 'build dev' 'watch dev' 'start doc'"
   },
   "keywords": [
     "component",

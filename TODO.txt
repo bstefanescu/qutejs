@@ -1,9 +1,16 @@
+TBD now:
+- Write model doc
+
+TBD Later:
+
 0. remove propKey from update functions
 1. move more functions to @qutejs/test-utils
 2. Be able to declare private templates in JSQ files?
 3. use setAsap instead of setTimeout in update queue?
 4. optimize update queue -> split runs of update in several async chunks? (one chunk per component?)
 5. add buble to dev release
+6. impl x-use:form-validation
+7. redux/flux integration as an example?
 
 Tests:
 - x-toggle

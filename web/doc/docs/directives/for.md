@@ -1,15 +1,18 @@
 # For Directive
 
-The for directive is iterating over lists (i.e. array like objects) or regular objects and renders an HTML fragment on each iteration.
-Any object having an integer length property will be treated as an array like object, otherwise the list will be obtained using `Object.keys(...)`.
+The `for` directive should be used to iterate over **immutable** array like objects or object keys.
 
-The **for** directive will **not update the DOM** when the list content changes (i.e. when items are added / removed / reordered).
+Although the `for` directive is **reactive** (i.e. if the target list is a reactive property which is replaced by another list then the DOM is updated), it will use brute force to update the DOM: the previous elements are replaced with the new ones.
 
-If the list expression is based on a reactive property and this property changes (i.e. the list instance changes ) then the *for* directive will **udpate** the DOM accordingly.
+If you need a `for` directive **optimized for reactivity and DOM updates** then you should use **[x-for](#/attributes/x-for)** which is only updating the changed items.
 
-Thus, **reactivity** is only supported on the list instance and not on the list content.
+This directive was optimized to work over static lists and is giving some additional features over the `x-for` directive:
 
-**Note:** If you need reactivity over the list content then use the [x-for](#/attributes/x-for) attribute.
+1. Each iteration renders a document fragment, and not a single element.
+2. It provides extra an `index` and `hasNext` attributes for each iterated item.
+3. Can iterate over object keys by obtaining the array using `Object.keys()`.
+
+Any object having a `length` property will be treated as an **array like object**, otherwise the list will be obtained using `Object.keys(...)`.
 
 **Syntax:** `<for value='item[,index,hasNext] in staticList'> ... </for>`
 
