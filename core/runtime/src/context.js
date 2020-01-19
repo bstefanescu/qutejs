@@ -61,10 +61,9 @@ ModelProp.prototype = {
 	}
 }
 
-
 export default function Context(data) {
 	this.topics = {};
-	this.$data = {};
+	this.data = {};
 	data && this.putAll(data);
 }
 
@@ -110,28 +109,28 @@ Context.prototype = {
 		}
 	},
 
-	data(key) {
-		var prop = this.$data[key];
+	prop(key) {
+		var prop = this.data[key];
 		if (!prop) {
 			ERR(40, key);
 		}
 		return prop;
 	},
 
-	put(key, value) {
+	defineProp(key, value) {
 		var prop = new ModelProp(this, key, value);
-		this.$data[key] = prop;
+		this.data[key] = prop;
 		return prop;
 	},
 
-	putAll(props) {
-		var data = this.$data;
+	defineProps(props) {
+		var data = this.data;
 		for (var key in props) {
 			data[key] = new ModelProp(this, key, props[key]);
 		}
 	},
 
-	link(target, name, prop) {
+	linkProp(target, name, prop) {
 		return this.data(prop).link(target, name);
 	},
 
