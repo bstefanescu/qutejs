@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/router",
-  "version": "0.11.0",
+  "version": "1.0.0-rc.0",
   "description": "Qute Router",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
@@ -51,8 +51,8 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/runtime": "0.11.0",
-    "@qutejs/window": "0.11.0"
+    "@qutejs/runtime": "1.0.0-rc.0",
+    "@qutejs/window": "1.0.0-rc.0"
   },
   "build": {
     "config": "component",
