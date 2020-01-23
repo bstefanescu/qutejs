@@ -38,24 +38,9 @@
 <x-tag name='page3'>
 	<div>Page 3 content</div>
 </x-tag>
-<x-tag name='login-dialog'>
-	<modal animation='scale-up' x-channel='login-dialog-modal'>
-	<div style='border: 1px solid gray'>
-    	<h3 style='padding: 10px;margin-top:0; border-bottom: 1px solid gray'>Login</h3>
-        <div style='padding: 10px'>
-           	<div><label>Username:</label> <input type='text' name='user' placeholder='foobar'></div>
-        	<div><label>Password:</label> No password is required ;-)</div>
-        	<hr>
-        	<button data-md-action='login'>Login</button>
-        	<button data-md-action='close'>Cancel</button>
-        </div>
-    </div>
-	</modal>
-</x-tag>
 
 <x-tag name='root'>
 	<div>
-		<login-dialog />
 		<div class='clearfix'>
 			<ul class='tbar' style='float:left' @click='onTabClick'>
 				<li><a href='#' data-key='page1'>Page 1</a></li>
@@ -77,14 +62,6 @@
 		</div>
 	</div>
 </x-tag>
-
-
-Qute('login-dialog', {
-	login() {
-		//this.
-		//this.emitAsync('login', );
-	}
-});
 
 var Root = Qute('root', {
 	init(app) {
