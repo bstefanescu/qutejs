@@ -16,7 +16,7 @@ Open the popup. You must specify the **target** element as the extra data attrib
 
 **Example**
 ```
-ctx.post('popup-channel', 'open', targetEl);
+app.post('popup-channel', 'open', targetEl);
 ```
 
 #### close
@@ -25,7 +25,7 @@ Close the popup
 
 **Example**
 ```
-ctx.post('popup-channel', 'close');
+app.post('popup-channel', 'close');
 ```
 
 ### position

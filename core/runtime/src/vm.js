@@ -4,7 +4,7 @@ import { stopEvent, chainFnAfter, closestVM, kebabToCamel } from './utils.js';
 
 import Rendering from './rendering.js';
 import UpdateQueue from './update.js';
-import Context from './context.js';
+import App from './app.js';
 import {createListeners, SetProp, SetVMAttrs, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
 import Emitter from './emit.js';
 import applyUserDirectives from './x-use.js';
@@ -32,14 +32,15 @@ function defProp(key) {
 	}
 }
 
-function ViewModel(ctx, attrs) {
+function ViewModel(app, attrs) {
+	if (!app) app = new App(app);
 	var prop = {};
 	// the attributes set on vm tag which are not declared as props
 	prop.value = {};
 	Object.defineProperty(this, '$attrs', prop);
 	// the app context if any
-	prop.value = ctx instanceof Context ? ctx : new Context(ctx);
-	Object.defineProperty(this, '$ctx', prop);
+	prop.value = app;
+	Object.defineProperty(this, '$app', prop);
 	// the listeners registered on the vm tag
 	prop.value = null;
 	prop.writable = true;
@@ -59,14 +60,14 @@ function ViewModel(ctx, attrs) {
 	prop.value = 0;
 	Object.defineProperty(this, '$st', prop); // state: 0 - default, 1 updating , 2 frozen
 
-	var data = this.init(ctx) || {};
+	var data = this.init(app) || {};
 	prop.value = data;
 	Object.defineProperty(this, '$data', prop);
 	if (data) {
 		for (var key in data) {
 			var val = data[key];
 			Object.defineProperty(this, key,
-				val.$bindVM ? val.$bindVM(this, key) : defProp(key)
+				val && val.$bindVM ? val.$bindVM(this, key) : defProp(key)
 			);
 		}
 	}
@@ -230,7 +231,7 @@ ViewModel.prototype = {
 		this.created && this.created(el);
 		// this can trigger a connect if tree is already connected (for example when inserting a comp in a connected list)
 		parentRendering && parentRendering.$push(this);
-		// should use parent vm for as context for custom directives
+		// should use parent vm as context for custom directives
 		if (this.$use) applyUserDirectives(el, parentRendering.vm, this.$use);
 		return el;
 	},
@@ -310,27 +311,27 @@ ViewModel.prototype = {
 	},
 	emit: Emitter.emit,
 	emitAsync: Emitter.emitAsync,
-	// -------- ctx event bus -------------
+	// -------- app event bus -------------
 	post: function(topic, msg, data) {
-		this.$ctx.post(topic, msg, data);
+		this.$app.post(topic, msg, data);
 	},
 	postAsync: function(topic, msg, data) {
-		this.$ctx.postAsync(topic, msg, data);
+		this.$app.postAsync(topic, msg, data);
 	},
 	// subscribe and register cleanup to remove subscription at disconnect
 	subscribe: function(name, listenerFn) {
-		var ctx = this.$ctx;
-		ctx.subscribe(name, listenerFn.bind(this));
+		var app = this.$app;
+		app.subscribe(name, listenerFn.bind(this));
 		this.cleanup(function() {
-			ctx.unsubscribe(name, listenerFn);
+			app.unsubscribe(name, listenerFn);
 		});
 		return this;
 	},
 	subscribeOnce: function(topic, event, listenerFn) {
-		var ctx = this.$ctx;
-		var onceSubscription = ctx.subscribeOnce(topic, event, listenerFn.bind(this));
+		var app = this.$app;
+		var onceSubscription = app.subscribeOnce(topic, event, listenerFn.bind(this));
 		this.cleanup(function() {
-			ctx.unsubscribe(topic, onceSubscription);
+			app.unsubscribe(topic, onceSubscription);
 		});
 		return this;
 	},

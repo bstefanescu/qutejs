@@ -1,5 +1,16 @@
 # Getting Started
 
+Qute is composed of two main layers:
+
+1. **The presentation layer** - which includes the [templates](#/templates) and the [component model](#/components).
+2. **The application layer** - which includes the [application data model](#/app/data) and [logic](#/app/instance).
+
+When developing basic UI components you will mostly use the **presentation layer**. And you can completly ignore the **application layer**.  \
+When developing more complex components or javascript applications you will need to focus more on the application layer (i.e. **business logic and data**), and less on individual components composing the presentation layer.
+
+The **goal** of Qute is to let you **focus where you need to**. Qute model try to be as concise as possible in order to hide from you repetitive and glue code.  \
+So that, you finally write less code and focus more on the business logic.
+
 To quickly design and test Qute components you can use the **[Qute Playground](../playground/index.html)** or directly code components inlined in a web page.
 
 Though, this method is not suitable for production projects.

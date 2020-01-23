@@ -1,8 +1,8 @@
 import {document} from '@qutejs/window';
 import ERR from './error.js';
 
-import Context from './context.js';
-import { getVMOrTag, getVM } from './registry.js';
+import App from './app.js';
+import { getVMOrTag, getVM, converters } from './registry.js';
 import {createListeners, createListener, SetClass, SetStyle, SetDisplay, SetToggle, SetText, SetInnerHTML, SetAttr, SetDOMAttrs, SetFuncAttrs, SetFuncAttr} from './binding.js';
 import { filterKeys } from './utils.js';
 import Emitter from './emit.js';
@@ -265,7 +265,7 @@ var RenderingProto = {
 	hh:function(tag, xattrs, content, type) {
 		var el = this.h(tag, xattrs);
 		if (type) { // convert can be a function to convert the content before injecting in the dom
-			var converter = Context.Qute.converters[type];
+			var converter = converters[type];
 			if (!converter) {
 				ERR(27, type);
 			}
@@ -285,7 +285,7 @@ var RenderingProto = {
 	// vm component
 	_v: function(XTag, xattrs, slots) { // a vm component (viewmodel)
 		if (isVM(XTag)) {
-			var vm = new XTag(this.vm.$ctx);
+			var vm = new XTag(this.vm.$app);
 			return vm.$create(this, xattrs, slots);
 		} else if (XTag.$compiled) { // a compiled template
 			var oldVm = this.vm;
@@ -480,5 +480,10 @@ function Rendering(vm) {
 	this.isc = false; // is connected?
 }
 Rendering.prototype = RenderingProto;
+
+// make the bindings visible to component implementors
+// add more bindigns here if needed
+Rendering.SetAttr = SetAttr;
+Rendering.SetDisplay = SetDisplay;
 
 export default Rendering;

@@ -13,19 +13,12 @@ function createProp(prop) {
 	};
 }
 
-function ModelProp(ctx, key, defValue) {
-	this.ctx = ctx;
-	this.key = key;
-	this.value = defValue;
-}
-ModelProp.prototype = {
+var PropProto = {
 	set(value) {
 		if (value !== this.value) {
 			var old = this.value;
 			this.value = value;
-			//TODO postAsync?
-			this.ctx.post('model:'+this.key, value, old);
-			// fire change event only if context is defined
+			this.app.post('model:'+this.key, value, old);
 		}
 	},
 	get() {
@@ -33,12 +26,12 @@ ModelProp.prototype = {
 	},
 
 	addChangeListener(fn) {
-		this.ctx.subscribe('model:'+this.key, fn);
+		this.app.subscribe('model:'+this.key, fn);
 		return fn;
 	},
 
 	removeChangeListener(fn) {
-		this.ctx.unsubscribe('model:'+this.key, fn);
+		this.app.unsubscribe('model:'+this.key, fn);
 	},
 
 	link(target, name) {
@@ -61,13 +54,52 @@ ModelProp.prototype = {
 	}
 }
 
-export default function Context(data) {
+var AsyncPropProto = Object.assign({_set: PropProto.set}, PropProto);
+AsyncPropProto.set = function(value) {
+	if (value && value.then) {
+		var self = this;
+		this.pending = true;
+		this.error = null;
+		value.then(function(value) { // resolved
+			self._set(value);
+			self.pending = false;
+		}, function(err) { // rejected
+			this.error = err;
+			this.pending = false;
+		})
+	} else {
+		this.pending = false;
+		this.error = null;
+		this._set(value);
+	}
+}
+
+function Prop(app, key, defValue) {
+	this.app = app;
+	this.key = key;
+	this.value = defValue;
+	app.data[key] = this;
+}
+Prop.prototype = PropProto;
+
+
+function AsyncProp(app, key, defValue) {
+	this.app = app;
+	this.key = key;
+	this.value = defValue;
+	app.data[key] = this;
+	new Prop(app, key+'/pending').link(this, 'pending');
+	new Prop(app, key+'/error').link(this, 'error');
+}
+AsyncProp.prototype = AsyncPropProto;
+
+export default function App(data) {
 	this.topics = {};
 	this.data = {};
 	data && this.putAll(data);
 }
 
-Context.prototype = {
+App.prototype = {
 	post(topic, msg, data) {
 		var listeners = this.topics[topic];
 		if (listeners) for (var i=0,l=listeners.length;i<l;i++) {
@@ -118,23 +150,25 @@ Context.prototype = {
 	},
 
 	defineProp(key, value) {
-		var prop = new ModelProp(this, key, value);
-		this.data[key] = prop;
-		return prop;
+		return new Prop(this, key, value);
+	},
+
+	defineAsyncProp(key, value) {
+		return new AsyncProp(this, key, value);
 	},
 
 	defineProps(props) {
 		var data = this.data;
 		for (var key in props) {
-			data[key] = new ModelProp(this, key, props[key]);
+			data[key] = new Prop(this, key, props[key]);
 		}
-	},
-
-	linkProp(target, name, prop) {
-		return this.data(prop).link(target, name);
 	},
 
 	view(VM) {
 		return new VM(this);
 	}
 }
+
+App.Prop = Prop;
+App.AsyncProp = AsyncProp;
+

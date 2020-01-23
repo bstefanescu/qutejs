@@ -67,7 +67,7 @@ describe('x-html attribute', function() {
 
 describe('x-markdown attribute', function() {
 	Qute.converters.markdown = function(content) {
-		// we don't use a real convevter for testing
+		// we don't use a real converter for testing
 		assert.ok(content.trim().startsWith('# Header'));
 		return "<h1>Header</h1><p>Some markdown</p>";
 	}

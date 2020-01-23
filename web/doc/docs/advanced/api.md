@@ -44,9 +44,9 @@ Usefull to define CSS rules directly in component files.
 
 #### `Qute.register(tag, templateFn, isCompiled)`
 
-Register a template fucntion given its (tag) name.
+Register a template function given its (tag) name.
 
-The `isCompiled` argument must be `true` if the template fucntion weas compiled from a Qute template.
+The `isCompiled` argument must be `true` if the template function was compiled from a Qute template.
 
 You can use this function to register hand written rendering functions. (in that case omit the `isCompiled` arguemnt and use a value of `false`).
 
@@ -86,9 +86,9 @@ The model can any object. You can thus use Qute templates to render anyhting, no
 
 The **Reactive List** type. See **[Reactive Lists](#/attributes/x-for)**.
 
-#### `Qute.Context`
+#### `Qute.App`
 
-The **Qute Context** type.
+The **Qute Application** type.
 
 #### `Qute.ViewModel`
 
@@ -151,15 +151,15 @@ The `handler` has the signature: `function(message, data)`
 
 The channel is not opened by registering the handler. To open a channel you must use a `x-channel` attribute on the component element toi give the channel a name, or, for root components use the `listen(channelName)` method.
 
-For more details see the **[Message Bus](#/model/bus)** and the **[Components](#/components)** section.
+For more details see the **[Message Bus](#/app/bus)** and the **[Components](#/components)** section.
 
 ## The Component Instance API
 
 A component instance is obtained by instantiating the component constructor. The constructor accepts two **optional** arguments:
 
-1. A **Qute Context** or a plain object.
+1. A **Qute Application** instance.
 
-2. An object of attributes, the same as the attributes you may use when instantiating the coimponent through a template.
+2. An object of attributes, the same as the attributes you may use when instantiating the component through a template.
 
 **Example:**
 
@@ -168,8 +168,8 @@ var MyComponent = Qute('my-component', {
 	// component model definition here
 });
 var myComponent1 = new MyComponent();
-// or you can use a specific context and some initial attributes
-var myComponent2 = new MyComponent(ctx, attrs);
+// or you can use a specific app instance and some initial attributes
+var myComponent2 = new MyComponent(app, attrs);
 ```
 
 ### Component properties
@@ -178,9 +178,9 @@ var myComponent2 = new MyComponent(ctx, attrs);
 
 The root element of the component. This property is set after the component is rendered.
 
-#### `$ctx`
+#### `$app`
 
-The current **Qute Context** object.
+The current **Qute Application** object.
 
 #### `$tag`
 

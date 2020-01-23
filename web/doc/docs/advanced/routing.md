@@ -2,11 +2,11 @@
 
 In modern javascript applications you often need a mechanism to navigate between local 'pages' and use the browser history to go back to the previous 'page' without interacting with the server.
 
-Such a mechanism is named `routing` and there are various javascript `routing` implementations.
+Such a mechanism is named `routing` and there are various javascript implementations.
 
 Qute is providing a built-in router implementation, but first, let's examine how a router can be integrated into a Qute Application.
 
-The recommended way to do this is to set the router instance as a **Qute Context** property:
+The recommended way to do this is to set the router instance as a **Qute Applcation** property:
 
 ```javascript
 var router = new Router();
@@ -20,52 +20,53 @@ router.add('*', function() {
 	// do something
 })
 
-// create the Qute application and pass the router imnsytance as a comntext property.
-new MyApp({router: router}).mount('app');
+// create the Qute application and pass the router instance as an app property.
+var app = new Qute.App();
+app.router = router;
 
+// define the root component
+var Root = Qute('app-root');
+// create the a root component and mount it
+new Root(app).mount('app');
 ```
 
-It will be then available in any **Qute Component** as `this.$ctx.router`
+It will be then available in any **Qute Component** in the `Root` component tree as `this.$app.router`
 
 If you want to hide the router instance from components then you can create a channel that accepts `route` requests and delegate the requests to the router instance:
 
 ```javascript
-// create the Qute application and pass the router imnsytance as a comntext property.
-var app = new MyApp({router: router}).mount('app');
-
-app.$ctx.subscribe('route', function(key) {
-	this.router.route(key);
-});
-```
-
-If you use a channel to change routes you don't need anymore to store the route in the context. You can create create the channel using your root component (the application component) and let the router instance in the local scope of the root component module:
-
-```javascript
+// create the router
 var router = new Router();
-// configure router here
 
-// create the Qute application and the route channel.
-new MyApp().subscribe('route', key => router.route(key)).mount('app');
+// create the Qute application
+var app = new Qute.App();
+
+// listen to 'route' requests
+app.subscribe('route', function(key) {
+  router.route(key);
+});
+
+// mount the app using the Root component
+var Root = Qute('app-root');
+new Root(app).mount('app');
 ```
 
-Usually, a route will change the component of a **[view](#/directives/view)**. This `view` can be anywhere in the component tree, at any level. In order to modify the component displayed by the view from the root context you can simply create a channel on the component containing the view. Then you just post to the channel a request to change the view.
+Usually, a route will change the component of a **[view](#/directives/view)**. This `view` can be anywhere in the component tree, at any level. In order to modify the component displayed by the view from the root context you can create a channel on the component containing the view. Then you just post to the channel a request to change the view.
 
-Here is an example that change the content of a view from a **Qute Context** service (we are not using a real router for the sake of brevity):
+Or, even more simple, is to use an **[application property](#/app/data)** to set the current view component.
+
+Here is an example that change the content of a view from a **Qute Application** service (we are not using a real router for the sake of brevity):
 
 ```jsq
-<x-tag name='app'>
+<x-tag name='app-root'>
     <div>
         <div>
             <button @click="this.post('route', 'page1')">Page 1</button>
             <button @click="this.post('route', 'page2')">Page 2</button>
         </div>
         <hr />
-        <view-wrapper x-channel='main-content' />
+        <view is='currentPage' />
     </div>
-</x-tag>
-
-<x-tag name='view-wrapper'>
-    <view is='currentView' />
 </x-tag>
 
 <x-tag name='page1'>
@@ -76,48 +77,74 @@ Here is an example that change the content of a view from a **Qute Context** ser
     <div>The Page 2 content</div>
 </x-tag>
 
-var MyApp = Qute('app');
-var ViewWrapper = Qute('view-wrapper', {
-    init() {
-        return { currentView: null };
-    }
-}).channel(function(viewType) {
-    this.currentView = viewType;
+// create the Qute application
+var app = new Qute.App();
+
+// create the router
+function Router(app) {
+  app.defineProp('Pages/current', null).link(this, 'currentPage');
+  this.route = function(key) {
+    console.log('Route to', key);
+    // here -> manage browser history state
+    this.currentPage = key;
+  }
+}
+var router = new Router(app);
+
+// listen to 'route' requests
+app.subscribe('route', function(key) {
+  router.route(key);
 });
 
-new MyApp().subscribe('route', function(key) {
-        //router.route(key); // the route handler will call postAsync:
-        this.postAsync('main-content', key);
-    }).mount('app');
-
+var Root = Qute('app-root', {
+  init(app) {
+    return {
+      currentPage: app.prop('Pages/current') // bind to app property
+    }
+  }
+});
+new Root(app).mount('app');
 ```
 
-You can adapt any existing router using the method explained above.
+You can adapt any existing javascript router using the method explained above.
 
-## Qute Router
 
-Qute is providing a router implementation that integrates into a **Qute Application** through the **Qute Context**, and simplify the way you register routes that post messages to Qute channels.
+# The Qute Router
 
-The router is registering a `route` channel that you can use to change routes. Also, it is assigning itself into the context as the `router` property.
+Qute is providing a router implementation that simplify the way you register routes and post messages to components.
+
+The router is registering a `route` channel that you can use to change routes. Also, it is assigning itself into the Qute application instance as the `router` property.
 
 Usage:
 
 ```javascript
-
-var MyApp = Qute('my-app');
-
-var myApp = new MyApp().mount('app');
-
-new QuteRouter({
+var router = new QuteRouter({
   "some/<path>+": function(vars) {
     // do somehting
   },
   "some/exact/path": "some/path/redirect",
   "some/<view>": "post:main-content/${view}"
-}).install(myApp.$ctx).start();
+});
+
+// create the root component
+var app = new Qute.App();
+// initialize the app here
+var Root = Qute('app-root');
+router.install(app).start();
+// mount the application
+new Root(app).mount('app');
 ```
 
-### Routes Mapping
+If you are not explicitly instantiating a **Qute application** you can also install the router directly on the root component (this will install the router on the implicit application instance created by the root component):
+
+```javascript
+var router = new Router({ ... });
+var Root = Qute('app-root');
+var root = new Root().mount('app');
+router.install(root).start();
+```
+
+## Routes Mapping
 
 To define your routes you should map handlers (functions) to path patterns. The handlers are responsible to do some action when the browser location change and the path pattern matches the current path. The `path` is usually specified using the location `hash` part (e.g. #/some/path) but you can also use regular paths by enabling the `pushState` mode.
 
@@ -137,7 +164,7 @@ You must avoid using capturing groups `(group)` inside regular expressions since
 * `/some/<:[a-zA-Z]+>` - will match "/some/Page" but will not capture anything.
 * `/some/page` - exact match (will only match /some/page)
 
-#### Augmenting Path Segments
+### Augmenting Path Segments
 
 You can augment variable segments by using the special modifiers: ? * and +. You cannot use such modifiers on composite segments (that are made from multiple variables or from a mix of text and variables).
 
@@ -150,11 +177,11 @@ You can augment variable segments by using the special modifiers: ? * and +. You
 * `/<optionalSegment>?/resource` - will match `/resource`, `/my/resource` etc. The segment will be captured in `optionalSegment` variable (if not empty). For example `{optionalSegment: 'my'}`
 
 
-#### Catch All Pattern.
+### Catch All Pattern.
 
 You can use the `*` pattern to match any path. This is usefull to have a fallback for any other path not matched by a pattern.
 
-#### Pattern Sorting
+### Pattern Sorting
 
 Before matcbhing the patterns are sorted so that longuest paths are tested first.
 
@@ -163,17 +190,17 @@ The patterns are sorted first in reverse lexicographical order, then patterns wi
 **Example:** The following patterns `*`, `/some/long/path`, `some/long/<myvar>`, `some/path` will be sorted as:
 `/some/long/path`, `some/path`, `/some/long/<myvar>`, `*`.s
 
-#### Route Handlers
+## Route Handlers
 
-There are 3 types of routes handlers:
+There are 4 types of routes handlers:
 
-##### Functions
+### 1. Functions
 
 When the route is matched, fucntions are invoked with the captured variables passed as the first argument.
 
 **Example:** `{'/some/path': function(vars) { ... } }`
 
-##### Redirection Paths
+### 2. Redirection Paths
 
 When the route is matched the browser is redirected to the `path`.
 
@@ -187,7 +214,7 @@ Redirects support variable expanding, so that you can use captured variables in 
 }
 ```
 
-##### Channel Posts
+### 3. Channel Posts
 
 To post a message to a channel you can just use an expression of the type: `post:channel-name/message`.
 This will trigger a message post to the specified channel when the route is matched.
@@ -210,16 +237,44 @@ You can use `${someVar}` variables inside the post expression to expand captured
 }
 ```
 
-Matching 'some/search' will trigger a post like: `ctx.postAsync('main-content', 'search', {view: 'search'})`.
+Matching 'some/search' will trigger a post like: `app.postAsync('main-content', 'search', {view: 'search'})`.
+
+### 4. Application Properties Setters
+
+To set an **[application property](#/app/data)** from a route mapping, you should use an expression of the type: `model:propName=value`, where value is any JSON parsable value. You can `${someVar}` variables inside the expression to expand captured variables.
+
+**Example:**
+
+```
+{
+    'some/<view>': 'model:Pages/currentPage="${view}"'
+}
+```
+
+Matching 'some/search' will trigger the following operation:
+
+`app.prop('Pages/currentPage').set("search")`
 
 
-### Router Methods
+## Router Methods
 
-#### `install(componentOrCtx)`
+### `Qute.Router(componentOrApp, mapping)`
 
-Install the router in the given `Qute Context`. You can pass as context either a Qute Context object, either a component (in which case the context of the component will be used).
+The router constructor.
 
-#### `start(options)`
+Install the router in the given `Qute Application`. You can pass as argument either a [Qute Application instance](#/app/instance), either a component (in which case the application bound to the component will be used).
+
+The mapping argument is optional and contains route definitions.
+
+### `map(bindings)`
+
+Add the given path mappings
+
+### `add(path, to)`
+
+Add a single path mapping
+
+### `start(options)`
 
 Start listening for location changes. For the list of options see the **[locationBar.start(options)](https://github.com/KidkArolis/location-bar)** documentation.
 
@@ -234,29 +289,29 @@ The default is to use the location `hash`. To use `pushState` use these options:
 
 and specify the right root for you application.
 
-#### `stop()`
+### `stop()`
 
 Stop listening for location changes.
 
-#### `navigate(path[, replace])`
+### `navigate(path[, replace])`
 
 Change the location to the given path. The `replace` argument is optional and defaults to `false`.
 If you want to replace the current location (i.e. to avoid modifying the browser history) then use `true` for the `replace` argument.
 
-#### `route(path[, replace])`
+### `route(path[, replace])`
 
 An alias for the `navigate` method.
 
-#### `onChange(callback)`
+### `onChange(callback)`
 
 Register a callback to be notified when the browser location change.
 
-### Changing the Location from Components
+## Changing the Location from Components
 
 To change the current location from a component you can either use
 
 ```
-this.$ctx.router.navigate('/to/path', replace);
+this.$app.router.navigate('/to/path', replace);
 ```
 either post a message to the `route` channel:
 ```

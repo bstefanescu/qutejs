@@ -2,7 +2,7 @@
 
 A Qute Component provides 4 life cycle events that can be used events that can be used to setup and cleanup components.
 
-1. **INIT** - the component is initialized. The `init(ctx)` method is called.
+1. **INIT** - the component is initialized. The `init(app)` method is called.
 2. **CREATED** - the component root element was created. The `created(element)` method is called.
 3. **CONNECTED** - the component root element was attached to the DOM. The `connected()` method is called.
 4. **DISCONNECTED** - the component element root was detached from the DOM. The `disconnected` method is called.
@@ -15,13 +15,13 @@ A Qute Component provides 4 life cycle events that can be used events that can b
 </div>
 
 
-#### `init(ctx)`
+#### `init(app)`
 
 Called just after the component is instantiated. Should be used to initialize the component and to declare reactive properties.
 
 Reactive properties are declared by returning an object that maps property keys to default values. Any other component property which is not declared in the returned object will not be reactive.
 
-The current [component context](#/model/context) is passed as an argument to the `init` callback.
+The current [application instance](#/app/instance) is passed as an argument to the `init` callback.
 
 #### `created(element)`
 

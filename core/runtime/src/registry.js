@@ -1,8 +1,9 @@
 
-
 var VMS = {};
 var XTAGS = {};
 var ATTRS = {};
+
+export const converters = {};
 
 export function QName(tag) {
 	var i = tag.indexOf(':');

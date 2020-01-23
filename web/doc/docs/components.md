@@ -70,7 +70,7 @@ You can find more details in the **[Component Properties](#/model/properties)** 
 
 ## ViewModel Components
 
-These are the fully featured **Qute Commponents**. Use this type of components whenever you need **reactivity**, **lifecycle** events, **context** or the **message bus**.
+These are the fully featured **Qute Commponents**. Use this type of components whenever you need **reactivity**, **lifecycle** events, **application instance** or the **message bus**.
 
 A **ViewNodel Component** is defined by a **tag name**, a `ViewModel` and an *optional* **template**. Why optional? Because you can still write the rendering method by yourself. But in most cases this is useless.
 
@@ -116,7 +116,7 @@ A ViewModel definition is a plain javascript object used to define the ViewModel
 ```javascript
 {
 	// initialization code and reactive properties definition
-	init(ctx) {
+	init(app) {
 		// do any intiialization here
 		this.aNonReactiveProperty = 'I am a non reactive property';
 		// then return the reactive properties if any
@@ -162,9 +162,9 @@ The **only requirement** is that either the component is **attached to a templat
 ### Initialization
 
 The component initialization can be customized by defining an `init` method.
-The `init` method takes as argument the current Qute context and may return an object defining the **reactive properties** if any.
+The `init` method takes as argument the current Qute application and may return an object defining the **reactive properties** if any.
 
-For more on the context object see the **[Qute Context](#/model/context)** section.
+For more on the application object see the **[Application Instance](#/app/instance)** section.
 
 This method will be called only once in the component life-cycle, when the instance is created and before the attributes are bound to component properties.  \
 You can use this method to initialize reactive or non reactive **component properties**.
@@ -291,7 +291,10 @@ The `Qute` function is creating a `ViewModel` constructor.
 The constructor can be used then to define further aspects of the component like event listeners, watchers, a communication channel and, of course, to instantiate the component.
 
 
-The constructor takes one optional argument a **Qute Context** object. If no one is provided a new context is created. Sharing a context between isolated component trees enable these components to communicate through the [Message Bus](#/model/bus).
+The constructor takes two optional arguments:
+
+1. A **Qute Application** object - see [Application Instance](#/app/instance)). If no one is provided an implicit application instance is created. Sharing an application instance between isolated component trees enable these components to communicate through the [Message Bus](#/app/bus).
+2. An object of attributes, the same as the attributes you may use when instantiating the component through a template.
 
 ```javascript
 var MyComponent = Qute('my-component', {
@@ -347,7 +350,7 @@ Channels can be used to implement inter-component communication.
 
 To register a component channel you can use the constructor `channel` method.
 
-See the **[Message Bus](#/model/bus)** section for more details.
+See the **[Message Bus](#/app/bus)** section for more details.
 
 **Example**
 
@@ -429,7 +432,7 @@ There are three ways components can communicate with each others:
 
 3. **Transversal Communication**
 
-For more details see the [Message Bus](#/model/bus) and the [Context](#/model/context) sections.
+For more details see the [Message Bus](#/app/bus) and the [Application Instance](#/app/instance) sections.
 
 ## Updating the DOM
 

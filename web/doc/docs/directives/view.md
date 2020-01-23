@@ -16,7 +16,7 @@ The view component supports the following attributes:
    The first time the **view** directive is rendered the listener will not be notified.
 
 3. **x-nocache** - *optional*. Turn the cache off.
-	By default the view directive is caching the rendered components. If you are switching off and then back again a component then the second time the component is rendered it will not be rendered again. (it will only be updated so that model modifications are reflected on the component DOM tree)
+	By default the view directive is caching the rendered components. If you are switching a component off and  back on again, then the second time the component is displayed it will not be rendered again (it will only be updated so that model modifications are reflected on the component DOM tree).
 
 All the other attributes or nested content will be passed down to the actual rendering component - as if you were directly invoking the component.
 

@@ -6,7 +6,7 @@ Reqs:
 
 1. Item need to be added/removed at runtime without causing leaks.
 Each item should register its updaters to its own context so that when it is removed the
-updaters are automatically removed. Contexts
+updaters are automatically removed.
 
 Solution: use a rendering context per item. Store the context as a DOM element prop: __qute_ctx__,
 so that we can easily retrieve the rendering context when removing an element.

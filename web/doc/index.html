@@ -6,7 +6,7 @@
 		<meta name="viewport" content="	width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
 
  		<meta name="author" content="Stefanescu Bogdan, Quandora">
- 		<meta name="keywords" content="JavaScript,DOM,component,model,modern,reactive,reactivity,template,virtual,application,framework,web,model,jsq,render,rendering,dynamic,message,bus,channel,extend,element,tag,view,vanilla,ES6,HTML,CSS">
+ 		<meta name="keywords" content="JavaScript,DOM,component,model,MVVM,Model,View,ViewModel,modern,reactive,reactivity,template,virtual,application,framework,web,jsq,render,rendering,dynamic,message,bus,channel,extend,element,tag,vanilla,ES6,HTML,CSS">
 		<meta name="description" content="Qute is a modern and reactive component model designed for plain old JavaScript lovers.">
 
 
@@ -333,14 +333,18 @@
 					{ title: 'Components', href: 'components'},
 					{ title: 'JSQ File Format', href: 'advanced/jsq'},
 				]},
-
+				{ title: 'Application Model', expand: true, items: [
+					{ title: 'Application Instance', href: 'app/instance'},
+					{ title: 'Message Bus', href: 'app/bus'},
+					{ title: 'Data Model', href: 'app/data'},
+					{ title: 'Example', href: 'app/example'},
+				]},
 				{ title: 'Component Model', expand: true, items: [
 					{ title: 'Properties', href: 'model/properties'},
 					{ title: 'Watchers', href: 'model/watchers'},
 					{ title: 'Events', href: 'model/events'},
 					{ title: 'Life Cycle', href: 'model/lifecycle'},
 					{ title: 'Context', href: 'model/context'},
-					{ title: 'Message Bus', href: 'model/bus'},
 					{ title: 'Class Syntax', href: 'model/class'},
 				]},
 				{ title: 'Directives', expand: true, items: [
@@ -430,11 +434,11 @@
 				get docPageContent() {
 					return this.docPage ? this.docPages[this.docPage] : '';
 				},
-				init: function() {
+				init: function(app) {
 					var self = this;
 					this.docPages = {};
 					this.toc = TOC;
-					this.router = new Qute.Router({
+					this.router = new Qute.Router(app, {
 						'*': function(path) {
 							self.updateDocPage(path);
 						},

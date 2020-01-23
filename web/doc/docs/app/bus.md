@@ -70,7 +70,7 @@ export default Qute('root', {
 ## Transversal Communication Between Components
 
 Another way of communication is to send messages between components, no matter where in the tree are these components located.
-This can be done by using the **message bus** provided by the [component context](#/model/context).
+This can be done by using the **message bus** provided by the [application instance](#/app/instance).
 
 Let's take the example of a dropdown menu:
 
@@ -119,10 +119,16 @@ Briefly, defining a channel function provides a messaging end-point. In order to
 Of course, the example above can be implemented using a mix of the first two communication methods (parent to child and chuld to panel) and by keeping the alert state in a reactive property.
 But there are situations when using a state property and up and down communication is to complex or not justified.
 
+### Application properties
+
+Another way to share information between components which are not visible for each other is through **application properties**. Application properties are also using channels internally.
+
+See the **[Application Data Model](#/app/data)** section for an examples.
+
 ## Providing Services through the Message Bus
 
 More, you can use this communication mechanism to provide shared services to all components in the application.
-This is because the message bus is provided to components via the [component context](#/model/context) which is shared between all components.
+This is because the message bus is provided to components via the [application instance](#/app/instance) which is shared between all components.
 
 Let's see an example:
 
@@ -158,8 +164,8 @@ Qute('child2', {
 	}
 });
 
-var ctx = new Qute.Context();
-ctx.subscribe('time-channel', function(message) {
+var app = new Qute.App();
+app.subscribe('time-channel', function(message) {
 	var date = new Date();
 	if (message === 'seconds') {
 		alert('Seconds: '+date.getSeconds());
@@ -169,7 +175,7 @@ ctx.subscribe('time-channel', function(message) {
 });
 
 var Root = Qute('root');
-new Root(ctx).mount('app');
+new Root(app).mount('app');
 
 ```
 
@@ -221,8 +227,8 @@ Qute('child2', {
 	}
 });
 
-var ctx = new Qute.Context();
-ctx.subscribe('time-channel', function(message, cb) {
+var app = new Qute.App();
+app.subscribe('time-channel', function(message, cb) {
 	var date = new Date();
 	if (message === 'seconds') {
 		cb(date.getSeconds());
@@ -232,17 +238,18 @@ ctx.subscribe('time-channel', function(message, cb) {
 });
 
 var Root = Qute('root');
-new Root(ctx).mount('app');
+new Root(app).mount('app');
 
 ```
 
-You can integrate this way any synchronous or asynchronous service like ajax requests etc.
+You can also find an [example of implementing routing](#/advanced/routing) through the message bus
 
-## Communicating Between two Applications
 
-Even more, we can use the message bus to communicate between components from two distinct Qute component trees running in the same web page. This way, we can use **Qute** to create components that integrate nicely into existing web page.
+## Communicating Between Components Having Different Roots
 
-When installing a root component we can use the nsame context as we used for other roots in the page. This way we can use the message bus to comunicate between each other.
+Even more, we can use the message bus to communicate between components from two distinct Qute component trees running in the same web page. This way, we can use **Qute** to create components that integrate nicely into existing web pages.
+
+When installing a root component we can use the same application instance used by the other roots in the page. This way we can share the same message bus to comunicate between components, no matter where components were mounted in the page.
 
 Example
 
@@ -254,14 +261,14 @@ Example
 
 <x-tag name='root1'>
 <div style='border: 1px solid green; padding: 10px;'>
-    <h3>App1</h3>
+    <h3>Root1</h3>
 	<child1 x-channel='child1-channel' />
 </div>
 </x-tag>
 
 <x-tag name='root2'>
 <div style='border: 1px solid green; padding: 10px;'>
-	<h3>App2</h3>
+	<h3>Root2</h3>
 	<button @click='sendMessage'>Change child1 color</button>
 </div>
 </x-tag>
@@ -290,10 +297,10 @@ div = document.createElement('DIV');
 div.id = 'app2';
 document.body.appendChild(div);
 
-// create the shared context
-var ctx = new Qute.Context();
+// create the shared application instance
+var app = new Qute.App();
 // mount roots
-new Root1(ctx).mount('app1');
-new Root2(ctx).mount('app2');
+new Root1(app).mount('app1');
+new Root2(app).mount('app2');
 ```
 

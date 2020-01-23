@@ -16,7 +16,7 @@ Open the modal.
 
 **Example**
 ```
-ctx.post('modal-channel', 'open');
+app.post('modal-channel', 'open');
 ```
 
 #### close
@@ -25,7 +25,7 @@ Close the modal.
 
 **Example**
 ```
-ctx.post('modal-channel', 'close');
+app.post('modal-channel', 'close');
 ```
 
 ### animation

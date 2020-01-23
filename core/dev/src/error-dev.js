@@ -58,13 +58,10 @@ var errors = {
 	34: "VM is not mounted!",
 	35: "View not connected",
 	36: "No template found for tag '%s'",
-	37: "Failed to install plugin %s. Plugins must provide an install(ctx) method.",
-	//38: 'Posting message to unknown topic %s',
 	39: "x-channel used on a VM not defining channels: %s",
 	//36: "Cannot unmount a child view",
-	// context.js and model.js
-	40: "No such model property was found: '%s'",
-	41: 'Models must implement the init method',
+	// app.js
+	40: "No model property named '%s' was found!",
 	// compiler.js
 	/*
 	50: "<tag> requires an 'is' attribute",

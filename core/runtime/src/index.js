@@ -6,9 +6,9 @@ import { chainFnAfter, closestVM } from './utils.js';
 import UpdateQueue from './update.js';
 import Rendering from './rendering.js';
 import ViewModel from './vm.js';
-import Context from './context.js';
+import App from './app.js';
 import { createListener } from './binding.js';
-import { registerTag, registerVM, getTag, getVM, getVMOrTag, snapshotRegistry, restoreRegistry, registerDirective } from './registry.js';
+import { registerTag, registerVM, getTag, getVM, getVMOrTag, snapshotRegistry, restoreRegistry, registerDirective, converters } from './registry.js';
 
 /**
  * We cannot use Object.assign since getter are lost. So we copy the prop def itself
@@ -25,8 +25,8 @@ function assignPropDefs(dst, src) {
 function Qute(tag, def, BaseVm) {
 	if (!tag) ERR(5);
 
-	function ViewModelImpl(ctx, attrs) {
-		ViewModel.call(this, ctx, attrs);
+	function ViewModelImpl(app, attrs) {
+		ViewModel.call(this, app, attrs);
 	}
 
 	var VMType, VMProto;
@@ -106,9 +106,8 @@ Qute.css = function(css) {
 	QUTE_STYLE.textContent += css;
 }
 
-Qute.converters = {};
-Context.Qute = Qute; // we need this to access globals defined in Qute like converters
-Qute.Context = Context;
+Qute.converters = converters;
+Qute.App = App;
 Qute.UpdateQueue = UpdateQueue;
 Qute.Rendering = Rendering;
 // render a functional template given its tag name and a model

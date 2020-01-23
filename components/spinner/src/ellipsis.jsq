@@ -24,26 +24,41 @@ function updateStyle(div, color, size) {
 }
 
 export default Qute('spinner', function(r, xattrs) {
-	var color = xattrs && xattrs.color;
-	var size = xattrs && xattrs.size;
+	var el = document.createElement('DIV');
 
-	var loader = document.createElement('DIV');
-	loader.className = 'spinner';
+	var color, size, classes = 'spinner';
+	if (xattrs) {
+		color = xattrs.color;
+		size = xattrs.size;
+		if (xattrs.style) {
+			el.setAttribute('style', xattrs.style);
+		}
+		if (xattrs.inline) {
+			el.style.display = 'inline-block';
+		}
+		if (xattrs.class) {
+			classes = xattrs.class+' '+classes;
+		}
+		if (xattrs.$show) {
+			r.up(Qute.Rendering.SetDisplay(el, r.vm, xattrs.$show))();
+		}
+	}
+	el.setAttribute('class', classes);
 
 	var div = document.createElement('DIV');
 	updateStyle(div, color, size);
 	div.className = 'bounce1';
-	loader.appendChild(div);
+	el.appendChild(div);
 
 	div = document.createElement('DIV');
 	updateStyle(div, color, size);
 	div.className = 'bounce2';
-	loader.appendChild(div);
+	el.appendChild(div);
 
 	div = document.createElement('DIV');
     updateStyle(div, color, size);
 	div.className = 'bounce3';
-	loader.appendChild(div);
+	el.appendChild(div);
 
-	return loader;
+	return el;
 })
