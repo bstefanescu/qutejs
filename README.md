@@ -1,9 +1,11 @@
 # Qute: A Javascript Component Model.
 
-Qute is a **reactive component model** designed for **plain old javascript** lovers.
+Qute is a modern component model designed for plain old javascript lovers.
+It is a clean and concise implementation of the MVVM pattern.
 
-It is **not intrusive**. It is **not another framework**. \
-It just provides a **modern component model** to facilitate working with the **DOM**.
+Qute can either be used as a component model to build plain javascript UI components, either as a framework to build modern javascript applications.
+
+Qute is an alternative to the well known react and vue.js frameworks. It is not another rewrite of a Virtual DOM framework. In fact it doesn't use a Virtual DOM, it is just using the real DOM. And it has its own personality and strengths, and may be some bugs ;-)
 
 ## Qute Multi-Package Repository
 
