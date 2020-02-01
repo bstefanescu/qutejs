@@ -1,9 +1,9 @@
 // A regex HTML PARSER extended to support special attr names (inspired from https://johnresig.com/blog/pure-javascript-html-parser/)
 
+import parseAttrs from './parse-attrs.js';
 
 var STAG_RX = /^<([-A-Za-z0-9_:]+)((?:\s+[-\w@#:]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|(?:\{.*\})|[^>\s]+))?)*)\s*(\/?)>/,
-    ETAG_RX = /^<\/([-A-Za-z0-9_:]+)[^>]*>/,
-    ATTR_RX = /([-A-Za-z0-9_@#:]+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|(?:\{([^}]*)\}(?!\s*}))|([^>\s]+)))?/g;
+    ETAG_RX = /^<\/([-A-Za-z0-9_:]+)[^>]*>/;
 
 var voids = {else:true, case:true, area:true, base:true, br:true, col:true, embed:true, hr:true, img:true, input:true, link:true, meta:true, param:true, source:true, track:true, wbr:true};
 
@@ -12,15 +12,9 @@ export default function parseHTML(html, handler) {
         tagName = tagName.toLowerCase();
         isVoid = isVoid || voids[tagName];
         if (!isVoid) stack.push(tagName);
-        var attrs = [];
-        ATTR_RX.lastIndex = 0;
-        var m = ATTR_RX.exec(attrsDecl);
-        while (m) {
-            // preserve empty values like: "" or ''. If attribute with no value then the boolean true is used as the value
-            var v = m[2] != null ? m[2] : (m[3] != null ? m[3] : (m[4] != null ? m[4] : (m[5] != null ? m[5] : true)))
-            attrs.push({ name: m[1], value: v, expr: m[4] != null });
-            m = ATTR_RX.exec(attrsDecl);
-        }
+
+        var attrs = parseAttrs(attrsDecl);
+
         handler.start(tagName, attrs, !!isVoid);
     }
 

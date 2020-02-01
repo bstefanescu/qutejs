@@ -4,19 +4,24 @@ The `x-use` directive lets you can create custom attribute directives.
 
 A custom directive is a function that will be called when the target DOM element is created.
 
-To register a custom directive you must use the `Qute.registerDirective` function. Then, to call the directive on an element you should use an attribute like `x-use:custom-directive-name` where _custom-directive-name_ is the name used to register the directive.  \
-The `x-use` can take a value of can be used as boolean attribute. If you want to pass some configuration to the custom directive then you can use the attribute value to pass a JSON representation of the configuration.
+To register a custom directive you must use the `Qute.registerDirective` function. Then, to call the directive on an element you should use an attribute like `x-use:custom-directive-name` where _custom-directive-name_ is the name used to register the directive.
 
-**Examples:**
+The `x-use` can take a value which type depends on the way the value is specified:
 
-1. As a boolean attribute: `<div x-use:color-spans>...</div>`
-2. Using a configuration objecta s value: `<div x-use:color-spans='{color:"red"}'>...</div>`
+1. If the value is enclosed in braces { ... }, then Qute will expects a valid javascript expression and will be encoded as a function that can be used to evaluate the expression in the current context. This attribute syntax should be used when the directive need reactivity on the given value.  \
+**Example:** `x-use:my-directive={this.getMessage()}`
+2. If the value is enclosed in quotes or double quotes and contains an object or array representation then the object will be evaluated in the current context and returned as is.  \
+**Example:** `x-use:my-directive='{key1: "some value", key2: this.someProperty}'`  \
+The difference with the. expression value `{ ... }` is that the contained variables will be evaluted only once at rendering (reactivity is not supported). This syntax is good to pass some configuration object.
+3. Otherwise (if the value is enclosed in quotes or double quotes) the value will be encoded as string literal.  \
+**Example:** `x-use:my-directive="Some value"`
 
-**Note** that configuration objects are literal JSON values that cannot reference variables.
+Specifying values can be usefull to configure the directive or to pass some initial value, or to create a reactive binding etc.
+
 
 ## The custom directive function
 
-The function signature is: **`function(xattrs, config)`** where `xattrs` is an object providing the attributes and the event listeners to be injected on the element, and the `config` object is the configuration object (parsed from JSON). The `config` argument is `undefined` if no configuration was passed.
+The function signature is: **`function(xattrs, value)`** where `xattrs` is an object providing the attributes and the event listeners to be injected on the element, and the `value` is the value passed to the directive or `undefined` if no value was passed.
 
 The function is called before the target DOM is created, in the context of the current **Rendering Context** instance. The **Rendering Context** object is internal to Qute and its job is to render components and update the DOM when needed. You can use the **Rendering Context object** to register your own update listeners, to retrieve the current **model** (i.e. a `ViewModel` instance or a functional component object) etc.
 
@@ -46,8 +51,8 @@ Evaluate an `xattr` value. An `xattr` can hold literal values when the attribute
 **Example:**
 
 ```
-function myDirectiveFactory(xattrs, config) {
-	var color = this.eval(xattrs.color); // evaluate the value of the color attribute if any
+function myDirectiveFactory(xattrs, valueExpr) {
+	var config = this.eval(valueExpr); // evaluate the directive value if any
 }
 ```
 
@@ -70,7 +75,7 @@ Get the closest `ViewModel` instance from this rendering context. If the compone
 When creating a custom directive you can register an update listener to be called whenever the containing component is updated (i.e. synzhronized with the DOM). This can be done using the `up()` method of the component rendering context. You can obtain the rendering context using: `this.$r`:
 
 ```javascript
-function myDirectiveFactory(xattrs, config) {
+function myDirectiveFactory(xattrs, valueExpr) {
 	 // register an update listener
 	this.up(function() {
 		console.log("component updated!");
@@ -106,9 +111,9 @@ In this example we change the font color to green, for all `span` elements conta
 	<div x-use:color-spans>Hello <span>world</span>!</div>
 </x-tag>
 
-Qute.registerDirective('color-spans', function(xattrs, config) {
+Qute.registerDirective('color-spans', function(xattrs, valueExpr) {
 	// this function is called just before the element creation.
-	console.log('#color-spans init: ', this, '; Config: ', config);
+	console.log('#color-spans init: ', this, '; Config: ', valueExpr);
 	// return a function to be called after the element is created
 	return function(el) {
 		var spans = el.getElementsByTagName('span');
@@ -127,9 +132,9 @@ Let's now modify the previous example and use a configuration object to be able 
 	<div x-use:color-spans='{color:"red"}'>Hello <span>world</span>!</div>
 </x-tag>
 
-Qute.registerDirective('color-spans', function(xattrs, config) {
-	console.log('#color-spans init:', this, "Config: ", config);
-	var color = (config && config.color) || 'green';
+Qute.registerDirective('color-spans', function(xattrs, valueExpr) {
+	console.log('#color-spans init:', this, "Config: ", valueExpr);
+	var color = valueExpr && valueExpr.color || 'green';
 	return function(el) {
 		var spans = el.getElementsByTagName('span');
 		for (var i=0,l=spans.length; i<l; i++) spans[i].style.color = color;
@@ -138,6 +143,24 @@ Qute.registerDirective('color-spans', function(xattrs, config) {
 
 export default Qute('root');
 ```
+
+**Note:** Here we used `valueExpr` as is (without evaluating it). This is because we expect the value to be an object and not an expression. But, you cannot know how the directive will be used by users. If someone is passing the value using an expression value like `x-use:color-spans={{color:"red"}}`, then the code will no more work.
+
+To avoid this you must use:
+
+```javascript
+	var config = this.eval(valueExpr);
+	var color = config && config.color || 'green';
+```
+
+instead of
+
+```javascript
+	var color = valueExpr && valueExpr.color || 'green';
+```
+
+and the code will work under any circumstances.
+
 
 ### Reactivity in custom directives
 
