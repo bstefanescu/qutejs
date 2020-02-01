@@ -204,8 +204,23 @@ function _events(events, ctx) {
 function _directives(directives, ctx) { // apply custom directives
 	var out = [];
 	for (var key in directives) {
-		// @ is used as a lambda attr directive: x-use='cb', x-call='cb'
-		var val = key === '@' ? _cb(directives[key], ctx) : _xo(directives[key], ctx);
+		// we store the attr itself - we need to know if the directive value is an expression or not using expr
+		var val, attr = directives[key];
+		if (key === '@') {
+			// @ is used for x-call
+			val = _cb(attr.value, ctx);
+		} else if (attr.expr) {
+			val = _v(_xo(attr.value, ctx));
+		} else {
+			var attrVal = attr.value;
+			var first = attrVal[0], last = attrVal[attrVal.length-1];
+				if ((first === '{' && last === '}') || (first === '[' && last === ']')) {
+				// an object?
+				val = _o(attrVal);
+			} else {
+				val = _s(attrVal);
+			}
+		}
 		out.push(_s(key)+':'+val);
 	}
 	return out.length ? '{'+out.join(',')+'}' : null;
@@ -475,18 +490,19 @@ function DomNode(name, attrs) {
 	        } else if (name.startsWith('x-content-')) {
 	        	var ctype = name.substring('x-content-'.length);
 	        	r = new StaticNode(this, ctype !== 'html' ? ctype : null);
-	        } else if (attr.expr) {
-	    		this.bind(name, attr.value);
 	    	} else if (name.startsWith('x-bind:')) {
 	    		this.bind(name.substring(7), attr.value);
 	    	} else if (name.startsWith('x-on:')) {
 	    		this.on(name.substring(5), attr.value);
 	    	} else if (name.startsWith('x-use:')) {
-	    		this.directive(name.substring(6), attr.value);
-	    	} else if (name.startsWith('x-call:')) { // an alias to x-use
-	    		this.directive(name.substring(7), attr.value);
-	    	} else if (name === 'x-use' || name === 'x-call') {
-	    		this.directive('@', attr.value);
+	    		// we store the attr itself for directives - we need to access attr.expr
+	    		this.directive(name.substring(6), attr);
+	    	} else if (name === 'x-use') {
+	    		ERR('Invalid attribute x-use: You need to write x-use:custom-directive.');
+	    	} else if (name === 'x-call') {
+	    		this.directive('@', attr);
+	        } else if (attr.expr) {
+	    		this.bind(name, attr.value);
 	        } else {
 	        	this.attr(name, attrValue(attr));
 	        }

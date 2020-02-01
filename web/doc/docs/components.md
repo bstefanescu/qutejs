@@ -30,10 +30,10 @@ A component template may use other component elements. In that case we say the u
 
 These ones are *pseudo components* and doesn't define any own properties. These components don't take part to the [component life cycle](#/model/lifecycle).
 Functional components  and are template wrappers (i.e. a fucntional component is only defining a rendering function).
-When using expressions inside functional components the `this` variable will point to the functional component instance. Here is the list of some usefull properties exposed by a functional component instance:
+When using expressions inside functional components the `this` variable will point to the functional component instance. Here is a list of some usefull properties exposed by a functional component instance:
 
 * `$attrs` - the attributes specified on the component element.
-* `$parent` - the parent component instance.
+* `$r` - the rendering context instance.
 * `$el` - the DOM element rendered by the functional component.
 * `emit` and `emitAsync` - provides a way to trigger DOM events on the fucntional component element
 

@@ -59,8 +59,16 @@ export function getDirective(key) {
 	return ATTRS[key];
 }
 
-export function registerDirective(key, dirFn) {
-	ATTRS[key] = dirFn;
+export function findDirective(tag, name) {
+	return ATTRS[tag+':'+name] || ATTRS[name];
+}
+
+export function registerDirective(/*[tag, ]name, dirFn*/) {
+	if (arguments.length === 3) {
+		ATTRS[arguments[0]+':'+arguments[1]] = arguments[2];
+	} else {
+		ATTRS[arguments[0]] = arguments[1];
+	}
 }
 
 export function snapshotRegistry() {

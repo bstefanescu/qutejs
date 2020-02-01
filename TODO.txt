@@ -9,8 +9,9 @@ TBD Later:
 3. use setAsap instead of setTimeout in update queue?
 4. optimize update queue -> split runs of update in several async chunks? (one chunk per component?)
 5. add buble to dev release
-6. impl x-use:form-validation
+6. impl x-use:form-validation, x-use:select-value, x-use:group
 7. redux/flux integration as an example?
+8. use a dirty prop on VM so that when disconnected and reconnected to automatically update if dirty?
 
 Tests:
 - x-toggle
@@ -29,3 +30,6 @@ Tests:
 
 Docs:
 - example with nesting through tag and slot
+
+
+TEST: view / if / for - update propagated inside the own rendering?

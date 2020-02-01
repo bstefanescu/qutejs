@@ -51,4 +51,4 @@ This handler can be used to cleanup resources setup by the `connected` handler.
 Functional components doesn't take part to the component life cycle, these components are just rendering functions.  \
 However, there is a way to be notified at the functional component level when the parent ViewModel component is connected to the DOM.
 
-See the **[x-use](#/attributes/x-use)** page for an example.
+See the **[x-call](#/attributes/x-call)** page for an example.

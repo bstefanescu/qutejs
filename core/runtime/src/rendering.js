@@ -3,14 +3,30 @@ import ERR from './error.js';
 
 import App from './app.js';
 import { getVMOrTag, getVM, converters } from './registry.js';
-import {createListeners, createListener, SetClass, SetStyle, SetDisplay, SetToggle, SetText, SetInnerHTML, SetAttr, SetDOMAttrs, SetFuncAttrs, SetFuncAttr} from './binding.js';
+import {applyListeners, createListeners, createListener, SetClass, SetStyle,
+			SetDisplay, SetToggle, SetText, SetInnerHTML, SetAttr} from './binding.js';
 import { filterKeys } from './utils.js';
 import Emitter from './emit.js';
 import applyUserDirectives from './x-use.js';
 import ListFragment from './list-fragment.js';
 
-function ViewRenderingContext(model, marker, isExpr, changeCb, noCache, xattrs, childrenFn) {
+import FunComp from './func.js';
 
+function SetDOMAttrs(el, model, filter) {
+	return function() {
+		var $attrs = model.$attrs;
+		if ($attrs) {
+			var keys = filterKeys($attrs, filter);
+			for (var i=0,l=keys.length; i<l; i++) {
+				var key = keys[i];
+				el.setAttribute(key, $attrs[key]);
+			}
+		}
+	}
+}
+
+function ViewRenderingContext(rendering, marker, isExpr, changeCb, noCache, xattrs, childrenFn) {
+	var model = rendering.vm;
 	var cache = noCache ? null : {};
 	var r = null; // the view rendering context
 	var cview = null; // current element
@@ -25,7 +41,7 @@ function ViewRenderingContext(model, marker, isExpr, changeCb, noCache, xattrs, 
 			if (viewXTag) {
 				r = cache && cache[viewXTag];
 				if (!r) {
-					r = new Rendering(model);
+					r = rendering.spawn(model);
 					if (cache) cache[viewXTag] = r;
 				}
 				el = r.r(viewXTag, xattrs, childrenFn(r));
@@ -57,7 +73,8 @@ function evalIfChain(exprs, model) {
 }
 
 
-function IfRenderingContext(model, start, end, exprs, kids, changeCb) {
+function IfRenderingContext(rendering, start, end, exprs, kids, changeCb) {
+	var model = rendering.vm;
 	var r = null; // the IF / ELSE-IF / ELSE rendering context
 	var state = -1; // the current case of IF / ELSE-IF / ELSE as the zero based index of the chain (0 for if, 1 for next else-if, ...)
 	return function(propKey, initialUpdate) {
@@ -69,7 +86,7 @@ function IfRenderingContext(model, start, end, exprs, kids, changeCb) {
 			while (start.nextSibling && start.nextSibling !== end) {
 				parent.removeChild(start.nextSibling);
 			}
-			r = new Rendering(model); // create the IF / ELSE rendering context
+			r = rendering.spawn(model); // create the IF / ELSE rendering context
 			state = newState;
 			if (state > -1) {
 				var children = kids[state](r);
@@ -88,7 +105,8 @@ function IfRenderingContext(model, start, end, exprs, kids, changeCb) {
 	}
 }
 
-function ForRenderingContext(model, start, end, listFn, iterationFn) {
+function ForRenderingContext(rendering, start, end, listFn, iterationFn) {
+	var model = rendering.vm;
 	var r = null; // the for rendering context
 	var list = null; // the current list
 	return function(propKey) {
@@ -100,7 +118,7 @@ function ForRenderingContext(model, start, end, listFn, iterationFn) {
 			while (start.nextSibling && start.nextSibling !== end) {
 				parent.removeChild(start.nextSibling);
 			}
-			r = new Rendering(model); // create the FOR rendering context
+			r = rendering.spawn(model); // create the FOR rendering context
 			list = newList;
 			// render content
 			if (list) {
@@ -144,13 +162,6 @@ function removeRange(from, to) {
 	var parent = from.parentNode;
 	while (from.nextSibling && from.nextSibling !== to) {
 		parent.removeChild(from.nextSibling);
-	}
-}
-
-function applyListeners(el, vm, listeners, doNotWrap) {
-	for (var key in listeners) {
-		var fn = listeners[key];
-		el.addEventListener(key, doNotWrap ? fn : createListener(vm, fn));
 	}
 }
 
@@ -210,10 +221,12 @@ var RenderingProto = {
 		return XTag ? this.v(XTag, xattrs, children) : this.h(tag, xattrs, children);
 	},
 	h: function(tag, xattrs, children) { // dom node
-		var el = document.createElement(tag);
-		var userDirs = null;
+		var el = document.createElement(tag), $use = null;
 		if (xattrs) {
 			var vm = this.vm;
+			if (xattrs.$use) {
+				$use = applyUserDirectives(this, tag, xattrs);
+			}
 			for (var key in xattrs) {
 				var up = null;
 				var val = xattrs[key];
@@ -230,8 +243,6 @@ var RenderingProto = {
 						up = SetToggle(el, vm, val);
 					} else if (key === '$html') {
 						up = SetInnerHTML(el, vm, val);
-					} else if (key === '$use') { // apply extra directives
-						userDirs = val;
 					} else if (key === '$attrs') {
 						up = SetDOMAttrs(el, vm, val);
 					} else if (key === '$listeners') {
@@ -241,7 +252,7 @@ var RenderingProto = {
 						//TODO
 					} else if (key === '$channel') {
 						ERR(28, tag);
-					} else {
+					} else if (key !== '$use') {
 						ERR(26, key);
 					}
 				} else if (typeof val === 'function') { // a dynamic binding
@@ -256,8 +267,8 @@ var RenderingProto = {
 		}
 		if (children) appendChildren(el, children);
 		// we should apply any user directive after the children are added.
-		if (userDirs) {
-			applyUserDirectives(el, vm, userDirs);
+		if ($use) {
+			$use(this, el);
 		}
 		return el;
 	},
@@ -288,27 +299,7 @@ var RenderingProto = {
 			var vm = new XTag(this.vm.$app);
 			return vm.$create(this, xattrs, slots);
 		} else if (XTag.$compiled) { // a compiled template
-			var oldVm = this.vm;
-			var fnVm = this.functx(this.vm, xattrs, slots);
-			this.vm = fnVm;
-			var el = XTag(this, xattrs, slots); // pass xattrs and slots too?
-			fnVm.$el = el;
-			// apply root bindings if any (x-class, x-style or x-show)
-			if (fnVm.$bindings) {
-				var bindings = fnVm.$bindings;
-				for (var i=0,l=bindings.length; i<l; i+=2) {
-					var up = bindings[i](el, oldVm, bindings[i+1]);
-					this.up(up)();
-				}
-			}
-			if (fnVm.$listeners) applyListeners(el, fnVm, fnVm.$listeners, true);
-			// call user directives if any
-			if (fnVm.$use) {
-				// use parent vm as custom directives context
-				applyUserDirectives(el, oldVm, fnVm.$use);
-			}
-			this.vm = oldVm;
-			return el;
+			return new FunComp().render(this, XTag, xattrs, slots);
 		} else { // a hand written function
 			return XTag(this, xattrs, slots);
 		}
@@ -328,7 +319,7 @@ var RenderingProto = {
 		var marker = document.createComment('[view/]');
 		var frag = document.createDocumentFragment();
 		frag.appendChild(marker);
-		var viewFrag = ViewRenderingContext(this.vm, marker, isExpr, changeCb, noCache, xattrs, childrenFn)
+		var viewFrag = ViewRenderingContext(this, marker, isExpr, changeCb, noCache, xattrs, childrenFn)
 		marker.__qute__ = viewFrag;
 		viewFrag(null, true);
 		this.up(viewFrag);
@@ -344,7 +335,7 @@ var RenderingProto = {
 		var frag = document.createDocumentFragment();
 		frag.appendChild(start);
 		frag.appendChild(end);
-		var ieFrag = IfRenderingContext(this.vm, start, end, ifChain, kidsChain, changeCb);
+		var ieFrag = IfRenderingContext(this, start, end, ifChain, kidsChain, changeCb);
 		start.__qute__ = ieFrag;
 		ieFrag(null, true);
 		this.up(ieFrag);
@@ -364,7 +355,7 @@ var RenderingProto = {
 		var frag = document.createDocumentFragment();
 		frag.appendChild(start);
 		frag.appendChild(end);
-		var forFrag = ForRenderingContext(this.vm, start, end, listFn, iterationFn);
+		var forFrag = ForRenderingContext(this, start, end, listFn, iterationFn);
 		start.__qute__ = forFrag;
 		forFrag(null);
 		this.up(forFrag);
@@ -372,11 +363,9 @@ var RenderingProto = {
 	},
 	up: function(fn) { // register a live update function
 		this.ups.push(fn);
-//		this.ups[this.ups.length-1].push(fn);
 		return fn;
 	},
-	//======
-	// eval the value of an xattr given the key - if a fucntion invoke the function within the current context otherwise return the value as is
+	// eval the value of an xattr given the key - if a function invoke the function within the current context otherwise return the value as is
 	eval: function(xattr) {
 		return typeof xattr === 'function' ? xattr(this.vm) : xattr;
 	},
@@ -409,71 +398,25 @@ var RenderingProto = {
 		for (var i=0,l=ups.length;i<l;i++) ups[i](model);
 		return this;
 	},
-	// create a new rendering instance using the same vm
-	$new: function() {
-		return new Rendering(this.vm);
+	// create a child rendering
+	spawn: function(vm) {
+		return new Rendering(vm || this.vm, this);
 	},
-	functx: function(vm, xattrs, slots) { // functional context
-		var $attrs = {};
-		var ctx = {
-			$parent: vm,
-			$attrs: $attrs,
-			$listeners: null,
-			$slots: slots,
-			$el: null,
-			$bindings: null,
-			$use: null, // user callbacks - registered through x-use
-			emit: Emitter.emit,
-			emitAsync: Emitter.emitAsync
-		}
-		var bindings = null;
-
-		if (xattrs) {
-			for (var key in xattrs) { // class, style and show, $attrs, $listeners are ignored
-				var val = xattrs[key];
-				if (key.charCodeAt(0) !== 36 || key === '$html') { // $ - extended attribute -> ignore all extended attrs but $html
-					if (typeof val === 'function') {
-						this.up(SetFuncAttr($attrs, vm, key, val))();
-					} else {
-						$attrs[key] = val;
-					}
-					//setFnContextAttr($attrs, vm, key, val);
-				} else if (key === '$attrs') {
-					if (vm.$attrs) {
-						// inject attributes in functional tags
-						// we need to create an update function to reinject attrs when model changes
-						// otherwise we loose the reactivity on func tags 'x-attrs' attribute
-						this.up(SetFuncAttrs($attrs, vm, val))();
-					}
-				} else if (key === '$on') {
-					ctx.$listeners = createListeners(vm, val);
-				} else if (key === '$class') {
-					if (!bindings) bindings = [];
-					bindings.push(SetClass, val);
-				} else if (key === '$style') {
-					if (!bindings) bindings = [];
-					bindings.push(SetStyle, val);
-				} else if (key === '$show') {
-					if (!bindings) bindings = [];
-					bindings.push(SetDisplay, val);
-				} else if (key === '$toggle') {
-					if (!bindings) bindings = [];
-					bindings.push(SetToggle, val);
-				} else if (key === '$use') {
-					ctx.$use = val;
-				}
-			}
-		}
-
-		ctx.$bindings = bindings;
-		return ctx;
+	// get the closest VM in current rendering, ignore renderings which are not bound to ViewModel objects (functional compjents etc)
+	closestVM: function() {
+		var r = this;
+		do {
+			if (r.vm && r.vm.__VM__) return r.vm;
+			r = r.parent;
+		} while (r);
+		return null;
 	}
-
 }
 
-function Rendering(vm) {
+function Rendering(vm, parent) {
+	this.parent = parent;
 	this.vm = vm; // defaults to current vm -> changed by functional views
-	this.ups = [];
+	this.ups = []; // the update listeners
 	// vms are usually ViewModels but can be any object providing $connect and $disconnect methods
 	// if you enrich the vms api you mustr check list.js since it register a ListFragment instance as a vm
 	this.vms = [];

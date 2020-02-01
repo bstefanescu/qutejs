@@ -13,7 +13,7 @@ so that we can easily retrieve the rendering context when removing an element.
 
 2. Items must be notified when parent rendering connects / disconnects
 
-Solution: the ListFragment itself implements the $connect / $disconnect contract of Rendering a nd register itself as a sub-rendering
+Solution: the ListFragment itself implements the $connect / $disconnect contract of Rendering and register itself as a sub-rendering
 (even if it is not a real rendering instance). It will be then called easch time the parent connect / disconnect, and will be able to connect disconnect each item rendering.
 To retrieve item renderings we need to store each rendering context (from 1.) into a element property '__qute_ctx__'
 this way we can connect/disconnect items by iterating over the DOM children elements.
@@ -90,7 +90,7 @@ ListFragment.prototype = {
 	// -----------------------------------
 
 	renderItem(r, items, key, item) {
-		var itemR = r.$new();
+		var itemR = r.spawn();
 		var el = this.itemFn(itemR, item);
 		el.__qute_ctx__ = itemR;
 		if (key) items[key] = el;

@@ -20,13 +20,11 @@ The `Qute()` function **returns** a **Component Constructor**.
 
 Also, the `Qute` object acts as a namespace for several global properties and methods.
 
-### `Qute` methods
-
-#### `Qute.closest(element)`
+### `Qute.closest(element)`
 
 Find the closest Qute ViewModel Component containing the given DOM element.
 
-#### `Qute.runAfter(callback)`
+### `Qute.runAfter(callback)`
 
 Register a callback to be invoked after all the tasks in the update queue are run. If the queue is empty then the callback is immediately run.
 
@@ -34,7 +32,7 @@ Because the updates are run asynchronously you cannot know when the update job r
 
 This is usefull when writing tests, to make assertions after the DOM changed in response to model change.
 
-#### `Qute.css(cssRules)`
+### `Qute.css(cssRules)`
 
 Inject a `CSS` fragment into a `<style>` element in the page `<head>`.
 
@@ -42,7 +40,7 @@ If a `<style id='--qute-inline-styles'>` already exists in the page then it will
 
 Usefull to define CSS rules directly in component files.
 
-#### `Qute.register(tag, templateFn, isCompiled)`
+### `Qute.register(tag, templateFn, isCompiled)`
 
 Register a template function given its (tag) name.
 
@@ -50,23 +48,29 @@ The `isCompiled` argument must be `true` if the template function was compiled f
 
 You can use this function to register hand written rendering functions. (in that case omit the `isCompiled` arguemnt and use a value of `false`).
 
-#### `Qute.template(tag)`
+### `Qute.registerDirective([tag, ]name, fn)`
+
+Register a custom attribute directive. The `tag` argument is optional, and should be used when the directive should only be enabled for the given tag.
+
+See **[x-use](#/attributes/x-use)** for more details.
+
+### `Qute.template(tag)`
 
 Get a registered template function given a tag name.
 
-#### `Qute.vm(tag)`
+### `Qute.vm(tag)`
 
 Get a registered `ViewModel` constructor given a tag name.
 
-#### `Qute.vmOrTemplate(tag)`
+### `Qute.vmOrTemplate(tag)`
 
 Get a registered template function or `ViewModel` constructor given a tag name.
 
-#### `Qute.snapshotRegistry()`
+### `Qute.snapshotRegistry()`
 
 Create a snapshot of the template and ViewModel registry. Return the snapshot.
 
-#### `Qute.restoreRegistry(snapshot)`
+### `Qute.restoreRegistry(snapshot)`
 
 Restore the registry to the given snapshot (generated using `snapshotRegistry`).
 
@@ -74,35 +78,34 @@ Using `snapshotRegistry` / `restoreRegistry` can be usefull to restore an initia
 
 This is used by the **Qute playground**.
 
-#### `Qute.render(xtagName, model)`
+### `Qute.render(xtagName, model)`
 
 Manualy render a template function given its (tag) name nad a `model` object.
 
 The model can any object. You can thus use Qute templates to render anyhting, not only `ViewModel` objects.
 
-### `Qute` Properties
 
-#### `Qute.List`
+### `Qute.List`
 
 The **Reactive List** type. See **[Reactive Lists](#/attributes/x-for)**.
 
-#### `Qute.App`
+### `Qute.App`
 
 The **Qute Application** type.
 
-#### `Qute.ViewModel`
+### `Qute.ViewModel`
 
 The **View Model** type. Should be extended by components declared through **[class syntax](#/model/class)**
 
-#### `Qute.Rendering`
+### `Qute.Rendering`
 
 The **Qute Rendering** type.
 
-#### `Qute.UpdateQueue`
+### `Qute.UpdateQueue`
 
 The **Qute** update queue.
 
-#### `Qute.converters`
+### `Qute.converters`
 
 A converter registry. To be used with  __[x-content-\*](#/attributes/x-markdown)__ attributes.
 
@@ -189,6 +192,11 @@ The component (tag) name.
 #### `$data`
 
 The data object holding all reactive properties.
+
+#### `$r`
+
+The rendering context linked to this component.
+This can be usefull when using **[x-use](#/attributes/x-use)** or **[x-call](#/attributes/x-use)**
 
 ### Component methods
 

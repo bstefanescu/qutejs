@@ -1,11 +1,11 @@
 import window, {document} from '@qutejs/window';
 import ERR from './error.js';
-import { stopEvent, chainFnAfter, closestVM, kebabToCamel } from './utils.js';
+import { stopEvent, chainFnAfter, closestVM, kebabToCamel, filterKeys } from './utils.js';
 
 import Rendering from './rendering.js';
 import UpdateQueue from './update.js';
 import App from './app.js';
-import {createListeners, SetProp, SetVMAttrs, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
+import {createListeners, SetProp, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
 import Emitter from './emit.js';
 import applyUserDirectives from './x-use.js';
 
@@ -32,6 +32,20 @@ function defProp(key) {
 	}
 }
 
+// set $attrs on VMs
+function SetVMAttrs(vm, parentVM, filter) {
+	return function() {
+		var parentAttrs = parentVM.$attrs;
+		if (parentAttrs) {
+			var keys = filterKeys(parentAttrs, filter);
+			for (var i=0,l=keys.length; i<l; i++) {
+				var key = keys[i];
+				vm.$set(key, parentAttrs[key]);
+			}
+		}
+	}
+}
+
 function ViewModel(app, attrs) {
 	if (!app) app = new App(app);
 	var prop = {};
@@ -50,15 +64,13 @@ function ViewModel(app, attrs) {
 	Object.defineProperty(this, '$listeners', prop);
 	// the slots injected by the caller
 	Object.defineProperty(this, '$slots', prop);
-	// custom use attr directives - should be called on component create.
-	Object.defineProperty(this, '$use', prop);
 	// the view root element
 	Object.defineProperty(this, '$el', prop);
 	// chained cleanup functions if any was registered
 	Object.defineProperty(this, '$clean', prop);
 	// States: 0 - initial, 1 - connected, 2 - updating
 	prop.value = 0;
-	Object.defineProperty(this, '$st', prop); // state: 0 - default, 1 updating , 2 frozen
+	Object.defineProperty(this, '$st', prop); // state: 0 - default, bit 1 - connected, bit 2 - update queued
 
 	var data = this.init(app) || {};
 	prop.value = data;
@@ -155,6 +167,8 @@ ViewModel.prototype = {
 				this.$on(key, listeners[key]);
 			}
 		}
+		// TODO update DOM if previously disconnected
+		if (false) this.$update();
 		// connect children vms
 		this.$r.$connect();
 		// call the connected callback
@@ -200,9 +214,7 @@ ViewModel.prototype = {
 						bindings.push(SetToggle, val);
 					} else if (key === '$channel') {
 						this.listen(val);
-					} else if (key === '$use') {
-						this.$use = val;
-					} else {
+					} else if (key !== '$use') {
 						ERR(26, key);
 					}
 				} else if (typeof val === 'function') { // a dynamic binding
@@ -215,12 +227,16 @@ ViewModel.prototype = {
 		return bindings;
 	},
 	$create: function(parentRendering, xattrs, slots) {
+		var $use, parentVM = parentRendering && parentRendering.vm;
+		if (xattrs && xattrs.$use) {
+			$use = applyUserDirectives(parentVM, this.$tag, xattrs);
+		}
 		// load definition
 		var bindings = parentRendering && this.$load(parentRendering, xattrs, slots);
-		var rendering = new Rendering(this);
+		var rendering = new Rendering(this, parentRendering);
+		this.$r = rendering;
 		// must never return null - for non rendering components like popups we return a comment
 		var el = this.render(rendering) || document.createComment('<'+this.$tag+'/>');
-		this.$r = rendering;
 		el.__qute__ = this;
 		this.$el = el;
 		if (bindings) for (var i=0,l=bindings.length; i<l; i+=2) {
@@ -232,7 +248,7 @@ ViewModel.prototype = {
 		// this can trigger a connect if tree is already connected (for example when inserting a comp in a connected list)
 		parentRendering && parentRendering.$push(this);
 		// should use parent vm as context for custom directives
-		if (this.$use) applyUserDirectives(el, parentRendering.vm, this.$use);
+		if ($use) $use.call(parentVM, el);
 		return el;
 	},
 

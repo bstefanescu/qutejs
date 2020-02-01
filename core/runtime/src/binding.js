@@ -61,6 +61,14 @@ export function createListeners(vm, $listeners) {
 	return $listeners;
 }
 
+export function applyListeners(el, vm, listeners, doNotWrap) {
+	for (var key in listeners) {
+		var fn = listeners[key];
+		el.addEventListener(key, doNotWrap ? fn : createListener(vm, fn));
+	}
+}
+
+
 export function SetText(el, model, expr) {
 	return function() {
 		var val = expr(model);
@@ -159,51 +167,6 @@ export function SetProp(vm, model, key, valFn) {
 		//if (!changedKey || changedKey === key) {
 			vm.$set(key, valFn(model));
 		//}
-	}
-}
-
-export function SetDOMAttrs(el, model, filter) {
-	return function() {
-		var $attrs = model.$attrs;
-		if ($attrs) {
-			var keys = filterKeys($attrs, filter);
-			for (var i=0,l=keys.length; i<l; i++) {
-				var key = keys[i];
-				el.setAttribute(key, $attrs[key]);
-			}
-		}
-	}
-}
-
-export function SetFuncAttrs($attrs, vm, filter) { // vm is the parent vm (i.e. current model)
-	return function() {
-		var vmAttrs = vm.$attrs;
-		if (vmAttrs) {
-			var keys = filterKeys(vmAttrs, filter);
-			for (var i=0,l=keys.length; i<l; i++) {
-				var key = keys[i];
-				$attrs[key] = vmAttrs[key];
-			}
-		}
-	}
-}
-
-export function SetFuncAttr($attrs, vm, key, val) { // vm is the parent vm (i.e. current model)
-	return function() {
-		$attrs[key] = val(vm);
-	}
-}
-// TODO set $attrs on VMs
-export function SetVMAttrs(vm, parentVM, filter) {
-	return function() {
-		var parentAttrs = parentVM.$attrs;
-		if (parentAttrs) {
-			var keys = filterKeys(parentAttrs, filter);
-			for (var i=0,l=keys.length; i<l; i++) {
-				var key = keys[i];
-				vm.$set(key, parentAttrs[key]);
-			}
-		}
 	}
 }
 
