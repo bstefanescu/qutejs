@@ -5,7 +5,7 @@ functional components
 import Emitter from './emit.js';
 import UpdateQueue from './update.js';
 import {applyListeners, createListeners, SetStyle, SetClass, SetDisplay, SetToggle} from './binding.js';
-import applyUserDirectives from './x-use.js';
+import applyUserDirectives from './q-attr.js';
 import { filterKeys } from './utils.js';
 
 function SetFuncAttrs(func, vm, filter) { // vm is the parent vm (i.e. current model)

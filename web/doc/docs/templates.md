@@ -51,6 +51,11 @@ There is an alternative notation for a event attribute: `x-on:{event-name}`
 
 See the **[Working with DOM Events](#/model/events)** section for more details.
 
+#### Other Special attributes
+
+Other special attribute notations are:
+1. **`#attrName`** - to define custom attributes (aka attribute directives) on DOM elements. See **[Attribute Directives](#/attributes/q)** for more details.
+2. **`?attrName`** - to toggle **flag** like attributes. See **[x-toggle](#/attributes/x-toggle)** for more details.
 
 ### Text Expressions (aka mustaches)
 

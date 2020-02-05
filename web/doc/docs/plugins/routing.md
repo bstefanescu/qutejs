@@ -113,6 +113,8 @@ You can adapt any existing javascript router using the method explained above.
 
 Qute is providing a router implementation that simplify the way you register routes and post messages to components.
 
+The router is provided by the `@qutejs/router` package. (it is not part of the Qute runtime package)
+
 The router is registering a `route` channel that you can use to change routes. Also, it is assigning itself into the Qute application instance as the `router` property.
 
 Usage:

@@ -276,6 +276,13 @@ function _xattrs(attrs, bindings, xattrs, directives, events, ctx) {
 			var val;
 			if (key === '$attrs' || key === '$listeners') {
 				val = xattrs[key];
+			} else if (key === '$toggle') { // toggle is an object
+				var ar = [];
+				var $toggle = xattrs[key];
+				for (var k in $toggle) {
+					ar.push(_s(k)+':'+_xo($toggle[k], ctx));
+				}
+				val =_v('{'+ ar.join(',')+'}');
 			} else {
 				val = _v(_xo(xattrs[key], ctx));
 			}
@@ -347,6 +354,12 @@ function DomNode(name, attrs) {
 	this.bind = function(name, value) {
 		var bindings = this.bindings || (this.bindings = {});
 		bindings[name] = value.trim();
+	}
+	this.toggle = function(name, value) {
+		if (!this.xattrs) this.xattrs = {};
+		var xattrs = this.xattrs;
+		if (!xattrs.$toggle) xattrs.$toggle = {};
+		xattrs.$toggle[name] = value;
 	}
 	this.xattr = function(name, value) {
 		if (!this.xattrs) this.xattrs = {};
@@ -463,6 +476,10 @@ function DomNode(name, attrs) {
 	        	this.bind(name.substring(1), attr.value);
 	        } else if (c === '@') {
 	        	this.on(name.substring(1), attr.value);
+	        } else if (c === '?') { // x-toggle alias
+	        	this.toggle(name.substring(1), attr.value);
+	        } else if (c === '#') { // 'q:'' alias
+               this.directive(name.substring(1), attr);
 	        } else if ('x-for' === name) {
 	        	r = new ListNode(attr.value, this);
 	        } else if ('x-attrs' === name) {
@@ -477,8 +494,6 @@ function DomNode(name, attrs) {
 				this.xattr('$class', attr.value);
 			} else if ('x-style' === name) {
 				this.xattr('$style', attr.value);
-			} else if ('x-toggle' === name) {
-				this.xattr('$toggle', attr.value);
 			} else if ('x-html' === name) {
 				if (attr.value === true) {
 					r = new StaticNode(this, null);
@@ -490,17 +505,20 @@ function DomNode(name, attrs) {
 	        } else if (name.startsWith('x-content-')) {
 	        	var ctype = name.substring('x-content-'.length);
 	        	r = new StaticNode(this, ctype !== 'html' ? ctype : null);
+	    	} else if (name === 'x-call') {
+	    		this.directive('@', attr);
 	    	} else if (name.startsWith('x-bind:')) {
 	    		this.bind(name.substring(7), attr.value);
 	    	} else if (name.startsWith('x-on:')) {
 	    		this.on(name.substring(5), attr.value);
-	    	} else if (name.startsWith('x-use:')) {
+	    	} else if (name.startsWith('q:')) {
+	    		// we store the attr itself for directives - we need to access attr.expr
+	    		this.directive(name.substring(2), attr);
+	    	} else if (name.startsWith('x-use:')) { // alias for 'q:'
 	    		// we store the attr itself for directives - we need to access attr.expr
 	    		this.directive(name.substring(6), attr);
-	    	} else if (name === 'x-use') {
-	    		ERR('Invalid attribute x-use: You need to write x-use:custom-directive.');
-	    	} else if (name === 'x-call') {
-	    		this.directive('@', attr);
+	    	} else if (name.startsWith('x-toggle:')) {
+	    		this.toggle(name.substring(9), attr.value);
 	        } else if (attr.expr) {
 	    		this.bind(name, attr.value);
 	        } else {

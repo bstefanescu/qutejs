@@ -7,7 +7,7 @@ import UpdateQueue from './update.js';
 import App from './app.js';
 import {createListeners, SetProp, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
 import Emitter from './emit.js';
-import applyUserDirectives from './x-use.js';
+import applyUserDirectives from './q-attr.js';
 
 function isEnumerable(key) {
 	return key.charCodeAt(0) !== 95; // keys starting with _ are not enumerable

@@ -242,7 +242,7 @@ new Root(app).mount('app');
 
 ```
 
-You can also find an [example of implementing routing](#/advanced/routing) through the message bus
+You can also find an [example of implementing routing](#/plugins/routing) through the message bus
 
 
 ## Communicating Between Components Having Different Roots

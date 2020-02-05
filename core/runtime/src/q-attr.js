@@ -2,8 +2,8 @@ import ERR from './error.js';
 import {findDirective} from './registry.js';
 
 
-
-export default function applyUserDirectives(rendering, tag, xattrs) {
+// el is defined only when called on a DOM element
+export default function applyUserDirectives(rendering, tag, xattrs, el) {
 	var xcall, fns = [], directives = xattrs.$use;
 	for (var key in directives) {
 		var val = directives[key];
@@ -14,7 +14,7 @@ export default function applyUserDirectives(rendering, tag, xattrs) {
 			if (!userDir) {
 				ERR(50, key);
 			}
-			var fn = userDir.call(rendering, xattrs, val===true?undefined:val);
+			var fn = userDir.call(rendering, xattrs, val===true?undefined:val, el);
 			if (fn) fns.push(fn)
 		}
 	}

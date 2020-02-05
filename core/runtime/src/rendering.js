@@ -7,7 +7,7 @@ import {applyListeners, createListeners, createListener, SetClass, SetStyle,
 			SetDisplay, SetToggle, SetText, SetInnerHTML, SetAttr} from './binding.js';
 import { filterKeys } from './utils.js';
 import Emitter from './emit.js';
-import applyUserDirectives from './x-use.js';
+import applyUserDirectives from './q-attr.js';
 import ListFragment from './list-fragment.js';
 
 import FunComp from './func.js';
@@ -225,7 +225,7 @@ var RenderingProto = {
 		if (xattrs) {
 			var vm = this.vm;
 			if (xattrs.$use) {
-				$use = applyUserDirectives(this, tag, xattrs);
+				$use = applyUserDirectives(this, tag, xattrs, el);
 			}
 			for (var key in xattrs) {
 				var up = null;

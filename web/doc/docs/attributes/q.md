@@ -1,22 +1,48 @@
-# The x-use attribute
+# Custom attribute directives
 
-The `x-use` directive lets you can create custom attribute directives.
+**Qute** let's you define custom attributes (aka attribute directives) on any HTML element. A custom attribute can be used to run some logic when element is created like storing some custom properties, registering listeners or modyfing the element content. Custom attributes can hook into the **Qute reactivity model** to update the element each time is needed.
 
-A custom directive is a function that will be called when the target DOM element is created.
+To **register a custom directive** you must use the `Qute.registerDirective` function. Then, to **use the directive** on an element you should use the attribute prefixed with `q:` like  **`q:custom-directive-name`** where _custom-directive-name_ is the name used to register the directive.
 
-To register a custom directive you must use the `Qute.registerDirective` function. Then, to call the directive on an element you should use an attribute like `x-use:custom-directive-name` where _custom-directive-name_ is the name used to register the directive.
+When registering a custom attribute you can specify a target element name (like `ul`, `input` etc.) to restrict the directive to the given element. If no target element is specified then the attribute will be available on any HTML element.
 
-The `x-use` can take a value which type depends on the way the value is specified:
+## Custom attribute alternative notation
 
-1. If the value is enclosed in braces { ... }, then Qute will expects a valid javascript expression and will be encoded as a function that can be used to evaluate the expression in the current context. This attribute syntax should be used when the directive need reactivity on the given value.  \
-**Example:** `x-use:my-directive={this.getMessage()}`
-2. If the value is enclosed in quotes or double quotes and contains an object or array representation then the object will be evaluated in the current context and returned as is.  \
-**Example:** `x-use:my-directive='{key1: "some value", key2: this.someProperty}'`  \
+Custom attributes can also be specified by prefixing the attribute name with a `#` character:
+
+`<input #model='someProp'>` is equivalent to `<input q:model='someProp'>`.
+
+
+## Custom attribute values
+
+Like any attribute, a custom attribute can take a value. The compielr encode the value dependeing on the how the value is specified. There are 3 types of values:
+
+1. Reactive expression values
+2. Object like values
+3. String literals
+
+
+### Reactive Expression values
+
+If the value is enclosed in braces { ... }, then Qute will expects a valid javascript expression and will be encoded as a function that can be used to evaluate the expression in the current context.
+
+This attribute syntax should be used when the directive need reactivity on the given value.
+
+**Example:** `q:my-directive={this.getMessage()}`
+
+### Object like values
+
+If the value is enclosed in quotes or double quotes and contains an object or array representation then the object will be evaluated in the current context and returned as is.
+
+**Example:** `q:my-directive='{key1: "some value", key2: this.someProperty}'`
+
 The difference with the. expression value `{ ... }` is that the contained variables will be evaluted only once at rendering (reactivity is not supported). This syntax is good to pass some configuration object.
-3. Otherwise (if the value is enclosed in quotes or double quotes) the value will be encoded as string literal.  \
-**Example:** `x-use:my-directive="Some value"`
 
-Specifying values can be usefull to configure the directive or to pass some initial value, or to create a reactive binding etc.
+### String literal values
+
+Otherwise (if the value is enclosed in quotes or double quotes) the value will be encoded as string literal.
+
+**Example:** `q:my-directive="Some value"`
 
 
 ## The custom directive function
@@ -31,9 +57,9 @@ The function returned by the factory function takes a single argument: the creat
 
 The returned function signature is `function(el)` where el is the created element. The returned function will be executed in the context of the closest component instance (i.e. `this` will point to the closest component instance).
 
-## Using `x-use` on component elements.
+## Using custom attributes on component tags.
 
-When you use the `x-use` attribute on a component tag, the custom directive will be executed on the root element rendered by the component.
+When you use a custom attribute on a component tag, the custom attribute directive will be executed on the root element rendered by the component.
 
 ## The Rendering Context object
 
@@ -86,15 +112,15 @@ function myDirectiveFactory(xattrs, valueExpr) {
 }
 ```
 
-## Custom directive scopes
+## Custom attribute scopes
 
-Custom directive can be restricted to an element tag name. When registering the directive you can use an optional tag name to restrict the directive to that tag:
+A custom attribute can be restricted to an element tag name. When registering the attribute directive you can use an optional tag name to restrict the directive to that tag:
 
 ```javascript
 Qute.registerDirective('select', 'value', selectValueDirective);
 ```
 
-then, use the directive as this: `<select x-use:value={someExpr}>`
+then, use the directive as this: `<select q:value={someExpr}>`
 
 When trying to use this directive on another element like for example an `<input>` the directive will not be found and an error will be thrown.
 
@@ -108,7 +134,7 @@ In this example we change the font color to green, for all `span` elements conta
 
 ```jsq
 <x-tag name='root'>
-	<div x-use:color-spans>Hello <span>world</span>!</div>
+	<div q:color-spans>Hello <span>world</span>!</div>
 </x-tag>
 
 Qute.registerDirective('color-spans', function(xattrs, valueExpr) {
@@ -125,16 +151,16 @@ export default Qute('root');
 
 ### A simple directive with configuration
 
-Let's now modify the previous example and use a configuration object to be able to change the default color.
+Let's now modify the previous example and use a value to specify a color.
 
 ```jsq
 <x-tag name='root'>
-	<div x-use:color-spans='{color:"red"}'>Hello <span>world</span>!</div>
+	<div q:color-spans='red'>Hello <span>world</span>!</div>
 </x-tag>
 
 Qute.registerDirective('color-spans', function(xattrs, valueExpr) {
 	console.log('#color-spans init:', this, "Config: ", valueExpr);
-	var color = valueExpr && valueExpr.color || 'green';
+	var color = valueExpr || 'green';
 	return function(el) {
 		var spans = el.getElementsByTagName('span');
 		for (var i=0,l=spans.length; i<l; i++) spans[i].style.color = color;
@@ -144,19 +170,18 @@ Qute.registerDirective('color-spans', function(xattrs, valueExpr) {
 export default Qute('root');
 ```
 
-**Note:** Here we used `valueExpr` as is (without evaluating it). This is because we expect the value to be an object and not an expression. But, you cannot know how the directive will be used by users. If someone is passing the value using an expression value like `x-use:color-spans={{color:"red"}}`, then the code will no more work.
+**Note:** Here we used `valueExpr` as is (without evaluating it). This is because we expect the value to be a string literal and not an expression. But, you cannot know how the directive will be used by users. If someone is passing the value using an expression value like `q:color-spans={colorValue}`, then the previous code will no more work.
 
-To avoid this you must use:
+To avoid this you must use the rendering `eval` method:
 
 ```javascript
-	var config = this.eval(valueExpr);
-	var color = config && config.color || 'green';
+	var color = this.eval(valueExpr) || 'green';
 ```
 
 instead of
 
 ```javascript
-	var color = valueExpr && valueExpr.color || 'green';
+	var color = valueExpr || 'green';
 ```
 
 and the code will work under any circumstances.
@@ -164,11 +189,11 @@ and the code will work under any circumstances.
 
 ### Reactivity in custom directives
 
-Let's now use a component reactive property to store the color to use. When the color is changed we re-run the `color-spans` directive to update to the new color
+Let's now use a component reactive property to store the color to use. When the color is changed we re-run the `color-spans` directive to re-run the directice using the new color:
 
 ```jsq
 <x-tag name='root'>
-    <div color={color} x-use:color-spans='{color:"red"}'>
+    <div color={color} q:color-spans={color}>
         Hello <span>world</span>!
         <br>
         Choose a color:
@@ -183,16 +208,11 @@ Let's now use a component reactive property to store the color to use. When the 
     </div>
 </x-tag>
 
-Qute.registerDirective('color-spans', function(xattrs, config) {
-    var rendering = this, color, colorProvider;
-    if (xattrs.color) {
-        colorProvider = xattrs.color;
-        // delete the color attribute to avoid storing it as a DOM element attribute
-        delete xattrs.color;
-    }
+Qute.registerDirective('color-spans', function(xattrs, colorExpr) {
+    var rendering = this, color;
 
     function updateColor(el) {
-        var newColor = rendering.eval(colorProvider) || 'green';
+        var newColor = rendering.eval(colorExpr) || 'green';
         if (color !== newColor) { // only update if color changed
             color = newColor;
             var spans = el.getElementsByTagName('span');
@@ -202,7 +222,7 @@ Qute.registerDirective('color-spans', function(xattrs, config) {
 
     return function(el) {
         // register an update listener
-        this.up(function() {
+        rendering.up(function() {
             updateColor(el);
         });
         updateColor(el);
@@ -220,8 +240,45 @@ export default Qute('root', {
 
 **Notes:**
 
-1. The `color` attribute is used to pass a variable value for the color to use. If the color evaluate to falsy then the default color is used.  \
-The attributes passed through the `xattrs` object must be evaluated with the rendering context `eval()` method. This will correctly handle literal values (i.e. constants) or variable values.
+1. The custom attribute value is used to pass a variable value for the color to use. If the color evaluate to falsy then the default color is used.  \
+The Custom attribute value must be evaluated using the rendering contetxt `eval()` method.  \
+You can evaluate any attribute passed to the element using `this.eval(xattrs["some-attr"])`.
 
-2. The `color` attribute is removed from the `xattrs` object. Otherwise it will be inserted as a HTML attribute on the target element.
+2. If you need to use mulptiple attributes for your directive then you may want to delete the extra attribute from the `xattrs` object to avoid writing the attribute on the DOM element.
 
+For example you may want to modify the previous directive to set the color of the children elements selected using a given element selector:
+
+`<div q:color-kids='span' color={color}>`
+
+In this case you want to retrieve the color from the `xattrs[color]` expression but then you want to remove the color attribute otherwise it will be inserted into the DOM element as an HTML attribute:
+
+```javascript
+Qute.registerDirective('color-kids', function(xattrs, selectorExpr) {
+    var rendering = this, color, colorExpr = 'green';
+    var selector = rendering.eval(selectorExpr) || 'span';
+
+    if (xattrs.color) {
+        colorExpr = xattrs.color;
+        delete xattrs.color;
+    }
+
+    function updateColor(el) {
+        var newColor = rendering.eval(colorExpr) || 'green';
+        if (color !== newColor) { // only update if color changed
+            color = newColor;
+            var spans = el.querySelectorAll(selector);
+            for (var i=0,l=spans.length; i<l; i++) spans[i].style.color = color;
+        }
+    }
+
+    return function(el) {
+        // register an update listener
+        rendering.up(function() {
+            updateColor(el);
+        });
+        updateColor(el);
+    };
+});
+```
+
+To use the directive you can write: `<div q:color-kids='span' color={color}>`

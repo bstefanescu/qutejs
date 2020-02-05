@@ -6,11 +6,11 @@ import { mountTest, click, runAfter } from './utils.js';
 
 
 <x-tag name='color-spans-1'>
-	<div x-use:color-spans>Hello <span>world</span>!</div>
+	<div q:color-spans>Hello <span>world</span>!</div>
 </x-tag>
 
 <x-tag name='color-spans-2'>
-	<div x-use:color-spans='{color:"red"}'>Hello <span>world</span>!</div>
+	<div q:color-spans='{color:"red"}'>Hello <span>world</span>!</div>
 </x-tag>
 
 Qute.registerDirective('color-spans', function(xattrs, valueFn) {
@@ -43,22 +43,6 @@ var TestLambda1 = Qute('test-lambda-1', {
     }
 });
 
-<x-tag name='test-lambda-2'>
-    <div>
-    <input type='text' name='name' value='Hello World!' x-call='el => this.inputEl = el'><button @click='onClick'>Click me!</button>
-    </div>
-</x-tag>
-
-var TestLambda2 = Qute('test-lambda-2', {
-	init() {
-		this.clicked = 0;
-	},
-    onClick() {
-    	assert.equal(this.inputEl.value, 'Hello World!');
-    	this.clicked++;
-    }
-});
-
 // -------
 
 
@@ -67,7 +51,7 @@ var TestLambda2 = Qute('test-lambda-2', {
 </x-tag>
 
 <x-tag name='test-fn'>
-	<my-fn x-call='testOnCreate' x-use:color-spans='{color:"cyan"}' />
+	<my-fn x-call='testOnCreate' q:color-spans='{color:"cyan"}' />
 </x-tag>
 
 var TestFn = Qute('test-fn', {
@@ -83,7 +67,7 @@ var TestFn = Qute('test-fn', {
 </x-tag>
 
 <x-tag name='test-vm'>
-	<my-vm x-call='testOnCreate' x-use:color-spans='{color:"blue"}' />
+	<my-vm x-call='testOnCreate' q:color-spans='{color:"blue"}' />
 </x-tag>
 
 var TestVm = Qute('test-vm', {
@@ -95,7 +79,7 @@ var TestVm = Qute('test-vm', {
 });
 
 
-describe('x-use attribute', function() {
+describe('Custom Attributes', function() {
 
 	it('calls registered directives (no config)', function() {
 		var test1 = mountTest(TestColorSpans1);
@@ -105,17 +89,11 @@ describe('x-use attribute', function() {
 		var test2 = mountTest(TestColorSpans2);
 		assert.equal(test2.getElementsByTagName('span')[0].style.color, 'red');
 	});
-	it('calls lambda callbacks using x-use', function() {
+	it('calls lambda callbacks using x-call', function() {
 		var test3 = mountTest(TestLambda1);
 		assert.equal(test3.$vm.clicked, 0);
 		click(test3.querySelector('button'));
 		assert.equal(test3.$vm.clicked, 1);
-	});
-	it('calls lambda callbacks using x-call', function() {
-		var test4 = mountTest(TestLambda2);
-		assert.equal(test4.$vm.clicked, 0);
-		click(test4.querySelector('button'));
-		assert.equal(test4.$vm.clicked, 1);
 	});
 	it('works on functional components', function() {
 		var test5 = mountTest(TestFn);

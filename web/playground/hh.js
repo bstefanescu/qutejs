@@ -5,7 +5,7 @@ var hh = (function() {
 
 // ---------- parse attrs ------------
 
-var ATTR_KEY = /\s*([A-Za-z0-9_@:-]+)(\s*=\s*)?/g;
+var ATTR_KEY = /\s*([A-Za-z0-9_@#\?:-]+)(\s*=\s*)?/g;
 var ATTR_V_Q = /\\*'/g;
 var ATTR_V_DQ = /\\*"/g;
 var ATTR_V_EXPR = /\{|\}/g;
@@ -99,7 +99,7 @@ function parseAttrs(text, from) {
 
 // -----------------------------------
 
-var STAG_RX = /^<([-A-Za-z0-9_:]+)((?:\s+[-\w@#:]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|(?:\{.*\})|[^>\s]+))?)*)\s*(\/?)>/,
+var STAG_RX = /^<([-A-Za-z0-9_:]+)((?:\s+[-\w@#\?:]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|(?:\{.*\})|[^>\s]+))?)*)\s*(\/?)>/,
     ETAG_RX = /^<\/([-A-Za-z0-9_:]+)[^>]*>/;
 
 var voids = {else:true, case:true, area:true, base:true, br:true, col:true, embed:true, hr:true, img:true, input:true, link:true, meta:true, param:true, source:true, track:true, wbr:true};

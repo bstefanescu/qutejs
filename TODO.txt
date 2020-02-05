@@ -1,7 +1,3 @@
-TBD now:
-- Write model doc
-
-TBD Later:
 
 0. remove propKey from update functions
 1. move more functions to @qutejs/test-utils

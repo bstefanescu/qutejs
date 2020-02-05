@@ -1,5 +1,5 @@
 
-var ATTR_KEY = /\s*([A-Za-z0-9_@:-]+)(\s*=\s*)?/g;
+var ATTR_KEY = /\s*([A-Za-z0-9_@#\?:-]+)(\s*=\s*)?/g;
 var ATTR_V_Q = /\\*'/g;
 var ATTR_V_DQ = /\\*"/g;
 var ATTR_V_EXPR = /\{|\}/g;

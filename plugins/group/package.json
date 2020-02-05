@@ -1,0 +1,46 @@
+{
+  "name": "@qutejs/group",
+  "version": "1.0.0-rc.0",
+  "description": "Qute Items Group directive",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bogdan Stefanescu <bogdan@quandora.com>",
+  "license": "MIT",
+  "keywords": [
+    "group",
+    "button",
+    "link",
+    "toggle",
+    "tabs",
+    "component",
+    "model",
+    "binding",
+    "qutejs",
+    "qute",
+    "directive",
+    "dom",
+    "template"
+  ],
+  "homepage": "https://qutejs.org",
+  "repository": {
+    "url": "https://github.com/bstefanescu/qutejs",
+    "type": "git"
+  },
+  "dependencies": {
+    "@qutejs/runtime": "1.0.0-rc.0",
+    "@qutejs/window": "1.0.0-rc.0"
+  },
+  "devDependencies": {
+    "@qutejs/rollup-plugin-qute": "1.0.0-rc.0"
+  },
+  "build": {
+    "config": "component",
+    "input": "src/index.js"
+  }
+}

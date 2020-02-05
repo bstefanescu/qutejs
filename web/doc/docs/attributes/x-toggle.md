@@ -1,29 +1,39 @@
 # The x-toggle attribute
 
-You can use this directive to conditionally add or remove `flag` like attributes on HTML elements. The attribute takes as a value a map of attribute names to conditional expressions.
+You can use this directive to conditionally add or remove `flag` like attributes on HTML elements. The attribute to be toggled must be prefixed with `x-toggle` and takes as value an expression. If the value evaluates to a truthy value then the attribute is added otherwise it is removed
 
-**Syntax:** `x-toggle="{attrName: booleanExpression}"`
+**Syntax:** `x-toggle:attrName={booleanExpression}`
+
+## The `?attr` alias
+
+You can use the shorter prefix `?` if you prefer a more compact notation:
+
+**Syntax:** `?attrName={booleanExpression}`
+
+Both of these notations are equivalent.
+
+## Example
 
 ```jsq
 
 <x-tag name='root'>
 	<div>
-		<button @click='e => this.disabledButton = "left"' x-toggle='{disabled: disabledButton === "left"}'>Enable right button</button>
-		<button @click='e => this.disabledButton = "right"' x-toggle='{disabled: disabledButton === "right"}'>Enable left button</button>
+        <button x-toggle:disabled={disabledButton1}
+        	@click='e => disableButton2 = true'>Enable right button</button>
+        <button ?disabled={disabledButton2}
+        	@click='e => disableButton1 = true'>Enable left button</button>
 	</div>
 </x-tag>
 
 export default Qute('root', {
 	init() {
 		return {
-			disabledButton: 'right'
+			disableButton1: false
+			disableButton2: false
 		};
 	}
 });
 ```
-
-**Note** that there is another method to conditionally add an attribute: when using regular attribute bindings, if the attribute value is evaluated to `null` or `undefined` then the attribute will not be added to the element.
-Anyway, one may want to use boolean values to control flag like attributes, this is why the `x-toggle` was added.
 
 ## Using x-toggle on components
 
@@ -39,11 +49,11 @@ When using `x-toggle` attribute on components it will modify the attributes on t
 
 <x-tag name='root'>
 	<div>
-		<button @click='disableButton1 = true'>Click to disable button 1</button>
-		<button @click='disableButton2 = true'>Click to disable button 2</button>
+		<button @click='e => disableButton1 = true'>Click to disable button 1</button>
+		<button @click='e => disableButton2 = true'>Click to disable button 2</button>
 		<hr/>
-		<button1 x-toggle='{disabled: disableButton1}'>Button 1</button1>
-		<button2 x-toggle='{disabled: disableButton2}'>Button 2</button2>
+		<button1 x-toggle:disabled={disableButton1}>Button 1</button1>
+		<button2 ?disabled={disableButton2}>Button 2</button2>
 	</div>
 </x-tag>
 

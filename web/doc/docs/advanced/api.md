@@ -52,7 +52,7 @@ You can use this function to register hand written rendering functions. (in that
 
 Register a custom attribute directive. The `tag` argument is optional, and should be used when the directive should only be enabled for the given tag.
 
-See **[x-use](#/attributes/x-use)** for more details.
+See **[Custom Attributes](#/attributes/q)** for more details.
 
 ### `Qute.template(tag)`
 
@@ -196,7 +196,8 @@ The data object holding all reactive properties.
 #### `$r`
 
 The rendering context linked to this component.
-This can be usefull when using **[x-use](#/attributes/x-use)** or **[x-call](#/attributes/x-use)**
+
+This can be usefull when using **[custom attributes](#/attributes/q)** or **[x-call](#/attributes/x-call)**
 
 ### Component methods
 
