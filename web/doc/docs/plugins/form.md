@@ -80,17 +80,3 @@ export default Qute('root', {
 	}
 });
 ```
-
-## The `radio` attribute
-
-This attribute can be used on `DIV` and `FIELDSET` elements, and is usefull to manage a group of radio inputs as a single control.
-
-The `radio` attribute value is the radio `input` name to use. The `radio` should be used in conjunction with the `model` attribute.
-
-```jsq
-
-```
-
-## The `validate` attribute
-
-
