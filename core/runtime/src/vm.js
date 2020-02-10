@@ -354,6 +354,10 @@ ViewModel.prototype = {
 	toHTML: function() {
 		return this.$el && this.$el.outerHTML;
 	},
+	// ---------- i18n support ---------------------
+	t: function() {
+		return this.$app.i18n.apply(this.$app, Array.prototype.slice.call(arguments));
+	},
 	// ---------------------------------------------
 	init: function() {} // do nothing
 }

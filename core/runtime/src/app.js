@@ -166,6 +166,12 @@ App.prototype = {
 
 	view(VM) {
 		return new VM(this);
+	},
+
+	// i18n is not implemented by default you must override this method with a real implementation
+	i18n(key) {
+		console.warn('No i18n implementation installed!');
+		return key;
 	}
 }
 

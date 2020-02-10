@@ -195,3 +195,9 @@ var Root = Qute('root');
 // mount root component using the app instance
 new Root(app).mount('app');
 ```
+
+### `i18n()`
+
+Translate the given message using the installed i18n. If no i18n support was installed return the message as is and print a warning on the `console.log`.
+
+Go to **[i18n section](#/app/i18n)** for more details.
