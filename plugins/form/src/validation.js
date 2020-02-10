@@ -104,12 +104,20 @@ function getValidationMessage(el, config) {
 	if (key) {
 		var msgs = config.messages[el.name];
 		if (msgs) {
-			msg = msgs[key] || msgs['error'];
+			if (typeof msgs === 'string') {
+				msg = msgs;
+			} else {
+				msg = msgs[key] || msgs['error'];
+			}
 		}
 		if (!msg) {
 			msgs = config.messages['*'];
 			if (msgs) {
-				msg = msgs[key] || msgs['error'];
+				if (typeof msgs === 'string') {
+					msg = msgs;
+				} else {
+					msg = msgs[key] || msgs['error'];
+				}
 			}
 		}
 	}
