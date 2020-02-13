@@ -1,12 +1,8 @@
-# Qute: A Javascript Component Model for the DOM.
-
-Qute is a **reactive component model** designed for **plain old javascript** lovers.
-
-## Qute Project Generator (@qutejs/create)
+# Qute Project Generator (@qutejs/create)
 
 Implements the Qute project generator.
 
-Go here for the **[Qute documentation](https://qutejs.org)**.
+**[Qute](https://qutejs.org)** is a **reactive component model** designed for **plain old javascript** lovers.
 
 # Usage
 
@@ -19,6 +15,8 @@ or (on **node versions** older than **10.3.0**)
 ```
 npx @qutejs/create
 ```
+
+Go here for the **[Qute Project Generator documentation](https://qutejs.org/#/getting-started)**.
 
 # Building
 

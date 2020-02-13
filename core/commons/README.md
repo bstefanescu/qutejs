@@ -1,10 +1,8 @@
-# Qute: A Javascript Component Model for the DOM.
+# Qute Commons (@qutejs/commons)
+
+This package is providing utility functions which are shared between **[Qute](https://qutejs.org)** packages.
 
 Qute is a **reactive component model** designed for **plain old javascript** lovers.
-
-## Qute Commons (@qutejs/commons)
-
-This package is providing utility functions which are shared between Qute packages.
 
 # Getting Started
 

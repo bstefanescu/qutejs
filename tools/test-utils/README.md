@@ -1,10 +1,8 @@
-# Qute: A Javascript Component Model for the DOM.
-
-Qute is a **reactive component model** designed for **plain old javascript** lovers.
-
-## @qutejs/test-utils
+# @qutejs/test-utils
 
 Provides utilities for writing Qute tests.
+
+**[Qute](https://qutejs.org)** is a **reactive component model** designed for **plain old javascript** lovers.
 
 # Getting Started
 

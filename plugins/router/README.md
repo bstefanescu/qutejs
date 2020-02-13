@@ -1,10 +1,8 @@
-# Qute: A Javascript Component Model for the DOM.
-
-Qute is a **reactive component model** designed for **plain old javascript** lovers.
-
-## Qute Router Plugin (@qutejs/router)
+# Qute Router Plugin (@qutejs/router)
 
 A javascript router working inside a Qute copmponent context.
+
+**[Qute](https://qutejs.org)** is a **reactive component model** designed for **plain old javascript** lovers.
 
 # Getting Started
 
@@ -20,7 +18,7 @@ or (on **node versions** older than **10.3.0**)
 npx @qutejs/create
 ```
 
-Go here for the **[Qute documentation](https://qutejs.org)**.
+Go here for the **[Qute Router documentation](https://qutejs.org#/plugins/routing)**.
 
 # Installing
 

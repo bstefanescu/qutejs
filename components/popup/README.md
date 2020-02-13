@@ -1,10 +1,8 @@
-# Qute: A Javascript Component Model for the DOM.
+# Qute Popup Component (@qutejs/popup)
+
+A **[Qute](https://qutejs.org)** component implementing a popup.
 
 Qute is a **reactive component model** designed for **plain old javascript** lovers.
-
-## Qute Popup Component (@qutejs/popup)
-
-A Qute component implementing a popup.
 
 # Getting Started
 
@@ -13,8 +11,6 @@ Use the Qute project generator to create a new Qute application or component pro
 ```
 npm init @qutejs
 ```
-
-Go here for the **[Qute documentation](https://qutejs.org)**.
 
 # Installing
 
@@ -33,6 +29,8 @@ or
 ```
 import Popup from '@qutejs/popup'
 ```
+
+Go to the **[Qute Popup Component documentation](https://qutejs.org/doc/#/components/popup)**.
 
 # Building
 

@@ -1,10 +1,8 @@
-# Qute: A Javascript Component Model for the DOM.
-
-Qute is a **reactive component model** designed for **plain old javascript** lovers.
-
-## Qute Form Helpers (@qutejs/form)
+# Qute Form Helpers (@qutejs/form)
 
 A collection of **Qute** custom attribute directives to help working with forms.
+
+**[Qute](https://qutejs.org)** is a **reactive component model** designed for **plain old javascript** lovers.
 
 # Getting Started
 
@@ -14,7 +12,7 @@ Use the Qute project generator to create a new Qute application or component pro
 npm init @qutejs
 ```
 
-Go here for the **[Qute documentation](https://qutejs.org)**.
+Go here for the **[Qute Form Helpers documentation](https://qutejs.org#/plugins/form)**.
 
 # Installing
 

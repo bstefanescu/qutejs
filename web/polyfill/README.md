@@ -1,8 +1,4 @@
-# Qute: A Javascript Component Model for the DOM.
-
-Qute is a **reactive component model** designed for **plain old javascript** lovers.
-
-## @qutejs/polyfill
+# @qutejs/polyfill
 
 Provides all the polyfills required by Qute to work on IE >= 9.
 The following polyfills are provided:
@@ -13,6 +9,8 @@ The following polyfills are provided:
 * `Element.matches`
 * `Object.assign`
 * `String.startsWith`
+
+**[Qute](https://qutejs.org)** is a **reactive component model** designed for **plain old javascript** lovers.
 
 # Getting Started
 

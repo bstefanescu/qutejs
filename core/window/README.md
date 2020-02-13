@@ -1,8 +1,4 @@
-# Qute: A Javascript Component Model for the DOM.
-
-Qute is a **reactive component model** designed for **plain old javascript** lovers.
-
-## @qutejs/window
+# @qutejs/window
 
 This package provides an abstraction for the browser window global. Any time you need to use a browser global you must import it from this package:
 
@@ -15,6 +11,10 @@ You can also import other globals (that are properties of the window object):
 ```
 import {document} from '@qutejs/window';
 ```
+
+The package is meant to be used by Qute components.
+
+**[Qute](https://qutejs.org)** is a **reactive component model** designed for **plain old javascript** lovers.
 
 # Getting Started
 

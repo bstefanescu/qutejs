@@ -1,10 +1,8 @@
-# Qute: A Javascript Component Model for the DOM.
-
-Qute is a **reactive component model** designed for **plain old javascript** lovers.
-
-## Qute Compiler (@qutejs/compiler)
+# Qute Compiler (@qutejs/compiler)
 
 The Qute Compiler is transpiling Qute templates and `.jsq` files to javascript.
+
+**[Qute](https://qutejs.org)** is a **reactive component model** designed for **plain old javascript** lovers.
 
 # Getting Started
 

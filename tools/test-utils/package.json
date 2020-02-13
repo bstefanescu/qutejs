@@ -17,6 +17,10 @@
     "url": "https://github.com/bstefanescu/qutejs",
     "type": "git"
   },
+  "keywords": [
+    "qute",
+    "test"
+  ],
   "build": {
     "config": "lib",
     "nodeDeps": [

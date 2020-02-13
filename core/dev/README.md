@@ -1,10 +1,8 @@
-# Qute: A Javascript Component Model for the DOM.
-
-Qute is a **reactive component model** designed for **plain old javascript** lovers.
-
-## Qute Development Runtime (@qutejs/dev)
+# Qute Development Runtime (@qutejs/dev)
 
 The Qute Development Runtime is extending the Qute Runtime to add more debugging information and the possibility to compile on the fly Qute components.
+
+**[Qute](https://qutejs.org)** is a **reactive component model** designed for **plain old javascript** lovers.
 
 # Getting Started
 

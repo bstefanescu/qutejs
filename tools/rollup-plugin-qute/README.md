@@ -1,10 +1,8 @@
-# Qute: A Javascript Component Model for the DOM.
-
-Qute is a **reactive component model** designed for **plain old javascript** lovers.
-
-## Rollup Plugin For Qute `.jsq` files (@qutejs/rollup-plugin-qute)
+# Rollup Plugin For Qute `.jsq` files (@qutejs/rollup-plugin-qute)
 
 Integrate Qute compiler into [rollup.js](https://rollupjs.org/) build process.
+
+**[Qute](https://qutejs.org)** is a **reactive component model** designed for **plain old javascript** lovers.
 
 # Getting Started
 

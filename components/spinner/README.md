@@ -1,10 +1,8 @@
-# Qute: A Javascript Component Model for the DOM.
+# Qute Spinner Component (@qutejs/spinner)
+
+A **[Qute](https://qutejs.org)** component implementing a spinner (i.e. loading notification) component.
 
 Qute is a **reactive component model** designed for **plain old javascript** lovers.
-
-## Qute Spinner Component (@qutejs/spinner)
-
-A Qute component implementing a spinner (i.e. loading notification) component.
 
 # Getting Started
 
@@ -13,8 +11,6 @@ Use the Qute project generator to create a new Qute application or component pro
 ```
 npm init @qutejs
 ```
-
-Go here for the **[Qute documentation](https://qutejs.org)**.
 
 # Installing
 
@@ -27,6 +23,8 @@ npm install @qutejs/spinner
 ```
 import '@qutejs/spinner';
 ```
+
+Go to the **[Qute Spinner Component documentation](https://qutejs.org/doc/#/components/spinner)**.
 
 # Building
 

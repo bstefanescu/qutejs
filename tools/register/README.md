@@ -1,12 +1,10 @@
-# Qute: A Javascript Component Model for the DOM.
-
-Qute is a **reactive component model** designed for **plain old javascript** lovers.
-
-## @qutejs/register
+# @qutejs/register
 
 Hook the Qute compiler into node `require` to automatically compile `.jsq` files.
 
 The `pirates` module is used to correctly integrate with other hooks like @babel/register.
+
+**[Qute](https://qutejs.org)** is a **reactive component model** designed for **plain old javascript** lovers.
 
 # Getting Started
 

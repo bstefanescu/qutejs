@@ -1,10 +1,8 @@
-# Qute: A Javascript Component Model for the DOM.
-
-Qute is a **reactive component model** designed for **plain old javascript** lovers.
-
-## Qute Items Group  (@qutejs/i18n)
+# Qute Items Group  (@qutejs/i18n)
 
 A **Qute** internationalization plugin based on [polyglot](https://airbnb.io/polyglot.js/).
+
+**[Qute](https://qutejs.org)** is a **reactive component model** designed for **plain old javascript** lovers.
 
 # Getting Started
 
@@ -14,7 +12,7 @@ Use the Qute project generator to create a new Qute application or component pro
 npm init @qutejs
 ```
 
-Go here for the **[Qute documentation](https://qutejs.org)**.
+Go here for the **[Qute i18n documentation](https://qutejs.org#/plugins/i18n)**.
 
 # Installing
 

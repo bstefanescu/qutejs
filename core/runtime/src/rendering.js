@@ -101,6 +101,7 @@ function IfRenderingContext(rendering, start, end, exprs, kids, changeCb) {
 		} else if (r) {
 			// only update children
 			r.$update();
+			console.log('>>>>>>>>>>VMS', r.vms);
 		}
 	}
 }
@@ -397,6 +398,15 @@ var RenderingProto = {
 		var model = this.vm, ups = this.ups;
 		for (var i=0,l=ups.length;i<l;i++) ups[i](model);
 		return this;
+	},
+	updateTree: function() {
+		this.$update();
+		var vms = this.vms;
+		for (var i=0,l=vms.length; i<l; i++) {
+			var child = vms[i];
+			child.updateTree && child.updateTree();
+			if (!child.updateTree) console.log('@@', child)
+		}
 	},
 	// create a child rendering
 	spawn: function(vm) {
