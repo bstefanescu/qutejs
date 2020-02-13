@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/compiler",
-  "version": "1.0.0-rc.0",
+  "version": "1.0.0-rc.1",
   "description": "Qute compiler",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
@@ -29,7 +29,7 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/commons": "1.0.0-rc.0"
+    "@qutejs/commons": "1.0.0-rc.1"
   },
   "build": {
     "config": "lib"

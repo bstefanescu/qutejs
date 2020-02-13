@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/register",
-  "version": "1.0.0-rc.0",
+  "version": "1.0.0-rc.1",
   "description": "Transpile .jsq files trhough node require hook",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
@@ -26,7 +26,7 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/compiler": "1.0.0-rc.0",
+    "@qutejs/compiler": "1.0.0-rc.1",
     "find-cache-dir": "^3.0.0",
     "mkdirp": "^0.5.1",
     "pirates": "^4.0.1"

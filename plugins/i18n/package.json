@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/i18n",
-  "version": "1.0.0-rc.0",
+  "version": "1.0.0-rc.1",
   "description": "Qute internationalization plugin based on polyglot",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
@@ -26,12 +26,12 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/runtime": "1.0.0-rc.0",
-    "@qutejs/window": "1.0.0-rc.0",
+    "@qutejs/runtime": "1.0.0-rc.1",
+    "@qutejs/window": "1.0.0-rc.1",
     "node-polyglot": "^2.4.0"
   },
   "devDependencies": {
-    "@qutejs/rollup-plugin-qute": "1.0.0-rc.0"
+    "@qutejs/rollup-plugin-qute": "1.0.0-rc.1"
   },
   "build": {
     "config": "component",
