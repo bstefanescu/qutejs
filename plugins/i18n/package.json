@@ -1,0 +1,41 @@
+{
+  "name": "@qutejs/i18n",
+  "version": "1.0.0-rc.0",
+  "description": "Qute internationalization plugin based on polyglot",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bogdan Stefanescu <bogdan@quandora.com>",
+  "license": "MIT",
+  "keywords": [
+    "i18n",
+    "polyglot",
+    "internationalization",
+    "qutejs",
+    "qute",
+    "plugin"
+  ],
+  "homepage": "https://qutejs.org",
+  "repository": {
+    "url": "https://github.com/bstefanescu/qutejs",
+    "type": "git"
+  },
+  "dependencies": {
+    "@qutejs/runtime": "1.0.0-rc.0",
+    "@qutejs/window": "1.0.0-rc.0",
+    "node-polyglot": "^2.4.0"
+  },
+  "devDependencies": {
+    "@qutejs/rollup-plugin-qute": "1.0.0-rc.0"
+  },
+  "build": {
+    "config": "component",
+    "input": "src/index.js",
+    "external": ["@qutejs/window", "@qutejs/runtime"]
+  }
+}

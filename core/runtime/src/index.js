@@ -114,6 +114,11 @@ Qute.Rendering = Rendering;
 Qute.render = function(xtagName, model) {
 	return getTag(xtagName)(new Rendering(model));
 }
+Qute.defineMethod = function(name, fn) {
+	//define method on both ViewModel and Functional components prototype
+	ViewModel.prototype[name] = fn;
+    Rendering.FunComp.prototype[name] = fn;
+}
 
 Qute.register = registerTag;
 Qute.template = getTag;

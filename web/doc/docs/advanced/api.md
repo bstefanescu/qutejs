@@ -84,10 +84,9 @@ Manualy render a template function given its (tag) name nad a `model` object.
 
 The model can any object. You can thus use Qute templates to render anyhting, not only `ViewModel` objects.
 
+### `Qute.defineMethod(name, fn)`
 
-### `Qute.List`
-
-The **Reactive List** type. See **[Reactive Lists](#/attributes/x-for)**.
+Define a method on `ViewModel` and functional component prototype. Can be used to extend the component API. See **[Internationalization Support](#/app/i18n)** for an example.
 
 ### `Qute.App`
 

@@ -108,7 +108,7 @@ function ViewModel(app, attrs) {
 }
 
 ViewModel.prototype = {
-	__VM__:true,
+	__VM__: true,
 	toString: function() {
 		return 'ViewModel <'+this.$tag+'/>';
 	},
@@ -278,6 +278,7 @@ ViewModel.prototype = {
 		if (!this.$el) ERR(34); // TODO check if root and mounted
 		this.$disconnect();
 		this.$el.parentNode.removeChild(this.$el);
+		this.$el = null;
 	},
 	$update: function() {
 		if (this.$el) { // only if connected
@@ -353,10 +354,6 @@ ViewModel.prototype = {
 	},
 	toHTML: function() {
 		return this.$el && this.$el.outerHTML;
-	},
-	// ---------- i18n support ---------------------
-	t: function() {
-		return this.$app.i18n.apply(this.$app, Array.prototype.slice.call(arguments));
 	},
 	// ---------------------------------------------
 	init: function() {} // do nothing

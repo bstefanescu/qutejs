@@ -424,6 +424,7 @@ function Rendering(vm, parent) {
 }
 Rendering.prototype = RenderingProto;
 
+Rendering.FunComp = FunComp;
 // make the bindings visible to component implementors
 // add more bindigns here if needed
 Rendering.SetAttr = SetAttr;

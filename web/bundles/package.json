@@ -13,6 +13,7 @@
     "@qutejs/router": "1.0.0-rc.0",
     "@qutejs/group": "1.0.0-rc.0",
     "@qutejs/form": "1.0.0-rc.0",
+    "@qutejs/i18n": "1.0.0-rc.0",
     "@qutejs/popup": "1.0.0-rc.0",
     "@qutejs/modal": "1.0.0-rc.0",
     "@qutejs/spinner": "1.0.0-rc.0",

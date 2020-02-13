@@ -1,7 +1,10 @@
+const replace = require('@rollup/plugin-replace');
 const commonjs = require('rollup-plugin-commonjs');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const buble = require('rollup-plugin-buble');
 const uglify = require('rollup-plugin-uglify').uglify;
+
+//NOTE: replace and external are only used by i18n
 
 // we need to avoid requiring qute for projects that don't depend on rollup-plugin-qute
 // since after a clean the rollup-plugin-qute link is removed from node_modules
@@ -12,6 +15,7 @@ const uglify = require('rollup-plugin-uglify').uglify;
 module.exports = function(project, args) {
     const PROD = args.indexOf('prod') > -1;
     var globals = project.config.globals || {};
+    var external = project.config.external || project.runtimeDeps;
     var input = project.file(project.config.input || 'src/index.jsq');
 
     var webFilePrefix = project.ws.file(`web/dist/${project.kebabCaseName}-${project.version}`);
@@ -21,6 +25,7 @@ module.exports = function(project, args) {
 
 
     const basePlugins = [
+        replace({ 'process.env.NODE_ENV': '"production"' }), // used by polyglot
         nodeResolve( {preferBuiltins: true} ),
         commonjs(),
         hasJSQ && require('rollup-plugin-postcss')({inject: false}),
@@ -31,7 +36,7 @@ module.exports = function(project, args) {
     function webConfig(prod) {
         return {
             input: input,
-            external: project.runtimeDeps,
+            external: external,
             plugins: [
                 ...basePlugins,
                 prod && uglify()
@@ -53,7 +58,7 @@ module.exports = function(project, args) {
     return [
         {
             input: input,
-            external: project.runtimeDeps,
+            external: external,
             plugins: basePlugins,
             output: [
                 {

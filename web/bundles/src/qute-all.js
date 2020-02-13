@@ -6,4 +6,6 @@ import '@qutejs/popup';
 import '@qutejs/spinner';
 import '@qutejs/group';
 import '@qutejs/form';
+import '@qutejs/i18n';
+
 
