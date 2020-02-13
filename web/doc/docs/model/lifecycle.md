@@ -1,6 +1,6 @@
 # Component Life Cycle
 
-A Qute Component provides 4 life cycle events that can be used events that can be used to setup and cleanup components.
+A Qute Component provides 4 life cycle events that can be used events that can be used to set up and clean up components.
 
 1. **INIT** - the component is initialized. The `init(app)` method is called.
 2. **CREATED** - the component root element was created. The `created(element)` method is called.
@@ -36,7 +36,7 @@ It is also available at any time as the **`$el`** property of the component inst
 
 Called just after the component is connected to the DOM (i.e. the component element is attached to the DOM).
 
-This handler may be called several times in the component life cycle, every time the component element is attached to the DOM. A component can be attached to the DOM or detached from the DOM mulitple times. For example if the component is conditionaly displayed by using the [if directive](#/directives/if), it will be detached / attached every time the `if` state changes.
+This handler may be called several times in the component life cycle, every time the component element is attached to the DOM. A component can be attached to the DOM or detached from the DOM multiple times. For example if the component is conditionally displayed by using the [if directive](#/directives/if), it will be detached / attached every time the `if` state changes.
 
 This handler can be used to add event listeners, setup timers etc.
 
@@ -44,7 +44,7 @@ This handler can be used to add event listeners, setup timers etc.
 
 Called just after the component is disconnected from the DOM. It may be called several times in the component life cycle.
 
-This handler can be used to cleanup resources setup by the `connected` handler.
+This handler can be used to clean-up resources setup by the `connected` handler.
 
 ## Functional Components and the Life Cycle
 

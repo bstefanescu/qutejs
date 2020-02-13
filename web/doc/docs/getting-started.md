@@ -5,18 +5,17 @@ Qute is composed of two main layers:
 1. **The presentation layer** - which includes the [templates](#/templates) and the [component model](#/components).
 2. **The application layer** - which includes the [application data model](#/app/data) and [logic](#/app/instance).
 
-When developing basic UI components you will mostly use the **presentation layer**. And you can completly ignore the **application layer**.  \
+When developing basic UI components you will mostly use the **presentation layer**. And you can completely ignore the **application layer**.  \
 When developing more complex components or javascript applications you will need to focus more on the application layer (i.e. **business logic and data**), and less on individual components composing the presentation layer.
 
 The **goal** of Qute is to let you **focus where you need to**. Qute model try to be as concise as possible in order to hide from you repetitive and glue code.  \
 So that, you finally write less code and focus more on the business logic.
 
-To quickly design and test Qute components you can use the **[Qute Playground](../playground/index.html)** or directly code components inlined in a web page.
-
+To quickly design and test Qute components you can use the **[Qute Playground](../playground/index.html)** or directly code components inlined in a web page.  \
 Though, this method is not suitable for production projects.
 
 A Qute component is made from javascript code, from some HTML based templates and possibly from some CSS fragments.  \
-All these parts of a component are transpiled to javascript code and when you depoly a component for production, you deploy a minified javascript file that contains all the parts a component is made of.
+All these parts of a component are transpiled to javascript code and when you deploy a component for production, you deploy a minified javascript file that contains all the parts a component is made of.
 
 ### Example: Component declared in a .jsq file
 
@@ -128,8 +127,8 @@ When testing, the `@qutejs/window` will resolve to the **[window](https://www.np
 
 ### Mounting a Component
 
-Once you created a component you can either use it in the templ,ate of anothewr component, either mount it (as a root component) in the DOM. Mounting the component will render the component tree on the page.  \
-To use a component inside another component template just use an element having the same name as the compopnent you want to use.
+Once you created a component you can either use it in the template of another component, either mount it (as a root component) in the DOM. Mounting the component will render the component tree on the page.  \
+To use a component inside another component template just use an element having the same name as the component you want to use.
 
 **Example:**
 
@@ -160,11 +159,11 @@ new MyComponent().mount();
 
 ## Component Namespace
 
-To isolate user defined components and avoid name clashes with external components you can use a namespace. To define a component in a namespace just prefix the compnent name with the namespace prefix.  \
+To isolate user defined components and avoid name clashes with external components you can use a namespace. To define a component in a namespace just prefix the component name with the namespace prefix.  \
 **Example:** `<x-tag name='my:select'>` will define a component named `select` in the `my` namespace.
 To use such components in templates you need to specify the qualified name (including the prefix).
 
-All components which are not explicitely prefixed with a namespace, will be part of the default Qute namespace which is using the `q` prefix.  \
+All components which are not explicitly prefixed with a namespace, will be part of the default Qute namespace which is using the `q` prefix.  \
 **Example:** `<x-tag name='popup'>` is equivalent to `<x-tag name='q:popup'>`.
 
 Components inside the default namespace can be specified with both the qualified name or the local name (i.e. non prefixed name) when used in other templates.
@@ -177,9 +176,9 @@ Go to **[Templates](#/templates)** and **[Components](#/components)** sections t
 
 ## Qute Project Generator
 
-In order to help you with this _build_ process, Qute is providing a **project generator** that initialize a **Qute Project** and generate the project structure and all the configuration files needed by the build process.
+In order to help you with the _build_ process, Qute is providing a **project generator** that initialize a **Qute Project**, generating the project structure and all the configuration files needed by the build process.
 
-The Qute project generator is using **[rollup](https://rollupjs.org/guide/en/)** as the bundler, **[mocha](https://mochajs.org/)** as the test framework and **[babel](https://babeljs.io/)** for transpiling ES6 syntax, but you can easily create boilerplates based on bundlers or test frameworks of your choice.
+The Qute project generator is using **[rollup](https://rollupjs.org/guide/en/)** as the bundler, **[mocha](https://mochajs.org/)** as the test framework and **[babel](https://babeljs.io/)** for transpiling ES6 syntax, but you can easily create a boilerplate based on bundlers or test frameworks of your choice.
 
 ### Creating a Qute Project
 
@@ -194,10 +193,10 @@ npm init @qutejs
 or if your **node version** is older than **10.3.0**, you must run the `npx` command:
 
 ```
-npx @qutejs/creates
+npx @qutejs/create
 ```
 
-It will ask you a bunch of questions, and then generate a directoy with a `package.json` file and all the other files needed to build and test your product.
+It will ask you a bunch of questions, and then generate a directory with a `package.json` file and all the other files needed to build and test your product.
 
 It will also ask you the project type. There are 2 project types:
 
@@ -234,8 +233,8 @@ package.json
 * The **`src`** directory contains the project sources (usually `.js` and `.jsq` files). The build expect to find a `index.js` which will be the entry point to your application or component.
 * The **`test`** directory contains  test sources (usually `.js` and `.jsq` files). Test files should be suffixed by `.test.js` or `.test.jsq`.
 * The **`build`** directory contains the build configuration (i.e. `rollup.config.js`), the test runner setup (i.e. `test/setup.js`) and the content root used by the development server (i.e. the `dev` directory).
-* The **`dist`** directory will contains the web bundles created by the build (e.g. my-app.js and my-app.min.js).
-* The **`lib`** directory **only exists for component projects**. It will contain the `CJS` and `ESM` files generated by the build. These fiels are required to import your component in other components, and are referenced in the component `package.json`.
+* The **`dist`** directory will contain the web bundles created by the build (e.g. my-app.js and my-app.min.js).
+* The **`lib`** directory **only exists for component projects**. It will contain the `CJS` and `ESM` files generated by the build. These files are required to import your component in other components, and are referenced in the component `package.json`.
 
 ### Application Project
 
@@ -259,7 +258,7 @@ import 'my-component';
 
 The component files are generated into the **lib/** directories in two flavors: `cjs` module and `esm` module.
 
-The web bundles are generated in the **dist/** directory. The web bundles **are not including** the **Qute Runtime**. If you want to directly use the component in a web page you must include the **Qute Runtime** library prior to the component bundle.
+The web bundles are generated in the **dist/** directory and **doesn't include** the **Qute Runtime**. If you want to directly use the component in a web page you must include the **Qute Runtime** library prior to the component bundle.
 
 Two web bundles are generated: a regular and a minified bundle ready to be used in production.
 
@@ -267,9 +266,9 @@ Two web bundles are generated: a regular and a minified bundle ready to be used 
 
 As mentioned you can use the **[Playground](../playground/index.html)** to quickly design your components, but also, you can directly write **Qute Components** inlined in a web page using the editor of your choice.
 
-To be able to test your inlined components you must include include the **[qute-dev.js](../dist/qute-dev-0.9.0.js)** bundle which contains everything is needed to transpile and run components. Do not use the **qute-dev.js** bundle in production.
+To be able to test your inlined components you must include the **[qute-dev.js](../dist/qute-dev-0.9.0.js)** bundle which contains everything is needed to transpile and run components. Do not use the **qute-dev.js** bundle in production.
 
-Before releasing your components it is recommended to create a **Qute Component Project** and copy your component code there (and adapting it to use import / export statemments). Then build the component and release to npm registry if needed.
+Before releasing your components it is recommended to create a **Qute Component Project** and copy your component code there (and adapting it to use import / export statements). Then build the component and release to npm registry if needed.
 
 ### Inlined Component Example
 

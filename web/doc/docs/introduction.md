@@ -5,7 +5,7 @@ It is a clean and concise implementation of the **MVVM** pattern.
 
 Qute can either be used as a component model to build plain javascript UI components, either as a framework to build modern javascript applications.
 
-Qute is an alternative to the well known **react** and **vue.js** frameworks. It is not another rewrite of a Virtual DOM framework. In fact it doesn't use a Virtual DOM, it is just using the real DOM. And it has its own personality and strengths, and may be some bugs ;-)
+Qute is an alternative to the well known **react** and **vue.js** frameworks. It is not another rewrite of a Virtual DOM framework. In fact, it doesn't use a Virtual DOM, it is just using the real DOM. And it has its own personality and strengths, and may be some bugs ;-)
 
 I was puzzled about the success of **Virtual DOM** frameworks. Such frameworks consume more resources than really needed.
 

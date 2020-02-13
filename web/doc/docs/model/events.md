@@ -102,7 +102,7 @@ export default Qute('root', {
 
 In the examples above the listeners are declared at component factory level. The listeners will be registered anytime an instance of the component is connected to the DOM. But what if you want to conditionally register a listener?
 
-#### Conditionaly Registering an Event Listener
+#### Conditionally Registering an Event Listener
 
 You can also use the `$on` method on the **ViewModel** instance to register a listener. This method has the same signature as the one provided by the component constructor.
 
@@ -135,17 +135,17 @@ Firing [DOM Custom Events](https://developer.mozilla.org/en-US/docs/Web/API/Cust
 Fire a custom DOM event. The event is fired by calling [dispatchEvent](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/dispatchEvent) on the component root element.
 
 * `event` - the event name
-* `data`  - an optional data object accessible as the `Event.detail` field. Defaults to the ViewModel instance who emited the event.
+* `data`  - an optional data object accessible as the `Event.detail` field. Defaults to the ViewModel instance who emitted the event.
 
 ### **`emitAsync(event, data, timeout)`**
 
 Fire a custom DOM event asynchronously. The event is fired by calling [dispatchEvent](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/dispatchEvent) on the component root element.
 
 * `event` - the event name
-* `data`  - an optional data object accessible as the `Event.detail` field. Defaults to the ViewModel instance who emited the event.
+* `data`  - an optional data object accessible as the `Event.detail` field. Defaults to the ViewModel instance who emitted the event.
 * timeout - an optional timeout in milliseconds. Defaults to 0.
 
-Emiting an event from a `ViewModel` instance is firing the event at the component root element.
+Emitting an event from a `ViewModel` instance is firing the event at the component root element.
 
 ### Example
 

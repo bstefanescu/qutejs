@@ -7,9 +7,9 @@ You can register property watchers when you define your component using the `Qut
 
 The `propName` argument is the name of the reactive property you want to watch and the `watcher` argument is a function with the signature `function (newValue, oldValue) { ... }`
 
-the `newValue` parameter is the new value being assigned to the property, and the `oldValue` is the existing property value. You can **cancel** the property update by returning `false` from the watcher function. Returning any other value will be ignored and the property update will be done (which will trigger a DOM update).
+The `newValue` argument is the new value being assigned to the property, and the `oldValue` is the existing property value. You can **cancel** the property update by returning `false` from the watcher function. Returning any other value will be ignored and the property update will be done (which will trigger a DOM update).
 
-The watcher fucntion is called in the context of the component instance (i.e. `this` points to the component instance).
+The watcher function is called in the context of the component instance (i.e. `this` points to the component instance).
 
 ```jsq
 <x-tag name='root'>

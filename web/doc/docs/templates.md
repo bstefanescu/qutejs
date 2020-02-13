@@ -2,7 +2,7 @@
 
 Qute Templates are written in a markup language derived from HTML and designed to render object models into **HTML views**. The markup language is named `JSQ`.
 
-## JSQ Markup Laguage
+## JSQ Markup Language
 
 `JSQ` supports any HTML construct. You can use empty HTML elements like `<br>` or `<hr>` without closing the tag. There are still some differences over HTML: elements that have content must always be closed. (like `<p>` or `<li>`).
 
@@ -16,7 +16,7 @@ In HTML, attributes can take a string value or can take no value at all (like fo
 
 #### Bounded Attributes
 
-In `JSQ` you can also use **bounded attributes** which are attributes which values are assigned from a javascript expression. These attributes can change during the life on an element: any time the expression changes the attribute value will changes too.
+In `JSQ` you can also use **bounded attributes** which are attributes which values are assigned from a javascript expression. These attributes can change during the life on an element: any time the expression changes the attribute value will change too.
 
 There are two ways to specify a **bounded attribute**:
 
@@ -27,7 +27,7 @@ There are two ways to specify a **bounded attribute**:
   **Example:** `<my-component :title='theTitle' />`  or `<my-component x-bind:title='theTitle' />` \
 
 Both of these notations are equivalent.  \
-You can use any one you prefer or mix notations if you want.
+You can use anyone you prefer or mix notations if you want.
 
 **Examples:**
 
@@ -43,9 +43,9 @@ In HTML, you can declare listeners on elements using an on{event-name} attribute
 
 **Example:** `<button @click='handleClick'>Click me!</button>`
 
-An event attribute can take as value a name which resolve to a function in the current context, or a siomple javascript expression like a method call.
+An event attribute can take as value a name which resolve to a function in the current context, or a simple javascript expression like a method call.
 
-There is an alternative notation for a event attribute: `x-on:{event-name}`
+There is an alternative notation for an event attribute: `x-on:{event-name}`
 
 **Example:** `<button x-on:click='handleClick'>Click me!</button>`
 
@@ -95,13 +95,13 @@ export default Qute('root', {
 
 Templates by themselves are useless. Templates need to be processed in the context of a model to generate an HTML view for that model. The model properties are directly accessible in a template (either in bounded attribute values or in mustache expressions).
 
-The model can be any javascript object.. The model itself is accessible as the `this` variable.
+The model can be any javascript object, and is accessible as the `this` variable.
 
-Here is the list of all the **builtin global variables** exposed in a template:
+Here is the list of all the **built-in global variables** exposed in a template:
 
 * `this` - the current component instance
 * `JSON` - the global `JSON` object
-* `console` - the global `console` object (usefull for debugging)
+* `console` - the global `console` object (useful for debugging)
 * `window` - the global `window` object
 * `Object` - the global `Object` object.
 * `$` - the current Rendering instance.
@@ -134,7 +134,7 @@ or even
 
 ## Directives
 
-Apart the syntax differences from HTML, the `JSQ` language introduce some new tag and attribute names used to control the rendering and the reactive phase of the template. These are the **tag directives** and the **attribute directives** bellow:
+Apart the syntax differences from HTML, the `JSQ` language introduce some new tag and attribute names used to control the rendering and the reactive phase of the template. These are the **tag directives** and the **attribute directives** below:
 
 #### Tag Directives
 
@@ -163,9 +163,9 @@ Apart the syntax differences from HTML, the `JSQ` language introduce some new ta
 
 There are 2 methods to define a Qute template:
 
-1. In a `.jsq` file. This is a `javascript` file that contains one or more `JSQ` templates. It should use a `.jsq` extentsion and the file mime-type is `text/jsq`.  \
+1. In a `.jsq` file. This is a `javascript` file that contains one or more `JSQ` templates. It should use a `.jsq` extension and the file mime-type is `text/jsq`.  \
 The template definitions contained inside a `.jsq` file are compiled at build time into `javascript` functions and registered at runtime against the current `Qute` instance.   \
-Templates are nested in top level `x-tag` tags to isolate from the surrounding javascript code.
+Templates are nested in top-level `x-tag` tags to isolate from the surrounding javascript code.
 
 2. Inlined in an HTML file. In that case the template is compiled at runtime and you must load the `qute-dev.js` library.  \
 This method **should not be used in production environments**.  \
@@ -173,7 +173,7 @@ It is only provided to quickly design components without creating a **Qute proje
 
 ### Declaring template style sheets
 
-A `JSQ` file may declare style sheets that are used in templates by nesting the style sheet rules inside a top level `x-style` tag.
+A `JSQ` file may declare style sheets that are used in templates by nesting the style sheet rules inside a top-level `x-style` tag.
 
 
 See the **[JSQ File Format](#/advanced/jsq)** section for more information on `JSQ` files.

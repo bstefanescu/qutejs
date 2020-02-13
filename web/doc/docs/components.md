@@ -5,11 +5,11 @@ As we've seen in the **[Templates](#/templates)** section, **Qute** provides a *
 A Component defines a **data model** and some **behavior** that can be rendered as a **live** HTML element using a **template**. Why **live**? Because the HTML element remains bound to the component instance and will change anytime the component data model change.
 
 In a component template, all the component properties and methods are visible as global variables.
-The component instance itself can be accessed using the special `this` variable. Here is the list of all the **builtin global variables** exposed in a component template:
+The component instance itself can be accessed using the special `this` variable. Here is the list of all the **built-in global variables** exposed in a component template:
 
 * `this` - the current component instance
 * `JSON` - the global `JSON` object
-* `console` - the global `console` object (usefull for debugging)
+* `console` - the global `console` object (useful for debugging)
 * `window` - the global `window` object
 * `Object` - the global `Object` object.
 * `$` - the current Rendering instance.
@@ -17,10 +17,10 @@ The component instance itself can be accessed using the special `this` variable.
 * `$1`, `_` and `__` are reserved and should not be used in the model.
 
 There are two types of components:
-1. **Functional Components**s
+1. **Functional Components**
 2. **ViewModel Components**
 
-Any component is defining a **name**. The **component name** can be used in any other component template as an element to render the component according to the given element attributes. We recommend you to use component names composed from multiple words sperated by hyphens. Examples: `my-component`, `my-button` etc. This is for safety reasons, to avoid collisions with current and future HTML element names.
+Any component is defining a **name**. The **component name** can be used in any other component template as an element to render the component according to the given element attributes. We recommend you to use component names composed of multiple words separated by hyphens. Examples: `my-component`, `my-button` etc. This is for safety reasons, to avoid collisions with current and future HTML element names.
 
 A component template may use other component elements. In that case we say the used component is the child of the component using it. So, components can be used, as DOM elements, in a **tree structure**. The root of a component tree is called the **root component**.
 
@@ -28,14 +28,14 @@ A component template may use other component elements. In that case we say the u
 
 ## Functional Components
 
-These ones are *pseudo components* and doesn't define any own properties. These components don't take part to the [component life cycle](#/model/lifecycle).
-Functional components  and are template wrappers (i.e. a fucntional component is only defining a rendering function).
-When using expressions inside functional components the `this` variable will point to the functional component instance. Here is a list of some usefull properties exposed by a functional component instance:
+These components cannot define any own properties nor life cycle hooks. Functional components are *model-less components* and don't take part to the [component life cycle](#/model/lifecycle). These, are mostly template wrappers - some sort of a macro that you can reuse in different contexts.
+
+When using expressions inside functional components the `this` variable will point to the functional component instance. Here is a list of some useful properties exposed by a functional component instance:
 
 * `$attrs` - the attributes specified on the component element.
 * `$r` - the rendering context instance.
 * `$el` - the DOM element rendered by the functional component.
-* `emit` and `emitAsync` - provides a way to trigger DOM events on the fucntional component element
+* `emit` and `emitAsync` - provides a way to trigger DOM events on the functional component element
 
 
 **Note:** As mentioned functional components doesn't take part to the life cycle but there is way to get **life cycle notifications from within a functional component**.  \
@@ -43,7 +43,7 @@ See the **[Life Cycle](#/model/lifecycle)** section for more details.
 
 Functional components are light objects, you should use this type of components whenever you need to create **macro** like structures.
 
-You don't need to declare anything to create a **functional component**. Any **template** not explictely linked to a **ViewModel Component** can be used as a **Functional Component**.
+You don't need to declare anything to create a **functional component**. Any **template** not explicitly linked to a **ViewModel Component** can be used as a **Functional Component**.
 
 Why **functional**? Because the component is practically a rendering function. There isn't any relation with **functional programming!**
 
@@ -77,7 +77,7 @@ A **ViewNodel Component** is defined by a **tag name**, a `ViewModel` and an *op
 To make it simpler, we will use the term **ViewModel** interchangeably with **ViewModel Component** or **Component**.
 
 The main job of a `ViewModel` is to render pure data into a DOM tree. This is done through the `ViewModel.render` method. Writing rendering methods by hand is difficult and this is why templates are good for.  \
-Templates are compiled as rendering functions. Instead of writing complex javascript routines - you simply write a template, compile it, then assign it as the `render` method of a `ViewMNodel` object.
+Templates are compiled as rendering functions. Instead of writing complex javascript routines - you simply write a template, compile it, then assign it as the `render` method of a `ViewModel` object.
 
 ### The DOM Element of a Component
 
@@ -95,14 +95,14 @@ A ViewModel is created using the `Qute()` function.
 
 **`Qute(tagName, definitionOrClass)`**
 
-* **tagName** - the tag name to use for taht component. This argument is **required** even for root components (that are never used by tag name in templates).
-* **definitionOrClass** - an object or a class defining the component. We will focus here on the defintion objects. This argument is **optional**. If not specified the **tagName** argument is expected to be a template name and the ViewModel will wrap the template without defining any own data model.
+* **tagName** - the tag name to use for the component. This argument is **required** even for root components (that are never used by tag name in templates).
+* **definitionOrClass** - an object or a class defining the component. We will focus here on the definition objects. This argument is **optional**. If not specified the **tagName** argument is expected to be a template name and the ViewModel will wrap the template without defining any own data model.
 
 For more information on how to use classes check the **[Class Syntax](#/model/class)** section.
 
 ### ViewModel Tag Name
 
-The ViewMNodel tag name is required even for root components. The tag name is usually the name of a **Qute template** that defines how the component is rendered. If there is no template which name is the same as the component tag name then the component **must** define a **render** method.
+The ViewModel tag name is required even for root components. The tag name is usually the name of a **Qute template** that defines how the component is rendered. If there is no template which name is the same as the component tag name then the component **must** define a **render** method.
 
 The component instance will expose the tag name as a static property named `$tag`.  \
 By **static property** we meant the property is defined on the instance's prototype and not on the instance itself.
@@ -117,8 +117,8 @@ A ViewModel definition is a plain javascript object used to define the ViewModel
 {
 	// initialization code and reactive properties definition
 	init(app) {
-		// do any intiialization here
-		this.aNonReactiveProperty = 'I am a non reactive property';
+		// do any initialization here
+		this.aNonReactiveProperty = 'I am a non-reactive property';
 		// then return the reactive properties if any
 		return {
 			firstName: 'John',
@@ -146,7 +146,7 @@ A ViewModel definition is a plain javascript object used to define the ViewModel
 	disconnected() {
 		console.log('component was disconnected');
 	},
-	// you can define custom rewndering
+	// you can define custom rendering
 	render(rendering) {
 		var span = document.createElement('SPAN');
 		span.textContent(this.fullName);
@@ -167,7 +167,7 @@ The `init` method takes as argument the current Qute application and may return 
 For more on the application object see the **[Application Instance](#/app/instance)** section.
 
 This method will be called only once in the component life-cycle, when the instance is created and before the attributes are bound to component properties.  \
-You can use this method to initialize reactive or non reactive **component properties**.
+You can use this method to initialize reactive or non-reactive **component properties**.
 
 #### Reactive Properties
 In order to define reactive properties you must return an object that maps property names to default values.
@@ -188,7 +188,7 @@ This will define 3 reactive properties: `firstName`, `lastName` and `age` which 
 
 See the **[Component Properties](#/model/properties)** section for more details.
 
-#### Non Reactive Properties
+#### Non-Reactive Properties
 
 Any `ViewModel` property which is not declared as reactive will not trigger any DOM update when changed.
 
@@ -196,7 +196,7 @@ Any `ViewModel` property which is not declared as reactive will not trigger any 
 
 ```javascript
 init() {
-	this.nonReactiveProp = 'I am a non reactive property';
+	this.nonReactiveProp = 'I am a non-reactive property';
 }
 ```
 
@@ -215,7 +215,7 @@ If you specify a method named `render` it will be used as the rendering method (
 A render function is called once when the component is created and must return a DOM element or null. The rendering method will never be called again during the component life cycle.
 
 The render function gets one argument: the rendering instance. We will not document the rendering API here, since it was not designed to be used by hand - but to be used by the template compiler to generate the `render` function.  \
-However here is an example of how a custom `render` function may look:
+However, here is an example of how a custom `render` function may look:
 
 ```javascript
     render(rendering) {
@@ -244,7 +244,7 @@ It is also available at any time as the **`$el`** property of the component inst
 
 Called just after the component is connected to the DOM (i.e. the component element is attached to the DOM).
 
-This handler may be called several times in the component life-cycle, every time the component element is attached to the DOM. A component can be attached to the DOM or detached from the DOM mulitple times. For example if the component is conditionaly displayed by using the [if directive](#/directives/if), it will be detached / attached every time the `if` state changes.
+This handler may be called several times in the component life-cycle, every time the component element is attached to the DOM. A component can be attached to the DOM or detached from the DOM multiple times. For example if the component is conditionally displayed by using the [if directive](#/directives/if), it will be detached / attached every time the `if` state changes.
 
 This handler can be used to add event listeners, setup timers etc.
 
@@ -252,13 +252,13 @@ This handler can be used to add event listeners, setup timers etc.
 
 Called just after the component is disconnected from the DOM. It may be called several times in the component life-cycle.
 
-This handler can be used to cleanup resources setup by the `connected` handler.
+This handler can be used to clean up resources setup by the `connected` handler.
 
 ### Methods
 
 Any method specified in a definition object which is not a getter and neither none of `init`, `created`, `connected`, `disconnected` will become a **Component Method**.
 
-Component methods are injected at the ViewModel's protototype level, and can be used from templates.
+Component methods are injected at the ViewModel's prototype level, and can be used from templates.
 
 **Example**
 
@@ -278,7 +278,7 @@ Then, you can use it from the component template:
 
 ## Interacting through DOM Events
 
-Components can trigger and listen to DOM events. This is especially usefull in communicating with a parent component or to simply listen to standard user actions like clicks, key press etc.
+Components can trigger and listen to DOM events. This is especially useful in communicating with a parent component or to simply listen to standard user actions like clicks, key press etc.
 
 Components can also create new event types (as instances of the `CustomEvent` object) and fire these events on an element.
 
@@ -286,10 +286,7 @@ See the **[Working with DOM Events](#/model/events)** section for more details.
 
 ## The ViewModel constructor
 
-The `Qute` function is creating a `ViewModel` constructor.
-
-The constructor can be used then to define further aspects of the component like event listeners, watchers, a communication channel and, of course, to instantiate the component.
-
+The `Qute` function is creating a `ViewModel` constructor which can be used then to define further aspects of the component like event listeners, watchers, a communication channel and, of course, to instantiate the component.
 
 The constructor takes two optional arguments:
 
@@ -384,15 +381,15 @@ var MyComponent = Qute('my-component', {
 ## Mounting ViewModel Components
 
 A **Root Component** can be attached to the DOM by **mounting** it.
-When mounting a component all the components refered by the template will be recursivelly instantiated and mounted too.
+When mounting a component all the components referred by the template will be recursively instantiated and mounted too.
 
-When a child component is mounted through the template of a parent component, it will be initialized with the attributes specified in the template on the component tag. These attributes will be bound to [component properties](#/model/properties). Child components are automatically instantiated and mouinted when the parent component is mounted.
+When a child component is mounted through the template of a parent component, it will be initialized with the attributes specified in the template on the component tag. These attributes will be bound to [component properties](#/model/properties). Child components are automatically instantiated and mounted when the parent component is mounted.
 
 **Root components** must be **instantiated** and **mounted** manually. When manually instantiating a component you can still specify the **attributes** to be bound on properties (as the component was instantiated through a component tag). This can be done by passing a **second argument to the ViewModel constructor**, which is mapping attribute names to attribute values.
 
 To mount a component instance you need to use the **`mount(elOrId, insertBefore)`** function.
 
-Both arguments are optionals.
+Both arguments are optional.
 
 1. **elOrId** - The first argument is either a DOM element or an DOM element ID which specify the target element where to insert the component
 2. **insertBefore** - The second argument is a boolean which if true the component will be inserted before the target element. If false (i.e. the default) the component element will be appended to the target element.
@@ -414,17 +411,17 @@ In the previous example the `myComp` is instantiated in the same way as if it wa
 <my-component message='Hello World!' />
 ```
 
-To unmount a root component you sgould soimply call the `unmount` method:
+To unmount a root component you should call the `unmount` method:
 
 ```javascript
 myComp.unmount();
 ```
 
-This will disconnect the root component (and all its descendants components) from the DOM and then it remove the root component element from the DOM.
+This will disconnect the root component (and all its descendants components) from the DOM and then it removes the root component element from the DOM.
 
 ## Inter-Component Communication
 
-There are three ways components can communicate with each others:
+There are three ways components can communicate with each other:
 
 1. **Parent to Children Communication**
 

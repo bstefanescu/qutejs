@@ -6,7 +6,7 @@ In frameworks like **react** or **vue** this is achieved using state management 
 
 Qute is providing a built-in solution to achieve this through the **application data model**.
 
-Anyway, you can still integrate a state management system like **redux** with Qute. See the `$bindVM` function at the bottom of thios page.
+Anyway, you can still integrate a state management system like **redux** with Qute. See the `$bindVM` function at the bottom of this page.
 
 
 ## Application Data Properties
@@ -34,7 +34,7 @@ prop.set({name: 'foo', email: 'foo@bar.com'});
 
 To get an existing property object you can use the `prop(name)` method.
 
-Another usefull method is the property `link(target, name)` method which will create a **mirror property** on another object. Any modification on the mirror property will be reflected on the source application property.  \
+Another useful method is the property `link(target, name)` method which will create a **mirror property** on another object. Any modification on the mirror property will be reflected on the source application property.  \
 In this way, you can link application properties to a service instance, to simplify accessing the application property:
 
 ```jsq
@@ -59,7 +59,7 @@ sm.login({name: 'foo', email:'foo@bar.com'});
 
 ## Asynchronous Properties
 
-When you need to set a property as a result of an asynchronous operations, like an ajax call, then you can use an **asynchronous property**.
+When you need to set a property as a result of an asynchronous operation, like an ajax call, then you can use an **asynchronous property**.
 
 Asynchronous properties are defined using the `defineAsyncProp(name, value)` application method.
 
@@ -75,7 +75,7 @@ If the value is not a promise or a thenable object then it is converted to a res
 If the value is a promise that is not yet resolved then the **pending** property will be set to `true` and will be set back to `false` when the promise is fulfilled or rejected.  \
 If the promise is rejected then the **error** property is set to the rejection value (usually an `Error` object).
 
-This is considerably helping implementing asynchronous actions in UI components, where the **pending** property can be used to display a progress indicator.
+This is considerably helping to implement asynchronous actions in UI components, where the **pending** property can be used to display a progress indicator.
 
 ## Binding a Reactive Component Property to an Application Property.
 
@@ -134,7 +134,7 @@ We've seen we can define properties either at component level, either are applic
 **The answer is:** if the property is part of the application logic, then use an application property.
 
 You can also use application properties if you need to **share the property between multiple components which are not necessarily visible for each other**. When a parent component need to share a property with its children then you can pass the property as an attribute to the children components, and you don't need an application property.  \
-There are cases when you need to pass many properties as attributes arround. If these properties are not internal to the component logic, then you could define them as application properties to minimize the attributes you pass around.
+There are cases when you need to pass many properties as attributes around. If these properties are not internal to the component logic, then you could define them as application properties to minimize the attributes you pass around.
 
 
 ## Application Data Property API
@@ -143,7 +143,7 @@ An application data property object provides the following methods and fields:
 
 ### `value`
 
-This field is used to store the data property value. You shold never use it directly. Use instead `set()` or `get()` methods.
+This field is used to store the data property value. You should never use it directly. Use instead `set()` or `get()` methods.
 
 ### `set(value)`
 
@@ -170,7 +170,7 @@ Remove an already registered change listener. The `listener` argument must be th
 Link the property to an object property.
 
 * `target` is the target object
-* `name` is hte property name on the object
+* `name` is the property name on the object
 
 The property created on the target object will be synchronized with the source application property.
 The linked property will act as a proxy to the application property.

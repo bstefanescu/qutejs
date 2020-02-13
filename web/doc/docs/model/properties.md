@@ -29,11 +29,11 @@ This will define 4 **reactive properties**, initialized with the declared defaul
 ### How reactive properties are implemented?
 
 Reactive properties are not stored directly on the `ViewModel` instance, but as properties of the `ViewModel.$data` property. These properties are created using `Object.defineProperty` by defining a custom setter and getter.
-The setter is intercepting the property change and triggers an asyhnchronous DOM update if needed. Multiple property changes occured in the same event loop execution are collected and all updates will run in a later event loop execution.
+The setter is intercepting the property change and triggers an asynchronous DOM update if needed. Multiple property changes occurred in the same event loop execution are collected and all updates will run in a later event loop execution.
 
 Changing properties inside `ViewModel.$data` will change the corresponding reactive property value but will not trigger any update.
 
-You can interecept reactive property changes (and cancel the DOM update if needed) through watchers.  \
+You can intercept reactive property changes (and cancel the DOM update if needed) through watchers.  \
 Check the **[Property Watchers](#/model/watchers)** section for more details.
 
 ## Regular Properties
@@ -52,17 +52,15 @@ Qute('my-component', {
 
 ## Template attributes mapping
 
-Let's you remind first that tag attributes are expected to be in [kebab-case](https://en.wikipedia.org/wiki/Letter_case#Special_case_styles).
+Element attributes are expected to be in [kebab-case](https://en.wikipedia.org/wiki/Letter_case#Special_case_styles).
 
-When a component is instantiated, due to a component tag being used in a template, the tag attributes will be used to initialize the **compoent reactive properties**.
+When a component is instantiated, due to a component tag being used in a template, the element attributes will be used to initialize the **component reactive properties**.
 
-Remember that only **reactive properties** can be initialized through attributes. Any attribute that doesn't match a **reactive property** is injected into the *catch all* `ViewModel.$attrs` property.
+Remember that only **reactive properties** can be initialized through attributes. Any attribute that doesn't match a **reactive property** is injected into the **"catch all"** `ViewModel.$attrs` property.
 
-The *catch all* `$attrs` name was used for consitency with the functional component attributes object.
+The `$attrs` name is used for consistency with the functional component attributes object.
 
-An attribute is matching a reactive property, if its [camel case](https://en.wikipedia.org/wiki/Camel_case) name is matching a reactive property name.
-
-So, *grosso modo*, if an attribute camel case name matches a reactive property then it is used to initialize the property otherwise it will be added to the *catch all* `$attrs` property.
+If an attribute [camel case](https://en.wikipedia.org/wiki/Camel_case) name matches a reactive property name then it is used to initialize the reactive property otherwise it will be added to the **"catch all"** `$attrs` property.
 
 
 ### Example
@@ -98,9 +96,9 @@ Qute('my-component', {
 export default Qute('root');
 ```
 
-You can see how the kebab case attribute named `reactive-prop` was used to initialize the `reactiveProp` reactive property. You can also use `reactiveProp` as the name of the attribute, it works too, but you recommend using kebab case notation instead since HTML attributes are not case sensitive, but property names are case sensitive.
+You can see how the kebab case attribute named `reactive-prop` was used to initialize the `reactiveProp` reactive property. You can also use `reactiveProp` as the name of the attribute, it works too, but you recommend using kebab case notation instead since HTML attributes are not case-sensitive, but property names are case-sensitive.
 
-Also, you can see that all other attribtues than `reactive-prop` and `title` (which were declared as reactive properties) are added to the *catch all* `$attrs` object. This is also the case of the `name` attribute. Even if we defined a regular `name` property on the component - it will still go in the `$attrs` object since the `name` property is not reactive, and thus, it is not initializable from attributes.
+Also, you can see that all other attributes than `reactive-prop` and `title` (which were declared as reactive properties) are added to the **"catch all"** `$attrs` object. This is also the case of the `name` attribute. Even if we defined a regular `name` property on the component - it will still go in the `$attrs` object since the `name` property is not reactive, and thus, it is not mappable from attributes.
 
 
 

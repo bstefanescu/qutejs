@@ -116,14 +116,14 @@ If you create an `alert` component instance without using the `x-channel` attrib
 
 Briefly, defining a channel function provides a messaging end-point. In order to open a channel to an instance end-point you need to use the `x-channel` attribute to assign the channel a name.
 
-Of course, the example above can be implemented using a mix of the first two communication methods (parent to child and chuld to panel) and by keeping the alert state in a reactive property.
+Of course, the example above can be implemented using a mix of the first two communication methods (parent to child and child to panel) and by keeping the alert state in a reactive property.
 But there are situations when using a state property and up and down communication is to complex or not justified.
 
 ### Application properties
 
 Another way to share information between components which are not visible for each other is through **application properties**. Application properties are also using channels internally.
 
-See the **[Application Data Model](#/app/data)** section for an examples.
+See the **[Application Data Model](#/app/data)** section for an example.
 
 ## Providing Services through the Message Bus
 
@@ -249,9 +249,9 @@ You can also find an [example of implementing routing](#/plugins/routing) throug
 
 Even more, we can use the message bus to communicate between components from two distinct Qute component trees running in the same web page. This way, we can use **Qute** to create components that integrate nicely into existing web pages.
 
-When installing a root component we can use the same application instance used by the other roots in the page. This way we can share the same message bus to comunicate between components, no matter where components were mounted in the page.
+When installing a root component we can use the same application instance used by the other roots in the page. This way we can share the same message bus to communicate between components, no matter where components were mounted in the page.
 
-Example
+### Example
 
 ```jsq
 
