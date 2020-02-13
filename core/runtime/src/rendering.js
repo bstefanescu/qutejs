@@ -101,7 +101,6 @@ function IfRenderingContext(rendering, start, end, exprs, kids, changeCb) {
 		} else if (r) {
 			// only update children
 			r.$update();
-			console.log('>>>>>>>>>>VMS', r.vms);
 		}
 	}
 }
@@ -399,6 +398,7 @@ var RenderingProto = {
 		for (var i=0,l=ups.length;i<l;i++) ups[i](model);
 		return this;
 	},
+	/*
 	updateTree: function() {
 		this.$update();
 		var vms = this.vms;
@@ -408,6 +408,7 @@ var RenderingProto = {
 			if (!child.updateTree) console.log('@@', child)
 		}
 	},
+	*/
 	// create a child rendering
 	spawn: function(vm) {
 		return new Rendering(vm || this.vm, this);
