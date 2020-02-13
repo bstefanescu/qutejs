@@ -1,4 +1,3 @@
-import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import Polyglot from 'node-polyglot';
 
