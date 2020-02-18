@@ -112,4 +112,4 @@ export default Qute('root', {
 
 ## Demo
 
-You can find a **[Popup Demo](playground/index.html#popup-demo)** into the playground.
+You can find a **[Popup Demo](/playground/index.html#popup-demo)** into the playground.
