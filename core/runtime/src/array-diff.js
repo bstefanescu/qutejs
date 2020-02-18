@@ -26,8 +26,7 @@ ArrayDiff.prototype = {
 	clear() {
 		var wasSet = !!(this.ar && this.ar.length > 0);
 		this.ar = null;
-		this.map = null;
-		this.keyOf = null;
+		this.map = {};
 		return wasSet ? [ CLEAR ] : null;
 	},
 	set(from) {
@@ -43,7 +42,7 @@ ArrayDiff.prototype = {
 			this.map = map;
 			this.keyOf = keyOf;
 		} else {
-			this.map = null;
+			this.map = {};
 		}
 		this.ar = from.slice(0); // store a copy
 		return [ SET, this.ar, keyOf ];
@@ -62,7 +61,6 @@ ArrayDiff.prototype = {
 		if (!keyOf) { // reset
 			return this.set(from);
 		}
-
 		var ar = this.ar;
 		var map = this.map;
 		var fromMap = {};
