@@ -166,4 +166,4 @@ export default Qute('root', {
 
 ## Demo
 
-You can find a **[Modal Demo](playground/index.html#modal-demo)** into the playground.
+You can find a **[Modal Demo](/playground/index.html#modal-demo)** into the playground.
