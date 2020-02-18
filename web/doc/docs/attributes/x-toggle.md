@@ -18,17 +18,18 @@ Both of these notations are equivalent.
 
 <x-tag name='root'>
 	<div>
-        <button x-toggle:disabled={disabledButton1}
-        	@click='e => disableButton2 = true'>Enable right button</button>
-        <button ?disabled={disabledButton2}
-        	@click='e => disableButton1 = true'>Enable left button</button>
+		<button @click='e => disableButton1 = true'>Click to disable button 1</button>
+		<button @click='e => disableButton2 = true'>Click to disable button 2</button>
+		<hr/>
+		<button x-toggle:disabled={disableButton1}>Button 1</button>
+		<button ?disabled={disableButton2}>Button 2</button>
 	</div>
 </x-tag>
 
 export default Qute('root', {
 	init() {
 		return {
-			disableButton1: false
+			disableButton1: false,
 			disableButton2: false
 		};
 	}
