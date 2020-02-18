@@ -13,8 +13,8 @@ The component instance itself can be accessed using the special `this` variable.
 * `window` - the global `window` object
 * `Object` - the global `Object` object.
 * `$` - the current Rendering instance.
-* `m` - an alias to `this`.
-* `$1`, `_` and `__` are reserved and should not be used in the model.
+* `_` - an alias to `this` (i.e. the current component instance).
+* `$0`, `$1`, `$2`, `$3` etc. - are reserved and should not be used in the model (can be used to access current function arguments in inline event handlers).
 
 There are two types of components:
 1. **Functional Components**
