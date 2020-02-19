@@ -1,3 +1,4 @@
+import {document} from '@qutejs/window';
 
 export default function ForFragment(rendering, listFn, iterationFn) {
 	this.r = rendering;
