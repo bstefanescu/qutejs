@@ -112,7 +112,7 @@ Qute.UpdateQueue = UpdateQueue;
 Qute.Rendering = Rendering;
 // render a functional template given its tag name and a model
 Qute.render = function(xtagName, model) {
-	return getTag(xtagName)(new Rendering(model));
+	return getTag(xtagName)(new Rendering(null, model));
 }
 Qute.defineMethod = function(name, fn) {
 	//define method on both ViewModel and Functional components prototype

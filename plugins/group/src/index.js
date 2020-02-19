@@ -11,9 +11,9 @@ function liValueDirective(xattrs, valueExpr) {
 export default function groupDirective(xattrs, valueExpr) {
     var rendering = this, value, boundProp = (typeof valueExpr === 'string') ? valueExpr : null;
 
-    if (boundProp && !rendering.vm.__VM__) {
+    if (boundProp && !rendering.vm) {
         // current component not a ViewModel - throw an error
-        throw new Error('x-use:value bound to "'+valueExpr+'" property but the current component is not a ViewModel component!');
+        throw new Error('q:value bound to "'+valueExpr+'" property but the current component is not a ViewModel component!');
     }
 
     function setValue(el, newValue) {

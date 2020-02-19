@@ -1,6 +1,6 @@
 import window, {document} from '@qutejs/window';
 import ERR from './error.js';
-import { stopEvent, chainFnAfter, closestVM, kebabToCamel, filterKeys } from './utils.js';
+import { stopEvent, chainFnAfter, kebabToCamel, filterKeys } from './utils.js';
 
 import Rendering from './rendering.js';
 import UpdateQueue from './update.js';
@@ -146,14 +146,24 @@ ViewModel.prototype = {
 		return this;
 	},
 	$parent: function() {
-		if (!this.$el) ERR(35);
-		return closestVM(this.$el.parentNode);
+		if (!this.$r) ERR(35);
+		return this.$r.closestVM();
 	},
 	$root: function() {
 		var parent = this.$parent();
 		return parent ? parent.$root() : this;
 	},
-	$connect: function() {
+	connect: function() {
+		this.$r && this.$r.connect();
+	},
+	disconnect: function() {
+		this.$r && this.$r.disconnect();
+	},
+	refresh: function() {
+		this.$r && this.$r.refresh();
+	},
+	willConnect: function() {
+		// TODO the connected flag is no mor euseful since we can use $r.isc
 		if (this.$st & 1) return; // ignore
 		this.$st |= 1; // set connected flag
 		// $init may be defined by the prototype to do automatic setup when connected
@@ -167,28 +177,26 @@ ViewModel.prototype = {
 				this.$on(key, listeners[key]);
 			}
 		}
+
 		// TODO update DOM if previously disconnected
 		if (false) this.$update();
-		// connect children vms
-		this.$r.$connect();
+
 		// call the connected callback
-		this.connected && this.connected();
+		//this.connected && this.connected();
 		return this;
 	},
-	$disconnect: function() {
+	willDisconnect: function() {
 		if (!(this.$st & 1)) return; // ignore
 		this.$st ^= 1; // clear connected flag
 		if (this.$clean) {
 			this.$clean();
 			this.$clean = null;
 		}
-		this.$r.$disconnect(); // disconnect children vms
-		this.disconnected && this.disconnected();
 	},
 	// initialize a vm from tag raw data
 	$load: function(rendering, xattrs, slots) {
 		var bindings = null;
-		var parentVM = rendering.vm;
+		var model = rendering.model;
 		this.$slots = slots;
 		if (xattrs) {
 			for (var key in xattrs) {
@@ -196,10 +204,10 @@ ViewModel.prototype = {
 				if (key.charCodeAt(0) === 36) { // $ - extended attribute
 					if (key === '$on') {
 						//TODO we should make a copy of val since it is modified by createListeners!!!
-						this.$listeners = createListeners(parentVM, val); // use parent vm when creating listeners
+						this.$listeners = createListeners(model, val); // use parent vm when creating listeners
 					} else if (key === '$attrs') { // we must not delete keys from xattrs since it can break when vm is loaded by a dynamic component
 						//TODO DO WE NEED to add an update fn? x-attrs are static
-						rendering.up(SetVMAttrs(this, parentVM, val))();
+						rendering.up(SetVMAttrs(this, model, val))();
 					} else if (key === '$class') {
 						if (!bindings) bindings = [];
 						bindings.push(SetClass, val);
@@ -218,7 +226,7 @@ ViewModel.prototype = {
 						ERR(26, key);
 					}
 				} else if (typeof val === 'function') { // a dynamic binding
-					rendering.up(SetProp(this, parentVM, key, val))();
+					rendering.up(SetProp(this, model, key, val))();
 				} else { // static binding
 					this.$set(key, val);
 				}
@@ -227,13 +235,14 @@ ViewModel.prototype = {
 		return bindings;
 	},
 	$create: function(parentRendering, xattrs, slots) {
-		var $use, parentVM = parentRendering && parentRendering.vm;
+		var $use, model = parentRendering && parentRendering.model;
 		if (xattrs && xattrs.$use) {
-			$use = applyUserDirectives(parentVM, this.$tag, xattrs);
+			$use = applyUserDirectives(model, this.$tag, xattrs);
 		}
 		// load definition
 		var bindings = parentRendering && this.$load(parentRendering, xattrs, slots);
-		var rendering = new Rendering(this, parentRendering);
+		var rendering = new Rendering(parentRendering, this);
+		rendering.vm = this;
 		this.$r = rendering;
 		// must never return null - for non rendering components like popups we return a comment
 		var el = this.render(rendering) || document.createComment('<'+this.$tag+'/>');
@@ -241,14 +250,16 @@ ViewModel.prototype = {
 		this.$el = el;
 		if (bindings) for (var i=0,l=bindings.length; i<l; i+=2) {
 			var binding = bindings[i];
-			var up = bindings[i](el, parentRendering.vm, bindings[i+1]);
+			var up = bindings[i](el, model, bindings[i+1]);
 			parentRendering.up(up)();
 		}
 		this.created && this.created(el);
-		// this can trigger a connect if tree is already connected (for example when inserting a comp in a connected list)
-		parentRendering && parentRendering.$push(this);
 		// should use parent vm as context for custom directives
-		if ($use) $use.call(parentVM, el);
+		if ($use) $use.call(model, el);
+
+		// this can trigger a connect if tree is already connected (for example when inserting a comp in a connected list)
+		parentRendering && parentRendering.$push(rendering);
+
 		return el;
 	},
 
@@ -267,7 +278,7 @@ ViewModel.prototype = {
 		} else {
 			target.appendChild(el);
 		}
-		this.$connect();
+		this.connect();
 		// announce the tree was attached to the DOM
 		return this;
 	},
@@ -276,13 +287,13 @@ ViewModel.prototype = {
 		// a child vm?
 		//if (this.$p) ERR();
 		if (!this.$el) ERR(34); // TODO check if root and mounted
-		this.$disconnect();
+		this.disconnect();
 		this.$el.parentNode.removeChild(this.$el);
 		this.$el = null;
 	},
 	$update: function() {
-		if (this.$el) { // only if connected
-			this.$r.$update();
+		if (this.$r) { // TODO only if connected
+			this.$r.update();
 		}
 	},
 	update: function() {

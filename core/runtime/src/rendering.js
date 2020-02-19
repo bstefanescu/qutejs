@@ -9,7 +9,8 @@ import { filterKeys } from './utils.js';
 import Emitter from './emit.js';
 import applyUserDirectives from './q-attr.js';
 import ListFragment from './list-fragment.js';
-
+import SwitchFragment from './switch-fragment.js';
+import ForFragment from './for-fragment.js';
 import FunComp from './func.js';
 
 function SetDOMAttrs(el, model, filter) {
@@ -21,132 +22,6 @@ function SetDOMAttrs(el, model, filter) {
 				var key = keys[i];
 				el.setAttribute(key, $attrs[key]);
 			}
-		}
-	}
-}
-
-function ViewRenderingContext(rendering, marker, isExpr, changeCb, noCache, xattrs, childrenFn) {
-	var model = rendering.vm;
-	var cache = noCache ? null : {};
-	var r = null; // the view rendering context
-	var cview = null; // current element
-	return function(propKey, initialUpdate) {
-		var el, viewXTag = isExpr(model);
-		if (viewXTag !== cview) {
-			var parent = marker.parentNode;
-			if (r) {
-				r.$disconnect();
-				parent.removeChild(marker.previousSibling);
-			}
-			if (viewXTag) {
-				r = cache && cache[viewXTag];
-				if (!r) {
-					r = rendering.spawn(model);
-					if (cache) cache[viewXTag] = r;
-				}
-				el = r.r(viewXTag, xattrs, childrenFn(r));
-				parent.insertBefore(el, marker);
-				r.$connect();
-			} else {
-				r = null;
-			}
-
-			if (changeCb && !initialUpdate) { // avoid calling changeCb the first time the if is rendered
-				changeCb.call(model, el && el.__qute__);
-			}
-			cview = viewXTag;
-		} else if (r) {
-			// only update children
-			r.$update();
-		}
-	}
-}
-
-function evalIfChain(exprs, model) {
-	var i = 0;
-	for (var l=exprs.length-1; i<l; i++) {
-		if (exprs[i](model)) return i;
-	}
-	var lastExpr = exprs[i];
-	// if lastExpr is null is is corresponding to an else statement
-	return !lastExpr || lastExpr(model) ? i : -1;
-}
-
-
-function IfRenderingContext(rendering, start, end, exprs, kids, changeCb) {
-	var model = rendering.vm;
-	var r = null; // the IF / ELSE-IF / ELSE rendering context
-	var state = -1; // the current case of IF / ELSE-IF / ELSE as the zero based index of the chain (0 for if, 1 for next else-if, ...)
-	return function(propKey, initialUpdate) {
-		var newState = evalIfChain(exprs, model);
-		if (newState !== state) {
-			r && r.$disconnect();
-			var parent = start.parentNode;
-			// remove current if branch
-			while (start.nextSibling && start.nextSibling !== end) {
-				parent.removeChild(start.nextSibling);
-			}
-			r = rendering.spawn(model); // create the IF / ELSE rendering context
-			state = newState;
-			if (state > -1) {
-				var children = kids[state](r);
-				for (var i=0,l=children.length; i<l; i++) {
-					parent.insertBefore(children[i], end);
-				}
-			}
-			r.$connect();
-			if (changeCb && !initialUpdate) { // avoid calling changeCb the first time the if is rendered
-				changeCb.call(model, state);
-			}
-		} else if (r) {
-			// only update children
-			r.$update();
-		}
-	}
-}
-
-function ForRenderingContext(rendering, start, end, listFn, iterationFn) {
-	var model = rendering.vm;
-	var r = null; // the for rendering context
-	var list = null; // the current list
-	return function(propKey) {
-		var newList = listFn(model);
-		if (newList !== list) {
-			r && r.$disconnect();
-			var parent = start.parentNode;
-			// remove current for content
-			while (start.nextSibling && start.nextSibling !== end) {
-				parent.removeChild(start.nextSibling);
-			}
-			r = rendering.spawn(model); // create the FOR rendering context
-			list = newList;
-			// render content
-			if (list) {
-				if (!Array.isArray(list)) {
-					list = Object.keys(list);
-				}
-				if (list.length > 0) {
-					var l = list.length-1;
-					for (var i=0; i<l; i++) {
-						var children = iterationFn(list[i], i, true);
-						if (children) {
-							for (var k=0,ll=children.length; k<ll; k++) {
-								parent.insertBefore(children[k], end);
-							}
-						}
-					}
-					var children = iterationFn(list[i], i, false);
-					if (children) {
-						for (var i=0,l=children.length; i<l; i++) {
-							parent.insertBefore(children[i], end);
-						}
-					}
-				}
-			}
-			r.$connect();
-		} else if (r) {
-			// just update children
-			r.$update();
 		}
 	}
 }
@@ -207,23 +82,23 @@ function extractSlots(children) {
 
 var RenderingProto = {
 	x: function(expr) { // expression {{ ... }}
-		var text = expr(this.vm);
+		var text = expr(this.model);
 		var el = document.createTextNode(text);
-		this.up(SetText(el, this.vm, expr));
+		this.up(SetText(el, this.model, expr));
 		return el;
 	},
 	t: function(value) { // text
 		return document.createTextNode(value);
 	},
 	g: function(isFn, xattrs, children) { // dynamic tag using 'is'
-		var tag = isFn(this.vm);
+		var tag = isFn(this.model);
 		var XTag = getVMOrTag(tag);
 		return XTag ? this.v(XTag, xattrs, children) : this.h(tag, xattrs, children);
 	},
 	h: function(tag, xattrs, children) { // dom node
 		var el = document.createElement(tag), $use = null;
 		if (xattrs) {
-			var vm = this.vm;
+			var model = this.model;
 			if (xattrs.$use) {
 				$use = applyUserDirectives(this, tag, xattrs, el);
 			}
@@ -232,23 +107,23 @@ var RenderingProto = {
 				var val = xattrs[key];
 				if (key.charCodeAt(0) === 36) { // $ - extended attribute
 					if (key === '$on') {
-						applyListeners(el, vm, val);
+						applyListeners(el, model, val);
 					} else if (key === '$class') {
-						up = SetClass(el, vm, val);
+						up = SetClass(el, model, val);
 					} else if (key === '$style') {
-						up = SetStyle(el, vm, val);
+						up = SetStyle(el, model, val);
 					} else if (key === '$show') {
-						up = SetDisplay(el, vm, val);
+						up = SetDisplay(el, model, val);
 					} else if (key === '$toggle') {
-						up = SetToggle(el, vm, val);
+						up = SetToggle(el, model, val);
 					} else if (key === '$html') {
-						up = SetInnerHTML(el, vm, val);
+						up = SetInnerHTML(el, model, val);
 					} else if (key === '$attrs') {
-						up = SetDOMAttrs(el, vm, val);
+						up = SetDOMAttrs(el, model, val);
 					} else if (key === '$listeners') {
 						//TODO filter like for $attrs
-						//TODO value must be a function ... and not use directly vm.$listeners
-						applyListeners(el, vm, vm.$listeners, true); // do not wrap listeners fns (already wrapped by the parent context)
+						//TODO value must be a function ... and not use directly model.$listeners
+						applyListeners(el, model, model.$listeners, true); // do not wrap listeners fns (already wrapped by the parent context)
 						//TODO
 					} else if (key === '$channel') {
 						ERR(28, tag);
@@ -256,7 +131,7 @@ var RenderingProto = {
 						ERR(26, key);
 					}
 				} else if (typeof val === 'function') { // a dynamic binding
-					up = SetAttr(el, vm, key, val);
+					up = SetAttr(el, model, key, val);
 				} else {
 					el.setAttribute(key, val);
 				}
@@ -296,7 +171,7 @@ var RenderingProto = {
 	// vm component
 	_v: function(XTag, xattrs, slots) { // a vm component (viewmodel)
 		if (isVM(XTag)) {
-			var vm = new XTag(this.vm.$app);
+			var vm = new XTag(this.model.$app);
 			return vm.$create(this, xattrs, slots);
 		} else if (XTag.$compiled) { // a compiled template
 			return new FunComp().render(this, XTag, xattrs, slots);
@@ -305,8 +180,8 @@ var RenderingProto = {
 		}
 	},
 	s: function(slotName, defaultChildren) {
-		var vm = this.vm;
-		var slots = vm.$slots;
+		var model = this.model;
+		var slots = model.$slots;
 		var children = slots && slots[slotName || 'default'] || defaultChildren;
 		if (children) {
 			var frag = document.createDocumentFragment();
@@ -316,30 +191,29 @@ var RenderingProto = {
 		return document.createComment('[slot/]'); // placeholder
 	},
 	w: function(isExpr, changeCb, noCache, xattrs, childrenFn) { // dynamic view
-		var marker = document.createComment('[view/]');
-		var frag = document.createDocumentFragment();
-		frag.appendChild(marker);
-		var viewFrag = ViewRenderingContext(this, marker, isExpr, changeCb, noCache, xattrs, childrenFn)
-		marker.__qute__ = viewFrag;
-		viewFrag(null, true);
-		this.up(viewFrag);
-		return frag;
+		var renderFn = function(r, key) {
+			return key ? r.r(key, xattrs, childrenFn(r)) : null;
+		}
+		return new SwitchFragment(this, 'view', isExpr, renderFn, changeCb, noCache).$create();
 	},
 	i: function(ifChain, kidsChain, changeCb) { // if / else-if / else
 		// ifChain is a list of if expression functions corresponding to if / if-else else chain.
 		// When 'else' is present - the last expression corresponding to the else will be null
 		// kidsChain is a list of children functions corresponding to if / else-if / else chain
 		// both lists have the same when length. When only 'if' is present the list is of length 1.
-		var start = document.createComment('[if]');
-		var end = document.createComment('[/if]');
-		var frag = document.createDocumentFragment();
-		frag.appendChild(start);
-		frag.appendChild(end);
-		var ieFrag = IfRenderingContext(this, start, end, ifChain, kidsChain, changeCb);
-		start.__qute__ = ieFrag;
-		ieFrag(null, true);
-		this.up(ieFrag);
-		return frag;
+		var exprFn = function(model) {
+			var i = 0;
+			for (var l=ifChain.length-1; i<l; i++) {
+				if (ifChain[i](model)) return i;
+			}
+			var lastExpr = ifChain[i];
+			// if lastExpr is null is is corresponding to an else statement
+			return !lastExpr || lastExpr(model) ? i : -1;
+		}
+		var renderFn = function(r, key) {
+			return key > -1 ? kidsChain[key](r) : null;
+		}
+		return new SwitchFragment(this, 'if', exprFn, renderFn, changeCb).$create();
 	},
 	// dynamic lists - which is updating only items that changed
 	l: function(listFn, iterationFn, key) {
@@ -350,16 +224,7 @@ var RenderingProto = {
 	},
 	// static array variant of lists - this cannot be updated it is rendered once at creation
 	a: function(listFn, iterationFn) {
-		var start = document.createComment('[for]');
-		var end = document.createComment('[/for]');
-		var frag = document.createDocumentFragment();
-		frag.appendChild(start);
-		frag.appendChild(end);
-		var forFrag = ForRenderingContext(this, start, end, listFn, iterationFn);
-		start.__qute__ = forFrag;
-		forFrag(null);
-		this.up(forFrag);
-		return frag;
+		return new ForFragment(this, listFn, iterationFn).$create();
 	},
 	up: function(fn) { // register a live update function
 		this.ups.push(fn);
@@ -367,70 +232,103 @@ var RenderingProto = {
 	},
 	// eval the value of an xattr given the key - if a function invoke the function within the current context otherwise return the value as is
 	eval: function(xattr) {
-		return typeof xattr === 'function' ? xattr(this.vm) : xattr;
+		return typeof xattr === 'function' ? xattr(this.model) : xattr;
 	},
 
-	// connect all nested  VMs
-	$connect: function() {
+	// connect all nested renderings
+	connect: function() {
 		if (!this.isc) {
-			var vms = this.vms;
-			for (var i=0,l=vms.length; i<l; i++) vms[i].$connect();
+			var vm = this.vm;
+			// before connect
+			vm && vm.willConnect && vm.willConnect();
+			var kids = this.kids;
+			for (var i=0,l=kids.length; i<l; i++) kids[i].connect();
 			this.isc = true;
+			// after connect
+			vm && vm.connected && vm.connected();
 		}
 		return this;
 	},
-	// disconnect all nested VMs
-	$disconnect: function() {
+	// disconnect all nested renderings
+	disconnect: function() {
 		if (this.isc) {
-			var vms = this.vms;
-			for (var i=0,l=vms.length; i<l; i++) vms[i].$disconnect();
+			var vm = this.vm;
+			// before disconnect
+			vm && vm.willDisconnect && vm.willDisconnect();
+			var kids = this.kids;
+			for (var i=0,l=kids.length; i<l; i++) kids[i].disconnect();
 			this.isc = false;
+			vm && vm.disconnected && vm.disconnected();
 		}
 		return this;
 	},
 	$push: function(r) { // push a sub-renderings
-		this.vms.push(r);
-		if (this.isc) r.$connect();
+		this.kids.push(r);
+		if (this.isc) r.connect();
 	},
 	// refresh the DOM - call all nested update functions
-	$update: function() {
-		var model = this.vm, ups = this.ups;
+	update: function() {
+		var model = this.model, ups = this.ups;
 		for (var i=0,l=ups.length;i<l;i++) ups[i](model);
 		return this;
 	},
-	/*
-	updateTree: function() {
-		this.$update();
-		var vms = this.vms;
-		for (var i=0,l=vms.length; i<l; i++) {
-			var child = vms[i];
-			child.updateTree && child.updateTree();
-			if (!child.updateTree) console.log('@@', child)
+
+	// run dom update recursively on each nested rendering
+	refresh: function() {
+		this.update();
+		var kids = this.kids;
+		for (var i=0,l=kids.length; i<l; i++) {
+			var kid = kids[i];
+			kid.refresh && kid.refresh();
 		}
 	},
-	*/
+
 	// create a child rendering
-	spawn: function(vm) {
-		return new Rendering(vm || this.vm, this);
+	spawn: function(model) {
+		return new Rendering(this, model || this.model);
 	},
+
 	// get the closest VM in current rendering, ignore renderings which are not bound to ViewModel objects (functional compjents etc)
 	closestVM: function() {
 		var r = this;
 		do {
-			if (r.vm && r.vm.__VM__) return r.vm;
+			if (r.vm) return r.vm;
 			r = r.parent;
 		} while (r);
 		return null;
-	}
+	},
+
 }
 
-function Rendering(vm, parent) {
+function Rendering(parent, model) {
 	this.parent = parent;
-	this.vm = vm; // defaults to current vm -> changed by functional views
+	/*
+	 the model to use when rendering. The model should provide the following props:
+	 	$app,
+	 	$listeners,
+	 	$attrs,
+	 	$slots
+	 	and other data properties
+	 */
+	this.model = model;
+	/*
+	The associated ViewModel component if any. The VM contract is to provide the following methods:
+	1. willConnect
+	2. connected
+	3. willDisconnect
+	4. disconnected
+	*/
+	this.vm;
 	this.ups = []; // the update listeners
-	// vms are usually ViewModels but can be any object providing $connect and $disconnect methods
-	// if you enrich the vms api you mustr check list.js since it register a ListFragment instance as a vm
-	this.vms = [];
+	/*
+	  Sub-rendering objects if any
+	  A rendering object must provide the following functions:
+	  	connect
+	  	disconnect
+	  	$update
+	  	refresh
+	*/
+	this.kids = [];
 	this.isc = false; // is connected?
 }
 Rendering.prototype = RenderingProto;

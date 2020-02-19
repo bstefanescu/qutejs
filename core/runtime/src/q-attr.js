@@ -19,7 +19,7 @@ export default function applyUserDirectives(rendering, tag, xattrs, el) {
 		}
 	}
 	return (xcall || fns.length) && function(rendering, el) {
-		if (xcall) xcall.call(rendering.vm, el);
+		if (xcall) xcall.call(rendering.model, el);
 		for (var i=0,l=fns.length; i<l; i++) {
 			fns[i].call(rendering, el);
 		}

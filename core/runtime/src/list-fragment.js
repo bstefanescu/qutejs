@@ -13,7 +13,7 @@ so that we can easily retrieve the rendering context when removing an element.
 
 2. Items must be notified when parent rendering connects / disconnects
 
-Solution: the ListFragment itself implements the $connect / $disconnect contract of Rendering and register itself as a sub-rendering
+Solution: the ListFragment itself implements the connect / disconnect contract of Rendering and register itself as a sub-rendering
 (even if it is not a real rendering instance). It will be then called easch time the parent connect / disconnect, and will be able to connect disconnect each item rendering.
 To retrieve item renderings we need to store each rendering context (from 1.) into a element property '__qute_ctx__'
 this way we can connect/disconnect items by iterating over the DOM children elements.
@@ -59,55 +59,50 @@ ListFragment.prototype = {
 		this.r.$push(this);
 		return frag;
 	},
+	callItemR(methodName) {
+		var end = this.end;
+		var next = this.start.nextSibling;
+		while (next && next !== end) {
+			next.__qute_ctx__ && next.__qute_ctx__[methodName]();
+			next = next.nextSibling;
+		}
+	},
 	// life cycle hooks
-	$connect() {
-		var end = this.end;
-		var next = this.start.nextSibling;
-		while (next && next !== end) {
-			next.__qute_ctx__ && next.__qute_ctx__.$connect();
-			next = next.nextSibling;
-		}
+	connect() {
+		this.callItemR('connect');
 	},
-	$disconnect() {
-		var end = this.end;
-		var next = this.start.nextSibling;
-		while (next && next !== end) {
-			next.__qute_ctx__ && next.__qute_ctx__.$disconnect();
-			next = next.nextSibling;
-		}
+	disconnect() {
+		this.callItemR('disconnect');
 	},
-	// -------- is this needed? ----------
-	/*
-	$updateItems() {
-		var end = this.end;
-		var next = this.start.nextSibling;
-		while (next && next !== end) {
-			next.__qute_ctx__ && next.__qute_ctx__.$update();
-			next = next.nextSibling;
-		}
+	refresh() {
+		this.callItemR('refresh');
 	},
-	*/
-	// -----------------------------------
+	// TODO not uet used
+	uupdateItems() {
+		this.callItemR('update');
+	},
 
 	renderItem(r, items, key, item) {
 		var itemR = r.spawn();
 		var el = this.itemFn(itemR, item);
 		el.__qute_ctx__ = itemR;
 		if (key) items[key] = el;
-		r.isc && itemR.$connect();
+		r.isc && itemR.connect();
 		return el;
 	},
+	// update the list
 	update() {
-		var list = this.listFn(this.r.vm);
+		var list = this.listFn(this.r.model);
 		var diff = this.adiff.update(list);
 		if (diff) {
 			ArrayDiff.run(this, diff);
 		}
 		//TODO
 		//update item contexts too? or keep them isolated from parent updates?
-		//this.$updateItems();
+		//this.updateItems();
 	},
 
+	// --------- ArrayDiff operations ---------
 	clear() {
 		//console.log('ListFragment:clear');
 		this.items = null;
@@ -116,7 +111,7 @@ ListFragment.prototype = {
 		var parent = end.parentNode;
 		while (start.nextSibling !== end) {
 			var el = start.nextSibling;
-			isc && el.__qute_ctx__ && el.__qute_ctx__.$disconnect();
+			isc && el.__qute_ctx__ && el.__qute_ctx__.disconnect();
 			parent.removeChild(el);
 		}
 	},
@@ -143,7 +138,7 @@ ListFragment.prototype = {
 		var itemEl = this.items && this.items[key];
 		if (itemEl) {
 			itemEl.parentNode.removeChild(itemEl);
-			this.r.isc && itemEl.__qute_ctx__ && itemEl.__qute_ctx__.$disconnect();
+			this.r.isc && itemEl.__qute_ctx__ && itemEl.__qute_ctx__.disconnect();
 			delete this.items[key];
 		} else {
 			console.error('cannot find cached element', key); // TODO

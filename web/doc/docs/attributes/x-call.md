@@ -75,10 +75,10 @@ Anyway, we can use the `x-call` directive to register a handler for connect and 
 // an object providing two event handlers to be notified
 // when parent component is connected or disconnected
 var ConnectionHandler = {
-  $connect() {
+  connect() {
   	console.log('Parent VM connected');
   },
-  $disconnect() {
+  disconnect() {
     console.log('Parent VM disconnected');
   }
 }

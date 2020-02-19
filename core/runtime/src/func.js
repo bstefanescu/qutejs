@@ -28,6 +28,7 @@ function SetFuncAttr(func, vm, key, val) { // vm is the parent vm (i.e. current 
 }
 
 export default function FunComp() {
+	this.$app = null;
 	this.$r = null;
 	this.$el = null;
 	this.$attrs = {};
@@ -49,7 +50,7 @@ FunComp.prototype = {
 			this.$uq = true;
 			var self = this;
 			UpdateQueue.push(function() {
-				self.$r.$update();
+				self.$r.update();
 				self.$uq = false;
 			});
 		}
@@ -60,12 +61,12 @@ FunComp.prototype = {
 		this.$r = rendering.spawn(this);
 		this.$slots = slots;
 
-		// we must push the rendering context of the fun comp
-		// to propagate connect / disconnect handlers
-		rendering && rendering.$push(this.$r);
-
-		var vm = rendering.vm, attrs = this.$attrs, $use,
+		var model = rendering.model, attrs = this.$attrs, $use,
 			bindings, listeners, parentListeners;
+
+		if (model) {
+			this.$app = model.$app;
+		}
 
 		if (xattrs) {
 			if (xattrs.$use) {
@@ -76,25 +77,25 @@ FunComp.prototype = {
 				var val = xattrs[key];
 				if (key.charCodeAt(0) !== 36 || key === '$html') { // $ - extended attribute -> ignore all extended attrs but $html
 					if (typeof val === 'function') {
-						rendering.up(SetFuncAttr(this, vm, key, val));
-						val = val(vm);
+						rendering.up(SetFuncAttr(this, model, key, val));
+						val = val(model);
 					}
 					attrs[key] = val;
 				} else if (key === '$attrs') {
-					if (vm.$attrs) {
+					if (model.$attrs) {
 						// inject attributes in functional tags
 						// we need to create an update function to reinject attrs when model changes
 						// otherwise we loose the reactivity on func tags 'x-attrs' attribute
-						rendering.up(SetFuncAttrs(this, vm, val))();
+						rendering.up(SetFuncAttrs(this, model, val))();
 					}
 				} else if (key === '$listeners') {
 					// copy parent listeners so we can inject in children if needed
 					// <fun1 @click='handleCLick'>
 					// <fun2 x-listeners><a href='#' x-listeners></fun2>
 					// </fun1>
-					parentListeners = vm.$listeners;
+					parentListeners = model.$listeners;
 				} else if (key === '$on') {
-					listeners = createListeners(vm, val);
+					listeners = createListeners(model, val);
 				} else if (key === '$class') {
 					if (!bindings) bindings = [];
 					bindings.push(SetClass, val);
@@ -126,7 +127,7 @@ FunComp.prototype = {
 		// apply root bindings if any (x-class, x-style or x-show)
 		if (bindings) {
 			for (var i=0,l=bindings.length; i<l; i+=2) {
-				var up = bindings[i](el, vm, bindings[i+1]);
+				var up = bindings[i](el, model, bindings[i+1]);
 				rendering.up(up)();
 			}
 		}
@@ -135,6 +136,10 @@ FunComp.prototype = {
 		if ($use) {
 			$use(rendering, el);
 		}
+
+		// we must push the rendering context of the fun comp
+		// to propagate connect / disconnect handlers
+		rendering && rendering.$push(this.$r);
 
 		return el;
 	}

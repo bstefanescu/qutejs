@@ -40,7 +40,7 @@ export default Qute('spinner', function(r, xattrs) {
 			classes = xattrs.class+' '+classes;
 		}
 		if (xattrs.$show) {
-			r.up(Qute.Rendering.SetDisplay(el, r.vm, xattrs.$show))();
+			r.up(Qute.Rendering.SetDisplay(el, r.model, xattrs.$show))();
 		}
 	}
 	el.setAttribute('class', classes);

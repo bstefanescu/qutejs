@@ -1,31 +1,6 @@
 import Qute from '@qutejs/runtime';
 import Polyglot from 'node-polyglot';
 
-/*
-function Thenable(fn) {
-    var _then;
-    var _catch;
-    var _resolve = function(val) {
-        return (_then && _then(val));
-    }
-    var _reject = function(val) {
-        return (_catch && _catch(val));
-    }
-    fn(_resolve, _reject);
-    this.then = function(onResolve, onReject) {
-        onResolve && _then = onResolve;
-        onReject && _catch = onReject;
-    }
-}
-function newPromise(fn) {
-    return window.Promise ? new window.Promise(fn) : new Thenable(fn);
-}
-
-function resolvedPromise(value) {
-    return window.Promise ? Promise.resolve(value) : new Thenable(function(resolve) { resolve(value); })
-}
-*/
-
 function fetchJSON(url, done) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url);
@@ -78,6 +53,7 @@ export default function QuteIntl(config) {
 
 QuteIntl.prototype = {
     load(lang) {
+        if (!lang) lang = 'guess';
         if (this.lang !== lang) {
             if (lang === 'guess') {
                 lang = guessLanguage('en');
@@ -104,7 +80,7 @@ QuteIntl.prototype = {
                 this.polyglot.replace(phrases);
                 return Promise.resolve(true);
             } else {
-                throw new Error('No phrases found for language '+lang);
+                throw new Error('No phrases found for language: '+lang);
             }
         } else {
             return Promise.resolve(false);

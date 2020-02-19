@@ -6,7 +6,6 @@ var Emitter = {
 	emit: function(event, data) {
 		if (!this.$el) ERR(35);
 		this.$el.dispatchEvent(new window.CustomEvent(event, {bubbles: true, detail: data === undefined ? this : data }));
-
 	},
 	emitAsync: function(event, data, timeout) {
 		var self = this;
