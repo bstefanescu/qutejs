@@ -13,15 +13,10 @@
 
 - there is a difference on using x-listeners on vm vs functional comp. => on vm, listeners are always registered on the root element. Explicitely Using x-listeners inside a VM template will register the listeners twice. On functional components you must explicitely use x-listeners to register the listeners ...
 
-- vm.js $parent $root must be refactored
-- include error texts in runtime?
-
-0. remove propKey from update functions
 1. move more functions to @qutejs/test-utils
 2. Be able to declare private templates in JSQ files?
 3. use setAsap instead of setTimeout in update queue?
 4. optimize update queue -> split runs of update in several async chunks? (one chunk per component?)
-5. add buble to dev release
 6. redux/flux integration as an example?
 7. use a dirty prop on VM so that when disconnected and reconnected to automatically update if dirty?
 

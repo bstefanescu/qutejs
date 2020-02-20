@@ -23,7 +23,7 @@ function assignPropDefs(dst, src) {
 }
 
 function Qute(tag, def, BaseVm) {
-	if (!tag) ERR(5);
+	if (!tag) ERR("Usage: Qute(tag[, VM_Definition, Base_VM])");
 
 	function ViewModelImpl(app, attrs) {
 		ViewModel.call(this, app, attrs);
@@ -55,7 +55,7 @@ function Qute(tag, def, BaseVm) {
 	if (!VMProto.render) {
 		VMProto.render = Qute.template(tag);
 		if (!VMProto.render) {
-			ERR(36, tag);
+			ERR("No template found for tag '%s'", tag);
 		}
 	}
 	// add the tag meta property

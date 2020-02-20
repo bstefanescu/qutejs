@@ -36,7 +36,7 @@ var UpdateQueue = {
 			queue[0]();
 			// remove from queue after execution
 			queue.shift();
-			if (++cnt > max) ERR(30);
+			if (++cnt > max) ERR("Possible infinite loop detected");
 		}
 
 		// run the 'after' routines if any

@@ -144,7 +144,7 @@ App.prototype = {
 	prop(key) {
 		var prop = this.data[key];
 		if (!prop) {
-			ERR(40, key);
+			ERR("No model property named '%s' was found!", key);
 		}
 		return prop;
 	},

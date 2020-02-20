@@ -12,7 +12,7 @@ export default function applyUserDirectives(rendering, tag, xattrs, el) {
 		} else {
 			var userDir = findDirective(tag, key);
 			if (!userDir) {
-				ERR(50, key);
+				ERR("Unknown user attribute directive: '%s'", key);
 			}
 			var fn = userDir.call(rendering, xattrs, val===true?undefined:val, el);
 			if (fn) fns.push(fn)

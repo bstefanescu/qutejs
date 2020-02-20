@@ -126,9 +126,7 @@ var RenderingProto = {
 						applyListeners(el, model, model.$listeners, true); // do not wrap listeners fns (already wrapped by the parent context)
 						//TODO
 					} else if (key === '$channel') {
-						ERR(28, tag);
-					} else if (key !== '$use') {
-						ERR(26, key);
+						ERR("x-channel cannot be used on regular DOM elements: %s", tag);
 					}
 				} else if (typeof val === 'function') { // a dynamic binding
 					up = SetAttr(el, model, key, val);
@@ -153,7 +151,7 @@ var RenderingProto = {
 		if (type) { // convert can be a function to convert the content before injecting in the dom
 			var converter = converters[type];
 			if (!converter) {
-				ERR(27, type);
+				ERR("Unknown converter: %s", type);
 			}
 			content = converter(content, this);
 		}
@@ -162,7 +160,7 @@ var RenderingProto = {
 	},
 	r: function(tag, xattrs, children) {
 		var XTag = getVMOrTag(tag);
-		if (!XTag) ERR(23, tag);
+		if (!XTag) ERR("Could not resolve component for tag: '%s'", tag);
 		return this._v(XTag, xattrs, extractSlots(children));
 	},
 	v: function(XTag, xattrs, children) { // xtag is specified as a func reference. TODO No more used

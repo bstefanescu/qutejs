@@ -1,6 +1,5 @@
 import {document} from '@qutejs/window';
 import Loader from './loader.js'
-import ERR from './error-dev.js';
 import Qute from '@qutejs/runtime';
 import Compiler from '@qutejs/compiler';
 

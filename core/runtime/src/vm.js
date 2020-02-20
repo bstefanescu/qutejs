@@ -84,7 +84,7 @@ function ViewModel(app, attrs) {
 		}
 	}
 
-	if (!this.render) ERR(32);
+	if (!this.render) ERR("No render function defined for the ViewModel!");
 
 	// initialize data model from attributes if any - this will not trigger an update
 	if (attrs) {
@@ -129,7 +129,7 @@ ViewModel.prototype = {
 	},
 	// subscribe to the given channel name - for use on root VMs
 	listen: function(channelName) {
-		if (!this.$channel) ERR(39, this.$tag);
+		if (!this.$channel) ERR("x-channel used on a VM not defining channels: %s", this.$tag);
 		// add an init function
 		this.$init = chainFnAfter(function(thisObj) {
 			thisObj.subscribe(channelName, thisObj.$channel);
@@ -146,7 +146,7 @@ ViewModel.prototype = {
 		return this;
 	},
 	$parent: function() {
-		if (!this.$r) ERR(35);
+		if (!this.$r) return null;
 		return this.$r.closestVM();
 	},
 	$root: function() {
@@ -222,8 +222,6 @@ ViewModel.prototype = {
 						bindings.push(SetToggle, val);
 					} else if (key === '$channel') {
 						this.listen(val);
-					} else if (key !== '$use') {
-						ERR(26, key);
 					}
 				} else if (typeof val === 'function') { // a dynamic binding
 					rendering.up(SetProp(this, model, key, val))();
@@ -265,7 +263,7 @@ ViewModel.prototype = {
 
 	// manual mount (only roots must be moutned this way)
 	mount: function(elOrId, insertBefore) {
-		if (this.$el) ERR(33); //TODO should check if connected and if not root
+		if (this.$r) ERR("VM is already mounted");
 		var target;
 		if (elOrId) {
 			target = typeof elOrId === 'string' ? document.getElementById(elOrId) : elOrId;
@@ -285,8 +283,7 @@ ViewModel.prototype = {
 	// only manually mounted vms can be unmounted
 	unmount: function() {
 		// a child vm?
-		//if (this.$p) ERR();
-		if (!this.$el) ERR(34); // TODO check if root and mounted
+		if (!this.r) ERR("VM is not mounted");
 		this.disconnect();
 		this.$el.parentNode.removeChild(this.$el);
 		this.$el = null;
@@ -307,7 +304,7 @@ ViewModel.prototype = {
 		}
 	},
 	$on: function(type/*, selector, cb*/) {
-		if (!this.$el) ERR(34);
+		if (!this.$el) ERR("View not connected");
 		//if (!this.$clean) this.$clean = [];
 		var selector, cb;
 		if (arguments.length === 3) {
