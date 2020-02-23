@@ -159,7 +159,9 @@ Apart the syntax differences from HTML, the `JSQ` language introduce some new ta
 * **[x-html](#/attributes/x-html)**
 * **[x-markdown](#/attributes/x-markdown)**
 * **[x-change](#/attributes/x-change)**
-
+* **[x-nocache](#/attributes/x-nocache)**
+* **[x-bind](#/attributes/x-bind)**
+* **[x-on](#/attributes/x-on)**
 
 ## Writing templates
 
