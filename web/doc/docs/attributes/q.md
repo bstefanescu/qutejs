@@ -10,8 +10,9 @@ When registering a custom attribute you can specify a target element name (like 
 
 Custom attributes can also be specified by prefixing the attribute name with a `#` character:
 
-`<input #model='someProp'>` is equivalent to `<input q:model='someProp'>`.
+`<input #model='someProp'>` is equivalent to `<input q:model='someProp'>`
 
+or using the `x-use:attr` alias: `<input x-use:model='someProp'>`.
 
 ## Custom attribute values
 

@@ -14,6 +14,13 @@ function chainFnAfter(fn, prevFn) {
 }
 
 function closestVM(el) {
+	while (el && !(el.__qute__ && el.__qute__.__VM__)) {
+		el = el.parentNode;
+	}
+	return el && el.__qute__;
+}
+
+function closestComp(el) {
 	while (el && !el.__qute__) {
 		el = el.parentNode;
 	}
@@ -33,4 +40,4 @@ function filterKeys(obj, filter) {
 	}
 }
 
-export { stopEvent, chainFnAfter, closestVM, filterKeys, kebabToCamel };
+export { stopEvent, chainFnAfter, closestVM, closestComp, filterKeys, kebabToCamel };

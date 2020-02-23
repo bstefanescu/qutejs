@@ -123,6 +123,7 @@ FunComp.prototype = {
 
 		var el = XTag(this.$r, xattrs, slots);
 		this.$el = el;
+		el.__qute__ = this; // to be used by Qute.closestComp
 
 		// apply root bindings if any (x-class, x-style or x-show)
 		if (bindings) {

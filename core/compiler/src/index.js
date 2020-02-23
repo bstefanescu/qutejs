@@ -283,6 +283,18 @@ function _xattrs(attrs, bindings, xattrs, directives, events, ctx) {
 					ar.push(_s(k)+':'+_xo($toggle[k], ctx));
 				}
 				val =_v('{'+ ar.join(',')+'}');
+			} else if (key === '$emit') {
+				var $emit = xattrs[key];
+				var emitOut = [];
+				for (var i=0,l=$emit.length; i<l; i+=4) {
+					var detail = $emit[i+2];
+					emitOut.push(
+						_s($emit[i]),
+						_s($emit[i+1]),
+						detail ? _v(_xo(detail, ctx)) : _s(detail), _s(!!$emit[i+3])
+					);
+				}
+				val = "["+emitOut.join(',')+"]";
 			} else {
 				val = _v(_xo(xattrs[key], ctx));
 			}
@@ -368,6 +380,25 @@ function DomNode(name, attrs) {
 	this.directive = function(name, value) {
 		if (!this.directives) this.directives = {};
 		this.directives[name] = value === true ? "true" : value;
+	}
+	this.emit = function(name, value, isAsync) {
+		var i = name.indexOf('@');
+		if (i < -1) {
+			i = name.indexOf(':');
+		}
+		var eventName = name;
+		var targetEvent = name;
+		if (i > -1) {
+			// use the same name for source event and target event
+			eventName = name.substring(0, i);
+			targetEvent = name.substring(i+1);
+		} // else use the same name for source and targetg events
+		if (!this.xattrs) this.xattrs = {};
+		var xattrs = this.xattrs;
+		if (!xattrs.$emit) {
+			xattrs.$emit = [];
+		}
+		xattrs.$emit.push(eventName, targetEvent, value === true ? null : value, isAsync);
 	}
 	this.on = function(name, value) {
 		var events = this.events || (this.events = {});
@@ -511,6 +542,10 @@ function DomNode(name, attrs) {
 	    		this.bind(name.substring(7), attr.value);
 	    	} else if (name.startsWith('x-on:')) {
 	    		this.on(name.substring(5), attr.value);
+	    	} else if (name.startsWith('x-emit:')) {
+	    		this.emit(name.substring(7), attr.value, false);
+	    	} else if (name.startsWith('x-emit-async:')) {
+	    		this.emit(name.substring(13), attr.value, true);
 	    	} else if (name.startsWith('q:')) {
 	    		// we store the attr itself for directives - we need to access attr.expr
 	    		this.directive(name.substring(2), attr);

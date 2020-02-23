@@ -1,4 +1,4 @@
-import {stopEvent, filterKeys} from './utils.js';
+import {stopEvent, filterKeys, closestComp} from './utils.js';
 
 function addClassMap(cl, value) {
 	var keys = Object.keys(value);
@@ -170,3 +170,40 @@ export function SetProp(vm, model, key, valFn) {
 	}
 }
 
+
+
+function retargetEvent(el, model, srcEvent, toEvent, detailFn, isAsync) {
+	el.addEventListener(srcEvent, function(e) {
+		// avoid infinite loop when emiting from a component root element a
+		// custom event with the same name of the original event
+		if (e.$originalEvent && e.$originalTarget === el) {
+			if (e.$originalEvent.type === srcEvent) return;
+		}
+
+		var comp = closestComp(el);
+		if (comp) {
+			var targetEl = comp.$el;
+			var newEvent = new window.CustomEvent(toEvent, {
+				bubbles: e.bubbles,
+				detail: detailFn ? detailFn(model) : e
+			});
+			newEvent.$originalEvent = e;
+			newEvent.$originalTarget = el;
+			e.stopImmediatePropagation();
+			e.preventDefault();
+			if (isAsync) {
+				window.setTimeout(function() {
+					targetEl.dispatchEvent(newEvent);
+				}, 0);
+			} else {
+				targetEl.dispatchEvent(newEvent);
+			}
+		}
+	});
+}
+
+export function applyEmiters(el, model, ar) {
+	for (var i=0,l=ar.length; i<l; i+=4) {
+		retargetEvent(el, model, ar[i+1], ar[i], ar[i+2], ar[i+3]);
+	}
+}

@@ -3,7 +3,7 @@ import ERR from './error.js';
 
 import App from './app.js';
 import { getVMOrTag, getVM, converters } from './registry.js';
-import {applyListeners, createListeners, createListener, SetClass, SetStyle,
+import {applyListeners, applyEmiters, createListeners, createListener, SetClass, SetStyle,
 			SetDisplay, SetToggle, SetText, SetInnerHTML, SetAttr} from './binding.js';
 import { filterKeys } from './utils.js';
 import Emitter from './emit.js';
@@ -77,7 +77,6 @@ function extractSlots(children) {
 	return null;
 }
 
-// ==============================================
 
 
 var RenderingProto = {
@@ -120,6 +119,8 @@ var RenderingProto = {
 						up = SetInnerHTML(el, model, val);
 					} else if (key === '$attrs') {
 						up = SetDOMAttrs(el, model, val);
+					} else if (key === '$emit') {
+						applyEmiters(el, model, val);
 					} else if (key === '$listeners') {
 						//TODO filter like for $attrs
 						//TODO value must be a function ... and not use directly model.$listeners
