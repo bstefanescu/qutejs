@@ -4,7 +4,7 @@ functional components
 
 import Emitter from './emit.js';
 import UpdateQueue from './update.js';
-import {applyListeners, createListeners, SetStyle, SetClass, SetDisplay, SetToggle} from './binding.js';
+import {applyListeners, SetStyle, SetClass, SetDisplay, SetToggle} from './binding.js';
 import applyUserDirectives from './q-attr.js';
 import { filterKeys } from './utils.js';
 
@@ -32,7 +32,6 @@ export default function FunComp() {
 	this.$r = null;
 	this.$el = null;
 	this.$attrs = {};
-	this.$listeners = null;
 	this.$slots = null;
 	this.$uq = false; // updayte queued
 }
@@ -62,7 +61,7 @@ FunComp.prototype = {
 		this.$slots = slots;
 
 		var model = rendering.model, attrs = this.$attrs, $use,
-			bindings, listeners, parentListeners;
+			bindings, listeners;
 
 		if (model) {
 			this.$app = model.$app;
@@ -88,14 +87,8 @@ FunComp.prototype = {
 						// otherwise we loose the reactivity on func tags 'x-attrs' attribute
 						rendering.up(SetFuncAttrs(this, model, val))();
 					}
-				} else if (key === '$listeners') {
-					// copy parent listeners so we can inject in children if needed
-					// <fun1 @click='handleCLick'>
-					// <fun2 x-listeners><a href='#' x-listeners></fun2>
-					// </fun1>
-					parentListeners = model.$listeners;
 				} else if (key === '$on') {
-					listeners = createListeners(model, val);
+					listeners = val;
 				} else if (key === '$class') {
 					if (!bindings) bindings = [];
 					bindings.push(SetClass, val);
@@ -112,15 +105,6 @@ FunComp.prototype = {
 			}
 		}
 
-		// listemners must be set before rendering the content
-		if (listeners && parentListeners) {
-			this.$listeners = Object.assign({}, parentListeners, listeners);
-		} else if (listeners) {
-			this.$listeners = listeners;
-		} else if (parentListeners) {
-			this.$listeners = Object.assign({}, parentListeners);
-		}
-
 		var el = XTag(this.$r, xattrs, slots);
 		this.$el = el;
 		el.__qute__ = this; // to be used by Qute.closestComp
@@ -131,6 +115,11 @@ FunComp.prototype = {
 				var up = bindings[i](el, model, bindings[i+1]);
 				rendering.up(up)();
 			}
+		}
+
+		// apply listeners if any
+		if (listeners) {
+			applyListeners(el, model, listeners);
 		}
 
 		// call user directives if any

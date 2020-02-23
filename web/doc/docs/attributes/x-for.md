@@ -122,10 +122,10 @@ Let's adding a remove button.
 
 ```jsq
 <x-tag name='item'>
-  <tr x-listeners>
+  <tr>
     <td>{{$attrs.text}}</td>
     <td>
-	    <button @click='emit("remove", $attrs.text)'>Remove</button>
+	    <button x-emit:remove@click={$attrs.text}>Remove</button>
     </td>
   </tr>
 </x-tag>

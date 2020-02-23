@@ -3,7 +3,7 @@ import ERR from './error.js';
 
 import App from './app.js';
 import { getVMOrTag, getVM, converters } from './registry.js';
-import {applyListeners, applyEmiters, createListeners, createListener, SetClass, SetStyle,
+import {applyListeners, applyEmiters, SetClass, SetStyle,
 			SetDisplay, SetToggle, SetText, SetInnerHTML, SetAttr} from './binding.js';
 import { filterKeys } from './utils.js';
 import Emitter from './emit.js';
@@ -121,11 +121,6 @@ var RenderingProto = {
 						up = SetDOMAttrs(el, model, val);
 					} else if (key === '$emit') {
 						applyEmiters(el, model, val);
-					} else if (key === '$listeners') {
-						//TODO filter like for $attrs
-						//TODO value must be a function ... and not use directly model.$listeners
-						applyListeners(el, model, model.$listeners, true); // do not wrap listeners fns (already wrapped by the parent context)
-						//TODO
 					} else if (key === '$channel') {
 						ERR("x-channel cannot be used on regular DOM elements: %s", tag);
 					}
@@ -304,7 +299,6 @@ function Rendering(parent, model) {
 	/*
 	 the model to use when rendering. The model should provide the following props:
 	 	$app,
-	 	$listeners,
 	 	$attrs,
 	 	$slots
 	 	and other data properties

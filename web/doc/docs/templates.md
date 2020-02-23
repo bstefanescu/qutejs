@@ -152,7 +152,9 @@ Apart the syntax differences from HTML, the `JSQ` language introduce some new ta
 * **[x-class](#/attributes/x-class)**
 * **[x-style](#/attributes/x-style)**
 * **[x-attrs](#/attributes/x-attrs)**
-* **[x-listeners](#/attributes/x-listeners)**
+* **[x-emit](#/attributes/x-emit)**
+* **[x-emit-async](#/attributes/x-emit-async)**
+* **[x-call](#/attributes/x-call)**
 * **[x-channel](#/attributes/x-channel)**
 * **[x-html](#/attributes/x-html)**
 * **[x-markdown](#/attributes/x-markdown)**

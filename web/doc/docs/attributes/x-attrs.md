@@ -14,7 +14,7 @@ Let's see an example of an input allows you to specify an additional label that 
 </x-tag>
 
 <x-tag name='root'>
-<my-input name='theName' type='text' class='form-control'>Your name:</my-input>
+<my-input name='theName' type='text' class='form-control' placeholder='Type your name'>Your name:</my-input>
 </x-tag>
 
 export default Qute('root');
@@ -31,7 +31,7 @@ The root component will render as
 
 You can see how `x-attrs` was used to inject all the attributes passed to the components into the nested `input` element.
 
-**Note** The event listeners passed to the component will not be injected by the `x-attrs` attribute. If you need this you must use the [x-listeners](#/attributes/x-listeners) attribute.
+**Note** The event listeners passed to the component will not be injected by the `x-attrs` attribute. If you need to emit events from a component you should use the [x-emit](#/attributes/x-emit) attribute.
 
 ## Filtering attributes to inject
 

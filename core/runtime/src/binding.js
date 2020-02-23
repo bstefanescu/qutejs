@@ -52,19 +52,10 @@ export function createListener(vm, fn) {
 	};
 }
 
-export function createListeners(vm, $listeners) {
-	if ($listeners) {
-		for (var key in $listeners) {
-			$listeners[key] = createListener(vm, $listeners[key]);
-		}
-	}
-	return $listeners;
-}
-
-export function applyListeners(el, vm, listeners, doNotWrap) {
+export function applyListeners(el, vm, listeners) {
 	for (var key in listeners) {
 		var fn = listeners[key];
-		el.addEventListener(key, doNotWrap ? fn : createListener(vm, fn));
+		el.addEventListener(key, createListener(vm, fn));
 	}
 }
 

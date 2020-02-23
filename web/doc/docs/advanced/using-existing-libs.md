@@ -9,7 +9,7 @@ As Qute is working directly on the DOM you can easily use any plain javascript c
 //@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
 
 <x-tag name='bs-button'>
-	<button class={$attrs['bs-type']?'btn btn-'+$attrs['bs-type']:'btn'} x-attrs='!bs-type' x-listeners><slot/></button>
+	<button class={$attrs['bs-type']?'btn btn-'+$attrs['bs-type']:'btn'} x-attrs='!bs-type' x-emit:click><slot/></button>
 </x-tag>
 
 <x-tag name='my-component'>

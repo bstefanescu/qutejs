@@ -5,7 +5,7 @@ import Qute from '..';
 import { mountTest } from './utils.js';
 
 <x-tag name='action'>
-	<tag is='$attrs.is||"a"' data-name={$attrs.name} href='#' x-listeners><slot/></tag>
+	<tag is='$attrs.is||"a"' data-name={$attrs.name} href='#' x-emit:click><slot/></tag>
 </x-tag>
 
 <x-tag name='link'>

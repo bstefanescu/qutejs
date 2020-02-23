@@ -5,7 +5,7 @@ import { stopEvent, chainFnAfter, kebabToCamel, filterKeys } from './utils.js';
 import Rendering from './rendering.js';
 import UpdateQueue from './update.js';
 import App from './app.js';
-import {createListeners, SetProp, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
+import {applyListeners, SetProp, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
 import Emitter from './emit.js';
 import applyUserDirectives from './q-attr.js';
 
@@ -60,8 +60,6 @@ function ViewModel(app, attrs) {
 	prop.writable = true;
 	// the associated rendering context
 	Object.defineProperty(this, '$r', prop);
-	// listeners injected through tag attributes (e.g. @click)
-	Object.defineProperty(this, '$listeners', prop);
 	// the slots injected by the caller
 	Object.defineProperty(this, '$slots', prop);
 	// the view root element
@@ -171,12 +169,6 @@ ViewModel.prototype = {
 		if (this.$init) {
 			this.$init(this);
 		}
-		if (this.$listeners) {
-			var listeners = this.$listeners;
-			for (var key in listeners) {
-				this.$on(key, listeners[key]);
-			}
-		}
 
 		// TODO update DOM if previously disconnected
 		if (false) this.$update();
@@ -202,10 +194,7 @@ ViewModel.prototype = {
 			for (var key in xattrs) {
 				var val = xattrs[key];
 				if (key.charCodeAt(0) === 36) { // $ - extended attribute
-					if (key === '$on') {
-						//TODO we should make a copy of val since it is modified by createListeners!!!
-						this.$listeners = createListeners(model, val); // use parent vm when creating listeners
-					} else if (key === '$attrs') { // we must not delete keys from xattrs since it can break when vm is loaded by a dynamic component
+					if (key === '$attrs') { // we must not delete keys from xattrs since it can break when vm is loaded by a dynamic component
 						//TODO DO WE NEED to add an update fn? x-attrs are static
 						rendering.up(SetVMAttrs(this, model, val))();
 					} else if (key === '$class') {
@@ -233,7 +222,9 @@ ViewModel.prototype = {
 		return bindings;
 	},
 	$create: function(parentRendering, xattrs, slots) {
-		var $use, model = parentRendering && parentRendering.model;
+		var $use,
+			model = parentRendering && parentRendering.model,
+			listeners = xattrs && xattrs.$on;
 		if (xattrs && xattrs.$use) {
 			$use = applyUserDirectives(model, this.$tag, xattrs);
 		}
@@ -251,6 +242,11 @@ ViewModel.prototype = {
 			var up = bindings[i](el, model, bindings[i+1]);
 			parentRendering.up(up)();
 		}
+
+		if (listeners) {
+			applyListeners(el, model, listeners);
+		}
+
 		this.created && this.created(el);
 		// should use parent vm as context for custom directives
 		if ($use) $use.call(model, el);

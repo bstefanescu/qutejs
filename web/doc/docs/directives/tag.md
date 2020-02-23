@@ -9,11 +9,11 @@ The tag name variable is specified through the *is* attribute.
 
 ```jsq
 <x-tag name='action'>
-<tag is='$attrs.is||"a"' href='#' x-listeners><slot/></tag>
+<tag is='$attrs.is||"a"' href='#' x-emit:click><slot/></tag>
 </x-tag>
 
 <x-tag name='root'>
-<action is='button'>My Button</action>
+<action is='button' @click='window.alert("Hello!")'>My Button</action>
 </x-tag>
 
 export default Qute('root');
@@ -23,7 +23,7 @@ export default Qute('root');
 
 ```jsq
 <x-tag name='link'>
-<a class='link' href='#'><slot/></a>
+<a class='link' href='#' x-emit:click><slot/></a>
 </x-tag>
 
 <x-tag name='component'>
@@ -31,7 +31,7 @@ export default Qute('root');
 </x-tag>
 
 <x-tag name='root'>
-<component is='link'>My Link</component>
+<component is='link' @click='window.alert("Hello!")'>My Link</component>
 </x-tag>
 
 export default Qute('root');

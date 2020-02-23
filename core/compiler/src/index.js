@@ -274,7 +274,7 @@ function _xattrs(attrs, bindings, xattrs, directives, events, ctx) {
 		out || (out = []);
 		for (var key in xattrs) {
 			var val;
-			if (key === '$attrs' || key === '$listeners') {
+			if (key === '$attrs') {
 				val = xattrs[key];
 			} else if (key === '$toggle') { // toggle is an object
 				var ar = [];
@@ -515,8 +515,6 @@ function DomNode(name, attrs) {
 	        	r = new ListNode(attr.value, this);
 	        } else if ('x-attrs' === name) {
 	        	this.xattr('$attrs', parseXAttrs(attr.value));
-	        } else if ('x-listeners' === name) {
-	        	this.xattr('$listeners', parseXAttrs(attr.value));
 	        } else if ('x-channel' === name) {
 	        	this.attr('$channel', attr.value); // use a regular attr since valkue is always a string literal
 			} else if ('x-show' === name) {

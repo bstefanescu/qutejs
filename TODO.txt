@@ -11,7 +11,8 @@
 - create separate components git repository
 - polyfill - add doc section + add promise??
 
-- there is a difference on using x-listeners on vm vs functional comp. => on vm, listeners are always registered on the root element. Explicitely Using x-listeners inside a VM template will register the listeners twice. On functional components you must explicitely use x-listeners to register the listeners ...
+- declarative listeners are not removed when the parent component are disconnecting
+ should we automatically remove them at disconnect to free up resources?
 
 1. move more functions to @qutejs/test-utils
 2. Be able to declare private templates in JSQ files?
