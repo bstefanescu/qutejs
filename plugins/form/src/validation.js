@@ -37,10 +37,13 @@ function reportInputValidity(el, config, asyncRun) {
 function checkFormValidity(form, config, update) {
 	var elements = form.elements, isValid = true;
 	for (var i=0,l=elements.length; i<l; i++) {
-		var el = checkInputValidity(elements[i], config);
-		if (el) {
-			update && update.push(el);
-			if (!el.validity.valid) isValid = false;
+		var el = elements[i];
+		if (el.willValidate) {
+			el = checkInputValidity(el, config);
+			if (el) {
+				update && update.push(el);
+				if (!el.validity.valid) isValid = false;
+			}
 		}
 	}
 	return isValid;
@@ -140,7 +143,9 @@ function setupValidation(form, config) {
 					reportInputValidity(e.target, config);
 				});
 			}
-
+			el.addEventListener('change', function(e) {
+				reportInputValidity(e.target, config);
+			})
 		}
 	}
 }
@@ -172,8 +177,8 @@ export function formValidateDirective(xattrs, valueExpr, el) {
 		report: null,
 		messages: null
 	}, this.eval(valueExpr) || {});
-	if (!el) {
-		throw new Error('Cannot use q:validate: Target element is not a form!');
+	if (el.tagName !== 'FORM') {
+		throw new Error('Cannot use q:validate: Target element is not a DOM form element!');
 	}
 	el.addEventListener('submit', function(e) {
 		if (!reportFormValidity(this, config, true)) {
