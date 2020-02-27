@@ -42,6 +42,7 @@ var PropProto = {
 
 	$bindVM(vm, key) {
 		var self = this;
+		vm.$data[key] = this.value; // set the initial value
 		vm.setup(function() {
 			vm.subscribe('model:'+self.key, function(value, old) {
 				var watcher = this.$el && this.$watch && this.$watch[key]; // if not connected whatchers are not enabled
