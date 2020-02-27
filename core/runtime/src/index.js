@@ -9,6 +9,7 @@ import ViewModel from './vm.js';
 import App from './app.js';
 import { createListener } from './binding.js';
 import { registerTag, registerVM, getTag, getVM, getVMOrTag, snapshotRegistry, restoreRegistry, registerDirective, converters } from './registry.js';
+import {StringProp,NumberProp,BooleanProp} from './prop-types';
 
 /**
  * We cannot use Object.assign since getter are lost. So we copy the prop def itself
@@ -81,7 +82,14 @@ function Qute(tag, def, BaseVm) {
 	return VMType;
 }
 
+// A place where plugins may expose custom API
+// A plugin named @qutejs/plugin-name should use `pluginName` as the key (in camel case format)
+Qute.$ = {};
+
 Qute.ViewModel = ViewModel;
+Qute.isVM = function(obj) {
+	return obj instanceof ViewModel;
+}
 
 // link a viewmodel to a template. Usefull for classes where defining prototype methods is not part of the class syntax
 Qute.link = function(VMType, renderFn) {
@@ -132,6 +140,10 @@ Qute.runAfter = function(cb) { UpdateQueue.runAfter(cb); }
 Qute.closest = closestVM;
 Qute.ERR = ERR;
 
+// prop types
+Qute.string = function(value) { return new StringProp(value) }
+Qute.number = function(value) { return new NumberProp(value) }
+Qute.boolean = function(value) { return new BooleanProp(value) }
 
 export default Qute;
 
