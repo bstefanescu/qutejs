@@ -1,0 +1,13 @@
+
+export default {
+	"amp":   0x0026,
+	"lt":    0x003C,
+	"gt":    0x003E,
+	"nbsp":  0x00A0,
+	"copy":  0x00A9,
+	"laquo": 0x00AB,
+	"reg":   0x00AE,
+	"raquo": 0x00BB,
+	"times": 0x00D7,
+	"bull":  0x2022
+}

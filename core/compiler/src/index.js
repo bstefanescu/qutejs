@@ -2,6 +2,8 @@ import { ERR, makeSymbols } from './utils.js';
 import parseHTML from './html-parser.js';
 import { transpile, loadXTags } from './xtag-parser.js';
 
+import HTML_ENT_MAP from './html-entities.js';
+
 /*
 attrs: {key: value, $, @}
 
@@ -43,6 +45,23 @@ var ARROW_FN_RX = /^(\(?)\s*((?:[a-zA-Z_$][a-zA-Z_$0-9]*)(?:\s*,\s*[a-zA-Z_$][a-
 // nested is a special tag we added for convenience in the regular html tags - it is used as a more meaningful replacement of template or div
 var HTML_TAGS = makeSymbols("nested html head meta link title base body style nav header footer main aside article section h1 h2 h3 h4 h5 h6 div p pre blockquote hr ul ol li dl dt dd span a em strong b i u s del ins mark small sup sub dfn code var samp kbd q cite ruby rt rp br wbr bdo bdi table caption tr td th thead tfoot tbody colgroup col img figure figcaption map area video audio source track script noscript object param embed iframe canvas abbr address meter progress time form button input textarea select option optgroup label fieldset legend datalist menu output details summary command keygen acronym applet bgsound basefont big center dir font frame frameset noframes strike tt xmp template".split(" "));
 
+var HTML_ENT_RX = /&(?:([a-zA-Z]+)|(#[0-9]+)|(#x[abcdefABCDEF0-9]+));/g;
+
+function _html_ent(text) {
+	if (!text) return text;
+	return text.replace(HTML_ENT_RX, function(m, p1, p2, p3) {
+		var code = null;
+		if (p1) {
+			// loookup in entities table
+			code = HTML_ENT_MAP[p1];
+		} else if (p2) {
+			code = parseInt(p2.substring(1));
+		} else if (p3) {
+			code = parseInt('0'+p3.substring(1), 16);
+		}
+		return isNaN(code) ? m : String.fromCharCode(code);
+	});
+}
 
 function _s(val) {
     return JSON.stringify(val);
@@ -611,7 +630,7 @@ function TextNode(value) {
 	this.isBlank = value.trim().length===0;
 	this.compile = function(ctx) {
 		var value = this.isBlank && !ctx.pre ? this.value.trim()+' ' : this.value;
-		return _fn('t', _s(value));
+		return _fn('t', _s(_html_ent(value)));
 	}
 	this.append = function(text) {
 		this.value += text;
