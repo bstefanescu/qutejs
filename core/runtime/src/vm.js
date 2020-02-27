@@ -8,29 +8,8 @@ import App from './app.js';
 import {applyListeners, SetProp, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
 import Emitter from './emit.js';
 import applyUserDirectives from './q-attr.js';
+import {createProp} from './prop-types';
 
-function isEnumerable(key) {
-	return key.charCodeAt(0) !== 95; // keys starting with _ are not enumerable
-}
-
-function defProp(key) {
-	return {
-		get: function() {
-			return this.$data[key];
-		},
-		set: function(value) {
-			var old = this.$data[key];
-			if (old !== value) {
-				this.$data[key] = value;
-				var watcher = this.$el && this.$watch && this.$watch[key]; // if not connected whatchers are not enabled
-				// avoid updating if watcher return false
-				if (watcher && watcher.call(this, value, old) === false) return;
-				this.update();
-			}
-		},
-		enumerable: isEnumerable(key) // keys starting with _ are not enumerable
-	}
-}
 
 // set $attrs on VMs
 function SetVMAttrs(vm, parentVM, filter) {
@@ -76,9 +55,7 @@ function ViewModel(app, attrs) {
 	if (data) {
 		for (var key in data) {
 			var val = data[key];
-			Object.defineProperty(this, key,
-				val && val.$bindVM ? val.$bindVM(this, key) : defProp(key)
-			);
+			Object.defineProperty(this, key, createProp(this, key, val));
 		}
 	}
 
