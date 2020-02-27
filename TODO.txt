@@ -11,8 +11,24 @@
 - create separate components git repository
 - polyfill - add doc section + add promise??
 
+- form and other plugins are registering things at load time. We must avoid registering twice if the form is imported twice.
+
 - declarative listeners are not removed when the parent component are disconnecting
  should we automatically remove them at disconnect to free up resources?
+
+- check unused methods in Qute and remove them. (Qute.link?)
+- Find a way to avoid registering optional fucntionality from plugins (for example in form/index.js).
+These are only needed when relying on the qute as an external dependency. But, when you use rollup to build it may unused code to the final bundle.
+(Qute.$ should be filled only in modular builds? And then use an internal import directive?
+e.g. Qute.import('form') -> will onlyt be available in qute-dev and will return Qute.$
+in prod we use normal `import` statement.
+For the inlined scripts we may transform import x from 'module' to var x = Qute.import('module')
+)
+
+- test the default value of prop: if number -> automatically use Qute.number() if boolean use Qute.boolean()
+
+- work more on prop_types.js
+
 
 1. move more functions to @qutejs/test-utils
 2. Be able to declare private templates in JSQ files?

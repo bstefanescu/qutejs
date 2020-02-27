@@ -1,0 +1,234 @@
+# Implementing a Custom Form Control
+
+In this example we will implement a custom form control to increment / decrement numeric values.
+
+Let's start with a simple counter:
+
+```jsq
+<x-tag name='counter'>
+	<div>
+		<button @click='value--'>-</button>
+		{{value}}
+		<button @click='value++'>+</button>
+	</div>
+</x-tag>
+
+<x-tag name='root'>
+	<counter value='2' />
+</x-tag>
+
+Qute('counter', {
+	init() {
+		return { value: 0 }
+	}
+});
+
+export default Qute('root');
+```
+
+To transform the counter component into a usable form control we need to use a hidden input to store the counter value and to add some more features, like a step, a range of legal values and to trigger a `change` event when the counter value changes.
+
+Let's update the component as follows:
+
+- add a `name` property and use it as the name of the hidden input.
+- update the hidden input value when the counter value changes.
+- add a `step` property to use it when incrementing / decrementing the coutner value (defaults to 1).
+- add `min` and `max` properties to define a range of legal values.
+- disable / enable buttons when incrementing / decrementing is no more possible (as specified by the range).
+- trigger a `change` event omn the hidden input when the counter value changes.
+
+```jsq
+<x-tag name='counter'>
+	<div>
+		<input type='hidden' name={name} value={value} x-call='el => this.input=el'>
+		<button @click='decr' ?disabled='!canDecrement'>-</button>
+		{{value}}
+		<button @click='incr' ?disabled='!canIncrement'>+</button>
+	</div>
+</x-tag>
+
+Qute('counter', {
+	init() {
+		return {
+			name: null,
+			value: 0,
+	        step: 1,
+	        min: Number.MIN_VALUE,
+	        max: Number.MAX_VALUE
+        }
+	},
+	get canIncrement() {
+		return this.value < this.max;
+	},
+	get canDecrement() {
+		return this.value > this.min;
+	},
+	decr() {
+		var value = this.value - this.step;
+		if (value >= this.min) {
+			this.value = value;
+			this._fireChangeEvent(value);
+		}
+		return false;
+	},
+	incr() {
+		var value = this.value + this.step;
+		if (value <= this.max) {
+			this.value = value;
+			this._fireChangeEvent(value);
+		}
+		return false;
+	},
+	_fireChangeEvent(value) {
+		var input = this.input;
+		// run after the UI is updated (so that the wrapped input is updated too)
+		Qute.runAfter(function() {
+			input.dispatchEvent(new window.CustomEvent('change', {bubbles:true, detail: value}));
+		});
+	}
+});
+
+<x-tag name='root'>
+	<counter value='2' step='2' min='0' max='8' @change='e=>console.log(">>> counter changed", e.detail)'/>
+</x-tag>
+
+export default Qute('root');
+```
+
+## Validation
+
+What about validation? Hidden `input` elements doesn't take part of the HTML5 validation mechanism (which is also used by the **[Qute form plugin](#/plugins/form)**).
+
+Anyway, custom controls are usually providing already validated values. In our example if a `min` or `max` value is specified the control will not let the user decrement / increment the value outside the defined range. So the value will always be valid.
+
+There is one case, though, when the received value may be invalid - at initialization time. The counter control may be called with a value already outside the required range. For example: `<counter value='10' min='0' max='8'>`.
+
+Also, if we want to use a `required` constraint on the counter we cannot do it using the hidden input.
+
+To fix all these issues, we need to use an invisible number input instead of a input of type hidden.
+
+Replacing `<input type='hidden' name={name} value={value}>` by `<input type='number' name={name} value={value} min={min} max={max} style='display:none'>` will solve our problem.
+
+Another way to wrap an input is to dynamically insert a input element at component creation (instead of defining it in the template). This can be done for example in the `created` life cycle method:
+
+```javascript
+Qute("counter", {
+	...
+	created(el) {
+		var input = document.createElement('INPUT');
+		// set input properties
+		this.input = input;
+	}
+	...
+}
+```
+
+## Binding control value to a model property
+
+The [Qute form plugin](#/plugins/form) provides a way to bind a custom form control value to a component property. This can be done by registering your custom for component:
+
+```javascript
+import { registerControl } from '@qutejs/form';
+registerControl("counter");
+```
+Then you can use the `q:model` directive to bind the control value to a reactive property of the container component:
+
+```xml
+<counter q:model='counterValue' />
+```
+
+## The Counter Custom Form Control
+
+Here is the final code for the counter component:
+
+```jsq
+//import { registerControl } from '@qutejs/form';
+
+<x-tag name='counter'>
+	<div style='display:inline-block'>
+		<input type='number' name={name} value={value} min={min} max={max} style='display:none' ?required={required} x-call='el => this.input = el'/>
+		<button @click='decr' ?disabled='!canDecrement'>-</button>
+		{{value}}
+		<button @click='incr' ?disabled='!canIncrement'>+</button>
+	</div>
+</x-tag>
+
+Qute('counter', {
+	init() {
+		this.input = null;
+		return {
+			name: null,
+			required: false,
+			value: 0,
+	        step: 1,
+	        min: Number.MIN_VALUE,
+	        max: Number.MAX_VALUE
+        }
+	},
+	get canIncrement() {
+		return this.value < this.max;
+	},
+	get canDecrement() {
+		return this.value > this.min;
+	},
+	decr() {
+		var value = this.value - this.step;
+		if (value >= this.min) {
+			this.value = value;
+			this._fireChangeEvent(value);
+		}
+		return false;
+	},
+	incr() {
+		var value = this.value + this.step;
+		if (value <= this.max) {
+			this.value = value;
+			this._fireChangeEvent(value);
+		}
+		return false;
+	},
+	_fireChangeEvent(value) {
+		var input = this.input;
+		// run after the UI is updated (so that the wrapped input is updated too)
+		Qute.runAfter(function() {
+			input.dispatchEvent(new window.CustomEvent('change', {bubbles:true, detail:value}));
+		});
+	}
+});
+
+Qute.$.form.registerControl("counter");
+
+// ------ Let's test the counter ---------
+
+<x-tag name='root'>
+	<form q:validate @submit='handleSubmit'>
+		<p>
+		The counter was initialized using a value outside the legal range, so the form will not be validated (try submiting).
+		<br/>
+		Change to a valid value to remove the validation error.
+		</p>
+
+		<counter style='display:inline-block' name='counter' q:model='counter' step='2' min='0' max='8' required />
+
+		<span q:validation-message='counter' style='color:red' />
+
+		<div style='margin-top:10px'>
+		<button>Submit</button>
+		</div>
+	</form>
+</x-tag>
+
+export default Qute('root', {
+	init() {
+		return {
+			counter: -4
+		}
+	},
+	handleSubmit(e) {
+		alert('Counter is ' + this.counter);
+		return false;
+	}
+});
+```
+
+
