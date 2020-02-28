@@ -1,7 +1,7 @@
 import window from '@qutejs/window';
 
 import ERR from './error.js';
-import { chainFnAfter, closestVM } from './utils.js';
+import { chainFnAfter, closestVM, closestListItem } from './utils.js';
 
 import UpdateQueue from './update.js';
 import Rendering from './rendering.js';
@@ -138,6 +138,7 @@ Qute.registerDirective = registerDirective;
 
 Qute.runAfter = function(cb) { UpdateQueue.runAfter(cb); }
 Qute.closest = closestVM;
+Qute.closestListItem = closestListItem;
 Qute.ERR = ERR;
 
 // prop types

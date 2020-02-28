@@ -27,6 +27,14 @@ function closestComp(el) {
 	return el && el.__qute__;
 }
 
+// find the closest list item rendering context
+function closestListItem(el) {
+	while (el && !el.__qute_ctx__) {
+		el = el.parentNode;
+	}
+	return el && el.__qute_ctx__;
+}
+
 // filter is a an array whoes first item is true or false. See compiler x-attrs encoding
 function filterKeys(obj, filter) {
 	var keys = Object.keys(obj);
@@ -40,4 +48,4 @@ function filterKeys(obj, filter) {
 	}
 }
 
-export { stopEvent, chainFnAfter, closestVM, closestComp, filterKeys, kebabToCamel };
+export { stopEvent, chainFnAfter, closestVM, closestComp, closestListItem, filterKeys, kebabToCamel };
