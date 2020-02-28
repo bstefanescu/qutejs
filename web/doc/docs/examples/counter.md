@@ -1,10 +1,18 @@
 # Implementing a Custom Form Control
 
+The following examples demonstrates the usage of:
+
+1. the `q:model` and `q:validate` directive from the **[form plugin](#/plugins/form)**.
+2. triggering and handling **[DOM events](#/model/events)**.
+3. **[x-toggle](#/attributes/x-toggle)** (i.e. ?attr) attribute directive.
+
 In this example we will implement a custom form control to increment / decrement numeric values.
 
 Let's start with a simple counter:
 
 ```jsq
+// ------------------------------------------ Templates
+
 <x-tag name='counter'>
 	<div>
 		<button @click='value--'>-</button>
@@ -16,6 +24,8 @@ Let's start with a simple counter:
 <x-tag name='root'>
 	<counter value='2' />
 </x-tag>
+
+// ------------------------------------------ Javascript
 
 Qute('counter', {
 	init() {
@@ -38,6 +48,8 @@ Let's update the component as follows:
 - trigger a `change` event omn the hidden input when the counter value changes.
 
 ```jsq
+// ------------------------------------------ Templates
+
 <x-tag name='counter'>
 	<div>
 		<input type='hidden' name={name} value={value} x-call='el => this.input=el'>
@@ -46,6 +58,12 @@ Let's update the component as follows:
 		<button @click='incr' ?disabled='!canIncrement'>+</button>
 	</div>
 </x-tag>
+
+<x-tag name='root'>
+	<counter value='2' step='2' min='0' max='8' @change='e=>console.log("counter changed", e.detail)'/>
+</x-tag>
+
+// ------------------------------------------ Javascript
 
 Qute('counter', {
 	init() {
@@ -87,10 +105,6 @@ Qute('counter', {
 		});
 	}
 });
-
-<x-tag name='root'>
-	<counter value='2' step='2' min='0' max='8' @change='e=>console.log(">>> counter changed", e.detail)'/>
-</x-tag>
 
 export default Qute('root');
 ```
@@ -144,6 +158,8 @@ Here is the final code for the counter component:
 ```jsq
 //import { registerControl } from '@qutejs/form';
 
+// ------------------------------------------ Templates
+
 <x-tag name='counter'>
 	<div style='display:inline-block'>
 		<input type='number' name={name} value={value} min={min} max={max} style='display:none' ?required={required} x-call='el => this.input = el'/>
@@ -152,6 +168,8 @@ Here is the final code for the counter component:
 		<button @click='incr' ?disabled='!canIncrement'>+</button>
 	</div>
 </x-tag>
+
+// ------------------------------------------ Javascript
 
 Qute('counter', {
 	init() {
@@ -198,7 +216,7 @@ Qute('counter', {
 
 Qute.$.form.registerControl("counter");
 
-// ------ Let's test the counter ---------
+// ------------------------------------------ Testing
 
 <x-tag name='root'>
 	<form q:validate @submit='handleSubmit'>

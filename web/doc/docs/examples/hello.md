@@ -1,6 +1,16 @@
 # Hello World
 
-Thw following component is just printing "Hello World!".
+The following examples demonstrates the usage of:
+
+1. basic **templating** features.
+2. **[event](#/model/events)** handling.
+3. **[x-call](#/attributes/x-call)** directive.
+4. **reactive** `ViewModel` properties.
+5. **non reactive** `ViewModel` properties.
+5. the `q:model` directive provided by **[form plugin](#/plugins/form)**.
+5. **[internationalization](#/plugins/i18n)**.
+
+The following component is just printing "Hello World!".
 
 ```jsq
 <x-tag name='hello'>
@@ -46,34 +56,17 @@ export default Qute('hello', {
 });
 ```
 
-## Using component non-reactive properties
-
-```jsq
-<x-tag name='hello'>
-	<div>
-		<input type='text' value={hello} @change="event => hello = event.target.value" />
-		<button @click='sayHello'>Say Hello</button>
-	</div>
-</x-tag>
-
-export default Qute('hello', {
-	init() {
-		this.hello = "World";
-	},
-	sayHello() {
-		window.alert('Hello '+this.hello+'!');
-	}
-});
-```
-
-
 ## Using component reactive properties
 
+Use a reactive property to store the user name to greet. When changing the user name, the greeting messages is automatically updated.
+
+**Note** that the property is updated using the input on `change` event, so you need to press enter to trigger a `change` event.
+
 ```jsq
 <x-tag name='hello'>
 	<div>
-		<input type='text' value={hello} @change="event => hello = event.target.value" />
-		<div>Hello {{hello}}!</div>
+		Enter an user name: <input type='text' value={name} @change='e => name = e.target.value' />
+		<div>Hello {{name}}!</div>
 	</div>
 </x-tag>
 
@@ -81,21 +74,45 @@ export default Qute('hello', {
 	init() {
 		// define a reactive property
 		return {
-			hello: "World"
+			name: "Foo"
 		}
+	}
+});
+```
+
+## Using component non-reactive properties
+
+Same as the previous example but we will use a non reactive property.
+
+The initial property value will be correctly displayed, but when changed the displayed message is not updated. You can still update the DOM by explicitly calling the `ViewModel.update()` method.
+
+
+```jsq
+<x-tag name='hello'>
+	<div>
+		Enter an user name: <input type='text' value={name} @change='e => name = e.target.value' />
+		<div>Hello {{name}}!</div>
+		<button @click='e=>this.update()'>Manual Update</button>
+	</div>
+</x-tag>
+
+export default Qute('hello', {
+	init() {
+		// define a none reactive property
+		this.name = 'Foo';
 	}
 });
 ```
 
 ## Binding a form control to a reactive property through `q:model` directive
 
-This example is using the **[form plugin](#/plugins/form)** to bind component properties to form controls using the `q:model` directive.
+The same as the reactive property example, but we will use the `q:model` directive to bind a reactive property to an input value. The binding is bidirectional so we don't need anymore to explicitly handle the `change` event (this will be done under the hood).
 
 ```jsq
 <x-tag name='hello'>
 	<div>
-		<input type='text' name='hello' q:model='hello' />
-		<div>Hello {{hello}}!</div>
+		Enter an user name: <input type='text' q:model='name' />
+		<div>Hello {{name}}!</div>
 	</div>
 </x-tag>
 
@@ -103,7 +120,7 @@ export default Qute('hello', {
 	init() {
 		// define a reactive property
 		return {
-			hello: "World"
+			name: "Foo"
 		}
 	}
 });
