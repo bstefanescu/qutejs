@@ -9,7 +9,7 @@ import {applyListeners, SetProp, SetClass, SetStyle, SetToggle, SetDisplay} from
 import Emitter from './emit.js';
 import applyUserDirectives from './q-attr.js';
 import {createProp} from './prop-types';
-
+import List from './list.js';
 
 // set $attrs on VMs
 function SetVMAttrs(vm, parentVM, filter) {
@@ -101,6 +101,10 @@ ViewModel.prototype = {
 				this.update();
 			}
 		}
+	},
+	getList: function(listName, keyField) {
+		if (!(listName in this)) ERR("No reactive list property found: "+listName);
+		return new List(this, listName, keyField);
 	},
 	// subscribe to the given channel name - for use on root VMs
 	listen: function(channelName) {
