@@ -191,6 +191,13 @@ ul.playground-navbar > li {
 		var codeBtn = document.getElementById('code-btn');
 		var tabs = document.getElementById('tabs');
 
+		function escapeHTML(html) {
+			return html.replace(/<|>/g, function(m) {
+				if (m === '<') return '&lt;';
+				else if (m === '>') return '&gt;';
+				else return m;
+			});
+		}
 		function updatePreview(source) {
   			appEl.__qute__ && appEl.__qute__.disconnect();
   			Qute.restoreRegistry(initialQuteRegistry); // restore initial registry
@@ -218,7 +225,7 @@ ul.playground-navbar > li {
 			} catch (e) {
 				console.error(e);
 			 	console.error('Transpileld code:\n', code);
-			 	appEl.innerHTML = "<pre style='color:red'>Error: "+e.stack+"</pre><p>You may find out more details by looking in the javascript console";
+			 	appEl.innerHTML = "<pre style='color:red'>Error: "+escapeHTML(e.stack)+"</pre><p>You may find out more details by looking in the javascript console";
 			 	//throw e;
 			 	// retwroing exception wiull loose stack trace code source info so we execute again the failing code
 			 	new Function(code)();
