@@ -1,3 +1,6 @@
+# Modal Demo
+
+```jsq
 <x-tag name='root'>
   <div>
     <b>Animation:</b> <select @change='changeAnimation'>
@@ -37,3 +40,5 @@ export default Qute('root', {
       this.animation = e.target.value;
     }
 });
+```
+
