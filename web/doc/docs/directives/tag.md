@@ -1,7 +1,9 @@
 # Tag Directive
 
 The tag directive can be used to render dynamic HTML tags or components by taking the actual tag name from a variable.
-The tag name variable is specified through the *is* attribute.
+
+The tag name variable is specified through the *is* attribute. The **is** attribute is expecting a javascript expression. If you want to use a literal for example the string 'link', then you need to write `is="'link'"`.  \
+You can use both `is='expr'` or `is={expr}` syntaxes to specify the `is` value.
 
 ### Examples
 
@@ -40,5 +42,4 @@ export default Qute('root');
 **Notes**
 
 1. The `tag` directive is not reactive - that means if the `is` expression changes then the tag will no change. The `is` expression is only used the first time the directive is rendered
-2. The `is` attribute is expecting a javascript expression - not a literal. If you want to use a literal for example the string 'link', then you need to write `is="'link'"`
 

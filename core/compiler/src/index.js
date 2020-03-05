@@ -430,34 +430,52 @@ function DomNode(name, attrs) {
 
 	this.compile = function(ctx) {
 		if (this.name === 'tag' || this.name === 'q:tag') {
-			var attrs = this.attrs;
-			if (!attrs || !attrs.is) ERR("<tag> requires an 'is' attribute");
-			var isAttr = attrs.is;
-			delete attrs.is;
-			return _fn('g', _v(_x(isAttr, ctx)), // g from tag
+			var isAttr, attrs = this.attrs, bindings = this.bindings;
+			if (bindings && bindings.is) {
+				isAttr = _v(_x(bindings.is, ctx));
+				delete bindings.is;
+			}
+			if (!isAttr && attrs && attrs.is) {
+				isAttr = _v(_x(attrs.is, ctx));
+				delete attrs.is;
+			}
+			if (!isAttr) {
+				ERR("<tag> requires an 'is' attribute");
+			}
+
+			return _fn('g', isAttr, // g from tag
 				//_attrs(this.attrs),
 				_xattrs(this.attrs, this.bindings, this.xattrs, this.directives, this.events, ctx),
 				_nodes(this.children, ctx));
 		}
 		if (this.name === 'view' || this.name === 'q:view') {
-			var attrs = this.attrs;
-			if (!attrs || !attrs.is) ERR("<view> requires an 'is' attribute");
+			var isAttr, attrs = this.attrs, bindings = this.bindings;
+			if (bindings && bindings.is) {
+				isAttr = _v(_x(bindings.is, ctx));
+				delete bindings.is;
+			}
+			if (!isAttr && attrs && attrs.is) {
+				isAttr = _v(_x(attrs.is, ctx));
+				delete attrs.is;
+			}
+			if (!isAttr) {
+				ERR("<view> requires an 'is' attribute");
+			}
 
-			var isExpr = _v(_x(attrs.is, ctx));
-			delete attrs.is;
 			var noCache = 'false';
-			if ('x-nocache' in attrs) {
-				delete attrs['x-nocache'];
-				noCache = 'true';
-			}
 			var onChange = 'null';
-			if ('x-change' in attrs) {
-				onChange = _cb(attrs['x-change'], ctx);
-				delete attrs['x-change'];
+			if (attrs) {
+				if ('x-nocache' in attrs) {
+					delete attrs['x-nocache'];
+					noCache = 'true';
+				}
+				if ('x-change' in attrs) {
+					onChange = _cb(attrs['x-change'], ctx);
+					delete attrs['x-change'];
+				}
 			}
-
 			return _fn('w', // w from view ?
-				isExpr,
+				isAttr,
 				onChange,
 				noCache,
 				_xattrs(this.attrs, this.bindings, this.xattrs, this.directives, this.events, ctx), //xattrs

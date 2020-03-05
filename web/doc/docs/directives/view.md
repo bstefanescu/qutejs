@@ -1,6 +1,7 @@
 # View Directive
 
-The view directive is a dynamic component. The component tag is specified as the **is** attribute. The **is** attribute expects javascript expressions and not literals. This directive is usefull to implement dynamic content components like tabs etc.
+The view directive is a dynamic component. The component tag is specified as the **is** attribute. The **is** attribute expects javascript expressions and not literals. This directive is usefull to implement dynamic content components like tabs etc.  \
+You can use both `is='expr'` or `is={expr}` syntaxes to specify the `is` value.
 
 The **view** directive is similar to the **tag** directive but has some important differences:
 
