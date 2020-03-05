@@ -142,25 +142,43 @@ ul.playground-navbar > li {
   		}
 
   		function initWithData(data) {
+
+  			function update() {
+				updatePreview(data.code);
+  				document.getElementById('content').style.display = 'block';
+  			}
+
   			var scripts = data.script || [];
   			var styles = data.style || [];
   			for (var i=0,l=styles.length; i<l; i++) {
   				insertStyle(styles[i]);
   			}
-  			for (var i=0,l=scripts.length; i<l; i++) {
-  				insertScript(scripts[i]);
+  			var scriptsLoaded = 0;
+  			var scriptsToLoad = scripts.length;
+  			for (var i=0; i<scriptsToLoad; i++) {
+  				insertScript(scripts[i], function() {
+  					scriptsLoaded++;
+  					if (scriptsLoaded === scriptsToLoad) {
+  						update();
+  					}
+  				});
   			}
-  			window.setTimeout(function() {
-  				updatePreview(data.code);
-  				document.getElementById('content').style.display = 'block';
-  			}, 100);
-
+  			if (!scriptsToLoad) {
+  				update();
+  			}
   		}
 
-  		function insertScript(url) {
+  		function insertScript(url, cb) {
   			console.log('insert script', url);
   			var script = document.createElement('script');
   			script.setAttribute('src', url);
+  		    script.onload = function() {
+  		    	cb(url, true);
+    		};
+    		script.onerror = function() {
+				cb(url, false);
+    		}
+
 			document.head.appendChild(script);
   		}
 
