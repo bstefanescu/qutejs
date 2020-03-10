@@ -21,6 +21,9 @@ in prod we use normal `import` statement.
 For the inlined scripts we may transform import x from 'module' to var x = Qute.import('module')
 )
 
+- documentation for list helper
+- which / when to use polyfills docs
+
 - work more on prop_types.js
 - remove `group` plugin
 - remove :attr syntax?

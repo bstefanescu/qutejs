@@ -2,7 +2,7 @@ import {document} from '@qutejs/window';
 import Loader from './loader.js'
 import Qute from '@qutejs/runtime';
 import Compiler from '@qutejs/compiler';
-
+import transpileES6 from './es6.js';
 
 Qute.Compiler = Compiler;
 Qute.compile = function(text, symbols) {
@@ -26,6 +26,13 @@ Qute.load = function(textOrId) {
 	} else {
 		loadXTag(textOrId[0] === '#' ? document.getElementById(textOrId.substring(1)).textContent : textOrId);
 	}
+}
+
+Qute.transpile = function(source) {
+	return new Compiler().transpile(source, {
+		removeNewLines: true,
+		js: transpileES6,
+	});
 }
 
 Qute.Loader = Loader;

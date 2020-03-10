@@ -16,7 +16,6 @@
 
 	<script type="text/javascript" src='../dev/qute-dev-all.js'></script>
 	<script type="text/javascript" src='hh.js'></script>
-	<script type="text/javascript" src='buble-browser-deps.umd.js'></script>
 
 	<script>
 		Qute.converters.markdown = marked;
@@ -132,6 +131,15 @@ ul.playground-navbar > li {
   	<script>
   		var PREVIEW_PENDING_KEY='qute-playground-preview-pending';
 
+  		var initialQuteRegistry = Qute.snapshotRegistry();
+		var appEl = document.getElementById('app');
+		var sourceEl = document.getElementById('source');
+		var codeEl = document.getElementById('code');
+		var previewBtn = document.getElementById('preview-btn');
+		var sourceBtn = document.getElementById('source-btn');
+		var codeBtn = document.getElementById('code-btn');
+		var tabs = document.getElementById('tabs');
+
   		var toLoad = window.localStorage.getItem(PREVIEW_PENDING_KEY);
   		if (toLoad) {
   			window.localStorage.removeItem(PREVIEW_PENDING_KEY);
@@ -190,25 +198,6 @@ ul.playground-navbar > li {
   			document.head.appendChild(link);
   		}
 
-  		function testES6() {
-  			try {
-				eval("function x(...args) { return {	get x() { return 1; }, init() {}, arrow: () => { return 'arrow'; } }; }");
-				return true;
-			} catch (e) {
-				return false;
-			}
-  		}
-
-  		var ES6 = testES6();
-  		var initialQuteRegistry = Qute.snapshotRegistry();
-		var appEl = document.getElementById('app');
-		var sourceEl = document.getElementById('source');
-		var codeEl = document.getElementById('code');
-		var previewBtn = document.getElementById('preview-btn');
-		var sourceBtn = document.getElementById('source-btn');
-		var codeBtn = document.getElementById('code-btn');
-		var tabs = document.getElementById('tabs');
-
 		function escapeHTML(html) {
 			return html.replace(/<|>/g, function(m) {
 				if (m === '<') return '&lt;';
@@ -234,11 +223,7 @@ ul.playground-navbar > li {
 
   			var code;
   			try {
-	  			code  = new Qute.Compiler().transpile(source, {removeNewLines: true}); // rmeove new lines is on
-	  			//TODO we need to use buble to transform es6 syntax if IE
-	  			if (!ES6) {
-	  				code = window.buble.transform(code).code;
-	  			}
+	  			code  = Qute.transpile(source);
 				new Function(code)();
 			} catch (e) {
 				console.error(e);

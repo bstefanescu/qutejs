@@ -104,7 +104,10 @@ function transpile(compiler, source, opts) {
             }
         },
         text: function(text) {
-        	if (text) out += text;
+        	if (text) {
+                // js can be used to transform fragments
+                out += opts && opts.js ? opts.js(text) : text;
+            }
         }
     });
 

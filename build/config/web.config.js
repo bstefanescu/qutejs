@@ -1,6 +1,7 @@
 const commonjs = require('rollup-plugin-commonjs');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const uglify = require('rollup-plugin-uglify').uglify;
+const buble = require('rollup-plugin-buble');
 
 module.exports = function(project, args) {
     var basePlugins = [
@@ -31,7 +32,11 @@ module.exports = function(project, args) {
         return {
             input: project.file('src/qute-dev-all'),
             external: [ '@qutejs/window' ],
-            plugins: basePlugins,
+            plugins: [
+                ... basePlugins,
+                //buble is needed since the dev bundle is packing buble deps which may require to be transpiled
+                buble({transforms: { dangerousForOf: true }})
+            ],
             output: {
                 format: 'iife',
                 file: project.ws.file(`web/dev/qute-dev-all.js`),

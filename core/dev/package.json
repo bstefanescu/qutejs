@@ -28,10 +28,11 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/runtime": "1.0.0-rc.1",
-    "@qutejs/compiler": "1.0.0-rc.1",
     "@qutejs/commons": "1.0.0-rc.1",
-    "@qutejs/window": "1.0.0-rc.1"
+    "@qutejs/compiler": "1.0.0-rc.1",
+    "@qutejs/runtime": "1.0.0-rc.1",
+    "@qutejs/window": "1.0.0-rc.1",
+    "buble": "^0.19.8"
   },
   "build": {
     "config": "runtime",

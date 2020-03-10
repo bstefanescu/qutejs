@@ -2,10 +2,11 @@ import window, {document} from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import Compiler from '@qutejs/compiler';
 import {capitalizeFirst, kebabToCamel} from '@qutejs/commons';
+import transpileES6 from './es6.js';
+
 
 var IMPORT_RX = /^\s*import\s+(\S+)\s+from\s+(?:(\"[^"]+\")|(\'[^']+\')|([^"'][^;\s]*));?$/mg;
 var EXPORT_RX = /^\s*export\s+default\s+/m;
-
 
 export default function Loader() {
 	this.createScript = function(code, name) {
@@ -30,11 +31,12 @@ export default function Loader() {
 			hasExport = true;
 			return "var __DEFAULT_EXPORT__ = ";
 		});
-		code = new Compiler().transpile(code);
-		// apply buble if needed
-		if (window.buble && window.buble.transform) {
-			code = window.buble.transform(code).code;
-		}
+		code = new Compiler().transpile(code, {
+			removeNewLines: true,
+			// apply buble if needed
+			js: transpileES6,
+		});
+
 		if (hasExport) code += '\nreturn __DEFAULT_EXPORT__;\n';
 		// for now script deps are expected to be declared above the script - otherwise compiling will fail
 		var comp = (new Function(code))();
@@ -58,7 +60,6 @@ export default function Loader() {
 			this.loadScript(scripts[i], wnd);
 		}
 	}
-
 }
 
 function Script() {
