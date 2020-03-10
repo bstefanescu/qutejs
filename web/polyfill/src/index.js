@@ -17,4 +17,5 @@ import './starts-with.js';
 import './custom-event.js';
 // Element closest and matches For IE>=9
 import './element-closest.js';
-
+// Array.findIndex for IE - used by list helper
+import './array-find-index.js';

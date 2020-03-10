@@ -1,12 +1,8 @@
 
 - refactor doc sidebar:
-	- add Example - instead of playground stored scripts
 	- Plugins, Components must be at bottom (above Examples)
-	- Move 'Using Existing Libraries' to Examples
-- cleanup playground stored scripts? - TODO list not working
 - cleanup dev release:
 	- add bubble
-	- test runtime size with error messages
 - dist releases - use always qute- and not qutejs-
 - create separate components git repository
 - polyfill - add doc section + add promise??
@@ -25,10 +21,10 @@ in prod we use normal `import` statement.
 For the inlined scripts we may transform import x from 'module' to var x = Qute.import('module')
 )
 
-- test the default value of prop: if number -> automatically use Qute.number() if boolean use Qute.boolean()
-
 - work more on prop_types.js
-
+- remove `group` plugin
+- remove :attr syntax?
+- use alternative notation: q:for, q:class, q:emit-click, q:emit-remove-onclick, q:onclick, q:bind-href, q:class  etc. for attribute directives
 
 1. move more functions to @qutejs/test-utils
 2. Be able to declare private templates in JSQ files?
