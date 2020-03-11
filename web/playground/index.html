@@ -188,16 +188,8 @@
 			<a class='push' href="#sidebar" id='sidebar-toggle'><i class="fas fa-chevron-circle-left"></i></a>
 			</div>
 			<div class='sidebar-content'>
-			<div class='menu-title'>Local Files</div>
+			<div class='menu-title'>Scripts</div>
 			<ul class='menu' id='files'>
-			</ul>
-			<div class='menu-title'>Examples</div>
-			<ul class='menu' id='examples'>
-				<li><a href='#hello'>Hello World!</a></li>
-				<li><a href='#counter'>Counter</a></li>
-				<li><a href='#time'>Time</a></li>
-				<li><a id='examples#modal-demo' href='#modal-demo'>Modal Demo</a></li>
-				<li><a id='examples#popup-demo' href='#popup-demo'>Popup Demo</a></li>
 			</ul>
 			</div>
 		</div>
@@ -474,18 +466,6 @@
 				clearPreview();
 			}
 
-			document.getElementById('examples').addEventListener('click', function(e) {
-	  			var a = e.target.closest('a');
-	  			if (a) {
-		  			href = a.getAttribute('href');
-		  			if (href) {
-		  				var example = href.substring(1);
-		  				openExample(example, a.textContent.trim());
-						e.preventDefault();
-						e.stopPropagation();
-		  			}
-	  			}
-	  		});
 
 			document.getElementById('files').addEventListener('click', function(e) {
 	  			var a = e.target.closest('a');
