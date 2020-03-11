@@ -1,5 +1,5 @@
 import {document} from '@qutejs/window';
-import Loader from './loader.js'
+import Script from './script.js'
 import Qute from '@qutejs/runtime';
 import Compiler from '@qutejs/compiler';
 import transpileES6 from './es6.js';
@@ -35,8 +35,8 @@ Qute.transpile = function(source) {
 	});
 }
 
-Qute.Loader = Loader;
+Qute.Script = Script;
 Qute.loadScripts = function() {
-	new Loader().load();
+	Script.load();
 }
 export default Qute;

@@ -196,7 +196,6 @@
 				<li><a href='#hello'>Hello World!</a></li>
 				<li><a href='#counter'>Counter</a></li>
 				<li><a href='#time'>Time</a></li>
-				<li><a href='#todo'>Todo List</a></li>
 				<li><a id='examples#modal-demo' href='#modal-demo'>Modal Demo</a></li>
 				<li><a id='examples#popup-demo' href='#popup-demo'>Popup Demo</a></li>
 			</ul>
@@ -352,29 +351,10 @@
     			lineNumbers: true
   			});
 
-			// transform the first export statement in a mount code
-  			function transformSource(source) {
-  				// comment out imports
-  				source = source.replace(/^\s*import\s+/mg, '//$&');
-
-  				var m = /^(\s*export\s+default\s+)Qute\s*\(.*$/m.exec(source);
-  				if (m) {
-  					var before = source.substring(0, m.index);
-  					var after = source.substring(m.index+m[1].length);
-  					return before + "var __ROOT__ = " + after+"\nnew __ROOT__().mount('app');\n";
-  				}
-  				m = /^(\s*export\s+default\s+)[_a-zA-Z\$][_a-zA-Z\$0-9]*\s*;?$/m.exec(source);
-  				if (m) {
-  					var before = source.substring(0, m.index);
-  					var after = source.substring(m.index+m[1].length);
-  					return before + "var __ROOT__ = " + after+"\nnew __ROOT__().mount('app');\n";
-  				}
-  				return source;
-  			}
 
 			function updatePreview() {
 				document.body.classList.add('preview');
-				var source = transformSource(editor.getValue());
+				var source = editor.getValue();
 				//console.log('----------------- Transformed Source ----------\n',source);
 				var req = createPreviewRequest(source);
 				iframe.contentWindow.postMessage(req, '*');

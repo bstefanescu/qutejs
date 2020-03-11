@@ -221,10 +221,12 @@ ul.playground-navbar > li {
 
   			document.getElementById('run-panel').style.display = 'none';
 
-  			var code;
+  			var code, script;
   			try {
-	  			code  = Qute.transpile(source);
-				new Function(code)();
+	  			var script = Qute.Script.create(source);
+	  			var VM = script.comp;
+	  			if (!VM) alert('Invalid Playground Script.\nYou must use "export default" to export the component to mount');
+	  			else new VM().mount('app');
 			} catch (e) {
 				console.error(e);
 			 	console.error('Transpileld code:\n', code);
