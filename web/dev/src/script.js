@@ -51,13 +51,13 @@ function createScript(code, name) {
 }
 
 function loadScript(scriptEl, wnd) {
-	return this.createScript(scriptEl.textContent, scriptEl.getAttribute('name')).load(wnd);
+	return createScript(scriptEl.textContent, scriptEl.getAttribute('name')).load(wnd);
 }
 
 function load(wnd) {
 	var scripts = (wnd ? wnd.document : document).querySelectorAll('script[type="text/jsq"]');
 	for (var i=0,l=scripts.length; i<l; i++) {
-		this.loadScript(scripts[i], wnd);
+		loadScript(scripts[i], wnd);
 	}
 }
 

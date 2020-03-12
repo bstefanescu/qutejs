@@ -1,3 +1,4 @@
+import window from '@qutejs/window';
 import {stopEvent, filterKeys, closestComp} from './utils.js';
 
 function addClassMap(cl, value) {

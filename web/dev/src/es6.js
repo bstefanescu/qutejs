@@ -1,4 +1,4 @@
-
+//import window from '@qutejs/window';
 import { transform } from 'buble';
 
 function testES6() {
@@ -11,6 +11,13 @@ function testES6() {
 }
 
 var ES6 = testES6();
+
+/*
+var bubleTransform = window.buble && window.buble.transform
+function transform(code) {
+	return bubleTransform ? bubleTransform(code).code : code;
+}
+*/
 
 export default function transpileES6(code) {
 	return ES6 ? code : transform(code).code;

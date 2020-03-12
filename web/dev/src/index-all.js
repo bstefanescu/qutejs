@@ -1,5 +1,4 @@
-import '@qutejs/polyfill';
-export { default } from '@qutejs/runtime';
+export { default } from './index.js';
 import '@qutejs/router';
 import '@qutejs/modal';
 import '@qutejs/popup';

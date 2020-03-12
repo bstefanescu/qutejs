@@ -277,7 +277,7 @@ Before releasing your components it is recommended to create a **Qute Component 
 <html>
   <head>
     <meta charset="utf-8"/>
-    <script type="text/javascript" src='../dist/qute-dev-0.9.0.js'></script>
+    <script type="text/javascript" src='../dev/lib/qute-dev.js'></script>
   </head>
   <body>
     <script type='text/jsq'>

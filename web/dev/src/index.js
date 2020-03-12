@@ -1,8 +1,20 @@
+/**
+ * The Qute runtime packed with IE polyfills and buble for
+ * being able to write inlined components on any browser (>=IE9).
+ */
+
+// ----------- IE Polyfill
+import '@qutejs/polyfill';
+
+// ----------- ES6 transform via buble
+import transpileES6 from './es6.js';
+
+// ----------- Qute runtime
+
 import {document} from '@qutejs/window';
-import Script from './script.js'
 import Qute from '@qutejs/runtime';
 import Compiler from '@qutejs/compiler';
-import transpileES6 from './es6.js';
+import Script from './script.js'
 
 Qute.Compiler = Compiler;
 Qute.compile = function(text, symbols) {
@@ -39,4 +51,5 @@ Qute.Script = Script;
 Qute.loadScripts = function() {
 	Script.load();
 }
+
 export default Qute;

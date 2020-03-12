@@ -1,6 +1,4 @@
 
-- refactor doc sidebar:
-	- Plugins, Components must be at bottom (above Examples)
 - cleanup dev release:
 	- add bubble
 - dist releases - use always qute- and not qutejs-
@@ -23,6 +21,9 @@ For the inlined scripts we may transform import x from 'module' to var x = Qute.
 
 - documentation for list helper
 - which / when to use polyfills docs
+- work more on qute script loader? (for dev mode) + add docs
+
+- create unpkg builds
 
 - work more on prop_types.js
 - remove `group` plugin

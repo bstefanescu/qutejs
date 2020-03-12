@@ -9,7 +9,7 @@ components/*/lib/
 plugins/*/lib/
 tools/*/lib/
 web/polyfill/lib/
-web/dev/
+web/dev/lib
 web/dist/
 
 ### OSX ###

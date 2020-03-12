@@ -77,7 +77,8 @@
       "lib": "build/config/lib.config.js",
       "weblib": "build/config/weblib.config.js",
       "component": "build/config/component.config.js",
-      "web": "build/config/web.config.js"
+      "web": "build/config/web.config.js",
+      "dev": "build/config/dev.config.js"
     },
     "projects": [
       "core/*",
@@ -85,7 +86,7 @@
       "plugins/*",
       "components/*",
       "web/polyfill",
-      "web/bundles"
+      "web/dev"
     ],
     "devServer": [
       {
