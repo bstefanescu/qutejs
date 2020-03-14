@@ -7,6 +7,7 @@ module.exports = function(project, args) {
     const PROD = args.indexOf('prod') > -1;
     var globals = project.config.globals || {};
     var external = project.config.external || [];
+    var webFileName = project.kebabCaseName.replace('qutejs-', 'qute-');
 
     const basePlugins = [
         nodeResolve( {preferBuiltins: true} ),
@@ -24,7 +25,7 @@ module.exports = function(project, args) {
             ],
             output: {
                 format: 'iife',
-                file: project.ws.file(`web/dist/${project.kebabCaseName}-${project.version}.${prod?'min.js':'js'}`),
+                file: project.file(`lib/${webFileName}.${prod?'min.js':'js'}`),
                 sourcemap: true,
                 name: project.pascalCaseName,
                 globals: {

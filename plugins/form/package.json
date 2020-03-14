@@ -4,6 +4,8 @@
   "description": "Qute Form helpers",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
+  "browser": "lib/qute-form.js",
+  "unpkg": "lib/qute-form.min.js",
   "files": [
     "lib"
   ],

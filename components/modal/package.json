@@ -4,6 +4,8 @@
   "description": "Qute Modal component",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
+  "browser": "lib/qute-modal.js",
+  "unpkg": "lib/qute-modal.min.js",
   "files": [
     "lib"
   ],

@@ -17,8 +17,7 @@ module.exports = function(project, args) {
     var globals = project.config.globals || {};
     var external = project.config.external || project.runtimeDeps;
     var input = project.file(project.config.input || 'src/index.jsq');
-
-    var webFilePrefix = project.ws.file(`web/dist/${project.kebabCaseName}-${project.version}`);
+    var webFileName = project.kebabCaseName.replace('qutejs-', 'qute-');
 
     // if the project is not in components group directory then the project doesn't need postcss and qute rollup plugins
     hasJSQ = project.group === 'components';
@@ -43,7 +42,7 @@ module.exports = function(project, args) {
             ],
             output: {
                 format: 'iife',
-                file: `${webFilePrefix}.${prod?'min.js':'js'}`,
+                file: project.file(`lib/${webFileName}.${prod?'min.js':'js'}`),
                 sourcemap: true,
                 name: project.pascalCaseName,
                 globals: {

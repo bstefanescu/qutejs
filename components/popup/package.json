@@ -4,6 +4,8 @@
   "description": "Qute Popup component",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
+  "browser": "lib/qute-popup.js",
+  "unpkg": "lib/qute-popup.min.js",
   "files": [
     "lib"
   ],

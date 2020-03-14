@@ -4,6 +4,8 @@
   "description": "Qute internationalization plugin based on polyglot",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
+  "browser": "lib/qute-i18n.js",
+  "unpkg": "lib/qute-i18n.min.js",
   "files": [
     "lib"
   ],

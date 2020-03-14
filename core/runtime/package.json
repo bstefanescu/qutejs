@@ -4,6 +4,8 @@
   "description": "Qute runtime",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
+  "browser": "lib/qute.js",
+  "unpkg": "lib/qute.min.js",
   "files": [
     "lib"
   ],
@@ -54,11 +56,10 @@
   },
   "devDependencies": {
     "@qutejs/register": "1.0.0-rc.1",
-    "@qutejs/test-utils": "1.0.0-rc.1"
+    "@qutejs/test-utils": "1.0.0-rc.1",
+    "@qutejs/polyfill": "1.0.0-rc.1"
   },
   "build": {
-    "config": "runtime",
-    "webName": "Qute",
-    "webFile": "qute"
+    "config": "runtime"
   }
 }

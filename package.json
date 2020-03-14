@@ -8,36 +8,6 @@
     "test": "ws test",
     "start": "ws build dev all && ws dev run 'watch dev' 'start doc'"
   },
-  "keywords": [
-    "component",
-    "model",
-    "reactive",
-    "reactivity",
-    "development",
-    "application",
-    "framework",
-    "web",
-    "model",
-    "dom",
-    "qute",
-    "template",
-    "jsq",
-    "render",
-    "rendering",
-    "dynamic",
-    "message",
-    "bus",
-    "channel",
-    "custom",
-    "extend",
-    "element",
-    "tag",
-    "view",
-    "x-tag",
-    "vue",
-    "react",
-    "virtual"
-  ],
   "author": "Bogdan Stefanescu <bogdan@quandora.com>",
   "license": "MIT",
   "description": "Qute monorepo",
@@ -54,6 +24,7 @@
     "@qutejs/rollup-plugin-qute": "1.0.0-rc.1",
     "@qutejs/test-utils": "1.0.0-rc.1",
     "mocha": "^6.1.4",
+    "rimraf": "^3.0.2",
     "rollup": "^1.10.1",
     "rollup-plugin-buble": "^0.19.6",
     "rollup-plugin-commonjs": "^9.3.4",
@@ -98,13 +69,11 @@
         "verbose": false
       }
     ],
-    "globalTasks": [
-      "webdev"
-    ],
     "tasks": {
       "dist": [
-        "build prod",
-        "test"
+        "build prod ie",
+        "test",
+        "web-dist"
       ],
       "deploy": [
         "dist",

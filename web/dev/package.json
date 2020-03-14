@@ -43,7 +43,6 @@
     "buble": "^0.19.8"
   },
   "build": {
-    "config": "dev",
-    "webName": "Qute"
+    "config": "dev"
   }
 }

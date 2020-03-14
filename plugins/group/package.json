@@ -4,6 +4,8 @@
   "description": "Qute Items Group directive",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
+  "browser": "lib/qute-group.js",
+  "unpkg": "lib/qute-group.min.js",
   "files": [
     "lib"
   ],

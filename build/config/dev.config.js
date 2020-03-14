@@ -7,7 +7,6 @@ const uglify = require('rollup-plugin-uglify').uglify;
 module.exports = function(project, args) {
     const PROD = args.indexOf('prod') > -1;
     const ALL = args.indexOf('all') > -1;
-    const webName = project.config.webName || project.pascalCaseName;
 
     const basePlugins = [
         nodeResolve( {preferBuiltins: true} ),
@@ -45,7 +44,7 @@ module.exports = function(project, args) {
                 format: 'iife',
                 file: project.file(`lib/${libName}.${prod?'min.js':'js'}`),
                 sourcemap: true,
-                name: webName,
+                name: 'Qute',
                 globals: {
                     '@qutejs/window': 'window'
                 },

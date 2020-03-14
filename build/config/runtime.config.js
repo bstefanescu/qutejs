@@ -1,3 +1,5 @@
+// Qute runtime build
+
 const commonjs = require('rollup-plugin-commonjs');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const buble = require('rollup-plugin-buble');
@@ -6,8 +8,7 @@ const uglify = require('rollup-plugin-uglify').uglify;
 
 module.exports = function(project, args) {
     const PROD = args.indexOf('prod') > -1;
-    const webName = project.config.webName || project.pascalCaseName;
-    const webFile = project.config.webFile || project.kebabCaseName;
+    const IE = args.indexOf('ie') > -1;
 
     const basePlugins = [
         nodeResolve( {preferBuiltins: true} ),
@@ -15,9 +16,10 @@ module.exports = function(project, args) {
         buble({exclude: ["node_modules/**", "**/node_modules/**"]})
     ];
 
-    function webConfig(prod) {
+    function webConfig(prod, ie) {
+        const index = ie ? 'src/index-ie.js' : 'src/index.js';
         return {
-            input: project.file('src/index.js'),
+            input: project.file(index),
             external: [ '@qutejs/window' ],
             plugins: [
                 ...basePlugins,
@@ -25,9 +27,9 @@ module.exports = function(project, args) {
             ],
             output: {
                 format: 'iife',
-                file: project.ws.file(`web/dist/${webFile}-${project.version}.${prod?'min.js':'js'}`),
+                file: project.file(`lib/qute${ie?'-ie.':'.'}${prod?'min.js':'js'}`),
                 sourcemap: true,
-                name: webName,
+                name: 'Qute',
                 globals: {
                     '@qutejs/window': 'window'
                 },
@@ -54,6 +56,8 @@ module.exports = function(project, args) {
             ]
         },
         webConfig(false),
-        PROD && webConfig(true)
+        PROD && webConfig(true),
+        IE && webConfig(false, true),
+        IE && PROD && webConfig(true, true)
     ];
 }
