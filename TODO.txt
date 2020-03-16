@@ -1,7 +1,5 @@
 
-- cleanup dev release:
-	- add bubble
-- dist releases - use always qute- and not qutejs-
+- create doc and playground project
 - create separate components git repository
 - polyfill - add doc section + add promise??
 

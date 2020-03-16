@@ -30,17 +30,16 @@
   "dependencies": {
     "@qutejs/commons": "1.0.0-rc.1",
     "@qutejs/compiler": "1.0.0-rc.1",
-    "@qutejs/runtime": "1.0.0-rc.1",
-    "@qutejs/window": "1.0.0-rc.1",
-    "@qutejs/polyfill": "1.0.0-rc.1",
-    "@qutejs/router": "1.0.0-rc.1",
-    "@qutejs/group": "1.0.0-rc.1",
     "@qutejs/form": "1.0.0-rc.1",
+    "@qutejs/group": "1.0.0-rc.1",
     "@qutejs/i18n": "1.0.0-rc.1",
-    "@qutejs/popup": "1.0.0-rc.1",
     "@qutejs/modal": "1.0.0-rc.1",
+    "@qutejs/polyfill": "1.0.0-rc.1",
+    "@qutejs/popup": "1.0.0-rc.1",
+    "@qutejs/router": "1.0.0-rc.1",
+    "@qutejs/runtime": "1.0.0-rc.1",
     "@qutejs/spinner": "1.0.0-rc.1",
-    "buble": "^0.19.8"
+    "@qutejs/window": "1.0.0-rc.1"
   },
   "build": {
     "config": "dev"

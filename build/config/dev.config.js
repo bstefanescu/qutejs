@@ -11,19 +11,7 @@ module.exports = function(project, args) {
     const basePlugins = [
         nodeResolve( {preferBuiltins: true} ),
         commonjs(),
-        buble({
-        	//exclude: ["node_modules/**", "**/node_modules/**"],
-        	/*
-			include: [
-				'node_modules/buble/**',
-				'node_modules/acorn-jsx/**',
-				'node_modules/regexpu-core/**',
-				'node_modules/unicode-match-property-ecmascript/**',
-				'node_modules/unicode-match-property-value-ecmascript/**'
-			],
-			*/
-        	transforms: { dangerousForOf: true } // required by buble depss
-    	})
+        buble({exclude: ["node_modules/**", "**/node_modules/**"]})
     ];
 
     function webConfig(prod, all) {

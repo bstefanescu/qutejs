@@ -314,7 +314,7 @@
 				function renderFile(filesEl, file) {
 					var li = document.createElement('li');
 					li.innerHTML = "<a href='#"+file+"'>"+file+"</a>";
-					filesEl.append(li);
+					filesEl.appendChild(li);
 				}
 
 				this.renderFiles = function(filesEl) {

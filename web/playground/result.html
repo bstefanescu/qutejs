@@ -206,51 +206,53 @@ ul.playground-navbar > li {
 			});
 		}
 		function updatePreview(source) {
-  			appEl.__qute__ && appEl.__qute__.disconnect();
-  			Qute.restoreRegistry(initialQuteRegistry); // restore initial registry
+			Qute.runWithScriptLoader(function(loader) {
+	  			appEl.__qute__ && appEl.__qute__.disconnect();
+	  			Qute.restoreRegistry(initialQuteRegistry); // restore initial registry
 
-  			// remove current content
-  			while (appEl.firstChild) appEl.removeChild(appEl.firstChild);
-  			while (sourceEl.firstChild) sourceEl.removeChild(sourceEl.firstChild);
-  			while (codeEl.firstChild) codeEl.removeChild(codeEl.firstChild);
+	  			// remove current content
+	  			while (appEl.firstChild) appEl.removeChild(appEl.firstChild);
+	  			while (sourceEl.firstChild) sourceEl.removeChild(sourceEl.firstChild);
+	  			while (codeEl.firstChild) codeEl.removeChild(codeEl.firstChild);
 
-  			if (!source) {
-  				document.getElementById('run-panel').style.display = '';
-  				return;
-  			}
+	  			if (!source) {
+	  				document.getElementById('run-panel').style.display = '';
+	  				return;
+	  			}
 
-  			document.getElementById('run-panel').style.display = 'none';
+	  			document.getElementById('run-panel').style.display = 'none';
 
-  			var code, script;
-  			try {
-	  			var script = Qute.Script.create(source);
-	  			var VM = script.comp;
-	  			if (!VM) alert('Invalid Playground Script.\nYou must use "export default" to export the component to mount');
-	  			else new VM().mount('app');
-			} catch (e) {
-				console.error(e);
-			 	console.error('Transpileld code:\n', code);
-			 	appEl.innerHTML = "<pre style='color:red'>Error: "+escapeHTML(e.stack)+"</pre><p>You may find out more details by looking in the javascript console";
-			 	//throw e;
-			 	// retwroing exception wiull loose stack trace code source info so we execute again the failing code
-			 	new Function(code)();
-			}
+	  			var code, script;
+	  			try {
+		  			var script = loader.create(source);
+		  			var VM = script.comp;
+		  			if (!VM) alert('Invalid Playground Script.\nYou must use "export default" to export the component to mount');
+		  			else new VM().mount('app');
+				} catch (e) {
+					console.error(e);
+				 	console.error('Transpileld code:\n', code);
+				 	appEl.innerHTML = "<pre style='color:red'>Error: "+escapeHTML(e.stack)+"</pre><p>You may find out more details by looking in the javascript console";
+				 	//throw e;
+				 	// retwroing exception wiull loose stack trace code source info so we execute again the failing code
+				 	new Function(code)();
+				}
 
-			// upodate code view
-			var preEl = document.createElement('PRE');
-			var langEl = document.createElement('CODE');
-			langEl.className = 'language-javascript';
-			langEl.textContent = code;
-			preEl.appendChild(langEl);
-			codeEl.appendChild(preEl);
-			Prism.highlightElement(langEl);
+				// upodate code view
+				var preEl = document.createElement('PRE');
+				var langEl = document.createElement('CODE');
+				langEl.className = 'language-javascript';
+				langEl.textContent = code;
+				preEl.appendChild(langEl);
+				codeEl.appendChild(preEl);
+				Prism.highlightElement(langEl);
 
-			//TODO use post exec
-			// update html source view
-			window.setTimeout(function() {
-				var source = hh(appEl.innerHTML);
-				sourceEl.innerHTML = source;
-			}, 100);
+				//TODO use post exec
+				// update html source view
+				window.setTimeout(function() {
+					var source = hh(appEl.innerHTML);
+					sourceEl.innerHTML = source;
+				}, 100);
+			});
 		}
 
   		window.addEventListener('message', function(event) {

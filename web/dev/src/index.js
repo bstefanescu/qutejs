@@ -6,15 +6,16 @@
 // ----------- IE Polyfill
 import '@qutejs/polyfill';
 
-// ----------- ES6 transform via buble
-import transpileES6 from './es6.js';
+// ----------- ES6 transform via buble if not supported by the browser
+import loadES6Transpiler from './buble-loader.js';
 
 // ----------- Qute runtime
 
-import {document} from '@qutejs/window';
+import window, {document, Promise} from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import Compiler from '@qutejs/compiler';
-import Script from './script.js'
+import ScriptLoader from './script-loader.js'
+
 
 Qute.Compiler = Compiler;
 Qute.compile = function(text, symbols) {
@@ -40,16 +41,30 @@ Qute.load = function(textOrId) {
 	}
 }
 
-Qute.transpile = function(source) {
-	return new Compiler().transpile(source, {
-		removeNewLines: true,
-		js: transpileES6,
+
+
+var loader = loadES6Transpiler().then(
+	function(transpiler) {
+		return new ScriptLoader(transpiler);
+	},
+	// failed to load buble
+	function(err) {
+		console.error('Failed to load ES6 transpiler: ', err);
+		return new ScriptLoader(null);
 	});
+
+Qute.getScriptLoader = function() {
+	return loader;
 }
 
-Qute.Script = Script;
+Qute.runWithScriptLoader = function(fn) {
+	return Qute.getScriptLoader().then(fn);
+}
+
 Qute.loadScripts = function() {
-	Script.load();
+	Qute.getScriptLoader().then(function(loader) {
+		loader.loadAll();
+	});
 }
 
 export default Qute;

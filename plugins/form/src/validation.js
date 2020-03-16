@@ -1,3 +1,4 @@
+import window from '@qutejs/window';
 import {polyfillFormControl, polyfillFormCheckValidity} from './polyfill/index.js';
 
 

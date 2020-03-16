@@ -19,3 +19,6 @@ import './custom-event.js';
 import './element-closest.js';
 // Array.findIndex for IE - used by list helper
 import './array-find-index.js';
+// Promise: optional polyfill. Not required by the Qute runtime, but nice to have.
+// (it is required by qute-dev.js and qute-i18n.js)
+import './promise.js';
