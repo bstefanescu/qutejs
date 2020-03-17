@@ -88,3 +88,30 @@ export default Qute('root', {
 Qute('test-class'); // remove this line to use test-class as a functional component
 ```
 
+## Example: Conditionaly adding or removing a class
+
+Here is a simple example on how to use the `x-class` object notation to conditionally add or remove a class.
+
+```jsq
+//@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
+
+<x-tag name='root'>
+<ul class="nav nav-pills" @click='e => page = e.target.getAttribute("data-key")'>
+  <li class="nav-item">
+    <a class="nav-link" x-class='{active: page=="home"}' href="#" data-key='home'>Home</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" x-class='{active: page=="settings"}' href="#" data-key='settings'>Settings</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" x-class='{active: page=="files"}' href="#" data-key='files'>Files</a>
+  </li>
+</ul>
+</x-tag>
+
+export default Qute('root', {
+	init() {
+		return { page: 'home' }
+	}
+})
+```
