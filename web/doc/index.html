@@ -225,14 +225,14 @@
 
 			<x-tag name='toc-item'>
 				<li class='toc-item' :id='"toc_item:/"+$attrs.href'>
-					<a :href='$attrs.href' x-html='$attrs.title'></a>
+					<a :href='$attrs.href' q:html='$attrs.title'></a>
 				</li>
 			</x-tag>
 
 			<x-tag name='toc-section'>
 				<li class='toc-section'>
-					<a href='#' x-html='$attrs.title'></a>
-					<div class='toc-items' x-class='{expanded: $attrs.expand}'>
+					<a href='#' q:html='$attrs.title'></a>
+					<div class='toc-items' q:class='{expanded: $attrs.expand}'>
 						<ul>
 						<for value='item in $attrs.items'>
 							<if value='item.items'>
@@ -280,13 +280,13 @@
 				</div>
 				<div id='sidebar'>
 					<div class='sidebar-nav'>
-						<toc :items='toc' @select='openTocItem' x-channel='toc' />
+						<toc :items='toc' @select='openTocItem' q:channel='toc' />
 					</div>
 				</div>
 				<div id='main'>
 					<div class='main'>
 						<if docPageContent>
-							<div x-html='docPageContent' class='markdown-body' />
+							<div q:html='docPageContent' class='markdown-body' />
 						<else>
 							<spinner/>
 						</if>

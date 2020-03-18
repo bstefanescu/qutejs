@@ -122,7 +122,7 @@ var RenderingProto = {
 					} else if (key === '$emit') {
 						applyEmiters(el, model, val);
 					} else if (key === '$channel') {
-						ERR("x-channel cannot be used on regular DOM elements: %s", tag);
+						ERR("q:channel cannot be used on regular DOM elements: %s", tag);
 					}
 				} else if (typeof val === 'function') { // a dynamic binding
 					up = SetAttr(el, model, key, val);
@@ -212,7 +212,7 @@ var RenderingProto = {
 	// dynamic lists - which is updating only items that changed
 	l: function(listFn, iterationFn, key) {
 		if (!key) {
-			console.warn("Reactive list used without a 'x-key' attribute: Performance will suffer!");
+			console.warn("Reactive list used without a 'q:key' attribute: Performance will suffer!");
 		}
 		return new ListFragment(this, listFn, iterationFn, key).$create();
 	},

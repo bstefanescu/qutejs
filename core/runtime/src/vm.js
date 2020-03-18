@@ -108,7 +108,7 @@ ViewModel.prototype = {
 	},
 	// subscribe to the given channel name - for use on root VMs
 	listen: function(channelName) {
-		if (!this.$channel) ERR("x-channel used on a VM not defining channels: %s", this.$tag);
+		if (!this.$channel) ERR("q:channel used on a VM not defining channels: %s", this.$tag);
 		// add an init function
 		this.$init = chainFnAfter(function(thisObj) {
 			thisObj.subscribe(channelName, thisObj.$channel);
@@ -176,7 +176,7 @@ ViewModel.prototype = {
 				var val = xattrs[key];
 				if (key.charCodeAt(0) === 36) { // $ - extended attribute
 					if (key === '$attrs') { // we must not delete keys from xattrs since it can break when vm is loaded by a dynamic component
-						//TODO DO WE NEED to add an update fn? x-attrs are static
+						//TODO DO WE NEED to add an update fn? q:attrs are static
 						rendering.up(SetVMAttrs(this, model, val))();
 					} else if (key === '$class') {
 						if (!bindings) bindings = [];

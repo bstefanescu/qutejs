@@ -84,7 +84,7 @@ FunComp.prototype = {
 					if (model.$attrs) {
 						// inject attributes in functional tags
 						// we need to create an update function to reinject attrs when model changes
-						// otherwise we loose the reactivity on func tags 'x-attrs' attribute
+						// otherwise we loose the reactivity on func tags 'q:attrs' attribute
 						rendering.up(SetFuncAttrs(this, model, val))();
 					}
 				} else if (key === '$on') {
@@ -109,7 +109,7 @@ FunComp.prototype = {
 		this.$el = el;
 		el.__qute__ = this; // to be used by Qute.closestComp
 
-		// apply root bindings if any (x-class, x-style or x-show)
+		// apply root bindings if any (q:class, q:style or q:show)
 		if (bindings) {
 			for (var i=0,l=bindings.length; i<l; i+=2) {
 				var up = bindings[i](el, model, bindings[i+1]);

@@ -44,8 +44,8 @@ export default function ListFragment(rendering, listFn, itemFn, key) {
 	this.itemFn = itemFn;
 	this.adiff = new ArrayDiff(key);
 	this.items = {};
-	this.start = document.createComment('[x-if]');
-	this.end = document.createComment('[/x-if]');
+	this.start = document.createComment('[q:if]');
+	this.end = document.createComment('[/q:if]');
 }
 
 ListFragment.prototype = {

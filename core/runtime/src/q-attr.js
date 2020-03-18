@@ -7,7 +7,7 @@ export default function applyUserDirectives(rendering, tag, xattrs, compOrEl) {
 	var xcall, fns = [], directives = xattrs.$use;
 	for (var key in directives) {
 		var val = directives[key];
-		if (key === '@') { // an x-call
+		if (key === '@') { // an q:call
 			xcall = val;
 		} else {
 			var userDir = findDirective(tag, key);

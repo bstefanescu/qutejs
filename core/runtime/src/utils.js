@@ -35,7 +35,7 @@ function closestListItem(el) {
 	return el && el.__qute_ctx__;
 }
 
-// filter is a an array whoes first item is true or false. See compiler x-attrs encoding
+// filter is a an array whoes first item is true or false. See compiler q:attrs encoding
 function filterKeys(obj, filter) {
 	var keys = Object.keys(obj);
 	if (filter) {
