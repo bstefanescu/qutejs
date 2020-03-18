@@ -11,7 +11,7 @@ You can use both `is='expr'` or `is={expr}` syntaxes to specify the `is` value.
 
 ```jsq
 <x-tag name='action'>
-<tag is='$attrs.is||"a"' href='#' x-emit:click><slot/></tag>
+<tag is='$attrs.is||"a"' href='#' q:emit-click><slot/></tag>
 </x-tag>
 
 <x-tag name='root'>
@@ -25,7 +25,7 @@ export default Qute('root');
 
 ```jsq
 <x-tag name='link'>
-<a class='link' href='#' x-emit:click><slot/></a>
+<a class='link' href='#' q:emit-click><slot/></a>
 </x-tag>
 
 <x-tag name='component'>

@@ -1,19 +1,19 @@
-# The x-call attribute
+# The q:call attribute
 
 Call a user function after the target DOM element was created (including its content).
 
-The x-call attribute value must resolve to a function: you can either use a **method name** of the current ViewModel, either an inline **arrow function**.
+The q:call attribute value must resolve to a function: you can either use a **method name** of the current ViewModel, either an inline **arrow function**.
 
 **Usage:**
-1. As an **arrow function**: `<input x-call="(el) => this.inputEl = el">`
-2. As a **ViewModel method**: `<input x-call="onCreateControl">`
+1. As an **arrow function**: `<input q:call="(el) => this.inputEl = el">`
+2. As a **ViewModel method**: `<input q:call="onCreateControl">`
 
-The `x-call` function value will be called in the context of the component containing the target DOM element (i.e. `this` will point to the closest component instance) and will take as argument the element instance.  \
+The `q:call` function value will be called in the context of the component containing the target DOM element (i.e. `this` will point to the closest component instance) and will take as argument the element instance.  \
 When the closest component is a functional copmponent `this` will point to the functional component object (which is not a `ViewModel`).
 
-## Using `x-call` on component tags
+## Using `q:call` on component tags
 
-When using `x-call` on a `ViewModel` or functional component tag the `x-call` function will be executed on the root element of the component.
+When using `q:call` on a `ViewModel` or functional component tag the `q:call` function will be executed on the root element of the component.
 
 ## Examples
 
@@ -22,7 +22,7 @@ When using `x-call` on a `ViewModel` or functional component tag the `x-call` fu
 ```jsq
 <x-tag name='root'>
 	<div>
-	<input type='text' name='name' x-call='el => this.inputEl = el'><button @click='onClick'>Click me!</button>
+	<input type='text' name='name' q:call='el => this.inputEl = el'><button @click='onClick'>Click me!</button>
 	</div>
 </x-tag>
 
@@ -42,7 +42,7 @@ Let's do more, we can initialize the input if empty:
 ```jsq
 <x-tag name='root'>
 	<div>
-	<input type='text' name='name' x-call='onInputCreate' />
+	<input type='text' name='name' q:call='onInputCreate' />
 	<button @click='onClick'>Click me!</button>
 	</div>
 </x-tag>
@@ -61,11 +61,11 @@ export default Qute('root', {
 ### Functional Components and the Life Cycle
 
 A functional component doesn't take part on the component life cycle.  \
-Anyway, we can use the `x-call` directive to register a handler for connect and disconnect life cycle events on the current rendering context.
+Anyway, we can use the `q:call` directive to register a handler for connect and disconnect life cycle events on the current rendering context.
 
 ```jsq
 <x-tag name='functional' import='handleFuncLoad'>
-    <div x-call='handleFuncLoad'>I am a functional component</div>
+    <div q:call='handleFuncLoad'>I am a functional component</div>
 </x-tag>
 
 <x-tag name='root'>

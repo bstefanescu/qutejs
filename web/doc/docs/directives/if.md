@@ -4,7 +4,7 @@ The if directive can be used to conditionally insert an HTML fragment.
 
 The if directive supports 2 attributes:
 * **value** - *required* - define the conditional expression (which will be evaluated in the current model context).
-* **x-change** - *optional* - listener function which will be invoked when the if expression changes.
+* **onchange** - *optional* - listener function which will be invoked when the if expression changes.
 	The listener will be called in the context of the ViewModel containing the **if** directive (the `this` variable will point to the container component instance) and the active if branch index (0 for the if branch, 1 - for the next else-if branch, and so on) will be passed as the first argument. If no if branch is active then -1 is passed as argument (this happens when you are not using an `else` statement and any of the if conditions are met).
 
 	The first time the **if** directive is rendered the listener will not be notified.
@@ -15,7 +15,7 @@ If you want to conditionaly hide or show an element then use the **[x-show](#/at
 **Syntax:**
 
 ```xml
-<if value='condition' x-change='funcName'> ... </if>
+<if value='condition' onchange='funcName'> ... </if>
 ```
 
 ### Example
@@ -53,7 +53,7 @@ The else directive can be used in conjuction with the *if* directive. It can onl
 
 ```jsq
 <x-tag name='root'>
-<if value='user' x-change='onUserChanged'>
+<if value='user' onchange='onUserChanged'>
   <div>Hello {{user.name}}. <a href='#logout' @click='doLogout'>Logout</a></div>
 <else/>
   <div><a href='#login' @click='doLogin'>Login</a></div>

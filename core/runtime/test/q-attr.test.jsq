@@ -29,7 +29,7 @@ var TestColorSpans2 = Qute('color-spans-2');
 
 <x-tag name='test-lambda-1'>
     <div>
-    <input type='text' name='name' value='Hello World!' x-call='el => this.inputEl = el'><button @click='onClick'>Click me!</button>
+    <input type='text' name='name' value='Hello World!' q:call='el => this.inputEl = el'><button @click='onClick'>Click me!</button>
     </div>
 </x-tag>
 
@@ -51,7 +51,7 @@ var TestLambda1 = Qute('test-lambda-1', {
 </x-tag>
 
 <x-tag name='test-fn'>
-	<my-fn x-call='testOnCreate' q:color-spans='{color:"cyan"}' />
+	<my-fn q:call='testOnCreate' q:color-spans='{color:"cyan"}' />
 </x-tag>
 
 var TestFn = Qute('test-fn', {
@@ -67,7 +67,7 @@ var TestFn = Qute('test-fn', {
 </x-tag>
 
 <x-tag name='test-vm'>
-	<my-vm x-call='testOnCreate' q:color-spans='{color:"blue"}' />
+	<my-vm q:call='testOnCreate' q:color-spans='{color:"blue"}' />
 </x-tag>
 
 var TestVm = Qute('test-vm', {
@@ -89,7 +89,7 @@ describe('Custom Attributes', function() {
 		var test2 = mountTest(TestColorSpans2);
 		assert.equal(test2.getElementsByTagName('span')[0].style.color, 'red');
 	});
-	it('calls lambda callbacks using x-call', function() {
+	it('calls lambda callbacks using q:call', function() {
 		var test3 = mountTest(TestLambda1);
 		assert.equal(test3.$vm.clicked, 0);
 		click(test3.querySelector('button'));

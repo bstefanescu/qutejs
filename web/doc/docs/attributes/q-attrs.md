@@ -1,4 +1,4 @@
-# The x-attrs attribute
+# The q:attrs attribute
 
 This attribute can be used to pass attributes specified on the parent component down to a nested element.
 It is very usefull to implement components that acts more as wrappers over an HTML element.
@@ -9,7 +9,7 @@ Let's see an example of an input allows you to specify an additional label that 
 <x-tag name='my-input'>
 <div class='row'>
 	<div class='col-md-4'><label><slot/></label></div>
-	<div class='col-md-8'><input x-attrs/></div>
+	<div class='col-md-8'><input q:attrs/></div>
 </div>
 </x-tag>
 
@@ -29,21 +29,21 @@ The root component will render as
 </div>
 ```
 
-You can see how `x-attrs` was used to inject all the attributes passed to the components into the nested `input` element.
+You can see how `q:attrs` was used to inject all the attributes passed to the components into the nested `input` element.
 
-**Note** The event listeners passed to the component will not be injected by the `x-attrs` attribute. If you need to emit events from a component you should use the [x-emit](#/attributes/x-emit) attribute.
+**Note** The event listeners passed to the component will not be injected by the `q:attrs` attribute. If you need to emit events from a component you should use the [q:emit](#/attributes/q-emit) attribute.
 
 ## Filtering attributes to inject
 
-In some cases yopu may want to inject certain attributes to certain nested elements or just to avoid injecting some attributes. You can specify which attributes must be injected by using a space (or comma) separated list of attribute names as the value of the `x-attrs`. You can also exclude a list of attribute names by prefixing the list with a `!` character.
+In some cases yopu may want to inject certain attributes to certain nested elements or just to avoid injecting some attributes. You can specify which attributes must be injected by using a space (or comma) separated list of attribute names as the value of the `q:attrs`. You can also exclude a list of attribute names by prefixing the list with a `!` character.
 
 Example:
 
 ```jsq
 <x-tag name='my-input'>
-<div class='row' x-attrs='class'>
+<div class='row' q:attrs='class'>
 	<div class='col-md-4'><label><slot/></label></div>
-	<div class='col-md-8'><input x-attrs='!class'/></div>
+	<div class='col-md-8'><input q:attrs='!class'/></div>
 </div>
 </x-tag>
 
@@ -54,7 +54,7 @@ Example:
 export default Qute('root');
 ```
 
-This component is injecting parts of the `x-attrs` attributes in different places in the nesting content.
+This component is injecting parts of the `q:attrs` attributes in different places in the nesting content.
 
 The `root` component will render as:
 
@@ -66,19 +66,19 @@ The `root` component will render as:
 ```
 
 
-## Using x-attrs on nested components
+## Using q:attrs on nested components
 
-You can also use `x-attrs` on any nested component (on both VM or functional components).
+You can also use `q:attrs` on any nested component (on both VM or functional components).
 
 Example:
 
 ```jsq
 <x-tag name='my-link'>
-<a x-class="{btn: $attrs.type === 'button'}" x-attrs>{{linkText}}</a>
+<a href='#' q:class="{btn: $attrs.type === 'button'}" q:attrs>{{linkText}}</a>
 </x-tag>
 
 <x-tag name='my-button'>
-<my-link type='button' x-attrs />
+<my-link type='button' q:attrs />
 </x-tag>
 
 <x-tag name='root'>

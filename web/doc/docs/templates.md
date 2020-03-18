@@ -23,8 +23,8 @@ There are two ways to specify a **bounded attribute**:
 1. Enclose the attribute value inside `{` `}` symbols instead of quotes or double quotes.  \
   **Example:** `<my-component title={theTitle} />`   \
   We will refer to this notation as the `jsx` like notation.
-2. Either use `x-bind:attr-name` as the attribute name or use the sort format `:attr-name` (i.e. prefix the attribute name with a `:` character). \
-  **Example:** `<my-component :title='theTitle' />`  or `<my-component x-bind:title='theTitle' />` \
+2. Either use `q:bind-attr-name` as the attribute name or use the short format `:attr-name` (i.e. prefix the attribute name with a `:` character). \
+  **Example:** `<my-component :title='theTitle' />`  or `<my-component q:bind-title='theTitle' />` \
 
 Both of these notations are equivalent.  \
 You can use anyone you prefer or mix notations if you want.
@@ -45,16 +45,16 @@ In HTML, you can declare listeners on elements using an on{event-name} attribute
 
 An event attribute can take as value a name which resolve to a function in the current context, or a simple javascript expression like a method call.
 
-There is an alternative notation for an event attribute: `x-on:{event-name}`
+There is an alternative notation for an event attribute: `q:on{event-name}`
 
-**Example:** `<button x-on:click='handleClick'>Click me!</button>`
+**Example:** `<button q:onclick='handleClick'>Click me!</button>`
 
 See the **[Working with DOM Events](#/model/events)** section for more details.
 
 #### Other Special attributes
 
 Other special attribute notations are:
-1. **`#attrName`** - to define custom attributes (aka attribute directives) on DOM elements. See **[Attribute Directives](#/attributes/q)** for more details.
+1. **`#newevent@srcevent`** - to define emit attributes. See **[q:emit](#/attributes/q-emit)** for more details.
 2. **`?attrName`** - to toggle **flag** like attributes. See **[x-toggle](#/attributes/x-toggle)** for more details.
 
 ### Text Expressions (aka mustaches)
@@ -147,21 +147,21 @@ Apart the syntax differences from HTML, the `JSQ` language introduce some new ta
 
 #### Attribute directives
 
-* **[x-for](#/attributes/x-for)**
-* **[x-show](#/attributes/x-show)**
-* **[x-class](#/attributes/x-class)**
-* **[x-style](#/attributes/x-style)**
-* **[x-attrs](#/attributes/x-attrs)**
-* **[x-emit](#/attributes/x-emit)**
-* **[x-emit-async](#/attributes/x-emit-async)**
-* **[x-call](#/attributes/x-call)**
-* **[x-channel](#/attributes/x-channel)**
-* **[x-html](#/attributes/x-html)**
-* **[x-markdown](#/attributes/x-markdown)**
-* **[x-change](#/attributes/x-change)**
-* **[x-nocache](#/attributes/x-nocache)**
-* **[x-bind](#/attributes/x-bind)**
-* **[x-on](#/attributes/x-on)**
+* **[q:for](#/attributes/q-for)**
+* **[q:show](#/attributes/q-show)**
+* **[q:class](#/attributes/q-class)**
+* **[q:style](#/attributes/q-style)**
+* **[q:toggle](#/attributes/q-toggle)**
+* **[q:attrs](#/attributes/q-attrs)**
+* **[q:emit](#/attributes/q-emit)**
+* **[q:async-emit](#/attributes/q-async-emit)**
+* **[q:call](#/attributes/q-call)**
+* **[q:channel](#/attributes/q-channel)**
+* **[q:html](#/attributes/q-html)**
+* **[q:markdown](#/attributes/q-markdown)**
+* **[q:bind](#/attributes/q-bind)**
+* **[q:on](#/attributes/q-on)**
+* **[Custom Attributes](#/attributes/<q></q>)**
 
 ## Writing templates
 

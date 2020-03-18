@@ -6,13 +6,6 @@ To **register a custom directive** you must use the `Qute.registerDirective` fun
 
 When registering a custom attribute you can specify a target element name (like `ul`, `input` etc.) to restrict the directive to the given element. If no target element is specified then the attribute will be available on any HTML element.
 
-## Custom attribute alternative notation
-
-Custom attributes can also be specified by prefixing the attribute name with a `#` character:
-
-`<input #model='someProp'>` is equivalent to `<input q:model='someProp'>`
-
-or using the `x-use:attr` alias: `<input x-use:model='someProp'>`.
 
 ## Custom attribute values
 

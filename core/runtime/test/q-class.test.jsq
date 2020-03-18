@@ -9,23 +9,23 @@ import { mountTest, runAfter } from './utils.js';
 </x-tag>
 
 <x-tag name='test-class-1'>
-	<span x-class='["active", "link", null]'></span>
+	<span q:class='["active", "link", null]'></span>
 </x-tag>
 
 <x-tag name='test-class-2'>
-	<span x-class='{"active": isActive, "link": true}'></span>
+	<span q:class='{"active": isActive, "link": true}'></span>
 </x-tag>
 
 <x-tag name='test-class-3'>
-	<span x-class='theClass'></span>
+	<span q:class='theClass'></span>
 </x-tag>
 
 <x-tag name='test-class-5'>
-	<span class='link' x-class='{active: isActive}'></span>
+	<span class='link' q:class='{active: isActive}'></span>
 </x-tag>
 
 <x-tag name='test-class-6'>
-	<span x-class='[ isActive && "active", "link" ]'></span>
+	<span q:class='[ isActive && "active", "link" ]'></span>
 </x-tag>
 
 var Test0 = Qute('test-class-0', {
@@ -84,19 +84,19 @@ var Test6 = Qute('test-class-6', {
 	}
 });
 
-// x-class on components
+// q:class on components
 
-<x-tag name='test-x-class-vm'>
+<x-tag name='test-q-class-vm'>
     <div><slot/></div>
 </x-tag>
 
-<x-tag name='test-x-class-on-vm-root'>
-    <test-x-class-vm x-class='{active: selected}'>Hello!</test-x-class-vm>
+<x-tag name='test-q-class-on-vm-root'>
+    <test-q-class-vm q:class='{active: selected}'>Hello!</test-q-class-vm>
 </x-tag>
 
 
-Qute('test-x-class-on-vm-root');
-var TestXClassOnVM = Qute('test-x-class-on-vm-root', {
+Qute('test-q-class-on-vm-root');
+var TestXClassOnVM = Qute('test-q-class-on-vm-root', {
     init() {
     	return {
     		selected: true
@@ -106,7 +106,7 @@ var TestXClassOnVM = Qute('test-x-class-on-vm-root', {
 
 
 
-describe('x-class attribute', function() {
+describe('q:class attribute', function() {
 
 	it('dynamic class set using class attribute', function(done) {
 		var test = mountTest(Test0);
@@ -175,7 +175,7 @@ describe('x-class attribute', function() {
 	});
 
 
-	it('using both class and x-class', function(done) {
+	it('using both class and q:class', function(done) {
 		var test = mountTest(Test5);
 		var cl = test.firstChild.classList;
 		assert.ok(cl.contains('active'));

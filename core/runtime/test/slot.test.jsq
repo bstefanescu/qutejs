@@ -104,7 +104,7 @@ import { mountTest } from './utils.js';
 
 <x-tag name='test-variable-content'>
 	<my-panel>
-    	<nested name='title' x-html='title' />
+    	<nested name='title' q:html='title' />
     	<nested name='content'>The panel content</nested>
 	</my-panel>
 </x-tag>

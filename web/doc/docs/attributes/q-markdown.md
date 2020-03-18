@@ -1,4 +1,4 @@
-# The x-markdown attribute
+# The q:markdown attribute
 
 This is a marker attribute (doesn't take a value) and can be used to inject static markdown content.
 The markdown content will be converted into an HTML string before being inserted.
@@ -23,7 +23,7 @@ It **only works on DOM elements** and cannot be used on component tags.
 
 ```jsq
 <x-tag name='root'>
-<div x-markdown>
+<div q:markdown>
 # My Header
 
 Some content
@@ -33,10 +33,10 @@ Some content
 export default Qute('root');
 ```
 
-# The x-content-* attribute
+# The q:content-* attribute
 
 In the same way, you can use any type of static content to be converted into HTML and inserted in an element.
-Just use the attribute `x-content-typeName` where **typeName** is the name of the type to convert and register the converter using the same type name:
+Just use the attribute `q:content-typeName` where **typeName** is the name of the type to convert and register the converter using the same type name:
 
 ```javascript
 Qute.converters.typeName = theConvertFunction;
@@ -46,7 +46,7 @@ Qute.converters.typeName = theConvertFunction;
 
 ```jsq
 <x-tag name='root'>
-<div x-content-random />
+<div q:content-random />
 </x-tag>
 
 Qute.converters.random = function() {

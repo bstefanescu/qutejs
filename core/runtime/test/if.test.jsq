@@ -2,7 +2,7 @@
 tests:
 1. when if is true only if branch is rendered
 2. when if is false only the else branch is rendered
-3. x-change callback is called when the if state changes. (but not the first time it is rendcered)
+3. onchange callback is called when the if state changes. (but not the first time it is rendcered)
 4. nested VMs should be disconnected when the branch containing them are nbot rendered
 (we test this using the msg property) p
 -> After a branch was removed setting the msg property must not be propagated to the nested component
@@ -20,7 +20,7 @@ import { createMountPoint, runAfter } from './utils.js';
 	<if value='user'>
 		<nested-vm user={user} msg={msg} />
 	</if>
-	<if value='user' x-change='userChanged'>
+	<if value='user' onchange='userChanged'>
 		<div id='if-else-true'>Hello {{user}}</div>
 	<else>
 		<div id='if-else-false'>Hello anonymous</div>
@@ -34,7 +34,7 @@ import { createMountPoint, runAfter } from './utils.js';
 
 <x-tag name='if-elseif-test'>
 <div>
-	<if value='state===0' x-change='stateChanged'>
+	<if value='state===0' onchange='stateChanged'>
 		<div id='if-state-0'>State {{state}}</div>
 	<else-if value='state===1'/>
 		<div id='if-state-1'>State {{state}}</div>
@@ -44,7 +44,7 @@ import { createMountPoint, runAfter } from './utils.js';
 
 <x-tag name='if-elseif-else-test'>
 <div>
-	<if value='state===0' x-change='stateChanged'>
+	<if value='state===0' onchange='stateChanged'>
 		<div id='ifeie-state-0'>State {{state}}</div>
 	<else-if value='state===1'/>
 		<div id='ifeie-state-1'>State {{state}}</div>

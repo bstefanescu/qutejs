@@ -9,24 +9,24 @@ import { mountTest, runAfter } from './utils.js';
 </x-tag>
 
 <x-tag name='test-style-1'>
-	<span x-style='theStyle'></span>
+	<span q:style='theStyle'></span>
 </x-tag>
 
 <x-tag name='test-style-2'>
-	<div x-style='getStyle()'>Is Visible</div>
+	<div q:style='getStyle()'>Is Visible</div>
 </x-tag>
 
 <x-tag name='test-style-3'>
-	<span x-style='{textDecoration: "underline", maxWidth: "100px", flex: 1}'></span>
+	<span q:style='{textDecoration: "underline", maxWidth: "100px", flex: 1}'></span>
 </x-tag>
 
 <x-tag name='test-style-4'>
-	<span x-style='{maxWidth: "100px"}' style='max-width: 200px; max-height: 200px'></span>
+	<span q:style='{maxWidth: "100px"}' style='max-width: 200px; max-height: 200px'></span>
 </x-tag>
 
 
 <x-tag name='test-style-5'>
-	<div x-style='[{maxWidth: "100px", maxHeight: "100px"}, {flex: 1}, {maxHeight:"300px"}]'>Is Visible</div>
+	<div q:style='[{maxWidth: "100px", maxHeight: "100px"}, {flex: 1}, {maxHeight:"300px"}]'>Is Visible</div>
 </x-tag>
 
 var Test0 = Qute('test-style-0', {
@@ -69,7 +69,7 @@ var Test5 = Qute('test-style-5');
 </x-tag>
 
 <x-tag name='test-style-vm-root'>
-    <test-style-vm x-style="{textAlign: align}">Hello!</test-style-vm>
+    <test-style-vm q:style="{textAlign: align}">Hello!</test-style-vm>
 </x-tag>
 
 
@@ -83,7 +83,7 @@ var TestStyleVM = Qute('test-style-vm-root', {
 
 
 
-describe('x-style attribute', function() {
+describe('q:style attribute', function() {
 
 	it('style set using HTML style attribute is reactive', function(done) {
 		var test1 = mountTest(Test0);

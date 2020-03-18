@@ -18,13 +18,13 @@ import { createMountPoint, runAfter } from './utils.js';
 
 <x-tag name='view-test'>
 <div>
-	<view is='activeView' user={user} x-change='viewChanged'>Are you fine?</view>
+	<view is='activeView' user={user} onchange='viewChanged'>Are you fine?</view>
 </div>
 </x-tag>
 
 <x-tag name='nocache-view-test'>
 <div>
-	<view is='activeView' user={user} x-nocache  x-change='viewChanged'>Are you fine?</view>
+	<view is='activeView' user={user} nocache  onchange='viewChanged'>Are you fine?</view>
 </div>
 </x-tag>
 

@@ -7,7 +7,7 @@ import { mountTest, runAfter } from './utils.js';
 
 <x-tag name='dom-test-root'>
 	<div>
-		<span x-for='item in list'>{{item}} </span>
+		<span q:for='item in list'>{{item}} </span>
 	</div>
 </x-tag>
 
@@ -17,7 +17,7 @@ import { mountTest, runAfter } from './utils.js';
 
 <x-tag name='func-test-root'>
 	<div>
-		<fn-comp x-for='item in list'>{{item}} </fn-comp>
+		<fn-comp q:for='item in list'>{{item}} </fn-comp>
 	</div>
 </x-tag>
 
@@ -25,7 +25,7 @@ import { mountTest, runAfter } from './utils.js';
 
 <x-tag name='vm-test-root'>
 	<div>
-		<vm-comp x-for='item in list'>{{item}} </vm-comp>
+		<vm-comp q:for='item in list'>{{item}} </vm-comp>
 	</div>
 </x-tag>
 
@@ -34,7 +34,7 @@ import { mountTest, runAfter } from './utils.js';
 
 <x-tag name='vm-test-root-2'>
 	<div>
-		<vm-comp-2 x-for='item in list' text={item.text} id={item.id} />
+		<vm-comp-2 q:for='item in list' text={item.text} id={item.id} />
 	</div>
 </x-tag>
 
@@ -112,9 +112,9 @@ function moveItem(list, from, to) {
 	list[to] = fromVal;
 }
 
-describe('x-for attribute', function() {
+describe('q:for attribute', function() {
 
-	context('x-for works on DOM elements', function() {
+	context('q:for works on DOM elements', function() {
 		var test = mountTest(DomTestRoot);
 		it('renders the element as many times as the list size', function() {
 			assert.equal(test.textContent.trim(), "item1 item2 item3");
@@ -150,7 +150,7 @@ describe('x-for attribute', function() {
 
 	});
 
-	context('x-for works on func components', function() {
+	context('q:for works on func components', function() {
 		var test = mountTest(FuncTestRoot);
 		it('renders the element as many times as the list size', function() {
 			assert.equal(test.textContent.trim(), "item1 item2 item3");
@@ -190,7 +190,7 @@ describe('x-for attribute', function() {
 
 	});
 
-	context('x-for works on vm components', function() {
+	context('q:for works on vm components', function() {
 		var test = mountTest(VmTestRoot);
 		it('renders the element as many times as the list size', function() {
 			assert.equal(test.textContent.trim(), "item1 item2 item3");
@@ -230,7 +230,7 @@ describe('x-for attribute', function() {
 
 	});
 
-	context('x-for items are reactive', function() {
+	context('q:for items are reactive', function() {
 		var test = mountTest(VmTestRoot2);
 		it('renders the element as many times as the list size', function() {
 			assert.equal(test.textContent.trim(), "1:item1 2:item2 3:item3");

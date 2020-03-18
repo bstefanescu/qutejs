@@ -5,11 +5,11 @@ import Qute from '..';
 import { mountTest, runAfter } from './utils.js';
 
 <x-tag name='test-show'>
-	<div x-show='isVisible'>Is Visible</div>
+	<div q:show='isVisible'>Is Visible</div>
 </x-tag>
 
 <x-tag name='test-show-2'>
-	<div x-show='isVisible' style='display:inline-block'>Is Visible</div>
+	<div q:show='isVisible' style='display:inline-block'>Is Visible</div>
 </x-tag>
 
 var Test = Qute('test-show', {
@@ -34,7 +34,7 @@ var Test2 = Qute('test-show-2', {
 </x-tag>
 
 <x-tag name='test-show-vm-root'>
-    <test-show x-show="showIt">Hello!</test-show>
+    <test-show q:show="showIt">Hello!</test-show>
 </x-tag>
 
 
@@ -49,7 +49,7 @@ var TestShowVM = Qute('test-show-vm-root', {
 Qute('test-show-vm');
 
 
-describe('x-show attribute', function() {
+describe('q:show attribute', function() {
 	var test = mountTest(Test);
 
 	it('should not be visible', function(done) {

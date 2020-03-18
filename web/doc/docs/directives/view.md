@@ -11,13 +11,12 @@ The **view** directive is similar to the **tag** directive but has some importan
 The view component supports the following attributes:
 
 1. **is** - *required*. A javascript expression (evaluated in the current context) which resolves to a component tag name.
-2. **x-change** - *optional*. As for the **if** directive the `x-change` attribute may be used to install a listener which 	will be notified when the view component changes.
-	The listener will be called in the context of the ViewModel containing the **view** directive (the `this` variable will point to the container component instance) and the current rendering component instance will be passed as the first argument.
+2. **onchange** - *optional*. As for the **if** directive the `onchange` attribute may be used to install a listener which 	will be notified when the view component changes.
+The listener will be called in the context of the ViewModel containing the **view** directive (the `this` variable will point to the container component instance) and the current rendering component instance will be passed as the first argument.  \
+The first time the **view** directive is rendered the listener will not be notified.
 
-   The first time the **view** directive is rendered the listener will not be notified.
-
-3. **x-nocache** - *optional*. Turn the cache off.
-	By default the view directive is caching the rendered components. If you are switching a component off and  back on again, then the second time the component is displayed it will not be rendered again (it will only be updated so that model modifications are reflected on the component DOM tree).
+3. **nocache** - *optional*. Turn the cache off.
+By default the view directive is caching the rendered components. If you are switching a component off and  back on again, then the second time the component is displayed it will not be rendered again (it will only be updated so that model modifications are reflected on the component DOM tree).
 
 All the other attributes or nested content will be passed down to the actual rendering component - as if you were directly invoking the component.
 
@@ -52,7 +51,7 @@ Here is a simple tabs panel implementation:
 	  <li><a href='#tab2' @click='activeTab="tab2"'>Tab 2</a></li>
 	</ul>
 
-	<view is='activeTab' user={user}>Some common content</view>
+	<view is='activeTab' user={user} onchange='viewChanged'>Some common content</view>
   </div>
 </x-tag>
 
@@ -62,6 +61,9 @@ export default Qute('my-tabs', {
 			user: 'Foo',
 			activeTab: null // no tab selected by default
 		}
+	},
+	viewChanged() {
+		console.log('View changed: ', this.activeTab);
 	}
 });
 ```

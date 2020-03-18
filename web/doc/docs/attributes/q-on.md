@@ -1,7 +1,7 @@
-# The x-on attribute
+# The q:on attribute
 
 This attribute is an alternative notation for **event attributes**.  \
-See the **[Templates]()** section for more details.
+See the **[Templates](#/templates)** section for more details.
 
 ## Example
 
@@ -9,7 +9,7 @@ See the **[Templates]()** section for more details.
 <x-tag name='root'>
   <div>
     <button @click='handleClick'>Click me: using @</button>
-    <button x-on:click='handleClick'>Click me: using x-on</button>
+    <button q:onclick='handleClick'>Click me: using q:on</button>
   </div>
 </x-tag>
 

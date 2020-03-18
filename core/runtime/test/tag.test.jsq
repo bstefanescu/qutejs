@@ -5,7 +5,7 @@ import Qute from '..';
 import { mountTest } from './utils.js';
 
 <x-tag name='action'>
-	<tag is='$attrs.is||"a"' data-name={$attrs.name} href='#' x-emit:click><slot/></tag>
+	<tag is='$attrs.is||"a"' data-name={$attrs.name} href='#' #click><slot/></tag>
 </x-tag>
 
 <x-tag name='link'>
@@ -13,7 +13,7 @@ import { mountTest } from './utils.js';
 </x-tag>
 
 <x-tag name='component'>
-	<tag is='$attrs.is' x-attrs='!is'><nested><slot/></nested></tag>
+	<tag is='$attrs.is' q:attrs='!is'><nested><slot/></nested></tag>
 </x-tag>
 
 <x-tag name='test-1'>

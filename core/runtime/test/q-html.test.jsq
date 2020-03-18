@@ -5,17 +5,17 @@ import Qute from '..';
 import { mountTest, runAfter } from './utils.js';
 
 <x-tag name='test-html'>
-	<div x-html='content'/>
+	<div q:html='content'/>
 </x-tag>
 
 <x-tag name='test-static-html'>
-	<div x-html>
+	<div q:html>
 		Some <b>static</b> HTML
 	</div>
 </x-tag>
 
 <x-tag name='test-static-markdown'>
-	<div x-markdown>
+	<div q:markdown>
 		# Header
 
 		Some markdown
@@ -23,7 +23,7 @@ import { mountTest, runAfter } from './utils.js';
 </x-tag>
 
 <x-tag name='test-static-text'>
-	<div x-content-text>
+	<div q:content-text>
 		bla bla
 	</div>
 </x-tag>
@@ -40,7 +40,7 @@ var TestStaticMarkdown = Qute('test-static-markdown');
 var TestStaticText = Qute('test-static-text');
 
 
-describe('x-html attribute', function() {
+describe('q:html attribute', function() {
 	var test = mountTest(TestHtml);
 
 	it('should render variable HTML content', function() {
@@ -65,7 +65,7 @@ describe('x-html attribute', function() {
 
 });
 
-describe('x-markdown attribute', function() {
+describe('q:markdown attribute', function() {
 	Qute.converters.markdown = function(content) {
 		// we don't use a real converter for testing
 		assert.ok(content.trim().startsWith('# Header'));
@@ -80,7 +80,7 @@ describe('x-markdown attribute', function() {
 	});
 });
 
-describe('x-content attribute', function() {
+describe('q:content attribute', function() {
 	Qute.converters.text = function(content) {
 		assert.equal(content.trim(), 'bla bla');
 		return "Some <b>generated</b> HTML";

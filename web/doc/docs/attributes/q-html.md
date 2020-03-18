@@ -1,4 +1,4 @@
-# The x-html attribute
+# The q:html attribute
 
 This attribute can be used to inject static or dynamic HTML content into an element.
 
@@ -9,14 +9,14 @@ It **only works on DOM elements** and cannot be used on component tags.
 **Usage:**
 
 ```xml
-<div x-html='someVar'/>
+<div q:html='someVar'/>
 ```
 
 where `someVar` resolve to a valid HTML text. The HTML text will be injected as the content of the div tag without being interpreted as a template.
 
 ```jsq
 <x-tag name='root'>
-<div x-html='content' />
+<div q:html='content' />
 </x-tag>
 
 export default Qute('root', {
@@ -34,8 +34,8 @@ changing the `content` property value will be reflected in the DOM:
 ```jsq
 <x-tag name='root'>
 <div>
-  <div x-html='content' />
-  <button @click='changeContent' x-toggle='{disabled:changed}'>Click to change</button>
+  <div q:html='content' />
+  <button @click='changeContent' q:toggle-disabled={changed}>Click to change</button>
 </div>
 </x-tag>
 
@@ -61,7 +61,7 @@ export default Qute('root', {
 
 ```jsq
 <x-tag name='root'>
-<div x-html>
+<div q:html>
     <p>This is some <b>HTML</b> content</p>
     <p>Expressions are not interpreted: {{someProperty}}</p>
 </div>

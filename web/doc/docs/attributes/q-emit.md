@@ -1,15 +1,15 @@
-# The x-emit attribute
+# The q:emit attribute
 
 ```jsq
 
 <x-tag name='fun-button'>
 	<div>
-		<a href='#' x-emit:action@click><slot/></a>
+		<a href='#' q:emit-action-onclick><slot/></a>
 	</div>
 </x-tag>
 
 <x-tag name='my-button'>
-	<a href='#' x-emit:click='$attrs.id'><slot/></a>
+	<a href='#' q:emit-click='$attrs.id'><slot/></a>
 </x-tag>
 
 <x-tag name='root'>

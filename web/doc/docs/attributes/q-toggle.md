@@ -1,8 +1,8 @@
-# The x-toggle attribute
+# The q:toggle attribute
 
-You can use this directive to conditionally add or remove `flag` like attributes on HTML elements. The attribute to be toggled must be prefixed with `x-toggle` and takes as value an expression. If the value evaluates to a truthy value then the attribute is added otherwise it is removed
+You can use this directive to conditionally add or remove `flag` like attributes on HTML elements. The attribute to be toggled must be prefixed with `q:toggle` and takes as value an expression. If the value evaluates to a truthy value then the attribute is added otherwise it is removed
 
-**Syntax:** `x-toggle:attrName={booleanExpression}`
+**Syntax:** `q:toggle-attrName={booleanExpression}`
 
 ## The `?attr` alias
 
@@ -21,7 +21,7 @@ Both of these notations are equivalent.
 		<button @click='e => disableButton1 = true'>Click to disable button 1</button>
 		<button @click='e => disableButton2 = true'>Click to disable button 2</button>
 		<hr/>
-		<button x-toggle:disabled={disableButton1}>Button 1</button>
+		<button q:toggle-disabled={disableButton1}>Button 1</button>
 		<button ?disabled={disableButton2}>Button 2</button>
 	</div>
 </x-tag>
@@ -36,9 +36,9 @@ export default Qute('root', {
 });
 ```
 
-## Using x-toggle on components
+## Using q:toggle on components
 
-When using `x-toggle` attribute on components it will modify the attributes on the component root element. This works for both **functional** and **ViewModel** components.
+When using `q:toggle` attribute on components it will modify the attributes on the component root element. This works for both **functional** and **ViewModel** components.
 
 ```jsq
 <x-tag name='button1'>
@@ -53,7 +53,7 @@ When using `x-toggle` attribute on components it will modify the attributes on t
 		<button @click='e => disableButton1 = true'>Click to disable button 1</button>
 		<button @click='e => disableButton2 = true'>Click to disable button 2</button>
 		<hr/>
-		<button1 x-toggle:disabled={disableButton1}>Button 1</button1>
+		<button1 q:toggle-disabled={disableButton1}>Button 1</button1>
 		<button2 ?disabled={disableButton2}>Button 2</button2>
 	</div>
 </x-tag>

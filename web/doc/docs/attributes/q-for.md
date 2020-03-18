@@ -1,4 +1,4 @@
-# The x-for attribute
+# The q:for attribute
 
 This attribute can be used to render **reactive array like objects**. Any object having a `length` property is assumed to be an array like object.
 
@@ -7,13 +7,13 @@ This directive is **optimized** to work over lists which **are frequently changi
 The syntax is similar to one used by the **[for](#/directives/for)** directive:
 
 ```xml
-<some-tag x-for='item in list' />
+<some-tag q:for='item in list' />
 ```
-with one difference: the `x-for` attribute doesn't accept the extra variables `index` or `hasNext` as the `for` directive.
+with one difference: the `q:for` attribute doesn't accept the extra variables `index` or `hasNext` as the `for` directive.
 
-Also, the `x-for` attribute is rendering repeatedly the same element, while the `for` directive is rendering repeatedly an HTML fragment.
+Also, the `q:for` attribute is rendering repeatedly the same element, while the `for` directive is rendering repeatedly an HTML fragment.
 
-If you need to render immutable lists you should use the `for` directive to avoid the overhead introduced by the `x-for` directive.
+If you need to render immutable lists you should use the `for` directive to avoid the overhead introduced by the `q:for` directive.
 
 **Note** that the DOM is updated only when the list instance changes and not when altering the current list instance.
 
@@ -23,7 +23,7 @@ Let say `myList` is a reactive property on the following component:
 
 ```javascript
 <x-tag name='my-list'>
-  <div x-for='item in myList'>...</div>
+  <div q:for='item in myList'>...</div>
 </x-tag>
 
 Qute('my-list', {
@@ -56,26 +56,29 @@ this.myList.push('new item');
 this.myList = this.myList.slice(0);
 ```
 
-## The `x-key` directive
+## The `q:key` directive
 
-The `x-for` directive can optimize the DOM updates **only** if an unique identifier string is given for each iterated item. This unique string can be specified using the `x-key` directive.
+The `q:for` directive can optimize the DOM updates **only** if an unique identifier string is given for each iterated item. This unique string can be specified using the `q:key` directive.
 
-The `x-key` value should point to a property of the item that is to be used as an ID. In case of primitive items like strings or numbers you can use the special value '.' which indicates that the item itself should be used as an id.
+The `q:key` value should point to a property of the item that is to be used as an ID. When iterating over primitive items like strings or numbers you can use the special value '.' which indicates that the item itself should be used as an id. You can also specify the ID as an arrow function taking the iterated item as argument and returning the id.
 
-If you are using `x-for` without a related `x-key` attribute then the DOM updates will be done using **brute force** in the same way as the `for` directive.
+If you are using `q:for` without a related `q:key` attribute then the DOM updates will be done using **brute force** in the same way as for the `for` directive.
 
 **Examples:**
 
-1. `<div x-for='item in myList' x-key='.'>...</div>`
-2. `<div x-for='item in myList' x-key='id'>...</div>`
+1. `<div q:for='item in myList' q:key='.'>...</div>`
+2. `<div q:for='item in myList' q:key='id'>...</div>`
+3. `<div q:for='item in myList' q:key='item => item.id'>...</div>`
 
-**Using `x-for` without an `x-key` is useless**. It is better to use `for` in that case.
+**Using `q:for` without a `q:key` is useless**. It is better to use `for` in that case.
+
+**Note** that for your convenience you can also use a `key` attribute instead of `q:key` to specify the identifier. The difference is that the `key` attribute will be preserved as is on the DOM element.
 
 The correct way to write the example above is:
 
 ```javascript
 <x-tag name='my-list'>
-  <div x-for='item in myList' x-key='.'>...</div>
+  <div q:for='item in myList' q:key='.'>...</div>
 </x-tag>
 
 Qute('my-list', {
@@ -98,7 +101,7 @@ The following example is displaying a list of items and allows the used to add a
 
   <x-tag name='root'>
     <div>
-      <item x-for='item in list' x-key='.' text={item} />
+      <item q:for='item in list' q:key='.' text={item} />
       <button @click='add'>Add</button>
     </div>
   </x-tag>
@@ -125,7 +128,7 @@ Let's adding a remove button.
   <tr>
     <td>{{$attrs.text}}</td>
     <td>
-	    <button x-emit:remove@click={$attrs.text}>Remove</button>
+	    <button q:emit-remove-onclick={$attrs.text}>Remove</button>
     </td>
   </tr>
 </x-tag>
@@ -133,7 +136,7 @@ Let's adding a remove button.
 <x-tag name='root'>
   <div>
 	  <table width='100%'>
-    	<item x-for='item in list' x-key='.' text={item} @remove='onRemove' />
+    	<item q:for='item in list' q:key='.' text={item} @remove='onRemove' />
 	  </table>
   	<button @click='add'>Add</button>
   </div>
@@ -172,7 +175,7 @@ There are also other ways to do this - like for example to pass an attribute whi
 
 ...
 
-<item x-for='item,index in list' index={index} text={item} remove={removeItem} />
+<item q:for='item,index in list' index={index} text={item} remove={removeItem} />
 ```
 
 where `removeItem` is a function `bound` to the parent ViewModel instance:
@@ -200,7 +203,7 @@ Also, since we can chamnge the item text, we need to use an immutable id propert
     <td>{{text}}</td>
     <td>
         <button @click='edit'>Edit</button>
-        <button @click='emit("remove", id)'>Remove</button>
+        <button q:emit-remove-onclick={id}>Remove</button>
     </td>
   </tr>
 </x-tag>
@@ -208,7 +211,7 @@ Also, since we can chamnge the item text, we need to use an immutable id propert
 <x-tag name='root'>
   <div>
       <table width='100%'>
-        <item x-for='item in list' x-key='id' id={item.id} text={item.text} @remove='onRemove'/>
+        <item q:for='item in list' q:key='id' id={item.id} text={item.text} @remove='onRemove'/>
       </table>
       <button @click='add'>Add</button>
   </div>

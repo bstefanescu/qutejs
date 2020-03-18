@@ -47,6 +47,10 @@ var HTML_TAGS = makeSymbols("nested html head meta link title base body style na
 
 var HTML_ENT_RX = /&(?:([a-zA-Z]+)|(#[0-9]+)|(#x[abcdefABCDEF0-9]+));/g;
 
+var ARR_FN_SIMPLE_BODY_RX = /(?:\breturn\b)|[{;]/; // test if no { or ; in the arrow fn body (a simple body)
+
+
+
 function _html_ent(text) {
 	if (!text) return text;
 	return text.replace(HTML_ENT_RX, function(m, p1, p2, p3) {
@@ -138,6 +142,8 @@ function getArrowFn(expr, ctx) {
 		} else if (be === 125) {
 			ERR('Invalid arrow function syntax: '+expr);
 		} else { // no { ... }
+			body = body.trim();
+			if (!ARR_FN_SIMPLE_BODY_RX.test(body)) body = 'return ('+body+')';
 			body = '{'+body+';}';
 		}
 		// push in ctx.symbols  the local vars
@@ -366,6 +372,62 @@ function RootNode() {
 	}
 }
 
+
+var QATTRS = {
+	for(attr) {
+		return new ListNode(attr.value, this);
+	},
+	attrs(attr) {
+		this.xattr('$attrs', parseXAttrs(attr.value));
+	},
+	channel(attr) {
+		this.attr('$channel', attr.value); // use a regular attr since valkue is always a string literal
+	},
+	show(attr) {
+		this.xattr('$show', attr.value);
+	},
+	class(attr) {
+		this.xattr('$class', attr.value);
+	},
+	style(attr) {
+		this.xattr('$style', attr.value);
+	},
+	html(attr) {
+		if (attr.value === true) {
+			return new StaticNode(this, null);
+		} else {
+			this.xattr('$html', attr.value);
+		}
+	},
+	markdown(attr) {
+		return new StaticNode(this, 'markdown');
+	},
+	call(attr) {
+		this.directive('@', attr);
+	},
+	key(attr) {
+		this.attr('q:key', attrValue(attr));
+	}
+}
+
+function parseXAttrs(val) {
+	if (val === true) return 'null';
+	var first = true;
+	if (val.charCodeAt(0) === 33) { // a ! -> exclude rule
+		val = val.substring(1);
+		first = false;
+	}
+	var ar;
+	val = val.trim();
+	if (val.indexOf(',') > -1) {
+		ar = val.split(/\s*,\s*/);
+	} else {
+		ar = val.split(/\s+/);
+	}
+	ar.unshift(first); // insert the filter type (true for inclusion, false for exclusion) as the first item
+	return _s(ar);
+}
+
 function DomNode(name, attrs) {
 	this.name = name;
 	this.attrs = null;
@@ -401,17 +463,19 @@ function DomNode(name, attrs) {
 		this.directives[name] = value === true ? "true" : value;
 	}
 	this.emit = function(name, value, isAsync) {
-		var i = name.indexOf('@');
-		if (i < -1) {
-			i = name.indexOf(':');
-		}
 		var eventName = name;
 		var targetEvent = name;
-		if (i > -1) {
-			// use the same name for source event and target event
+		var i = name.indexOf('@');
+		if (i === -1) {
+			i = name.indexOf('-on');
+			if (i > -1) {
+				eventName = name.substring(0, i);
+				targetEvent = name.substring(i+3);
+			}
+		} else {
 			eventName = name.substring(0, i);
 			targetEvent = name.substring(i+1);
-		} // else use the same name for source and targetg events
+		}
 		if (!this.xattrs) this.xattrs = {};
 		var xattrs = this.xattrs;
 		if (!xattrs.$emit) {
@@ -465,13 +529,13 @@ function DomNode(name, attrs) {
 			var noCache = 'false';
 			var onChange = 'null';
 			if (attrs) {
-				if ('x-nocache' in attrs) {
-					delete attrs['x-nocache'];
+				if ('nocache' in attrs) {
 					noCache = 'true';
+					delete attrs['nocache'];
 				}
-				if ('x-change' in attrs) {
-					onChange = _cb(attrs['x-change'], ctx);
-					delete attrs['x-change'];
+				if ('onchange' in attrs) {
+					onChange = _cb(attrs['onchange'], ctx);
+					delete attrs['onchange'];
 				}
 			}
 			return _fn('w', // w from view ?
@@ -516,25 +580,93 @@ function DomNode(name, attrs) {
     	return this;
 	}
 
-	function parseXAttrs(val) {
-		if (val === true) return 'null';
-		var first = true;
-		if (val.charCodeAt(0) === 33) { // a ! -> exclude rule
-			val = val.substring(1);
-			first = false;
-		}
-		var ar;
-		val = val.trim();
-		if (val.indexOf(',') > -1) {
-			ar = val.split(/\s*,\s*/);
+	this.handleQAttr = function(name, attr) {
+		var r, fn = QATTRS[name];
+		if (fn) {
+			r = fn.call(this, attr);
+		} else if (name.startsWith('toggle-')) {
+			this.toggle(name.substring(7), attr.value);
+		} else if (name.startsWith('bind-')) {
+			this.bind(name.substring(5), attr.value);
+		} else if (name.startsWith('on')) {
+			this.on(name.substring(2), attr.value);
+		} else if (name.startsWith('emit-')) {
+			this.emit(name.substring(5), attr.value, false);
+		} else if (name.startsWith('async-emit-')) {
+			this.emit(name.substring(11), attr.value, true);
+		} else if (name.startsWith('content-')) {
+	        var ctype = name.substring(8);
+	        r = new StaticNode(this, ctype !== 'html' ? ctype : null);
 		} else {
-			ar = val.split(/\s+/);
+			this.directive(name, attr);
 		}
-		ar.unshift(first); // insert the filter type (true for inclusion, false for exclusion) as the first item
-		return _s(ar);
+		// x-use was removed
+		return r ? r : this;
+	}
+
+	function isXAttr(name) {
+		if (!name.startsWith('x-')) return false;
+		if (name.substring(2) in QATTRS) return true;
+		var i = name.indexOf(':');
+		return i > -1 || name.startsWith('x-content-');
+	}
+
+	// only for backward compatibility
+	this.handleXAttr = function(name, attr) {
+		var fn = QATTRS[name];
+		if (fn) return fn.call(this, attr) || this;
+
+		if (name.startsWith('toggle:')) {
+			this.toggle(name.substring(7), attr.value);
+		} else if (name.startsWith('bind:')) {
+	    	this.bind(name.substring(5), attr.value);
+		} else if (name.startsWith('on:')) {
+	    	this.on(name.substring(3), attr.value);
+		} else if (name.startsWith('emit:')) {
+	    	this.emit(name.substring(5), attr.value, false);
+		} else if (name.startsWith('emit-async:')) {
+	    	this.emit(name.substring(1), attr.value, true);
+		} else if (name.startsWith('use:')) {
+	    	this.directive(name.substring(4), attr);
+		} else if (name.startsWith('content-')) {
+        	var ctype = name.substring('content-'.length);
+        	return new StaticNode(this, ctype !== 'html' ? ctype : null);
+		} else if (attr.expr) {
+    		this.bind(name, attr.value);
+        } else {
+        	this.attr(name, attrValue(attr));
+       	}
 	}
 
 	this.parseAttrs = function(attrs) {
+		var ret;
+		for (var i=0,l=attrs.length; i<l; i++) {
+	    	var attr = attrs[i];
+	    	var name = attr.name;
+	        var c = name[0];
+	        if (c === ':') {
+	        	this.bind(name.substring(1), attr.value);
+	        } else if (c === '@') {
+	        	this.on(name.substring(1), attr.value);
+	        } else if (c === '?') { // q:toggle alias
+	        	this.toggle(name.substring(1), attr.value);
+	        } else if (c === '#') { // 'q:emit' alias
+	        	this.emit(name.substring(1), attr.value, false);
+           	} else if (c === 'q' && name[1] === ':') {
+           		var r = this.handleQAttr(name.substring(2), attr);
+           		if (!ret) ret = r;
+           	} else if (isXAttr(name)) { // compatibility code with x-attr notation
+				return this.handleXAttr(name.substring(2), attr) || this;
+           	} else if (attr.expr) {
+	    		this.bind(name, attr.value);
+	        } else {
+	        	this.attr(name, attrValue(attr));
+           	}
+       }
+       return ret || this;
+	}
+
+	this.parseAttrs0 = function(attrs) {
 		var r = this;
 		for (var i=0,l=attrs.length; i<l; i++) {
 	    	var attr = attrs[i];
@@ -708,20 +840,25 @@ function ListNode(expr, node) {
 	}
 
 	this.compile = function(ctx) {
-		// look for a x-key attr
-		var attrs = this.node.attrs;
-		var key = attrs && attrs['x-key'];
+		// look for a q:key or key attr
+		var attrs = this.node.attrs, key;
+		if (attrs) {
+			key = attrs['q:key'];
+			if (key) {
+				delete attrs['q:key'];
+			} else {
+				key = attrs.key;
+			}
+		}
 		if (key) {
 			// encode key
 			var keyFn = getArrowFn(key, ctx);
 			if (keyFn) {
-				key = keyFn;
+				key = "function($1){var _=this; return "+keyFn+"}";
 			} else {
 				key = _s(key);
 			}
-			delete attrs['x-key'];
-		}
-		if (!key) {
+		} else {
 			key = 'null';
 		}
 
@@ -775,20 +912,24 @@ function IfNode(tag, attrs) {
 	this.change = null; // onchange event handler if any
 	this.expr = null;
 
+	var valueAttr;
 	// we don't check the attr name - any name may be used (not only 'value')
-	var valueAttr = attrs[0];
-	if (attrs.length === 2) {
-		var changeAttr = attrs[1];
-		if (valueAttr.name === 'x-change') {
-			changeAttr = valueAttr;
-			valueAttr = attrs[1];
-		} else if (changeAttr.name !== 'x-change') {
-			ERR(`Invalid if attribute '${changeAttr.name}'. You may want to use x-change?`);
+	for (var i=0,l=attrs.length; i<l; i++) {
+		var attr = attrs[i];
+		var name = attr.name;
+		if (name === 'value') {
+			if (valueAttr) ERR('Invalid if syntax. Invalid attribute name: '+valueAttr.name);
+			valueAttr = attr;
+		} else if (name === 'onchange') {
+			this.change = attr.value;
+		} else if (valueAttr) {
+			ERR('Invalid if syntax. Invalid attribute name: '+attr.name);
+		} else {
+			valueAttr = attr;
 		}
-		this.change = changeAttr.value;
-	} else if (attrs.length !== 1) {
-		ERR("if has only one required attribute: value='expr' and an optional one: x-change='onChangeHandler'");
 	}
+	if (!valueAttr) ERR("Invalid if syntax: no 'value' attribute found.");
+
 	this.expr = attrValue(valueAttr);
 
 	this.append = function(node) {
@@ -873,7 +1014,7 @@ var NODES = {
 }
 
 var SYMBOLS = {
-	"true": true, "false": true, "undefined": true, "null": true, "void": true,
+	"true": true, "false": true, "undefined": true, "null": true, "void": true, "return": true,
 	"$0": true, "$1": true, "$2": true, "$3": true,
 	"$": true, "this": true, "_": true,
 	"JSON": true, "Object": true, "console": true, "window": true
