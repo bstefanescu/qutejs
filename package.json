@@ -72,8 +72,7 @@
     "tasks": {
       "dist": [
         "build prod ie",
-        "test",
-        "web-dist"
+        "test"
       ],
       "deploy": [
         "dist",
