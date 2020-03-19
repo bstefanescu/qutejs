@@ -6,16 +6,16 @@ It is very usefull to implement components that acts more as wrappers over an HT
 Let's see an example of an input allows you to specify an additional label that will be rendered on the left of the input using [bootstrap](https://getbootstrap.com/) grid system.
 
 ```jsq
-<x-tag name='my-input'>
+<q:template name='my-input'>
 <div class='row'>
 	<div class='col-md-4'><label><slot/></label></div>
 	<div class='col-md-8'><input q:attrs/></div>
 </div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 <my-input name='theName' type='text' class='form-control' placeholder='Type your name'>Your name:</my-input>
-</x-tag>
+</q:template>
 
 export default Qute('root');
 ```
@@ -40,16 +40,16 @@ In some cases yopu may want to inject certain attributes to certain nested eleme
 Example:
 
 ```jsq
-<x-tag name='my-input'>
+<q:template name='my-input'>
 <div class='row' q:attrs='class'>
 	<div class='col-md-4'><label><slot/></label></div>
 	<div class='col-md-8'><input q:attrs='!class'/></div>
 </div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 <my-input name='theName' type='text' class='my-row'>Your name:</my-input>
-</x-tag>
+</q:template>
 
 export default Qute('root');
 ```
@@ -73,17 +73,17 @@ You can also use `q:attrs` on any nested component (on both VM or functional com
 Example:
 
 ```jsq
-<x-tag name='my-link'>
+<q:template name='my-link'>
 <a href='#' q:class="{btn: $attrs.type === 'button'}" q:attrs>{{linkText}}</a>
-</x-tag>
+</q:template>
 
-<x-tag name='my-button'>
+<q:template name='my-button'>
 <my-link type='button' q:attrs />
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 <my-button title='Click me' link-text='My Button' />
-</x-tag>
+</q:template>
 
 Qute('my-link', {
   init() {

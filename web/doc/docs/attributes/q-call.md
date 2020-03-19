@@ -20,11 +20,11 @@ When using `q:call` on a `ViewModel` or functional component tag the `q:call` fu
 ### Fetch a DOM element instance from a `ViewModel` component
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 	<div>
 	<input type='text' name='name' q:call='el => this.inputEl = el'><button @click='onClick'>Click me!</button>
 	</div>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	onClick() {
@@ -40,12 +40,12 @@ Here we used an arrow function to store the input element instance as a componen
 Let's do more, we can initialize the input if empty:
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 	<div>
 	<input type='text' name='name' q:call='onInputCreate' />
 	<button @click='onClick'>Click me!</button>
 	</div>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	onInputCreate(el) {
@@ -64,13 +64,13 @@ A functional component doesn't take part on the component life cycle.  \
 Anyway, we can use the `q:call` directive to register a handler for connect and disconnect life cycle events on the current rendering context.
 
 ```jsq
-<x-tag name='functional' import='handleFuncLoad'>
+<q:template name='functional' import='handleFuncLoad'>
     <div q:call='handleFuncLoad'>I am a functional component</div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
     <functional />
-</x-tag>
+</q:template>
 
 // an object providing two event handlers to be notified
 // when parent component is connected or disconnected
@@ -93,7 +93,7 @@ export default Qute('root');
 
 In this example, we are registering the connect / disconnect handlers using the current rendering context `$push` method.
 
-The `import` attribute of `x-tag` is required to access variables declared in the current file within the template.
+The `import` attribute of `q:template` is required to access variables declared in the current file within the template.
 
 This technique can be used **on any DOM element**, not only on functional component elements.
 

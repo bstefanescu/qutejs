@@ -55,25 +55,25 @@ See the **[Working with DOM Events](#/model/events)** section for more details.
 
 Other special attribute notations are:
 1. **`#newevent@srcevent`** - to define emit attributes. See **[q:emit](#/attributes/q-emit)** for more details.
-2. **`?attrName`** - to toggle **flag** like attributes. See **[x-toggle](#/attributes/x-toggle)** for more details.
+2. **`?attrName`** - to toggle **flag** like attributes. See **[q:toggle](#/attributes/q-toggle)** for more details.
 
 ### Text Expressions (aka mustaches)
 
 Any text node containing **mustache** expressions `{{ ... }}` will evaluate the javascript expression inside the  double braces and will render the output as text (escaping any special HMTL character)
 
-If you want to insert unescaped HTML content then use the **[x-html](#/attributes/x-html)** attribute.
+If you want to insert unescaped HTML content then use the **[q:html](#/attributes/q-html)** attribute.
 
 **Example:**
 
 ```jsq-norun
-<x-tag name='root'>
+<q:template name='root'>
 <div>
   <div>Hello {{fullName}}!</div>
   <div>{{"Hello "+firstName}}!</div>
   <div>{{"Hello "+getFullName()}}!</div>
   <pre>{{JSON.stringify(this)}}</pre>
 </div>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
   init() {
@@ -169,7 +169,7 @@ There are 2 methods to define a Qute template:
 
 1. In a `.jsq` file. This is a `javascript` file that contains one or more `JSQ` templates. It should use a `.jsq` extension and the file mime-type is `text/jsq`.  \
 The template definitions contained inside a `.jsq` file are compiled at build time into `javascript` functions and registered at runtime against the current `Qute` instance.   \
-Templates are nested in top-level `x-tag` tags to isolate from the surrounding javascript code.
+A Template is nested in a top-level `q:template` tag to isolate it from the surrounding javascript code.
 
 2. Inlined in an HTML file. In that case the template is compiled at runtime and you must load the `qute-dev.js` library.  \
 This method **should not be used in production environments**.  \
@@ -177,7 +177,7 @@ It is only provided to quickly design components without creating a **Qute proje
 
 ### Declaring template style sheets
 
-A `JSQ` file may declare style sheets that are used in templates by nesting the style sheet rules inside a top-level `x-style` tag.
+A `JSQ` file may declare style sheets that are used in templates by nesting the style sheet rules inside a top-level `q:style` tag.
 
 
 See the **[JSQ File Format](#/advanced/jsq)** section for more information on `JSQ` files.

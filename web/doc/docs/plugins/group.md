@@ -36,7 +36,7 @@ The value attribute can be used on `LI` elements, and it will simply store the g
 Let's implement a tabs bar using the **actions group** custom attributes.
 
 ```jsq
-<x-style>
+<q:style>
 ul.group {
     margin: 0 0 10px -4px; padding: 0; list-style-type: none;
 }
@@ -52,13 +52,13 @@ ul.group > li.active {
 ul.group a, ul.group a:hover, ul.group a:active {
     text-decoration: none;
 }
-</x-style>
+</q:style>
 
-<x-tag name='placeholder'><div>Click on a link</div></x-tag>
-<x-tag name='view1'><div>View 1 content</div></x-tag>
-<x-tag name='view2'><div>View 2 content</div></x-tag>
-<x-tag name='view3'><div>View 3 content</div></x-tag>
-<x-tag name='root'>
+<q:template name='placeholder'><div>Click on a link</div></q:template>
+<q:template name='view1'><div>View 1 content</div></q:template>
+<q:template name='view2'><div>View 2 content</div></q:template>
+<q:template name='view3'><div>View 3 content</div></q:template>
+<q:template name='root'>
 	<div>
 		<ul class='group' q:model='currentView'>
 			<li q:value='view1'><a href='#'>View 1</a></li>
@@ -69,7 +69,7 @@ ul.group a, ul.group a:hover, ul.group a:active {
 		<hr>
 		<button @click="e => currentView = 'placeholder'">Reset</button>
 	</div>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {
@@ -85,7 +85,7 @@ export default Qute('root', {
 We will rewrite the previous example by using an expression binding and an explicit change listener to update back the component.
 
 ```jsq
-<x-style>
+<q:style>
 ul.group {
     margin: 0 0 10px -4px; padding: 0; list-style-type: none;
 }
@@ -101,13 +101,13 @@ ul.group > li.active {
 ul.group a, ul.group a:hover, ul.group a:active {
     text-decoration: none;
 }
-</x-style>
+</q:style>
 
-<x-tag name='placeholder'><div>Click on a link</div></x-tag>
-<x-tag name='view1'><div>View 1 content</div></x-tag>
-<x-tag name='view2'><div>View 2 content</div></x-tag>
-<x-tag name='view3'><div>View 3 content</div></x-tag>
-<x-tag name='root'>
+<q:template name='placeholder'><div>Click on a link</div></q:template>
+<q:template name='view1'><div>View 1 content</div></q:template>
+<q:template name='view2'><div>View 2 content</div></q:template>
+<q:template name='view3'><div>View 3 content</div></q:template>
+<q:template name='root'>
 	<div>
 		<ul class='group' q:model={currentView} @change='e => currentView = e.detail'>
 			<li q:value='view1'><a href='#'>View 1</a></li>
@@ -118,7 +118,7 @@ ul.group a, ul.group a:hover, ul.group a:active {
 		<hr>
 		<button @click="e => currentView = 'placeholder'">Reset</button>
 	</div>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {

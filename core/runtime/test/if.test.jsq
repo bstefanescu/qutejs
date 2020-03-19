@@ -15,7 +15,7 @@ import Qute from '..';
 import { createMountPoint, runAfter } from './utils.js';
 
 
-<x-tag name='if-else-test'>
+<q:template name='if-else-test'>
 <div>
 	<if value='user'>
 		<nested-vm user={user} msg={msg} />
@@ -26,13 +26,13 @@ import { createMountPoint, runAfter } from './utils.js';
 		<div id='if-else-false'>Hello anonymous</div>
 	</if>
 </div>
-</x-tag>
+</q:template>
 
-<x-tag name='nested-vm'>
+<q:template name='nested-vm'>
 	<div id='if-true'>Hello {{user}}</div>
-</x-tag>
+</q:template>
 
-<x-tag name='if-elseif-test'>
+<q:template name='if-elseif-test'>
 <div>
 	<if value='state===0' onchange='stateChanged'>
 		<div id='if-state-0'>State {{state}}</div>
@@ -40,9 +40,9 @@ import { createMountPoint, runAfter } from './utils.js';
 		<div id='if-state-1'>State {{state}}</div>
 	</if>
 </div>
-</x-tag>
+</q:template>
 
-<x-tag name='if-elseif-else-test'>
+<q:template name='if-elseif-else-test'>
 <div>
 	<if value='state===0' onchange='stateChanged'>
 		<div id='ifeie-state-0'>State {{state}}</div>
@@ -52,7 +52,7 @@ import { createMountPoint, runAfter } from './utils.js';
 		<div id='ifeie-state-other'>State {{state}}</div>
 	</if>
 </div>
-</x-tag>
+</q:template>
 
 var NESTED_MSG = null;
 

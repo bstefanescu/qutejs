@@ -8,13 +8,13 @@ As Qute is working directly on the DOM you can easily use any plain javascript c
 //playground directives
 //@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
 
-<x-tag name='bs-button'>
-	<button class={$attrs['bs-type']?'btn btn-'+$attrs['bs-type']:'btn'} x-attrs='!bs-type' x-emit:click><slot/></button>
-</x-tag>
+<q:template name='bs-button'>
+	<button class={$attrs['bs-type']?'btn btn-'+$attrs['bs-type']:'btn'} q:attrs='!bs-type' q:emit-click><slot/></button>
+</q:template>
 
-<x-tag name='my-component'>
+<q:template name='my-component'>
 	<bs-button bs-type='primary' @click='window.alert("Hello!")'>My Button</bs-button>
-</x-tag>
+</q:template>
 
 export default Qute('my-component')
 ```
@@ -27,9 +27,9 @@ export default Qute('my-component')
 //@script ../doc/files/selectivity-jquery.min.js
 //@style ../doc/files/selectivity-jquery.min.css
 
-<x-tag name='my-component'>
+<q:template name='my-component'>
 	<div></div>
-</x-tag>
+</q:template>
 
 export default Qute('my-component', {
 	created(el) {

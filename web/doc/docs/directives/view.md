@@ -28,23 +28,23 @@ If the **is** attribute is evaluated to a **falsy** value then no component will
 Here is a simple tabs panel implementation:
 
 ```jsq
-<x-tag name='tab1'>
+<q:template name='tab1'>
   <div>
   	<p>Hello {{$attrs.user}}!</p>
   	<p>This is tab 1.</p>
   	<div><slot/></div>
   </div>
-</x-tag>
+</q:template>
 
-<x-tag name='tab2'>
+<q:template name='tab2'>
   <div>
   	<p>Hello {{$attrs.user}}!</p>
   	<p>This is tab 2.</p>
   	<div><slot/></div>
   </div>
-</x-tag>
+</q:template>
 
-<x-tag name='my-tabs'>
+<q:template name='my-tabs'>
   <div>
 	<ul class='tabs'>
 	  <li><a href='#tab1' @click='activeTab="tab1"'>Tab 1</a></li>
@@ -53,7 +53,7 @@ Here is a simple tabs panel implementation:
 
 	<view is='activeTab' user={user} onchange='viewChanged'>Some common content</view>
   </div>
-</x-tag>
+</q:template>
 
 export default Qute('my-tabs', {
 	init: function() {

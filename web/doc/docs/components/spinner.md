@@ -2,11 +2,11 @@
 
 This is a simple functional component that display a spinner.
 
-The spinner component supports only one reactive attrinbute: the `x-show` attribute.p
+The spinner component supports only one reactive attrinbute: the `q:show` attribute.
 
 ## Attributes
 
-The component attributes **are not reactive**. The only attribute directive supported by this component is the [x-show](#/attributes/x-show) directive
+The component attributes **are not reactive**. The only attribute directive supported by this component is the [q:show](#/attributes/q-show) directive
 
 ### color
 
@@ -28,18 +28,18 @@ custom style to be added to the spinner element.
 
 custom class names to be added to the spinner element.
 
-### x-show
+### q:show
 
 This is the only directive supported by this component.
 
 ## Example
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
     <div style='margin-top: 20px'>
 	    <spinner color='green' size='16px' />
 	</div>
-</x-tag>
+</q:template>
 
 export default Qute('root');
 ```

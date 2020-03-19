@@ -5,38 +5,38 @@ import Qute from '..';
 import { mountTest, runAfter } from './utils.js';
 
 
-<x-tag name='dom-test-root'>
+<q:template name='dom-test-root'>
 	<div>
 		<span q:for='item in list'>{{item}} </span>
 	</div>
-</x-tag>
+</q:template>
 
 
-<x-tag name='fn-comp-vm'><span><slot/></span> </x-tag>
-<x-tag name='fn-comp'><fn-comp-vm><template name='default'><slot/></template></fn-comp-vm></x-tag>
+<q:template name='fn-comp-vm'><span><slot/></span> </q:template>
+<q:template name='fn-comp'><fn-comp-vm><template name='default'><slot/></template></fn-comp-vm></q:template>
 
-<x-tag name='func-test-root'>
+<q:template name='func-test-root'>
 	<div>
 		<fn-comp q:for='item in list'>{{item}} </fn-comp>
 	</div>
-</x-tag>
+</q:template>
 
-<x-tag name='vm-comp'><span><slot/></span> </x-tag>
+<q:template name='vm-comp'><span><slot/></span> </q:template>
 
-<x-tag name='vm-test-root'>
+<q:template name='vm-test-root'>
 	<div>
 		<vm-comp q:for='item in list'>{{item}} </vm-comp>
 	</div>
-</x-tag>
+</q:template>
 
 
-<x-tag name='vm-comp-2'><span>{{id}}:{{text}} </span> </x-tag>
+<q:template name='vm-comp-2'><span>{{id}}:{{text}} </span> </q:template>
 
-<x-tag name='vm-test-root-2'>
+<q:template name='vm-test-root-2'>
 	<div>
 		<vm-comp-2 q:for='item in list' text={item.text} id={item.id} />
 	</div>
-</x-tag>
+</q:template>
 
 var DomTestRoot = Qute('dom-test-root', {
 	init() {

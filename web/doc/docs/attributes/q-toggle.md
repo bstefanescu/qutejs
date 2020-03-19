@@ -16,7 +16,7 @@ Both of these notations are equivalent.
 
 ```jsq
 
-<x-tag name='root'>
+<q:template name='root'>
 	<div>
 		<button @click='e => disableButton1 = true'>Click to disable button 1</button>
 		<button @click='e => disableButton2 = true'>Click to disable button 2</button>
@@ -24,7 +24,7 @@ Both of these notations are equivalent.
 		<button q:toggle-disabled={disableButton1}>Button 1</button>
 		<button ?disabled={disableButton2}>Button 2</button>
 	</div>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {
@@ -41,14 +41,14 @@ export default Qute('root', {
 When using `q:toggle` attribute on components it will modify the attributes on the component root element. This works for both **functional** and **ViewModel** components.
 
 ```jsq
-<x-tag name='button1'>
+<q:template name='button1'>
 	<button><slot/></button>
-</x-tag>
-<x-tag name='button2'>
+</q:template>
+<q:template name='button2'>
 	<button><slot/></button>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<div>
 		<button @click='e => disableButton1 = true'>Click to disable button 1</button>
 		<button @click='e => disableButton2 = true'>Click to disable button 2</button>
@@ -56,7 +56,7 @@ When using `q:toggle` attribute on components it will modify the attributes on t
 		<button1 q:toggle-disabled={disableButton1}>Button 1</button1>
 		<button2 ?disabled={disableButton2}>Button 2</button2>
 	</div>
-</x-tag>
+</q:template>
 
 Qute('button1');
 

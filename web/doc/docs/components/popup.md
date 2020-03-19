@@ -4,7 +4,7 @@ The popup component display a popup element that can be positioned relative to a
 
 ## Attributes
 
-### x-channel
+### q:channel
 
 This attribute is **required**.
 
@@ -86,11 +86,11 @@ The `event.detail` field points to the popup root element.
 ## Example
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
   <div>
     <button style='margin-left: 50px; margin-top: 50px; padding: 10px'
       @click='this.post("my-popup", "open", $1.target)'>Open popup</button>
-    <popup position='bottom start' animation='slide' x-channel='my-popup'
+    <popup position='bottom start' animation='slide' q:channel='my-popup'
       @open='onOpen' @close='onClose'>
       <div style='border: 1px solid gray; padding: 10px'>
         <h3 style='margin-top:0'>Popup header</h3>
@@ -98,7 +98,7 @@ The `event.detail` field points to the popup root element.
       </div>
     </popup>
   </div>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
   onOpen(event) {
@@ -112,4 +112,4 @@ export default Qute('root', {
 
 ## Demo
 
-You can find a **[Popup Demo](/playground/index.html#popup-demo)** into the playground.
+You can find a **[Popup Demo here](#/examples/popup-demo)**.

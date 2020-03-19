@@ -4,7 +4,7 @@ The following examples demonstrates the usage of:
 
 1. basic **templating** features.
 2. **[event](#/model/events)** handling.
-3. **[x-call](#/attributes/x-call)** directive.
+3. **[q:call](#/attributes/q-call)** directive.
 4. **reactive** `ViewModel` properties.
 5. **non reactive** `ViewModel` properties.
 5. the `q:model` directive provided by **[form plugin](#/plugins/form)**.
@@ -13,9 +13,9 @@ The following examples demonstrates the usage of:
 The following component is just printing "Hello World!".
 
 ```jsq
-<x-tag name='hello'>
+<q:template name='hello'>
 	<div>Hello World!</div>
-</x-tag>
+</q:template>
 
 export default Qute('hello');
 ```
@@ -25,9 +25,9 @@ export default Qute('hello');
 The following compopnent is displaying a "Hello World!" alert when clicking a button.
 
 ```jsq
-<x-tag name='hello'>
+<q:template name='hello'>
 	<button @click='sayHello'>Say Hello</button>
-</x-tag>
+</q:template>
 
 export default Qute('hello', {
 	sayHello() {
@@ -36,18 +36,18 @@ export default Qute('hello', {
 });
 ```
 
-## Using x-call to retrieve a DOM element instance
+## Using `q:call` to retrieve a DOM element instance
 
 The following component is displaying a "Hello {name}!" where `{name}` is the value entered in a text input.
 
 
 ```jsq
-<x-tag name='hello'>
+<q:template name='hello'>
 	<div>
-		<input type='text' value="World" x-call="element => this.inputElement = element" />
+		<input type='text' value="World" q:call="element => this.inputElement = element" />
 		<button @click='sayHello'>Say Hello</button>
 	</div>
-</x-tag>
+</q:template>
 
 export default Qute('hello', {
 	sayHello() {
@@ -63,12 +63,12 @@ Use a reactive property to store the user name to greet. When changing the user 
 **Note** that the property is updated using the input on `change` event, so you need to press enter to trigger a `change` event.
 
 ```jsq
-<x-tag name='hello'>
+<q:template name='hello'>
 	<div>
 		Enter an user name: <input type='text' value={name} @change='e => name = e.target.value' />
 		<div>Hello {{name}}!</div>
 	</div>
-</x-tag>
+</q:template>
 
 export default Qute('hello', {
 	init() {
@@ -88,13 +88,13 @@ The initial property value will be correctly displayed, but when changed the dis
 
 
 ```jsq
-<x-tag name='hello'>
+<q:template name='hello'>
 	<div>
 		Enter an user name: <input type='text' value={name} @change='e => name = e.target.value' />
 		<div>Hello {{name}}!</div>
 		<button @click='e=>this.update()'>Manual Update</button>
 	</div>
-</x-tag>
+</q:template>
 
 export default Qute('hello', {
 	init() {
@@ -109,12 +109,12 @@ export default Qute('hello', {
 The same as the reactive property example, but we will use the `q:model` directive to bind a reactive property to an input value. The binding is bidirectional so we don't need anymore to explicitly handle the `change` event (this will be done under the hood).
 
 ```jsq
-<x-tag name='hello'>
+<q:template name='hello'>
 	<div>
 		Enter an user name: <input type='text' q:model='name' />
 		<div>Hello {{name}}!</div>
 	</div>
-</x-tag>
+</q:template>
 
 export default Qute('hello', {
 	init() {
@@ -132,9 +132,9 @@ export default Qute('hello', {
 This example is using the **[i18n plugin](#/plugins/i18n)**.
 
 ```jsq
-import '@qutejs/i18n';
+//import '@qutejs/i18n';
 
-<x-tag name='hello'>
+<q:template name='hello'>
 	<div>
 		<div>
 			Choose Language:
@@ -145,7 +145,7 @@ import '@qutejs/i18n';
 		</div>
 		<div>{{t('hello')}}</div>
 	</div>
-</x-tag>
+</q:template>
 
 var i18n = new Qute.Intl({
     resources: {

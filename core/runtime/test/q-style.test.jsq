@@ -4,30 +4,30 @@ import window, {document} from '@qutejs/window';
 import Qute from '..';
 import { mountTest, runAfter } from './utils.js';
 
-<x-tag name='test-style-0'>
+<q:template name='test-style-0'>
 	<span style={"max-width:300px;flex:"+theFlex}></span>
-</x-tag>
+</q:template>
 
-<x-tag name='test-style-1'>
+<q:template name='test-style-1'>
 	<span q:style='theStyle'></span>
-</x-tag>
+</q:template>
 
-<x-tag name='test-style-2'>
+<q:template name='test-style-2'>
 	<div q:style='getStyle()'>Is Visible</div>
-</x-tag>
+</q:template>
 
-<x-tag name='test-style-3'>
+<q:template name='test-style-3'>
 	<span q:style='{textDecoration: "underline", maxWidth: "100px", flex: 1}'></span>
-</x-tag>
+</q:template>
 
-<x-tag name='test-style-4'>
+<q:template name='test-style-4'>
 	<span q:style='{maxWidth: "100px"}' style='max-width: 200px; max-height: 200px'></span>
-</x-tag>
+</q:template>
 
 
-<x-tag name='test-style-5'>
+<q:template name='test-style-5'>
 	<div q:style='[{maxWidth: "100px", maxHeight: "100px"}, {flex: 1}, {maxHeight:"300px"}]'>Is Visible</div>
-</x-tag>
+</q:template>
 
 var Test0 = Qute('test-style-0', {
 	init() {
@@ -64,13 +64,13 @@ var Test4 = Qute('test-style-4');
 var Test5 = Qute('test-style-5');
 
 // vm components test
-<x-tag name='test-style-vm'>
+<q:template name='test-style-vm'>
     <div><slot/></div>
-</x-tag>
+</q:template>
 
-<x-tag name='test-style-vm-root'>
+<q:template name='test-style-vm-root'>
     <test-style-vm q:style="{textAlign: align}">Hello!</test-style-vm>
-</x-tag>
+</q:template>
 
 
 Qute('test-style-vm');

@@ -10,13 +10,13 @@ You can use both `is='expr'` or `is={expr}` syntaxes to specify the `is` value.
 #### A dynamic HTML tag
 
 ```jsq
-<x-tag name='action'>
+<q:template name='action'>
 <tag is='$attrs.is||"a"' href='#' q:emit-click><slot/></tag>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 <action is='button' @click='window.alert("Hello!")'>My Button</action>
-</x-tag>
+</q:template>
 
 export default Qute('root');
 ```
@@ -24,17 +24,17 @@ export default Qute('root');
 #### A dynamic Qute component
 
 ```jsq
-<x-tag name='link'>
+<q:template name='link'>
 <a class='link' href='#' q:emit-click><slot/></a>
-</x-tag>
+</q:template>
 
-<x-tag name='component'>
-<tag is='$attrs.is' x-attrs><nested><slot/></nested></tag>
-</x-tag>
+<q:template name='component'>
+<tag is='$attrs.is' q:attrs><nested><slot/></nested></tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 <component is='link' @click='window.alert("Hello!")'>My Link</component>
-</x-tag>
+</q:template>
 
 export default Qute('root');
 ```

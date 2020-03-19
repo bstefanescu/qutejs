@@ -22,13 +22,13 @@ It **only works on DOM elements** and cannot be used on component tags.
 ## Example
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 <div q:markdown>
 # My Header
 
 Some content
 </div>
-</x-tag>
+</q:template>
 
 export default Qute('root');
 ```
@@ -45,9 +45,9 @@ Qute.converters.typeName = theConvertFunction;
 ## Example
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 <div q:content-random />
-</x-tag>
+</q:template>
 
 Qute.converters.random = function() {
 	return Math.random().toString(36).substring(2, 15);

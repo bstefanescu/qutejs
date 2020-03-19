@@ -4,13 +4,13 @@ import window, {document} from '@qutejs/window';
 import Qute from '..';
 import { mountTest, runAfter } from './utils.js';
 
-<x-tag name='test-show'>
+<q:template name='test-show'>
 	<div q:show='isVisible'>Is Visible</div>
-</x-tag>
+</q:template>
 
-<x-tag name='test-show-2'>
+<q:template name='test-show-2'>
 	<div q:show='isVisible' style='display:inline-block'>Is Visible</div>
-</x-tag>
+</q:template>
 
 var Test = Qute('test-show', {
 	init() {
@@ -29,13 +29,13 @@ var Test2 = Qute('test-show-2', {
 });
 
 
-<x-tag name='test-show-vm'>
+<q:template name='test-show-vm'>
     <div><slot/></div>
-</x-tag>
+</q:template>
 
-<x-tag name='test-show-vm-root'>
+<q:template name='test-show-vm-root'>
     <test-show q:show="showIt">Hello!</test-show>
-</x-tag>
+</q:template>
 
 
 var TestShowVM = Qute('test-show-vm-root', {

@@ -232,7 +232,7 @@ function _directives(directives, ctx) { // apply custom directives
 		// we store the attr itself - we need to know if the directive value is an expression or not using expr
 		var val, attr = directives[key];
 		if (key === '@') {
-			// @ is used for x-call
+			// @ is used for q:call
 			val = _cb(attr.value, ctx);
 		} else if (attr.expr) {
 			val = _v(_xo(attr.value, ctx));
@@ -241,7 +241,7 @@ function _directives(directives, ctx) { // apply custom directives
 			var first = attrVal[0], last = attrVal[attrVal.length-1];
 				if ((first === '{' && last === '}') || (first === '[' && last === ']')) {
 				// an object?
-				val = _o(attrVal);
+				val = _o(attrVal, ctx);
 			} else {
 				val = _s(attrVal);
 			}
@@ -432,7 +432,7 @@ function DomNode(name, attrs) {
 	this.name = name;
 	this.attrs = null;
 	this.bindings = null;
-	this.xattrs = null; // directives like x-show
+	this.xattrs = null; // directives like q:show
 	// for future use (not yet used)
 	// directives are custom attrs that can be  contirbuted by apps
 	// They are treated like xattrs but are output as is (as they are encoded at read time)
@@ -600,43 +600,9 @@ function DomNode(name, attrs) {
 		} else {
 			this.directive(name, attr);
 		}
-		// x-use was removed
 		return r ? r : this;
 	}
 
-	function isXAttr(name) {
-		if (!name.startsWith('x-')) return false;
-		if (name.substring(2) in QATTRS) return true;
-		var i = name.indexOf(':');
-		return i > -1 || name.startsWith('x-content-');
-	}
-
-	// only for backward compatibility
-	this.handleXAttr = function(name, attr) {
-		var fn = QATTRS[name];
-		if (fn) return fn.call(this, attr) || this;
-
-		if (name.startsWith('toggle:')) {
-			this.toggle(name.substring(7), attr.value);
-		} else if (name.startsWith('bind:')) {
-	    	this.bind(name.substring(5), attr.value);
-		} else if (name.startsWith('on:')) {
-	    	this.on(name.substring(3), attr.value);
-		} else if (name.startsWith('emit:')) {
-	    	this.emit(name.substring(5), attr.value, false);
-		} else if (name.startsWith('emit-async:')) {
-	    	this.emit(name.substring(1), attr.value, true);
-		} else if (name.startsWith('use:')) {
-	    	this.directive(name.substring(4), attr);
-		} else if (name.startsWith('content-')) {
-        	var ctype = name.substring('content-'.length);
-        	return new StaticNode(this, ctype !== 'html' ? ctype : null);
-		} else if (attr.expr) {
-    		this.bind(name, attr.value);
-        } else {
-        	this.attr(name, attrValue(attr));
-       	}
-	}
 
 	this.parseAttrs = function(attrs) {
 		var ret;
@@ -655,8 +621,6 @@ function DomNode(name, attrs) {
            	} else if (c === 'q' && name[1] === ':') {
            		var r = this.handleQAttr(name.substring(2), attr);
            		if (!ret) ret = r;
-           	} else if (isXAttr(name)) { // compatibility code with x-attr notation
-				return this.handleXAttr(name.substring(2), attr) || this;
            	} else if (attr.expr) {
 	    		this.bind(name, attr.value);
 	        } else {
@@ -666,72 +630,10 @@ function DomNode(name, attrs) {
        return ret || this;
 	}
 
-	this.parseAttrs0 = function(attrs) {
-		var r = this;
-		for (var i=0,l=attrs.length; i<l; i++) {
-	    	var attr = attrs[i];
-	    	var name = attr.name;
-	        var c = name[0];
-	        if (c === ':') {
-	        	this.bind(name.substring(1), attr.value);
-	        } else if (c === '@') {
-	        	this.on(name.substring(1), attr.value);
-	        } else if (c === '?') { // x-toggle alias
-	        	this.toggle(name.substring(1), attr.value);
-	        } else if (c === '#') { // 'q:'' alias
-               this.directive(name.substring(1), attr);
-	        } else if ('x-for' === name) {
-	        	r = new ListNode(attr.value, this);
-	        } else if ('x-attrs' === name) {
-	        	this.xattr('$attrs', parseXAttrs(attr.value));
-	        } else if ('x-channel' === name) {
-	        	this.attr('$channel', attr.value); // use a regular attr since valkue is always a string literal
-			} else if ('x-show' === name) {
-				this.xattr('$show', attr.value);
-			} else if ('x-class' === name) {
-				this.xattr('$class', attr.value);
-			} else if ('x-style' === name) {
-				this.xattr('$style', attr.value);
-			} else if ('x-html' === name) {
-				if (attr.value === true) {
-					r = new StaticNode(this, null);
-				} else {
-    				this.xattr('$html', attr.value);
-    			}
-			} else if ('x-markdown' === name) {
-				r = new StaticNode(this, 'markdown');
-	        } else if (name.startsWith('x-content-')) {
-	        	var ctype = name.substring('x-content-'.length);
-	        	r = new StaticNode(this, ctype !== 'html' ? ctype : null);
-	    	} else if (name === 'x-call') {
-	    		this.directive('@', attr);
-	    	} else if (name.startsWith('x-bind:')) {
-	    		this.bind(name.substring(7), attr.value);
-	    	} else if (name.startsWith('x-on:')) {
-	    		this.on(name.substring(5), attr.value);
-	    	} else if (name.startsWith('x-emit:')) {
-	    		this.emit(name.substring(7), attr.value, false);
-	    	} else if (name.startsWith('x-emit-async:')) {
-	    		this.emit(name.substring(13), attr.value, true);
-	    	} else if (name.startsWith('q:')) {
-	    		// we store the attr itself for directives - we need to access attr.expr
-	    		this.directive(name.substring(2), attr);
-	    	} else if (name.startsWith('x-use:')) { // alias for 'q:'
-	    		// we store the attr itself for directives - we need to access attr.expr
-	    		this.directive(name.substring(6), attr);
-	    	} else if (name.startsWith('x-toggle:')) {
-	    		this.toggle(name.substring(9), attr.value);
-	        } else if (attr.expr) {
-	    		this.bind(name, attr.value);
-	        } else {
-	        	this.attr(name, attrValue(attr));
-	        }
-		}
-		return r;
-	}
-
 	return this.parseAttrs(attrs);
 }
+
+
 // a DomNode that has static children (set with innerHTML from the template content)
 function StaticNode(node, type) {
 	this.node = node;
@@ -1032,7 +934,7 @@ function Compiler() {
 			return new Context(Object.assign({}, this.symbols), this.imports, this.resolve, this.pre);
 		}
 	}
-	// collector is used only when static html should be collected sue to an x-html attribute
+	// collector is used only when static html should be collected sue to an q:html attribute
 	// See StaticNode
 	this.collector = null;
 	this.top = null;
@@ -1110,8 +1012,8 @@ function Compiler() {
 			} else {
 				node = new DomNode(tagName, attrs, isVoid);
 				if (node instanceof StaticNode) {
-					// allow <div x-conent-{random} />
-					//if (isVoid) ERR("Static node (x-html) must have some content");
+					// allow <div q:conent-{random} />
+					//if (isVoid) ERR("Static node (q:html) must have some content");
 					this.collector = node;
 				}
 			}

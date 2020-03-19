@@ -3,7 +3,7 @@
 ```jsq
 //@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
 
-<x-style>
+<q:style>
 .tbar {
 	list-style:none;
 	padding: 0;
@@ -24,22 +24,22 @@
 	margin-left: 6px;
 	margin-top: 10px;
 }
-</x-style>
+</q:style>
 
-<x-tag name='page-placeholder'>
+<q:template name='page-placeholder'>
 	<div>Click on the tab bar to open a page</div>
-</x-tag>
-<x-tag name='page1'>
+</q:template>
+<q:template name='page1'>
 	<div>Page 1 content</div>
-</x-tag>
-<x-tag name='page2'>
+</q:template>
+<q:template name='page2'>
 	<div>Page 2 content</div>
-</x-tag>
-<x-tag name='page3'>
+</q:template>
+<q:template name='page3'>
 	<div>Page 3 content</div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<div>
 		<div class='clearfix'>
 			<ul class='tbar' style='float:left' @click='onTabClick'>
@@ -52,8 +52,8 @@
 				Hello {{user}}!
 				<button @click='logout'>Logout</button>
 				<else />
-				<spinner size='8px' inline x-show='loginPending'/>
-				<button @click='login' x-toggle='{disabled:loginPending}'>Login</button>
+				<spinner size='8px' inline q:show='loginPending'/>
+				<button @click='login' q:toggle-disabled={loginPending}>Login</button>
 				</if>
 			</div>
 		</div>
@@ -61,7 +61,7 @@
 			<view is='currentPage' />
 		</div>
 	</div>
-</x-tag>
+</q:template>
 
 var Root = Qute('root', {
 	init(app) {

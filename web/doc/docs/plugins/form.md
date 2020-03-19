@@ -33,12 +33,12 @@ and
 ### Example
 
 ```jsq
-<x-style>
+<q:style>
 div {
 	padding: 10px
 }
-</x-style>
-<x-tag name='root'>
+</q:style>
+<q:template name='root'>
 	<form @submit='handleSubmit'>
 		<div>
 		<label>Name:</label> <input type='text' placeholder='Type something' name='name' q:model='name' />
@@ -62,7 +62,7 @@ div {
 		<input type='submit' value='Submit' />
 		</div>
 	</form>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {
@@ -211,7 +211,7 @@ where checkPassword is a function provided by the current component model, that 
 Here is a complete example on form validation
 
 ```jsq
-<x-style>
+<q:style>
 .row {
 	margin: 8px 0;
 	display: flex;
@@ -233,8 +233,8 @@ button {
 	padding: 4px;
 	font-weight: 500;
 }
-</x-style>
-<x-tag name='root'>
+</q:style>
+<q:template name='root'>
 	<form q:validate={config} @submit='handleSubmit'>
 		<div class='row'>
 		<label>Username:</label> <input type='text' q:model='user' name='username' pattern='[A-Za-z0-9_]+' required/>
@@ -256,7 +256,7 @@ button {
 		<button>Submit</button>
 		</div>
 	</form>
-</x-tag>
+</q:template>
 export default Qute('root', {
 	init() {
 		this.config = {

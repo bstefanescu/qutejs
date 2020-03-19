@@ -22,9 +22,9 @@ If you need to render immutable lists you should use the `for` directive to avoi
 Let say `myList` is a reactive property on the following component:
 
 ```javascript
-<x-tag name='my-list'>
+<q:template name='my-list'>
   <div q:for='item in myList'>...</div>
-</x-tag>
+</q:template>
 
 Qute('my-list', {
   init() {
@@ -77,9 +77,9 @@ If you are using `q:for` without a related `q:key` attribute then the DOM update
 The correct way to write the example above is:
 
 ```javascript
-<x-tag name='my-list'>
+<q:template name='my-list'>
   <div q:for='item in myList' q:key='.'>...</div>
-</x-tag>
+</q:template>
 
 Qute('my-list', {
   init() {
@@ -95,16 +95,16 @@ Qute('my-list', {
 The following example is displaying a list of items and allows the used to add a new item by clicking on the `Add` button.
 
 ```jsq
-  <x-tag name='item'>
+  <q:template name='item'>
     <div>{{$attrs.text}}</div>
-  </x-tag>
+  </q:template>
 
-  <x-tag name='root'>
+  <q:template name='root'>
     <div>
       <item q:for='item in list' q:key='.' text={item} />
       <button @click='add'>Add</button>
     </div>
-  </x-tag>
+  </q:template>
 
   export default Qute('root', {
     counter: 0,
@@ -124,23 +124,23 @@ The following example is displaying a list of items and allows the used to add a
 Let's adding a remove button.
 
 ```jsq
-<x-tag name='item'>
+<q:template name='item'>
   <tr>
     <td>{{$attrs.text}}</td>
     <td>
 	    <button q:emit-remove-onclick={$attrs.text}>Remove</button>
     </td>
   </tr>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
   <div>
 	  <table width='100%'>
     	<item q:for='item in list' q:key='.' text={item} @remove='onRemove' />
 	  </table>
   	<button @click='add'>Add</button>
   </div>
-</x-tag>
+</q:template>
 
 
 export default Qute('root', {
@@ -198,7 +198,7 @@ Let's rewrite the example above, and attach a ViewNodel to the `item` template.
 Also, since we can chamnge the item text, we need to use an immutable id property to identify the item.
 
 ```jsq
-<x-tag name='item'>
+<q:template name='item'>
   <tr>
     <td>{{text}}</td>
     <td>
@@ -206,16 +206,16 @@ Also, since we can chamnge the item text, we need to use an immutable id propert
         <button q:emit-remove-onclick={id}>Remove</button>
     </td>
   </tr>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
   <div>
       <table width='100%'>
         <item q:for='item in list' q:key='id' id={item.id} text={item.text} @remove='onRemove'/>
       </table>
       <button @click='add'>Add</button>
   </div>
-</x-tag>
+</q:template>
 
 var counter = 1;
 

@@ -12,12 +12,12 @@ The `newValue` argument is the new value being assigned to the property, and the
 The watcher function is called in the context of the component instance (i.e. `this` points to the component instance).
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 <div>
 	<button @click='counter1++'>Unlimited Counter: {{counter1}}</button>
 	<button @click='counter2++'>Limited Counter: {{counter2}}</button>
 </div>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {

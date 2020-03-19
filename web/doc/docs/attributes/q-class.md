@@ -70,13 +70,13 @@ When using `q:class` attribute on components it will modify the classes on the c
 Example:
 
 ```jsq
-<x-tag name='test-class'>
+<q:template name='test-class'>
 	<div><slot/></div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<test-class q:class='{active: selected}'>Hello!</test-class>
-</x-tag>
+</q:template>
 
 
 export default Qute('root', {
@@ -93,7 +93,7 @@ Here is a simple example on how to use the `q:class` object notation to conditio
 ```jsq
 //@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
 
-<x-tag name='root'>
+<q:template name='root'>
 <ul class="nav nav-pills" @click='e => page = e.target.getAttribute("data-key")'>
   <li class="nav-item">
     <a class="nav-link" q:class='{active: page=="home"}' href="#" data-key='home'>Home</a>
@@ -105,7 +105,7 @@ Here is a simple example on how to use the `q:class` object notation to conditio
     <a class="nav-link" q:class='{active: page=="files"}' href="#" data-key='files'>Files</a>
   </li>
 </ul>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {

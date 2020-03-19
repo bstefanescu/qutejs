@@ -15,9 +15,9 @@ It **only works on DOM elements** and cannot be used on component tags.
 where `someVar` resolve to a valid HTML text. The HTML text will be injected as the content of the div tag without being interpreted as a template.
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 <div q:html='content' />
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {
@@ -32,12 +32,12 @@ changing the `content` property value will be reflected in the DOM:
 
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 <div>
   <div q:html='content' />
   <button @click='changeContent' q:toggle-disabled={changed}>Click to change</button>
 </div>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {
@@ -60,12 +60,12 @@ export default Qute('root', {
 **Example:**
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 <div q:html>
     <p>This is some <b>HTML</b> content</p>
     <p>Expressions are not interpreted: {{someProperty}}</p>
 </div>
-</x-tag>
+</q:template>
 
 export default Qute('root', {someProperty: "hello!"})
 ```

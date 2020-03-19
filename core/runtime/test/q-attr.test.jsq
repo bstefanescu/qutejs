@@ -5,13 +5,13 @@ import Qute from '..';
 import { mountTest, click, runAfter } from './utils.js';
 
 
-<x-tag name='color-spans-1'>
+<q:template name='color-spans-1'>
 	<div q:color-spans>Hello <span>world</span>!</div>
-</x-tag>
+</q:template>
 
-<x-tag name='color-spans-2'>
+<q:template name='color-spans-2'>
 	<div q:color-spans='{color:"red"}'>Hello <span>world</span>!</div>
-</x-tag>
+</q:template>
 
 Qute.registerDirective('color-spans', function(xattrs, valueFn) {
 	return function(el) {
@@ -27,11 +27,11 @@ var TestColorSpans2 = Qute('color-spans-2');
 
 // -------
 
-<x-tag name='test-lambda-1'>
+<q:template name='test-lambda-1'>
     <div>
     <input type='text' name='name' value='Hello World!' q:call='el => this.inputEl = el'><button @click='onClick'>Click me!</button>
     </div>
-</x-tag>
+</q:template>
 
 var TestLambda1 = Qute('test-lambda-1', {
 	init() {
@@ -46,13 +46,13 @@ var TestLambda1 = Qute('test-lambda-1', {
 // -------
 
 
-<x-tag name='my-fn'>
+<q:template name='my-fn'>
 	<div>Hello <span>world</span>!</div>
-</x-tag>
+</q:template>
 
-<x-tag name='test-fn'>
+<q:template name='test-fn'>
 	<my-fn q:call='testOnCreate' q:color-spans='{color:"cyan"}' />
-</x-tag>
+</q:template>
 
 var TestFn = Qute('test-fn', {
 	testOnCreate(el) {
@@ -62,13 +62,13 @@ var TestFn = Qute('test-fn', {
 	}
 });
 
-<x-tag name='my-vm'>
+<q:template name='my-vm'>
 	<div>Hello <span>world</span>!</div>
-</x-tag>
+</q:template>
 
-<x-tag name='test-vm'>
+<q:template name='test-vm'>
 	<my-vm q:call='testOnCreate' q:color-spans='{color:"blue"}' />
-</x-tag>
+</q:template>
 
 var TestVm = Qute('test-vm', {
 	testOnCreate(el) {

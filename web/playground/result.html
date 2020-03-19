@@ -222,26 +222,13 @@ ul.playground-navbar > li {
 
 	  			document.getElementById('run-panel').style.display = 'none';
 
-	  			var code, script;
-	  			try {
-		  			var script = loader.create(source);
-		  			var VM = script.comp;
-		  			if (!VM) alert('Invalid Playground Script.\nYou must use "export default" to export the component to mount');
-		  			else new VM().mount('app');
-				} catch (e) {
-					console.error(e);
-				 	console.error('Transpileld code:\n', code);
-				 	appEl.innerHTML = "<pre style='color:red'>Error: "+escapeHTML(e.stack)+"</pre><p>You may find out more details by looking in the javascript console";
-				 	//throw e;
-				 	// retwroing exception wiull loose stack trace code source info so we execute again the failing code
-				 	new Function(code)();
-				}
+	  			var script = loader.create(source);
 
-				// upodate code view
+				// update code view
 				var preEl = document.createElement('PRE');
 				var langEl = document.createElement('CODE');
 				langEl.className = 'language-javascript';
-				langEl.textContent = code;
+				langEl.textContent = script.code;
 				preEl.appendChild(langEl);
 				codeEl.appendChild(preEl);
 				Prism.highlightElement(langEl);
@@ -252,6 +239,21 @@ ul.playground-navbar > li {
 					var source = hh(appEl.innerHTML);
 					sourceEl.innerHTML = source;
 				}, 100);
+
+				// run script
+	  			var VM;
+	  			try {
+	  				VM = script.run();
+		  			if (!VM) {
+		  				console.warn('No component was exported: You may want to export a component to mount using "export default"');
+		  			} else {
+		  				new VM().mount('app');
+		  			}
+	  			} catch (e) {
+	  				appEl.innerHTML = "<pre style='color:red'>Error: "+escapeHTML(e.stack)+"</pre><p>You may find out more details by looking in the javascript console";
+	  				throw e;
+	  			}
+
 			});
 		}
 

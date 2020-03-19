@@ -5,7 +5,7 @@ These examples demonstrates the usage of:
 1. the **[for](#/directives/for)** directive.
 2. the **[view](#/directives/view)** directive.
 3. the **[tag](#/directives/tag)** directive.
-4. the **[x-class](#/attributes/x-class)** attribute directive.
+4. the **[q:class](#/attributes/q-class)** attribute directive.
 
 ## A Simple Tab Bar
 
@@ -16,7 +16,7 @@ These examples demonstrates the usage of:
 
 // -------------------------------------------------- Tab Bar styles
 
-<x-style>
+<q:style>
 .tabs {
 	margin: 0 0 10px 0; padding: 0;
 	list-style-type: none;
@@ -36,15 +36,15 @@ These examples demonstrates the usage of:
 .tabs > li > a:hover, .tabs > li > a:active {
 	text-decoration: none;
 }
-</x-style>
+</q:style>
 
 // --------------------------------------------------- Tab Bar template
 
-<x-tag name='tab-bar'>
-	<div x-attrs>
+<q:template name='tab-bar'>
+	<div q:attrs>
 		<ul class='tabs'>
 			<for value='tab in tabs'>
-				<li x-class='{active: tab.active}'>
+				<li q:class='{active: tab.active}'>
 					<a href={'#'+tab.name} @click={activeTab = tab}>{{tab.label}}</a>
 				</li>
 			</for>
@@ -53,7 +53,7 @@ These examples demonstrates the usage of:
 			<view is='activeView'></view>
 		</div>
 	</div>
-</x-tag>
+</q:template>
 
 // --------------------------------------------------- Tab Bar component
 
@@ -81,16 +81,16 @@ Qute('tab-bar', {
 
 // --------------------------------------------------- Usage
 
-<x-tag name='home-page'>
+<q:template name='home-page'>
 	<div>The home page</div>
-</x-tag>
-<x-tag name='settings-page'>
+</q:template>
+<q:template name='settings-page'>
 	<div>The settings page</div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<tab-bar tabs={tabs} />
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {
@@ -122,7 +122,7 @@ Note that most of the code in the example is `css` code. The javascript code of 
 
 // -------------------------------------------------- Tab Bar styles
 
-<x-style>
+<q:style>
 .tbar {
 	display: flex;
 	justify-content: space-between;
@@ -163,16 +163,16 @@ Note that most of the code in the example is `css` code. The javascript code of 
 	opacity: 1;
 	text-decoration:none;
 }
-</x-style>
+</q:style>
 
 // --------------------------------------------------- Tab Bar template
 
-<x-tag name='tab-bar'>
-	<div x-attrs>
+<q:template name='tab-bar'>
+	<div q:attrs>
 		<div class='tbar'>
 			<ul class='tbar-tabs'>
 				<for value='tab in tabs'>
-					<li x-class='{active: tab.active}'>
+					<li q:class='{active: tab.active}'>
 						<if value='tab.component'>
 							<tag is={tab.component} tab={tab} @select={activeTab = tab} />
 						<else />
@@ -187,7 +187,7 @@ Note that most of the code in the example is `css` code. The javascript code of 
 			<view is='activeView'></view>
 		</div>
 	</div>
-</x-tag>
+</q:template>
 
 // --------------------------------------------------- Tab Bar component
 
@@ -215,24 +215,24 @@ Qute('tab-bar', {
 
 // --------------------------------------------------- Usage
 
-<x-tag name='home-page'>
+<q:template name='home-page'>
 	<div>The home page</div>
-</x-tag>
-<x-tag name='settings-page'>
+</q:template>
+<q:template name='settings-page'>
 	<div>The settings page</div>
-</x-tag>
-<x-tag name='custom-tab'>
+</q:template>
+<q:template name='custom-tab'>
 	<div class='custom-tab'>
-		<a href='#' x-html={$attrs.tab.label} x-emit:select@click></a>
-		<a href='#' x-emit:remove@click class='close'>&times;</a>
+		<a href='#' q:html={$attrs.tab.label} q:emit-select-onclick></a>
+		<a href='#' q:emit-remove-onclick class='close'>&times;</a>
 	</div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<tab-bar tabs={tabs} @remove='onTabRemove' @add='onTabAdd'>
-		<button x-emit:add@click>Add</button>
+		<button q:emit-add-onclick>Add</button>
 	</tab-bar>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {

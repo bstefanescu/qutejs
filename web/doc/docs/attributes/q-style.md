@@ -49,13 +49,13 @@ When using `q:style` attribute on components it will modify the style on the com
 Example:
 
 ```jsq
-<x-tag name='test-style'>
+<q:template name='test-style'>
 	<div><slot/></div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<test-style q:style="{textAlign: align}">Hello!</test-style>
-</x-tag>
+</q:template>
 
 
 export default Qute('root', {

@@ -40,13 +40,11 @@ function ScriptLoader(transpileES6) {
 
 		if (hasExport) code += '\nreturn __DEFAULT_EXPORT__;\n';
 		// for now script deps are expected to be declared above the script - otherwise compiling will fail
-		var comp = (new Function(code))();
 
 		var script = new Script();
-		script.name = comp ? name || capitalizeFirst(kebabToCamel(comp.prototype.$tag)) : null;
 		script.code = code;
 		script.deps = deps;
-		script.comp = comp; // exported component type
+		script.name = name;
 
 		if (hasDeps) {
 			console.warn('Imports are ignored in dev version!');
@@ -56,13 +54,16 @@ function ScriptLoader(transpileES6) {
 	}
 
 	this.load = function(scriptEl, wnd) {
-		return createScript(scriptEl.textContent, scriptEl.getAttribute('name')).load(wnd);
+		var script = this.create(scriptEl.textContent, scriptEl.getAttribute('name'));
+		script.run();
+		script.load(wnd);
+		return script;
 	}
 
 	this.loadAll = function(wnd) {
 		var scripts = (wnd ? wnd.document : document).querySelectorAll('script[type="text/jsq"]');
 		for (var i=0,l=scripts.length; i<l; i++) {
-			loadScript(scripts[i], wnd);
+			this.load(scripts[i], wnd);
 		}
 	}
 
@@ -73,6 +74,13 @@ function Script() {
 	this.code = null;
 	this.comp = null;
 	this.deps = null;
+
+	this.run = function() {
+		// adding sourceURL for chrom dev tools.
+		var comp = (new Function(this.code+"\n//# sourceURL="+this.name+".js\n"))();
+		this.comp = comp;
+		return comp;
+	}
 
 	this.load = function(wnd) {
 		if (!wnd) wnd = window;

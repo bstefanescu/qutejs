@@ -4,7 +4,7 @@ We implemented the Todo List in 3 different ways.
 
 The following examples demonstrates the usage of:
 
-1. the **[x-for](#/attributes/x-for)** directive.
+1. the **[q:for](#/attributes/q-for)** directive.
 2. the `ViewModel.getList()` helper to easily manipulate reactive list properties.
 3. the `Qute.closestListItem(el)` method to retrieve the closest list item rendering context containing a DOM element.
 
@@ -23,42 +23,42 @@ The `todo-list` component is responsible for managing the list structure, while 
 
 // ------------------------------------------ Styles
 
-<x-style>
+<q:style>
 .done {
   text-decoration: line-through;
 }
-</x-style>
+</q:style>
 
 // ------------------------------------------ Templates
 
-<x-tag name='todo-item'>
+<q:template name='todo-item'>
 	<li class="list-group-item d-flex justify-content-between align-items-center">
         <span>
 	        <a href='#' @click='toggleDone'>&#x2714;</a>
-	        <span x-class='{done:todo.done}'>{{todo.text}}</span>
+	        <span q:class='{done:todo.done}'>{{todo.text}}</span>
         </span>
-		<span><a href='#' class='close' x-emit:remove@click={todo.id}>&times;</a></span>
+		<span><a href='#' class='close' q:emit-remove-onclick={todo.id}>&times;</a></span>
 	</li>
-</x-tag>
+</q:template>
 
-<x-tag name='todo-list'>
+<q:template name='todo-list'>
 	<div>
 		<ul class="list-group">
-			<todo-item x-for='item in todos' x-key='id' todo={item} @remove='removeItem' />
+			<todo-item q:for='item in todos' q:key='id' todo={item} @remove='removeItem' />
 		</ul>
 		<form class='d-flex'>
-			<input x-call='el => input = el' type='text' class='form-control' style='display:inline-block'/>
+			<input q:call='el => input = el' type='text' class='form-control' style='display:inline-block'/>
 			<button class='btn btn-primary' @click='addItem'>Add</button>
 		</form>
 		<div style='text-align:center; margin-top: 10px'>
 			<button @click='exportJson'>Export as JSON</button>
 		</div>
 	</div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<todo-list todos={todos}/>
-</x-tag>
+</q:template>
 
 // ------------------------------------------ Javascript
 
@@ -136,38 +136,38 @@ Because we don't use a component for each item we need to explicitly update the 
 
 // ------------------------------------------ Styles
 
-<x-style>
+<q:style>
 .done {
   text-decoration: line-through;
 }
-</x-style>
+</q:style>
 
 // ------------------------------------------ Templates
 
-<x-tag name='todo-list'>
+<q:template name='todo-list'>
 	<div>
 		<ul class="list-group">
-			<li x-for='item in todos' x-key='id' class="list-group-item d-flex justify-content-between align-items-center">
+			<li q:for='item in todos' q:key='id' class="list-group-item d-flex justify-content-between align-items-center">
 	            <span>
 		            <a href='#' @click='e=>checkItem(item.id, e.target)'>&#x2714;</a>
-		            <span x-class='{done:item.done}'>{{item.text}}</span>
+		            <span q:class='{done:item.done}'>{{item.text}}</span>
 	            </span>
 				<span><a href='#' class='close' @click='e=>removeItem(item.id)'>&times;</a></span>
 			</li>
 		</ul>
 		<form class='d-flex'>
-			<input x-call='el => input = el' type='text' class='form-control' style='display:inline-block'/>
+			<input q:call='el => input = el' type='text' class='form-control' style='display:inline-block'/>
 			<button class='btn btn-primary' @click='addItem'>Add</button>
 		</form>
 		<div style='text-align:center; margin-top: 10px'>
 			<button @click='exportJson'>Export as JSON</button>
 		</div>
 	</div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<todo-list todos={todos}/>
-</x-tag>
+</q:template>
 
 // ------------------------------------------ Javascript
 
@@ -235,38 +235,38 @@ Here is the same example as before, but without using the Qute list helper. The 
 
 // ------------------------------------------ Styles
 
-<x-style>
+<q:style>
 .done {
   text-decoration: line-through;
 }
-</x-style>
+</q:style>
 
 // ------------------------------------------ Templates
 
-<x-tag name='todo-list'>
+<q:template name='todo-list'>
 	<div>
 		<ul class="list-group">
-			<li x-for='item in todos' x-key='id' class="list-group-item d-flex justify-content-between align-items-center">
+			<li q:for='item in todos' q:key='id' class="list-group-item d-flex justify-content-between align-items-center">
 	            <span>
 		            <a href='#' @click='e=>checkItem(item.id, e.target)'>&#x2714;</a>
-		            <span x-class='{done:item.done}'>{{item.text}}</span>
+		            <span q:class='{done:item.done}'>{{item.text}}</span>
 	            </span>
 				<span><a href='#' class='close' @click='e=>removeItem(item.id)'>&times;</a></span>
 			</li>
 		</ul>
 		<form class='d-flex'>
-			<input x-call='el => input = el' type='text' class='form-control' style='display:inline-block'/>
+			<input q:call='el => input = el' type='text' class='form-control' style='display:inline-block'/>
 			<button class='btn btn-primary' @click='addItem'>Add</button>
 		</form>
 		<div style='text-align:center; margin-top: 10px'>
 			<button @click='exportJson'>Export as JSON</button>
 		</div>
 	</div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<todo-list todos={todos}/>
-</x-tag>
+</q:template>
 
 // ------------------------------------------ Javascript
 

@@ -4,29 +4,29 @@ import window, {document} from '@qutejs/window';
 import Qute from '..';
 import { mountTest, runAfter } from './utils.js';
 
-<x-tag name='test-html'>
+<q:template name='test-html'>
 	<div q:html='content'/>
-</x-tag>
+</q:template>
 
-<x-tag name='test-static-html'>
+<q:template name='test-static-html'>
 	<div q:html>
 		Some <b>static</b> HTML
 	</div>
-</x-tag>
+</q:template>
 
-<x-tag name='test-static-markdown'>
+<q:template name='test-static-markdown'>
 	<div q:markdown>
 		# Header
 
 		Some markdown
 	</div>
-</x-tag>
+</q:template>
 
-<x-tag name='test-static-text'>
+<q:template name='test-static-text'>
 	<div q:content-text>
 		bla bla
 	</div>
-</x-tag>
+</q:template>
 
 var TestHtml = Qute('test-html', {
 	init() {

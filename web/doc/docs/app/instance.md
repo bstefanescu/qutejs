@@ -12,9 +12,9 @@ For generic components like popups, modals etc. you don't need an application mo
 To bind an application instance to a component tree you need to pass the instance to the root component. If you don't pass an application instance to the root component, an empty instance will be automatically created and used by the root component.
 
 ```jsq
-<x-tag name='my-root'>
+<q:template name='my-root'>
 	<div>Hello World!</div>
-</x-tag>
+</q:template>
 
 var app = new Qute.App();
 // create the root component constructor using 'my-root' as a template
@@ -26,9 +26,9 @@ new MyRoot(app).mount('app');
 This example will simply render *Hello World!* in the page. No need for that to create an application instance. The same can be done by ommiting to pass the `app` instance to the root component:
 
 ```jsq
-<x-tag name='my-root'>
+<q:template name='my-root'>
 	<div>Hello World!</div>
-</x-tag>
+</q:template>
 
 // create the root component constructor using 'my-root' as a template
 var MyRoot = Qute('my-root');

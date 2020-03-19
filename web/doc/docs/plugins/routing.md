@@ -58,7 +58,7 @@ Or, even more simple, is to use an **[application property](#/app/data)** to set
 Here is an example that change the content of a view from a **Qute Application** service (we are not using a real router for the sake of brevity):
 
 ```jsq
-<x-tag name='app-root'>
+<q:template name='app-root'>
     <div>
         <div>
             <button @click="this.post('route', 'page1')">Page 1</button>
@@ -67,15 +67,15 @@ Here is an example that change the content of a view from a **Qute Application**
         <hr />
         <view is='currentPage' />
     </div>
-</x-tag>
+</q:template>
 
-<x-tag name='page1'>
+<q:template name='page1'>
     <div>The Page 1 content</div>
-</x-tag>
+</q:template>
 
-<x-tag name='page2'>
+<q:template name='page2'>
     <div>The Page 2 content</div>
-</x-tag>
+</q:template>
 
 // create the Qute application
 var app = new Qute.App();

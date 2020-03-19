@@ -4,7 +4,7 @@ The following examples demonstrates the usage of:
 
 1. the `q:model` and `q:validate` directive from the **[form plugin](#/plugins/form)**.
 2. triggering and handling **[DOM events](#/model/events)**.
-3. **[x-toggle](#/attributes/x-toggle)** (i.e. ?attr) attribute directive.
+3. **[q:toggle](#/attributes/q-toggle)** (i.e. ?attr) attribute directive.
 
 In this example we will implement a custom form control to increment / decrement numeric values.
 
@@ -13,17 +13,17 @@ Let's start with a simple counter:
 ```jsq
 // ------------------------------------------ Templates
 
-<x-tag name='counter'>
+<q:template name='counter'>
 	<div>
 		<button @click='value--'>-</button>
 		{{value}}
 		<button @click='value++'>+</button>
 	</div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<counter value='2' />
-</x-tag>
+</q:template>
 
 // ------------------------------------------ Javascript
 
@@ -50,18 +50,18 @@ Let's update the component as follows:
 ```jsq
 // ------------------------------------------ Templates
 
-<x-tag name='counter'>
+<q:template name='counter'>
 	<div>
-		<input type='hidden' name={name} value={value} x-call='el => this.input=el'>
+		<input type='hidden' name={name} value={value} q:call='el => this.input=el'>
 		<button @click='decr' ?disabled='!canDecrement'>-</button>
 		{{value}}
 		<button @click='incr' ?disabled='!canIncrement'>+</button>
 	</div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<counter value='2' step='2' min='0' max='8' @change='e=>console.log("counter changed", e.detail)'/>
-</x-tag>
+</q:template>
 
 // ------------------------------------------ Javascript
 
@@ -160,14 +160,14 @@ Here is the final code for the counter component:
 
 // ------------------------------------------ Templates
 
-<x-tag name='counter'>
+<q:template name='counter'>
 	<div style='display:inline-block'>
-		<input type='number' name={name} value={value} min={min} max={max} style='display:none' ?required={required} x-call='el => this.input = el'/>
+		<input type='number' name={name} value={value} min={min} max={max} style='display:none' ?required={required} q:call='el => this.input = el'/>
 		<button @click='decr' ?disabled='!canDecrement'>-</button>
 		{{value}}
 		<button @click='incr' ?disabled='!canIncrement'>+</button>
 	</div>
-</x-tag>
+</q:template>
 
 // ------------------------------------------ Javascript
 
@@ -218,7 +218,7 @@ Qute.$.form.registerControl("counter");
 
 // ------------------------------------------ Testing
 
-<x-tag name='root'>
+<q:template name='root'>
 	<form q:validate @submit='handleSubmit'>
 		<p>
 		The counter was initialized using a value outside the legal range, so the form will not be validated (try submiting).
@@ -234,7 +234,7 @@ Qute.$.form.registerControl("counter");
 		<button>Submit</button>
 		</div>
 	</form>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {

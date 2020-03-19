@@ -5,13 +5,13 @@ The slot directive can be used to inject templates inside a component from the c
 Let's say you want to create a component which display an alert message. You want this alert message to contain rich HTML text which can be specified by the caller when the component is used:
 
 ```jsq
-<x-tag name='alert-message'>
+<q:template name='alert-message'>
 <div class='alert'><slot/></div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 <alert-message><b>Error:</b> {{errorMessage}}</alert-message>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {
@@ -32,19 +32,19 @@ In some situations you may want more than one injectable content. In this case y
 #### Example
 
 ```jsq
-<x-tag name='alert-message'>
+<q:template name='alert-message'>
 <div>
   <h3><slot name='title' /></h3>
   <div class='alert'><slot name='content'/></div>
 </div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 <alert-message>
 	<nested name='title'>Error</nested>
 	<nested name='content'>{{errorMessage}}</nested>
 </alert-message>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {
@@ -62,13 +62,13 @@ A slot can have a default value. If no content is injected in the slot (i.e. no 
 #### Example
 
 ```jsq
-<x-tag name='alert-message'>
+<q:template name='alert-message'>
 <div class='alert'><slot>Unknown Error!</slot></div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 <alert-message />
-</x-tag>
+</q:template>
 
 export default Qute('root');
 ```
@@ -94,15 +94,15 @@ In the same way a `nested` directive can be used without a name. In this case it
 Slots can be propagated down to components on any nested level. Here is an example:
 
 ```jsq
-<x-tag name='my-title'>
+<q:template name='my-title'>
 	<h3><slot/></h3>
-</x-tag>
+</q:template>
 
-<x-tag name='my-content'>
+<q:template name='my-content'>
 	<div class='content'><slot/></div>
-</x-tag>
+</q:template>
 
-<x-tag name='my-panel'>
+<q:template name='my-panel'>
 	<div class='panel'>
 		<my-title>
 			<nested><slot name='title'/></nested>
@@ -111,34 +111,34 @@ Slots can be propagated down to components on any nested level. Here is an examp
 			<nested><slot name='content'/></nested>
 		</my-content>
 	</div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 <my-panel>
 	<nested name='title'>The panel title</nested>
 	<nested name='content'>The panel content</nested>
 </my-panel>
-</x-tag>
+</q:template>
 
 export default Qute('root');
 ```
 
 ## Injecting variable content
 
-You can also inject variable content inside slots. To do this, use the **[x-html](#/attributes/x-html)** attribute on the `nested` directive.
+You can also inject variable content inside slots. To do this, use the **[q:html](#/attributes/q-html)** attribute on the `nested` directive.
 
 We can rewrite the previous example like this:
 
 ```jsq
-<x-tag name='my-title'>
+<q:template name='my-title'>
 	<h3><slot/></h3>
-</x-tag>
+</q:template>
 
-<x-tag name='my-content'>
+<q:template name='my-content'>
 	<div class='content'><slot/></div>
-</x-tag>
+</q:template>
 
-<x-tag name='my-panel'>
+<q:template name='my-panel'>
 	<div class='panel'>
 		<my-title>
 			<nested><slot name='title'/></nested>
@@ -147,14 +147,14 @@ We can rewrite the previous example like this:
 			<nested><slot name='content'/></nested>
 		</my-content>
 	</div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 <my-panel>
-    <nested name='title' x-html='title'/>
+    <nested name='title' q:html='title'/>
     <nested name='content'>The panel content</nested>
 </my-panel>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {

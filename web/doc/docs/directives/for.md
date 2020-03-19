@@ -4,9 +4,9 @@ The `for` directive should be used to iterate over **immutable** array like obje
 
 Although the `for` directive is **reactive** (i.e. if the target list is a reactive property which is replaced by another list then the DOM is updated), it will use brute force to update the DOM: the previous elements are replaced with the new ones.
 
-If you need a `for` directive **optimized for reactivity and DOM updates** then you should use **[x-for](#/attributes/x-for)** which is only updating the changed items.
+If you need a `for` directive **optimized for reactivity and DOM updates** then you should use **[q:for](#/attributes/q-for)** which is only updating the changed items.
 
-This directive was optimized to work over static lists and is giving some additional features over the `x-for` directive:
+This directive was optimized to work over static lists and is giving some additional features over the `q:for` directive:
 
 1. Each iteration renders a document fragment, and not a single element.
 2. It provides extra an `index` and `hasNext` attributes for each iterated item.
@@ -24,11 +24,11 @@ Any object having a `length` property will be treated as an **array like object*
 #### Simple iteration:
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 <for value='item in list'>
 	<li> <a href={item.href}>{{item.title}}</a></li>
 </for>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {
@@ -44,11 +44,11 @@ export default Qute('root', {
 #### Retrieving the index:
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 <for value='item,index in list'>
 	<li>{{index+1}}. <a href={item.href}>{{item.title}}</a></li>
 </for>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {
@@ -64,11 +64,11 @@ export default Qute('root', {
 #### Using hasNext:
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 <for value='item,index,hasNext in list'>
 	<li>{{index+1}}. <a href={item.href}>{{item.title}}</a> <if value='hasNext'><hr></if></li>
 </for>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {
@@ -86,11 +86,11 @@ export default Qute('root', {
 When using a regular object instead of an array like object to iterate on then, the list to iterate is obtained using the `Object.keys()` method.
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 <for value='key in dict'>
 	<li>{{key}} = {{dict[key]}}</li>
 </for>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {
@@ -106,7 +106,7 @@ export default Qute('root', {
 ### List instance reactivity
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 <div>
 	<button @click='changeList'>Change the list</button>
 	<ul>
@@ -115,7 +115,7 @@ export default Qute('root', {
 	</for>
 	</ul>
 </div>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	changeList() {

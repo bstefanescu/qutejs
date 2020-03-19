@@ -6,9 +6,9 @@ import Qute from '..';
 import { createMountPoint } from './utils.js';
 
 
-<x-tag name='entities'>
+<q:template name='entities'>
 	<div>{{htmlCode}}</div>
-</x-tag>
+</q:template>
 
 var Entities = Qute('entities', {
 	init: function() {
@@ -16,12 +16,12 @@ var Entities = Qute('entities', {
 	}
 });
 
-<x-tag name='symbols'>
+<q:template name='symbols'>
 	<div>
 	<div>Hello {{this.firstName}} {{this.lastName}}!</div>
 	<div>{{JSON.stringify(this)}}</div>
 	</div>
-</x-tag>
+</q:template>
 
 
 var Symbols = Qute('symbols', {
@@ -34,7 +34,7 @@ var Symbols = Qute('symbols', {
 });
 
 
-<x-tag name='root'>
+<q:template name='root'>
 	<div>
 	<div>Hello {{firstName}} {{lastName}}!</div>
 	<div>Hello {{this.firstName}} {{this.lastName}}!</div>
@@ -42,7 +42,7 @@ var Symbols = Qute('symbols', {
 	<div>Hello {{fullName}}!</div>
 	<div>Hello {{getFullName()}}!</div>
 	</div>
-</x-tag>
+</q:template>
 
 
 var Root = Qute('root', {

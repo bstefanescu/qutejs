@@ -14,13 +14,13 @@ When instantiating a child component the parent is passing down some information
 This is the most basic form of communication.
 
 ```jsq
-<x-tag name='child'>
+<q:template name='child'>
 	<div>{{$attrs.message}}</div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<child message={message}></child>
-</x-tag>
+</q:template>
 
 
 export default Qute('root', {
@@ -42,17 +42,17 @@ This type of communication can be done through DOM events that bubbles up to anc
 
 ```jsq
 
-<x-tag name='child'>
+<q:template name='child'>
 	<button>Remove Me!</button>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<if value='hasButton'>
 	<child @click='removeButton'/>
 	<else/>
 	Button was removed!
 	</if>
-</x-tag>
+</q:template>
 
 
 export default Qute('root', {
@@ -75,19 +75,19 @@ This can be done by using the **message bus** provided by the [application insta
 Let's take the example of a dropdown menu:
 
 ```jsq
-<x-tag name='alert'>
+<q:template name='alert'>
 	<div style='display:none;position:fixed; left:40%; top:40%; border: 1px solid red; padding: 10px'>
 	<div><slot/></div>
 	<button @click='hideAlert'>Close</button>
 	</div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 <div>
-	<alert x-channel='hello'>Hello!</alert>
+	<alert q:channel='hello'>Hello!</alert>
 	<button @click='showAlert'>Show Alert!</button>
 </div>
-</x-tag>
+</q:template>
 
 Qute('alert', {
 	hideAlert() {
@@ -110,11 +110,11 @@ export default Qute('root', {
 
 In the previous example, the `alert` component is declaring a communication channel by calling the `channel(channelListener)` method. The channel is only declared.
 
-In order to create the channel you need to give the channel a name. This is done in the template by using the `x-channel` attribute on the `alert` component. This will create a communication channel to the `alert` component instance that will use the defined channel listener to respond to messages.
+In order to create the channel you need to give the channel a name. This is done in the template by using the `q:channel` attribute on the `alert` component. This will create a communication channel to the `alert` component instance that will use the defined channel listener to respond to messages.
 
-If you create an `alert` component instance without using the `x-channel` attribute the channel will never be created on that instance (even if the channel listener was defined).
+If you create an `alert` component instance without using the `q:channel` attribute the channel will never be created on that instance (even if the channel listener was defined).
 
-Briefly, defining a channel function provides a messaging end-point. In order to open a channel to an instance end-point you need to use the `x-channel` attribute to assign the channel a name.
+Briefly, defining a channel function provides a messaging end-point. In order to open a channel to an instance end-point you need to use the `q:channel` attribute to assign the channel a name.
 
 Of course, the example above can be implemented using a mix of the first two communication methods (parent to child and child to panel) and by keeping the alert state in a reactive property.
 But there are situations when using a state property and up and down communication is to complex or not justified.
@@ -133,24 +133,24 @@ This is because the message bus is provided to components via the [application i
 Let's see an example:
 
 ```jsq
-<x-tag name='child1'>
+<q:template name='child1'>
 <div>
 	<button @click='askSeconds'>Ask Seconds!</button>
 </div>
-</x-tag>
+</q:template>
 
-<x-tag name='child2'>
+<q:template name='child2'>
 <div>
 	<button @click='askMinutes'>Ask Minutes!</button>
 </div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 <div>
 	<child1 />
 	<child2 />
 </div>
-</x-tag>
+</q:template>
 
 Qute('child1', {
 	askSeconds() {
@@ -184,24 +184,24 @@ Let's rewrite the previous example to pass a callback to retrieve the informatio
 
 
 ```jsq
-<x-tag name='child1'>
+<q:template name='child1'>
 <div>
 	<button @click='askSeconds'>Ask Seconds! {{seconds}}</button>
 </div>
-</x-tag>
+</q:template>
 
-<x-tag name='child2'>
+<q:template name='child2'>
 <div>
 	<button @click='askMinutes'>Ask Minutes! {{minutes}}</button>
 </div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 <div>
 	<child1 />
 	<child2 />
 </div>
-</x-tag>
+</q:template>
 
 Qute('child1', {
 	init() {
@@ -255,23 +255,23 @@ When installing a root component we can use the same application instance used b
 
 ```jsq
 
-<x-tag name='child1'>
+<q:template name='child1'>
 <div>I am child1 from root1</div>
-</x-tag>
+</q:template>
 
-<x-tag name='root1'>
+<q:template name='root1'>
 <div style='border: 1px solid green; padding: 10px;'>
     <h3>Root1</h3>
-	<child1 x-channel='child1-channel' />
+	<child1 q:channel='child1-channel' />
 </div>
-</x-tag>
+</q:template>
 
-<x-tag name='root2'>
+<q:template name='root2'>
 <div style='border: 1px solid green; padding: 10px;'>
 	<h3>Root2</h3>
 	<button @click='sendMessage'>Change child1 color</button>
 </div>
-</x-tag>
+</q:template>
 
 Qute('child1').channel(function(message, data) {
 	if (message === 'color') this.$el.style.color = data;

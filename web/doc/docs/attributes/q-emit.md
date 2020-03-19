@@ -2,22 +2,22 @@
 
 ```jsq
 
-<x-tag name='fun-button'>
+<q:template name='fun-button'>
 	<div>
 		<a href='#' q:emit-action-onclick><slot/></a>
 	</div>
-</x-tag>
+</q:template>
 
-<x-tag name='my-button'>
+<q:template name='my-button'>
 	<a href='#' q:emit-click='$attrs.id'><slot/></a>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<div>
 	<fun-button @action='handleAction'>Fun Button - Click Me</fun-button>
 	<my-button @click='handleAction' id='bla'>VM Button - Click Me</my-button>
 	</div>
-</x-tag>
+</q:template>
 
 
 Qute('my-button');

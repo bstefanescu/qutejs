@@ -4,35 +4,35 @@ import window, {document} from '@qutejs/window';
 import Qute from '..';
 import { mountTest, runAfter } from './utils.js';
 
-<x-tag name='test-fn-attrs'>
+<q:template name='test-fn-attrs'>
 	<div>
 		<span q:attrs><slot/></span>
 		<span q:attrs='class, msg'>Include test</span>
 		<span q:attrs='!class msg'>Exclude test</span>
 	</div>
-</x-tag>
+</q:template>
 
-<x-tag name='test-fn-root'>
+<q:template name='test-fn-root'>
 	<test-fn-attrs class={theClass} title='Some tooltip' msg='hello'>Hello!</test-fn-attrs>
-</x-tag>
+</q:template>
 
-<x-tag name='func-comp'>
+<q:template name='func-comp'>
     <div q:attrs='class'>
         A <a q:attrs='!class'>functional</a> component
     </div>
-</x-tag>
+</q:template>
 
-<x-tag name='func-comp-wrapper'><func-comp q:attrs /></x-tag>
-<x-tag name='test-func-comp'><func-comp-wrapper class={theClass} title='Some tooltip' href='#action' /></x-tag>
+<q:template name='func-comp-wrapper'><func-comp q:attrs /></q:template>
+<q:template name='test-func-comp'><func-comp-wrapper class={theClass} title='Some tooltip' href='#action' /></q:template>
 
-<x-tag name='vm-comp'>
+<q:template name='vm-comp'>
     <div q:attrs='class'>
         A <a q:attrs='!class'>VM</a> component: {{someProp}}
     </div>
-</x-tag>
+</q:template>
 
-<x-tag name='vm-comp-wrapper'><vm-comp q:attrs /></x-tag>
-<x-tag name='test-vm-comp'><vm-comp-wrapper class={theClass} title='Some tooltip' href='#action' some-prop='the injected prop' /></x-tag>
+<q:template name='vm-comp-wrapper'><vm-comp q:attrs /></q:template>
+<q:template name='test-vm-comp'><vm-comp-wrapper class={theClass} title='Some tooltip' href='#action' some-prop='the injected prop' /></q:template>
 
 
 

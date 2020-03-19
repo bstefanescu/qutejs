@@ -50,13 +50,13 @@ Why **functional**? Because the component is practically a rendering function. T
 Here is an example:
 
 ```jsq
-<x-tag name='message'>
-	<div>{{$attrs.msg}}</div>
-</x-tag>
+<q:template name='message'>
+    <div>{{$attrs.msg}}</div>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<message msg='Hello'/>
-</x-tag>
+</q:template>
 
 export default Qute('root');
 ```
@@ -441,9 +441,9 @@ There are cases when you want to manually update the DOM sub-tree corresponding 
 ## Complete Example
 
 ```jsq
-<x-tag name='my-component'>
+<q:template name='my-component'>
   <button>{{buttonLabel}}</button>
-</x-tag>
+</q:template>
 
 var MyComponent = Qute('my-component', {
 	init() {

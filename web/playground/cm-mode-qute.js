@@ -19,12 +19,12 @@ CodeMirror.defineMode("qute", function(config, parserConfig) {
 CodeMirror.defineMode("jsq", function(config) {
   return CodeMirror.multiplexingMode(
     CodeMirror.getMode(config, "text/javascript"), {
-      open: "<x-tag",
+      open: "<q:template",
       close: "\n",
       mode: CodeMirror.getMode(config, "qute"),
       parseDelimiters: true
     }, {
-      open: "<x-style",
+      open: "<q:style",
       close: "\n",
       mode: CodeMirror.getMode(config, "css"),
       parseDelimiters: true

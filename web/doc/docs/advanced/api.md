@@ -106,7 +106,7 @@ The **Qute** update queue.
 
 ### `Qute.converters`
 
-A converter registry. To be used with  __[x-content-\*](#/attributes/x-markdown)__ attributes.
+A converter registry. To be used with  __[q:content-\*](#/attributes/q-markdown)__ attributes.
 
 ## The Component Constructor API
 
@@ -151,7 +151,7 @@ Register a communication channel handler for the component.
 
 The `handler` has the signature: `function(message, data)`
 
-The channel is not opened by registering the handler. To open a channel you must use a `x-channel` attribute on the component element toi give the channel a name, or, for root components use the `listen(channelName)` method.
+The channel is not opened by registering the handler. To open a channel you must use a `q:channel` attribute on the component element toi give the channel a name, or, for root components use the `listen(channelName)` method.
 
 For more details see the **[Message Bus](#/app/bus)** and the **[Components](#/components)** section.
 
@@ -196,7 +196,7 @@ The data object holding all reactive properties.
 
 The rendering context linked to this component.
 
-This can be usefull when using **[custom attributes](#/attributes/q)** or **[x-call](#/attributes/x-call)**
+This can be usefull when using **[custom attributes](#/attributes/q)** or **[q:call](#/attributes/q-call)**
 
 ### Component methods
 
@@ -219,7 +219,7 @@ Unmount the component. This will disconnect all the children ViewModel component
 
 Subscribe to `channelName` channel and use the component channel listener to handle incoming messages.
 
-This method is specially provided for **root components** and have the same efect as using the **[x-channel](#/attributes/x-channel)** attribute.
+This method is specially provided for **root components** and have the same efect as using the **[q:channel](#/attributes/q-channel)** attribute.
 
 #### `setup(setupFn)`
 

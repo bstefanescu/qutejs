@@ -25,16 +25,16 @@ When using `q:show` attribute on components it will modify the display style pro
 Example:
 
 ```jsq
-<x-tag name='test-show'>
+<q:template name='test-show'>
     <div><slot/></div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
   <div>
     <test-show q:show="showIt">Hello!</test-show>
     <button @click='e => showIt=!showIt'>{{showIt?'Hide':'Show'}}</button>
   </div>
-</x-tag>
+</q:template>
 
 
 export default Qute('root', {

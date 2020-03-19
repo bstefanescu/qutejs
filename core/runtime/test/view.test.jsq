@@ -16,27 +16,27 @@ import Qute from '..';
 import { createMountPoint, runAfter } from './utils.js';
 
 
-<x-tag name='view-test'>
+<q:template name='view-test'>
 <div>
 	<view is='activeView' user={user} onchange='viewChanged'>Are you fine?</view>
 </div>
-</x-tag>
+</q:template>
 
-<x-tag name='nocache-view-test'>
+<q:template name='nocache-view-test'>
 <div>
 	<view is='activeView' user={user} nocache  onchange='viewChanged'>Are you fine?</view>
 </div>
-</x-tag>
+</q:template>
 
 // a func template
-<x-tag name='hello-user'>
+<q:template name='hello-user'>
 	<div id='hello-user'>Hello {{$attrs.user}}. <slot/></div>
-</x-tag>
+</q:template>
 
 // a VM
-<x-tag name='bye-user'>
+<q:template name='bye-user'>
 	<div id='bye-user'>Bye {{user}}. <slot/></div>
-</x-tag>
+</q:template>
 
 
 

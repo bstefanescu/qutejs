@@ -127,9 +127,9 @@ If you register a global directive (i.e. not restricted to a tag name) named `va
 In this example we change the font color to green, for all `span` elements contained in the target `div` when it is created.
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 	<div q:color-spans>Hello <span>world</span>!</div>
-</x-tag>
+</q:template>
 
 Qute.registerDirective('color-spans', function(xattrs, valueExpr) {
 	// this function is called just before the element creation.
@@ -148,9 +148,9 @@ export default Qute('root');
 Let's now modify the previous example and use a value to specify a color.
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 	<div q:color-spans='red'>Hello <span>world</span>!</div>
-</x-tag>
+</q:template>
 
 Qute.registerDirective('color-spans', function(xattrs, valueExpr) {
 	console.log('#color-spans init:', this, "Config: ", valueExpr);
@@ -186,7 +186,7 @@ and the code will work under any circumstances.
 Let's now use a component reactive property to store the color to use. When the color is changed we re-run the `color-spans` directive to re-run the directice using the new color:
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
     <div color={color} q:color-spans={color}>
         Hello <span>world</span>!
         <br>
@@ -200,7 +200,7 @@ Let's now use a component reactive property to store the color to use. When the 
             <option value='yellow'>Yellow</option>
         </select>
     </div>
-</x-tag>
+</q:template>
 
 Qute.registerDirective('color-spans', function(xattrs, colorExpr) {
     var rendering = this, color;

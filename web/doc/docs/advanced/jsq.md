@@ -34,43 +34,43 @@ import './component-library.jsq';
 
 ### Templates Section
 
-This section of the file contains the template definitions. Each template must be enclosed in a `x-tag` element.
-An `x-tag` element is only valid if used in the top level context of the file (it should not be nested in javascript blocks)
+This section of the file contains the template definitions. Each template must be enclosed in a `q:template` element.
+An `q:template` element is only valid if used in the top level context of the file (it should not be nested in javascript blocks)
 
-Template **must define a single root element**. This means, inside a `x-tag` declaration you can have only one  direct child element.
+Template **must define a single root element**. This means, inside a `q:template` declaration you can have only one  direct child element.
 
-The `x-tag` element accept the following attributes:
+The `q:template` element accept the following attributes:
 
 1. **name** - required - the template name. Must be specified in the kebab notation. Example: `my-component`.
 You must not use existing html element names as template names. To avoid conflicts, it is **recommended** to use component names containing a hyphen.
 2. **import** - optional - a comma or space separated list of names to import from the file context in the template context. This can be usefull when using `functional components`. You can see an example in the **Template Library Files** section below.
 
-Also in a `templates section` you can specify **style sheets** to be injected in the HTML page where the component will be used. Style sheets can be specified by enclosing the style sheet rules in a `x-style` tag. The `x-style` tag must be used only the in the root context of the file.
+Also in a `templates section` you can specify **style sheets** to be injected in the HTML page where the component will be used. Style sheets can be specified by enclosing the style sheet rules in a `q:style` tag. The `q:style` tag must be used only the in the root context of the file.
 
 #### Example
 
 ```xml
 
-<x-tag name='my-menu-item'>
+<q:template name='my-menu-item'>
 	<li>
-		<a x-attrs><slot/></a>
+		<a q:attrs><slot/></a>
 	</li>
-</x-tag>
-<x-tag name='my-menu'>
+</q:template>
+<q:template name='my-menu'>
 	<ul class='my-menu'>
 		<for value='item in $attrs.items'>
 			<my-menu-item href={item.href}>{{item.text}}</my-menu-item>
 		</for>
 	</ul>
-</x-tag>
+</q:template>
 
-<x-style>
+<q:style>
 	.my-menu {
 		list-style-type: none;
 		margin: 0;
 		padding: 0;
 	}
-</x-style>
+</q:style>
 ```
 
 In our example we defined two templates: `my-menu` and `my-menu-item`. But only `my-menu` is intended to be exported to the outside world. The `my-menu-item` template is private to that component.
@@ -133,16 +133,16 @@ In that case we don't need any component definition nor export statement.
 ```xml
 import Qute from '@qutejs/runtime';
 
-<x-tag name='my-link'>
-	<a class='my-link' x-attrs><slot/></a>
-</x-tag>
+<q:template name='my-link'>
+	<a class='my-link' q:attrs><slot/></a>
+</q:template>
 
-<x-tag name='my-button'>
-	<a class='my-button' x-attrs><slot/></a>
-</x-tag>
+<q:template name='my-button'>
+	<a class='my-button' q:attrs><slot/></a>
+</q:template>
 ```
 
-When creating functional components it may be usefull to be able to use external javascript functions inside the template. This can be done using the `x-tag` `import` attribute.
+When creating functional components it may be usefull to be able to use external javascript functions inside the template. This can be done using the `q:template` `import` attribute.
 
 ### Importing external variables in a template
 
@@ -151,13 +151,13 @@ In the following example we define a onclick handler in the `JSQ` file context a
 ```xml
 import Qute from '@qutejs/runtime';
 
-<x-tag name='my-link'>
-	<a class='my-link' x-attrs><slot/></a>
-</x-tag>
+<q:template name='my-link'>
+	<a class='my-link' q:attrs><slot/></a>
+</q:template>
 
-<x-tag name='my-button' import='onButtonClick'>
-	<a class='my-button' x-attrs @click='onButtonClick(this, $1)'><slot/></a>
-</x-tag>
+<q:template name='my-button' import='onButtonClick'>
+	<a class='my-button' q:attrs @click='onButtonClick(this, $1)'><slot/></a>
+</q:template>
 
 function onButtonClick(context, event) {
 	console.log('On Click!', context, event);
@@ -168,8 +168,8 @@ function onButtonClick(context, event) {
 
 As we saw, there are two special constructs in a `JSQ` file that are transpiled to javascript:
 
-1. `x-tag` - this construct will be tranbspiled into something like `Qute.register("x-tag-name", function($){return  ... }, true);`
-2. `x-style` - this construct will be transpiled into something like `Qute.css("x-style-content");`
+1. `q:template` - this construct will be tranbspiled into something like `Qute.register("template-name", function($){return  ... }, true);`
+2. `q:style` - this construct will be transpiled into something like `Qute.css("q:style content ...");`
 
 This is why you mmust always **import Qute** at the top of the `JSQ` file.
 
@@ -177,7 +177,7 @@ The `Qute.register` is registering the template in a global template registry.
 
 The `Qute.css` is registering the style rules so that it will be inserted in the head of the HTML page using the component.
 
-You can see the transpilation output for any playable example in the Qute documentation by clicking the `Javascript` tab in the **[Qute Playground](playground/index.html)**.
+You can see the transpilation output for any playable example in the Qute documentation by clicking the `Javascript` tab in the **[Qute Playground](/playground/index.html)**.
 
 
 

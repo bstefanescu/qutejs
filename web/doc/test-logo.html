@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8"/>
-    <script type="text/javascript" src='../dev/qute-dev-all.js'></script>
+    <script type="te  t/javascript" src='../dev/qute-dev-all.js'></script>
     <link rel="icon" type="image/png" href="../assets/qute-16.png" />
   </head>
   <body style='background: orange; padding: 20px'>
@@ -17,7 +17,7 @@
     <img src='../assets/qute.png' width='16px' height='16px'>
 
     <script type='text/jsq'>
-      <x-tag name='my-template'>
+      <q:template name='my-template'>
       <div q:class='{authenticated:user}'>
         <if value='!user'>
           Click <a @click='doLogin' href='#' class='common-link'>here</a> to login
@@ -25,7 +25,7 @@
           Hello {{user.firstName}}. <a href='#' @click='doLogout'>Logout</a>
         </if>
       </div>
-      </x-tag>
+      </q:template>
 
       export default Qute('my-template', {
         init() {

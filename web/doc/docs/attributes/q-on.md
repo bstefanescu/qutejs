@@ -6,12 +6,12 @@ See the **[Templates](#/templates)** section for more details.
 ## Example
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
   <div>
     <button @click='handleClick'>Click me: using @</button>
     <button q:onclick='handleClick'>Click me: using q:on</button>
   </div>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	handleClick() {

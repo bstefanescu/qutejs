@@ -86,15 +86,15 @@ Application properties which are bound to component properties will trigger a co
 ### Example - Binding an async property to a ViewModel Component
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 	<if value='user'>
 		<div style='display:inline-block'>Hello {{user}}!</div>
 		<button @click='session.logout()'>Logout</button>
 	<else/>
-		<spinner size='8px' inline x-show='loginPending' />
-		<button @click='session.login("Foo")' x-toggle='{disabled:loginPending}'>Login</button>
+		<spinner size='8px' inline q:show='loginPending' />
+		<button @click='session.login("Foo")' q:toggle-disabled={loginPending}>Login</button>
 	</if>
-</x-tag>
+</q:template>
 
 var Root = Qute('root', {
 	init(app) {

@@ -4,32 +4,32 @@ import window, {document} from '@qutejs/window';
 import Qute from '..';
 import { mountTest } from './utils.js';
 
-<x-tag name='single-wrapper'>
+<q:template name='single-wrapper'>
 	<blockquote><slot/></blockquote>
-</x-tag>
+</q:template>
 
-<x-tag name='single-wrapper-with-default'>
+<q:template name='single-wrapper-with-default'>
 	<blockquote><slot>Default content</slot></blockquote>
-</x-tag>
+</q:template>
 
 
-<x-tag name='multi-wrapper'>
+<q:template name='multi-wrapper'>
 	<div>
 		<h3><slot name='title'>The default title</slot></h3>
 		<div><slot name='content'>The default content</slot></div>
 		<div><slot name='optional'>The default optional content</slot></div>
 	</div>
-</x-tag>
+</q:template>
 
-<x-tag name='my-title'>
+<q:template name='my-title'>
     <h3><slot/></h3>
-</x-tag>
+</q:template>
 
-<x-tag name='my-content'>
+<q:template name='my-content'>
     <div class='content'><slot/></div>
-</x-tag>
+</q:template>
 
-<x-tag name='my-panel'>
+<q:template name='my-panel'>
     <div class='panel'>
         <my-title>
             <nested><slot name='title'/></nested>
@@ -38,35 +38,35 @@ import { mountTest } from './utils.js';
             <nested><slot name='content'/></nested>
         </my-content>
     </div>
-</x-tag>
+</q:template>
 
 
-<x-tag name='test-single-wrapper'>
+<q:template name='test-single-wrapper'>
 	<div>
 		<single-wrapper>The <b>wrapped</b> content</single-wrapper>
 	</div>
-</x-tag>
-<x-tag name='test-single-wrapper-override'>
+</q:template>
+<q:template name='test-single-wrapper-override'>
 	<div>
 		<single-wrapper-with-default>The <b>wrapped</b> content</single-wrapper-with-default>
 	</div>
-</x-tag>
-<x-tag name='test-single-wrapper-default'>
+</q:template>
+<q:template name='test-single-wrapper-default'>
 	<div>
 		<single-wrapper-with-default>
 
 		</single-wrapper-with-default>
 	</div>
-</x-tag>
-<x-tag name='test-multi-wrapper'>
+</q:template>
+<q:template name='test-multi-wrapper'>
 	<div>
 		<multi-wrapper>
 			<nested name='title'>The <b>named</b> title</nested>
 			<nested name='content'>The <b>named</b> content</nested>
 		</multi-wrapper>
 	</div>
-</x-tag>
-<x-tag name='test-multi-wrapper-extra-content'>
+</q:template>
+<q:template name='test-multi-wrapper-extra-content'>
 	<div>
 		<multi-wrapper>
 			some <b>ingored</b> content
@@ -74,8 +74,8 @@ import { mountTest } from './utils.js';
 			<nested name='content'>The <b>named</b> content</nested>
 		</multi-wrapper>
 	</div>
-</x-tag>
-<x-tag name='test-multi-wrapper-override'>
+</q:template>
+<q:template name='test-multi-wrapper-override'>
 	<div>
 		<multi-wrapper>
 			<nested name='title'>The <b>named</b> title</nested>
@@ -83,31 +83,31 @@ import { mountTest } from './utils.js';
 			<nested name='optional'>The <b>named</b> optional content</nested>
 		</multi-wrapper>
 	</div>
-</x-tag>
+</q:template>
 
-<x-tag name='test-nested-context'>
+<q:template name='test-nested-context'>
 	<div>
 		<multi-wrapper>
 			<nested name='title'>The <b>{{title}}</b> title</nested>
 		</multi-wrapper>
 	</div>
-</x-tag>
+</q:template>
 
 
-<x-tag name='test-nested-propagation'>
+<q:template name='test-nested-propagation'>
 	<my-panel>
     	<nested name='title'>{{title}}</nested>
     	<nested name='content'>The panel content</nested>
 	</my-panel>
-</x-tag>
+</q:template>
 
 
-<x-tag name='test-variable-content'>
+<q:template name='test-variable-content'>
 	<my-panel>
     	<nested name='title' q:html='title' />
     	<nested name='content'>The panel content</nested>
 	</my-panel>
-</x-tag>
+</q:template>
 
 var TestSingleWrapper = Qute('test-single-wrapper');
 var TestSingleWrapperOverride = Qute('test-single-wrapper-override');

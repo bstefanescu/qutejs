@@ -5,14 +5,14 @@
 import { ERR, splitList } from './utils.js';
 
 
-const TAG_RX = /(?:^|\n)\s*<(?:(x-tag)|(x-style))(\s+[^>]*)?>/;
-const TAG_END_RX = /\s*<\/(?:(x-tag)|(x-style))\s*>/;
+const TAG_RX = /(?:^|\n)\s*<(?:(q\:template)|(q\:style))(\s+[^>]*)?>/;
+const TAG_END_RX = /\s*<\/(?:(q\:template)|(q\:style))\s*>/;
 const ATTR_RX = /([-A-Za-z0-9_]+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g;
 const CNT_LINES_RX = /\n/g;
 
 function getTagName(match) {
-    if (match[1]) return 'x-tag';
-    if (match[2]) return 'x-style';
+    if (match[1]) return 'q:template';
+    if (match[2]) return 'q:style';
     ERR("Bug?");
 }
 
@@ -72,7 +72,7 @@ function parseXTags(source, handler) {
 // ======================= transform JSQ to JS =====================
 
 function handleTemplate(compiler, attrs, text) {
-	if (!attrs || !attrs.name) ERR("x-tag attribute 'name' is required");
+	if (!attrs || !attrs.name) ERR("q:template attribute 'name' is required");
     var name = attrs.name;
     //var fname = kebabToCamel(name);
     var imports = attrs.import || null;
@@ -93,9 +93,9 @@ function transpile(compiler, source, opts) {
     parseXTags(source, {
         tag: function(tag, attrs, text) {
             if (text) {
-                if (tag === 'x-tag') {
+                if (tag === 'q:template') {
                     out += handleTemplate(compiler, attrs, text);
-                } else if (tag === 'x-style') {
+                } else if (tag === 'q:style') {
                     out += handleStyle(compiler, attrs, text);
                 } else {
                 	ERR(`Unsupported tag: '${tag}'`);
@@ -121,8 +121,8 @@ function transpile(compiler, source, opts) {
 function loadXTags(compiler, source, cb) {
     parseXTags(source, {
         tag: function(tag, attrs, text) {
-            if (tag !== 'x-tag') ERR(`Unsupported tag: '${tag}'`);
-            if (!attrs || !attrs.name) ERR("x-tag attribute 'name' is required");
+            if (tag !== 'q:template') ERR(`Unsupported tag: '${tag}'`);
+            if (!attrs || !attrs.name) ERR("q:template attribute 'name' is required");
             var fn = compiler.compileFn(text, splitList(attrs.import));
             cb(attrs.name, fn, !attrs.static)
         },

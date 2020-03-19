@@ -4,28 +4,28 @@ import window, {document} from '@qutejs/window';
 import Qute from '..';
 import { mountTest } from './utils.js';
 
-<x-tag name='action'>
+<q:template name='action'>
 	<tag is='$attrs.is||"a"' data-name={$attrs.name} href='#' #click><slot/></tag>
-</x-tag>
+</q:template>
 
-<x-tag name='link'>
+<q:template name='link'>
 	<a class='link' href='#'><slot/></a>
-</x-tag>
+</q:template>
 
-<x-tag name='component'>
+<q:template name='component'>
 	<tag is='$attrs.is' q:attrs='!is'><nested><slot/></nested></tag>
-</x-tag>
+</q:template>
 
-<x-tag name='test-1'>
+<q:template name='test-1'>
 	<div>
 	 	<action>The Anchor</action>
         <action is='button'>The Button</action>
 	</div>
-</x-tag>
+</q:template>
 
-<x-tag name='test-2'>
+<q:template name='test-2'>
 	<component is='link'>The Link component</component>
-</x-tag>
+</q:template>
 
 
 describe('Tag Directive', function() {

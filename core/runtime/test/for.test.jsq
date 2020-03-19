@@ -5,7 +5,7 @@ import Qute from '..';
 import { createMountPoint, runAfter } from './utils.js';
 
 
-<x-tag name='for-test'>
+<q:template name='for-test'>
 <div>
 
 <ul>
@@ -31,22 +31,22 @@ import { createMountPoint, runAfter } from './utils.js';
 </ul>
 
 </div>
-</x-tag>
+</q:template>
 
-<x-tag name='for-expr-compact'>
+<q:template name='for-expr-compact'>
 <ul>
 	<for value='it,i,next in items'>
 		<li>{{i+1}}. <a href={it.href}>{{it.title}}</a></li><if value='next'>,</if>
 	</for>
 </ul>
-</x-tag>
-<x-tag name='for-expr-spaces'>
+</q:template>
+<q:template name='for-expr-spaces'>
 <ul>
 	<for value='   item    ,    index   ,   	hasNext     in     items   '>
 		<li>{{index+1}}. <a href={item.href}>{{item.title}}</a></li><if value='hasNext'>,</if>
 	</for>
 </ul>
-</x-tag>
+</q:template>
 
 
 var ForTest = Qute('for-test', {
@@ -62,9 +62,9 @@ var ForTest = Qute('for-test', {
 });
 
 
-<x-tag name='for-test-reactivity'>
+<q:template name='for-test-reactivity'>
 <div><for value='item in list'>{{item}} </for></div>
-</x-tag>
+</q:template>
 
 var ForTestReactivity = Qute('for-test-reactivity', {
 	changeList() {

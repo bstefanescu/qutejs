@@ -66,22 +66,22 @@ If an attribute [camel case](https://en.wikipedia.org/wiki/Camel_case) name matc
 ### Example
 
 ```jsq
-<x-tag name='my-component'>
+<q:template name='my-component'>
 	<div>
 	<div>reactiveProp value: {{reactiveProp}}</div>
 	<for value='key in $attrs'>
 		<div>Undeclared attribute: {{key}} = {{$attrs[key]}}</div>
 	</for>
 	</div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<my-component reactive-prop='reactive prop value'
 		title='the title'
 		some-attribute='some value'
 		another-attribute='another value'
 		name='the name' />
-</x-tag>
+</q:template>
 
 Qute('my-component', {
 	init() {

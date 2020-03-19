@@ -5,24 +5,24 @@ import Qute from '..';
 import { createMountPoint } from './utils.js';
 
 
-<x-tag name='my:component'>
+<q:template name='my:component'>
 	<div id='my-component'>My Component</div>
-</x-tag>
-<x-tag name='q:component'>
+</q:template>
+<q:template name='q:component'>
 	<div id='q-component'><q:if value='true'>Q Component</q:if></div>
-</x-tag>
-<x-tag name='x-component'>
+</q:template>
+<q:template name='x-component'>
 	<div id='x-component'><if value='true'>X Component</if></div>
-</x-tag>
+</q:template>
 
-<x-tag name='my:vmcomp'>
+<q:template name='my:vmcomp'>
 	<div id='my-vmcomp'><if value='true'>My VM Component</if></div>
-</x-tag>
-<x-tag name='q:vmcomp'>
+</q:template>
+<q:template name='q:vmcomp'>
 	<div id='q-vmcomp'><if value='true'>Q VM Component</if></div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<div>
 		<my:component />
 		<q:component />
@@ -34,7 +34,7 @@ import { createMountPoint } from './utils.js';
 		<vmcomp />
 		<q:vmcomp />
 	</div>
-</x-tag>
+</q:template>
 
 Qute('q:vmcomp');
 Qute('my:vmcomp');

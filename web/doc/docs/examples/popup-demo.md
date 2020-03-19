@@ -1,7 +1,7 @@
 # Popup demo
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
   <div>
     <b>Animation:</b> <select @change='changeAnimation'>
         <option value=''>None</option>
@@ -46,7 +46,7 @@
     <br/>
     <button class='popup-btn' @click='openPopup'>Open popup</button>
 
-    <popup position={position} animation={animation} x-channel='my-popup'>
+    <popup position={position} animation={animation} q:channel='my-popup'>
         <div class='my-popup'>
           <h3>Popup header</h3>
           <div>
@@ -55,9 +55,9 @@
         </div>
     </popup>
   </div>
-</x-tag>
+</q:template>
 
-<x-style>
+<q:style>
 .popup-btn {
   position: fixed;
   left: 50%;
@@ -75,7 +75,7 @@
 .my-popup h3 {
   margin-top: 0;
 }
-</x-style>
+</q:style>
 
 export default Qute('root', {
     init() {

@@ -18,30 +18,10 @@ import ScriptLoader from './script-loader.js'
 
 
 Qute.Compiler = Compiler;
+Qute.ScriptLoader = ScriptLoader;
 Qute.compile = function(text, symbols) {
 	return new Compiler().compileFn(text, symbols);
 }
-
-Qute.css('x-tag { display:none; }\n');
-
-function loadXTag(text) {
-	new Compiler().loadXTags(text, function(xtagName, xtagFn, isCompiled) {
-		Qute.register(xtagName, xtagFn, isCompiled);
-	});
-}
-// load templates
-Qute.load = function(textOrId) {
-	if (!textOrId) {
-		var xtags = document.getElementsByTagName('x-tag');
-	    for (var i=0,l=xtags.length; i<l; i++) {
-	    	loadXTag(xtags[i].innerHTML);
-	    }
-	} else {
-		loadXTag(textOrId[0] === '#' ? document.getElementById(textOrId.substring(1)).textContent : textOrId);
-	}
-}
-
-
 
 var loader = loadES6Transpiler().then(
 	function(transpiler) {
@@ -61,10 +41,43 @@ Qute.runWithScriptLoader = function(fn) {
 	return Qute.getScriptLoader().then(fn);
 }
 
+// TODO remove this - replaced by load
 Qute.loadScripts = function() {
 	Qute.getScriptLoader().then(function(loader) {
 		loader.loadAll();
 	});
+}
+
+Qute.loadTemplates = function(idOrElement) {
+	var script; // tje script element
+	if (typeof idOrElement === 'string') {
+		script = document.getElementById(idOrElement);
+	} else {
+		script = idOrElement;
+	}
+	if (script) {
+		new ScriptLoader().load(script);
+	}
+}
+
+Qute.load = function(idOrElement) {
+	if (idOrElement) {
+		var script; // tje script element
+		if (typeof idOrElement === 'string') {
+			script = document.getElementById(idOrElement);
+		} else {
+			script = idOrElement;
+		}
+		if (script) {
+			Qute.getScriptLoader().then(function(loader) {
+				loader.load(script);
+			});
+		}
+	} else { // load all
+		Qute.getScriptLoader().then(function(loader) {
+			loader.loadAll();
+		});
+	}
 }
 
 export default Qute;

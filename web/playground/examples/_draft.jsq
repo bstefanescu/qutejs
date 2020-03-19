@@ -1,7 +1,7 @@
-// ---------- Tempaltes
-<x-tag name='root'>
+// ---------- Templates
+<q:template name='root'>
 	<div>Let's start {{verb}}</div>
-</x-tag>
+</q:template>
 
 // ----------- Javascript
 // You must export using 'export default' the root component

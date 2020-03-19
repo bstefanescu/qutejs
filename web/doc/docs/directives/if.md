@@ -10,7 +10,7 @@ The if directive supports 2 attributes:
 	The first time the **if** directive is rendered the listener will not be notified.
 
 **Note:** The if directive will not render at all the HTML fragment if the condition evaluates to false.
-If you want to conditionaly hide or show an element then use the **[x-show](#/attributes/x-show)** attribute.
+If you want to conditionaly hide or show an element then use the **[q:show](#/attributes/q-show)** attribute.
 
 **Syntax:**
 
@@ -21,14 +21,14 @@ If you want to conditionaly hide or show an element then use the **[x-show](#/at
 ### Example
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 <if value='hasSection2'>
   <h1>Section 2</h1>
   <div>
   	Section content here
   </div>
 </if>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {
@@ -52,13 +52,13 @@ The else directive can be used in conjuction with the *if* directive. It can onl
 ### Example
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 <if value='user' onchange='onUserChanged'>
   <div>Hello {{user.name}}. <a href='#logout' @click='doLogout'>Logout</a></div>
 <else/>
   <div><a href='#login' @click='doLogin'>Login</a></div>
 </if>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	doLogin() {
@@ -99,7 +99,7 @@ The else-if directive allows you to create conditional if / else if / else chain
 ### Example
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 	<div>
 		Select status:
 		<select @change='updateStatus'>
@@ -116,7 +116,7 @@ The else-if directive allows you to create conditional if / else if / else chain
 		Content for <i>unknown</i> status
 		</if>
 	</div>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {

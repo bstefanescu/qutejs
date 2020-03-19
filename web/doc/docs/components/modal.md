@@ -4,7 +4,7 @@ The modal component display a modal dialog.
 
 ## Attributes
 
-### x-channel
+### q:channel
 
 This attribute is **required**.
 
@@ -128,11 +128,11 @@ The `event.detail` field points to an object like:
 ## Example
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
   <div>
     <button style='margin-left: 10px; margin-top: 10px; padding: 10px'
       @click='this.post("my-modal", "open")'>Open modal</button>
-    <modal animation='scale-up' x-channel='my-modal'
+    <modal animation='scale-up' q:channel='my-modal'
       @open='onOpen' @close='onClose' @ready='onReady' @action='onAction'>
       <div style='border: 1px solid gray'>
         <h3 style='padding: 10px;margin-top:0; border-bottom: 1px solid gray'>Modal header</h3>
@@ -144,7 +144,7 @@ The `event.detail` field points to an object like:
       </div>
     </modal>
   </div>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
   onOpen(event) {
@@ -166,4 +166,4 @@ export default Qute('root', {
 
 ## Demo
 
-You can find a **[Modal Demo](/playground/index.html#modal-demo)** into the playground.
+You can find a **[Modal Demo here](#/examples/modal-demo)**.

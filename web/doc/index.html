@@ -223,13 +223,13 @@
 
 		<script id='templates' type='text/plain'>
 
-			<x-tag name='toc-item'>
+			<q:template name='toc-item'>
 				<li class='toc-item' :id='"toc_item:/"+$attrs.href'>
 					<a :href='$attrs.href' q:html='$attrs.title'></a>
 				</li>
-			</x-tag>
+			</q:template>
 
-			<x-tag name='toc-section'>
+			<q:template name='toc-section'>
 				<li class='toc-section'>
 					<a href='#' q:html='$attrs.title'></a>
 					<div class='toc-items' q:class='{expanded: $attrs.expand}'>
@@ -244,9 +244,9 @@
 						</ul>
 					</div>
 				</li>
-			</x-tag>
+			</q:template>
 
-			<x-tag name='toc'>
+			<q:template name='toc'>
 			<ul class='toc'>
 				<for value='item in $attrs.items'>
 					<if value='item.items'>
@@ -256,9 +256,9 @@
 					</if>
 				</for>
 			</ul>
-			</x-tag>
+			</q:template>
 
-			<x-tag name='app'>
+			<q:template name='app'>
 			<div class='app'>
 				<div class='topbar clearfix'>
 					<div class='pull-left'>
@@ -294,7 +294,7 @@
 			    </div>
 			</div>
 
-			</x-tag>
+			</q:template>
 
 		</script>
 		<script>
@@ -323,7 +323,7 @@
 			}
 
 			Qute.converters.markdown = marked;
-			Qute.load('#templates');
+			Qute.loadTemplates('templates');
 
 			var TOC = [
 				{ title: 'Overview', expand: true, items: [
@@ -514,9 +514,9 @@
 
 
 			function parseJsq(text, textHandler, tagHandler) {
-				var START_TAG = /\s*<\s*(?:(x-tag)|(x-style))(?:\s[^>]*)?>/;
-				var END_XTAG = /\s*<\/\s*x-tag\s*>/;
-				var END_STYLE = /\s*<\/\s*x-style\s*>/;
+				var START_TAG = /\s*<\s*(?:(q\:template)|(q\:style))(?:\s[^>]*)?>/;
+				var END_XTAG = /\s*<\/\s*q\:template\s*>/;
+				var END_STYLE = /\s*<\/\s*q\:style\s*>/;
 
 				while (text) {
 					var m = START_TAG.exec(text);
@@ -525,12 +525,12 @@
 					textHandler(text.substring(0, i));
 					var tag, stag = m[0];
 					text = text.substring(i+l);
-					if (m[1]) { // x-tag
+					if (m[1]) { // q:template
 						m = END_XTAG.exec(text);
-						tag = 'x-tag';
+						tag = 'q:template';
 					} else if (m[2]) { // style
 						m = END_STYLE.exec(text);
-						tag = 'x-style';
+						tag = 'q:style';
 					} else { // cannot happen
 						throw new Error('cannot happen');
 					}
@@ -558,9 +558,9 @@
 						out += text;
 					}
 				}, function(tag, start, text, end) {
-					if (tag === 'x-tag') {
+					if (tag === 'q:template') {
 						out += Prism.highlight(start+text+end, Prism.languages.markup, 'xml');
-					} else if (tag === 'x-style') {
+					} else if (tag === 'q:style') {
 						out += Prism.highlight(start+text+end, Prism.languages.markup, 'xml');
 					}
 				});

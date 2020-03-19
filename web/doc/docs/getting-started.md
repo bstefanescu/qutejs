@@ -23,15 +23,15 @@ All these parts of a component are transpiled to javascript code and when you de
 import Qute from '@qutejs/runtime';
 
 // the component template
-<x-tag name='my-component'>
-  <div x-class='{authenticated:user}'>
+<q:template name='my-component'>
+  <div q:class='{authenticated:user}'>
     <if value='!user'>
       Click <a href='#' @click='doLogin' class='common-link'>here</a> to login
     <else />
       Hello {{user.firstName}}. <a href='#' @click='doLogout'>Logout</a>
     </if>
   </div>
-</x-tag>
+</q:template>
 
 // the component ViewModel definition
 export default Qute('my-component', {
@@ -68,15 +68,15 @@ See the **[JSQ File Format](#/advanced/jsq)** section for more information on `J
 import Qute from '@qutejs/runtime';
 
 // the component template
-<x-tag name='my-component'>
-<div x-class='{authenticated:user}'>
+<q:template name='my-component'>
+<div q:class='{authenticated:user}'>
   <if value='!user'>
     Click <a href='#' @click='doLogin' class='common-link'>here</a> to login
   <else />
     Hello {{user.firstName}}. <a href='#' @click='doLogout'>Logout</a>
   </if>
 </div>
-</x-tag>
+</q:template>
 ```
 
 2. The ViewModel file (e.g. `my-component.js`):
@@ -136,20 +136,20 @@ To use a component inside another component template just use an element having 
 import Qute from '@qutejs/runtime';
 
 // example of components used in other component template
-<x-tag name='my-title'>
+<q:template name='my-title'>
   <h3><a name={$attrs.name}><slot/></a></h3>
-</x-tag>
-<x-tag name='my-content'>
+</q:template>
+<q:template name='my-content'>
   <div><slot/></div>
-</x-tag>
+</q:template>
 
 // the root component template
-<x-tag name='my-component'>
+<q:template name='my-component'>
   <div>
     <my-title name='the-title'>The title</my-title>
     <my-content>The content</my-content>
   </div>
-</x-tag>
+</q:template>
 
 // the component ViewModel definition
 var MyComponent = Qute('my-component');
@@ -160,11 +160,11 @@ new MyComponent().mount();
 ## Component Namespace
 
 To isolate user defined components and avoid name clashes with external components you can use a namespace. To define a component in a namespace just prefix the component name with the namespace prefix.  \
-**Example:** `<x-tag name='my:select'>` will define a component named `select` in the `my` namespace.
+**Example:** `<q:template name='my:select'>` will define a component named `select` in the `my` namespace.
 To use such components in templates you need to specify the qualified name (including the prefix).
 
 All components which are not explicitly prefixed with a namespace, will be part of the default Qute namespace which is using the `q` prefix.  \
-**Example:** `<x-tag name='popup'>` is equivalent to `<x-tag name='q:popup'>`.
+**Example:** `<q:template name='popup'>` is equivalent to `<q:template name='q:popup'>`.
 
 Components inside the default namespace can be specified with both the qualified name or the local name (i.e. non prefixed name) when used in other templates.
 
@@ -249,9 +249,9 @@ This type of project will build your code as a reusable component. You can reuse
 ```jsq-norun
 import 'my-component';
 
-<x-tag name='my-other-component'>
+<q:template name='my-other-component'>
 	<my-component>some content</my-component>
-</x-tag>
+</q:template>
 
 ...
 ```
@@ -281,15 +281,15 @@ Before releasing your components it is recommended to create a **Qute Component 
   </head>
   <body>
     <script type='text/jsq'>
-      <x-tag name='my-template'>
-      <div x-class='{authenticated:user}'>
+      <q:template name='my-template'>
+      <div q:class='{authenticated:user}'>
         <if value='!user'>
           Click <a @click='doLogin' href='#' class='common-link'>here</a> to login
         <else />
           Hello {{user.firstName}}. <a href='#' @click='doLogout'>Logout</a>
         </if>
       </div>
-      </x-tag>
+      </q:template>
 
       export default Qute('my-template', {
         init() {

@@ -13,20 +13,20 @@ Also, you can use this to send events between components inside different roots 
 ## Example
 
 ```jsq
-<x-tag name='tbar'>
+<q:template name='tbar'>
 	<a href='#' data-message-type='info' data-message-content='hello!'>Send message</a>
-</x-tag>
+</q:template>
 
-<x-tag name='content'>
+<q:template name='content'>
 	<div>{{message}}</div>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 <div>
 	<tbar />
 	<content q:channel='messages' />
 </div>
-</x-tag>
+</q:template>
 
 Qute('tbar').on('click', 'a[data-message-type]', function(event) {
 	var msgType = event.target.getAttribute('data-message-type');

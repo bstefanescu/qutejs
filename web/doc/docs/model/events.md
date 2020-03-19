@@ -24,9 +24,9 @@ You can register a DOM event listener directly in the template by using a specia
 #### Example
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
   <button @click='handleClick'>Click me</button>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	handleClick(event, target) {
@@ -38,21 +38,21 @@ export default Qute('root', {
 You can also use simple expressions instead of passing a listener method name:
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
   <button @click='console.log("Handling event: ", this, $1)'>Click me</button>
-</x-tag>
+</q:template>
 
 export default Qute('root');
 ```
 
 In that case the event object is accessible as a variable named `$1`.
 
-An alternative way to write inline expressions is to use an arrow functions:
+An alternate way to write inline expressions is to use an arrow functions:
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
   <button @click='event => console.log("Handling event: ", this, event)'>Click me</button>
-</x-tag>
+</q:template>
 
 export default Qute('root');
 ```
@@ -66,9 +66,9 @@ The component factory **API** provides you an easy way to do it.
 You can declare a listener when defining the component **ViewModel** by using the `on(event[, selector], listener)` method like in the example below:
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
   <button>Click me</button>
-</x-tag>
+</q:template>
 
 export default Qute('root').on('click', function(event) {
 	console.log("Handling event: ", this, event);
@@ -81,12 +81,12 @@ The listener will be automatically registered when the component is connected to
 The `on` method used above can be chained to easily register multiple listeners:
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 <div>
   <input type='text' name='text' value={text} />
   <button>Click me</button>
 </div>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {
@@ -109,9 +109,9 @@ You can also use the `$on` method on the **ViewModel** instance to register a li
 When using this registration method it is recommended to do the registration when the component is connected to the DOM.
 
 ```jsq
-<x-tag name='root'>
-  <button log-clicks>Click me</button>
-</x-tag>
+<q:template name='root'>
+  <button>Click me</button>
+</q:template>
 
 export default Qute('root', {
 	logClicks: true,
@@ -150,13 +150,13 @@ Emitting an event from a `ViewModel` instance is firing the event at the compone
 ### Example
 
 ```jsq
-<x-tag name='my-button'>
+<q:template name='my-button'>
 	<button @click='handleClick'><slot/></button>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<my-button @action='performAction'>Click me!</my-button>
-</x-tag>
+</q:template>
 
 Qute('my-button', {
 	handleClick(event) {
@@ -177,13 +177,13 @@ export default Qute('root', {
 Functional components are also exposing `emit` and `emitAsync`. In that case the event will be dispatched at the functional component root element.
 
 ```jsq
-<x-tag name='my-button'>
+<q:template name='my-button'>
 	<button @click='emitAsync("action")'><slot/></button>
-</x-tag>
+</q:template>
 
-<x-tag name='root'>
+<q:template name='root'>
 	<my-button @action='performAction'>Click me!</my-button>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	performAction(event) {
@@ -191,4 +191,39 @@ export default Qute('root', {
 	}
 });
 ```
+## Forwarding events.
+
+You can forward (and optionally rewrite) existing events using the **[q:emit](#/templates/q-emit)** attribute directive. This is especially usefull to forward events from a component context to the parent context. The event is fired from the root element of the current component.
+
+The `q:emit` directive can be specified as a regular XML attribute: `q:emit-{newEvent}-on{sourceEvent}` or using its short notation: `#{newEvent}@{sourceEvent}`
+
+**Examples:**
+
+1. `<a href='#' q:emit-action-onclick>Click me</a>` - will fire an 'action' event on the current component when a click event is issued (the click event propagation will be stopped).
+2. `<a href='#' #action@click>Click me</a>` - the same as before but using the short notation.
+3. `<a href='#' q:emit-click>Click me</a>` - will fire a click event on the current component when the click event is issued.
+4. `<a href='#' #click>Click me</a>` - the same as before but using the short notation.
+
+**Note** that emitted events are fired in the context of the root element of the current component.
+
+You can also use the **[q:async-emit](#/templates/q-async-emit)** directive to emit events asynchronously.
+
+## Example
+
+```jsq
+
+<q:template name='my-action'>
+	<a href='#' q:emit-action-onclick='$attrs.id'><slot/></a>
+</q:template>
+
+<q:template name='root'>
+	<div>
+	<my-action @action='e=>window.alert("Action: "+e.detail)' id='action-id'>Click Me</my-action>
+	</div>
+</q:template>
+
+
+export default Qute('root');
+```
+
 

@@ -6,13 +6,13 @@ See the **[Templates](#/templates)** section for more details.
 ## Example
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
   <ul>
   	<li style={'color:'+color}>Using jsx like notation</li>
   	<li :style="'color:'+color">Using ':' prefix</li>
   	<li q:bind-style="'color:'+color">Using 'q:bind' atribute</li>
   </ul>
-</x-tag>
+</q:template>
 
 export default Qute('root', {
 	init() {

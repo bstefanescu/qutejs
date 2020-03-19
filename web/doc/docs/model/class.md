@@ -3,9 +3,9 @@
 You can also use the ES6 class syntax to define components. Let's look at an example
 
 ```jsq
-<x-tag name='root'>
+<q:template name='root'>
 <div>{{message}}</div>
-</x-tag>
+</q:template>
 
 class MyComponent extends Qute.ViewModel {
 	init() {

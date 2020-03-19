@@ -4,29 +4,29 @@ import window, {document} from '@qutejs/window';
 import Qute from '..';
 import { mountTest, runAfter } from './utils.js';
 
-<x-tag name='test-class-0'>
+<q:template name='test-class-0'>
 	<span class = { (isActive ? "active " : "")+"link" }></span>
-</x-tag>
+</q:template>
 
-<x-tag name='test-class-1'>
+<q:template name='test-class-1'>
 	<span q:class='["active", "link", null]'></span>
-</x-tag>
+</q:template>
 
-<x-tag name='test-class-2'>
+<q:template name='test-class-2'>
 	<span q:class='{"active": isActive, "link": true}'></span>
-</x-tag>
+</q:template>
 
-<x-tag name='test-class-3'>
+<q:template name='test-class-3'>
 	<span q:class='theClass'></span>
-</x-tag>
+</q:template>
 
-<x-tag name='test-class-5'>
+<q:template name='test-class-5'>
 	<span class='link' q:class='{active: isActive}'></span>
-</x-tag>
+</q:template>
 
-<x-tag name='test-class-6'>
+<q:template name='test-class-6'>
 	<span q:class='[ isActive && "active", "link" ]'></span>
-</x-tag>
+</q:template>
 
 var Test0 = Qute('test-class-0', {
 	init() {
@@ -86,13 +86,13 @@ var Test6 = Qute('test-class-6', {
 
 // q:class on components
 
-<x-tag name='test-q-class-vm'>
+<q:template name='test-q-class-vm'>
     <div><slot/></div>
-</x-tag>
+</q:template>
 
-<x-tag name='test-q-class-on-vm-root'>
+<q:template name='test-q-class-on-vm-root'>
     <test-q-class-vm q:class='{active: selected}'>Hello!</test-q-class-vm>
-</x-tag>
+</q:template>
 
 
 Qute('test-q-class-on-vm-root');

@@ -1,9 +1,9 @@
 
 import Qute from '../..';
 
-<x-tag name='vm-item'>
+<q:template name='vm-item'>
 <li><a href={$attrs.href}>{{$attrs.text}}</a></li>
-</x-tag>
+</q:template>
 
 
 export default Qute('vm-item');

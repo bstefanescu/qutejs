@@ -1,7 +1,7 @@
 import Qute from '../..';
 
-<x-tag name='fn-item'>
+<q:template name='fn-item'>
 <li><a href={$attrs.href}>{{$attrs.text}}</a></li>
-</x-tag>
+</q:template>
 
 
