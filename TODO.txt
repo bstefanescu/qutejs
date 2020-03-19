@@ -1,3 +1,4 @@
+refactor create package -> for component use externals from package.json dependencies
 
 - create doc and playground project
 - create separate components git repository
@@ -18,14 +19,13 @@ For the inlined scripts we may transform import x from 'module' to var x = Qute.
 )
 
 - documentation for list helper
+- x-emit / x-emit-async docs
 - use <slot> instead of <nested>?
 - which / when to use polyfills docs
 - work more on qute script loader? (for dev mode) + add docs
 
 - work more on prop_types.js
 - remove `group` plugin?
-- remove :attr syntax?
-- use alternative notation: q:for, q:class, q:emit-click, q:emit-remove-onclick, q:onclick, q:bind-href, q:class  etc. for attribute directives
 
 
 1. move more functions to @qutejs/test-utils
