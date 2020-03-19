@@ -30,7 +30,7 @@ let config;
 
 if (devMode) { // dev mode
 	config = {
-		input: './build/dev/index.js',
+		input: './src/index.jsq',
 		output: {
 	        name: componentName,
 	        file: './build/dev/'+moduleName+'-dev.js',

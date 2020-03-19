@@ -63,7 +63,6 @@ function installDeps(target) {
       ['-D', 'source-map-support'],
       ['-P', '@qutejs/window'],
       ['-P', '@qutejs/runtime'],
-      ['-D', '@qutejs/dev'],
       ['-D', '@qutejs/rollup-plugin-qute'],
       ['-D', '@qutejs/register'],
       //['-D', '@qutejs/test-utils']

@@ -1,6 +1,6 @@
 import assert from 'assert';
 import {document} from '@qutejs/window';
-import Qute from '@qutejs/dev';
+import Qute from '@qutejs/runtime';
 import Component from '../src/index.jsq';
 
 describe('Component', function() {
