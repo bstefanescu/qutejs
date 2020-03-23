@@ -14,36 +14,36 @@ import loadES6Transpiler from './buble-loader.js';
 import window, {document, Promise} from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import Compiler from '@qutejs/compiler';
-import ScriptLoader from './script-loader.js'
+import JSQLoader from './jsq-loader.js';
 
 
 Qute.Compiler = Compiler;
-Qute.ScriptLoader = ScriptLoader;
+Qute.JSQLoader = JSQLoader;
 Qute.compile = function(text, symbols) {
 	return new Compiler().compileFn(text, symbols);
 }
 
 var loader = loadES6Transpiler().then(
 	function(transpiler) {
-		return new ScriptLoader(transpiler);
+		return new JSQLoader(transpiler);
 	},
 	// failed to load buble
 	function(err) {
 		console.error('Failed to load ES6 transpiler: ', err);
-		return new ScriptLoader(null);
+		return new JSQLoader(null);
 	});
 
-Qute.getScriptLoader = function() {
+Qute.getLoader = function() {
 	return loader;
 }
 
-Qute.runWithScriptLoader = function(fn) {
-	return Qute.getScriptLoader().then(fn);
+Qute.runWithLoader = function(fn) {
+	return Qute.getLoader().then(fn);
 }
 
 // TODO remove this - replaced by load
 Qute.loadScripts = function() {
-	Qute.getScriptLoader().then(function(loader) {
+	Qute.getLoader().then(function(loader) {
 		loader.loadAll();
 	});
 }
@@ -56,7 +56,7 @@ Qute.loadTemplates = function(idOrElement) {
 		script = idOrElement;
 	}
 	if (script) {
-		new ScriptLoader().load(script);
+		new JSQLoader().load(script);
 	}
 }
 
@@ -69,12 +69,12 @@ Qute.load = function(idOrElement) {
 			script = idOrElement;
 		}
 		if (script) {
-			Qute.getScriptLoader().then(function(loader) {
+			Qute.getLoader().then(function(loader) {
 				loader.load(script);
 			});
 		}
 	} else { // load all
-		Qute.getScriptLoader().then(function(loader) {
+		Qute.getLoader().then(function(loader) {
 			loader.loadAll();
 		});
 	}

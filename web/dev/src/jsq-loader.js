@@ -4,25 +4,45 @@ import Compiler from '@qutejs/compiler';
 import {capitalizeFirst, kebabToCamel} from '@qutejs/commons';
 
 
-var IMPORT_RX = /^\s*import\s+(\S+)\s+from\s+(?:(\"[^"]+\")|(\'[^']+\')|([^"'][^;\s]*));?$/mg;
+var IMPORT_RX = /^\s*import\s+(?:(\S+)\s+from\s+)?(?:(\"[^"]+\")|(\'[^']+\')|([^"'][^;\s]*));?$/mg;
 var EXPORT_RX = /^\s*export\s+default\s+/m;
 
 function identityTransform(code) {
 	return code;
 }
 
-function ScriptLoader(transpileES6) {
+function JSQLoader(transpileES6) {
+	// parse playground directives like @script @style etc.s
+	// return {code, script, style}
+	function parseDirectives(source) {
+	    var r = {};
+	    r.code = source.replace(/^\/\/@([a-z]+)\s+(\S+)$/gm, function(m, p1, p2) {
+	        var list = r[p1];
+	        if (!list) {
+	            r[p1] = list = [];
+	        }
+	        list.push(p2);
+	        return '';
+	    }).trim();
+	    return r;
+	}
 
 	this.create = function(code, name) {
 		if (!name) name = 'QuteLambda';
-		var deps = {};
-		var hasDeps = false;
+		var imports = [], namedImports = {};
+
+		var dirs = parseDirectives(code);
+		code = dirs.code;
+
 		code = code.replace(IMPORT_RX, function(m, p1, p2, p3, p4) {
 			var path = p2 || p3 || p4;
 
 			if (path) {
-				hasDeps = true;
-				deps[p1] = path;
+				if (p1) {
+					namedImports[p1] = path;
+				} else {
+					imports.push(path);
+				}
 			}
 
 			return m.replace('import ', '//import ');
@@ -39,16 +59,14 @@ function ScriptLoader(transpileES6) {
 		});
 
 		if (hasExport) code += '\nreturn __DEFAULT_EXPORT__;\n';
-		// for now script deps are expected to be declared above the script - otherwise compiling will fail
 
 		var script = new Script();
 		script.code = code;
-		script.deps = deps;
+		script.imports = imports;
+		script.namedImports = namedImports;
 		script.name = name;
-
-		if (hasDeps) {
-			console.warn('Imports are ignored in dev version!');
-		}
+		script.scripts = dirs.script;
+		script.styles = dirs.style;
 
 		return script;
 	}
@@ -69,17 +87,59 @@ function ScriptLoader(transpileES6) {
 
 }
 
+function unpkgResolver(name) {
+	if (name.startsWith('./')
+		|| name === '@qutejs/runtime'
+		|| name === '@qutejs/window') return null;
+	return 'https://unpkg.com/'+name;
+}
+
 function Script() {
 	this.name = null;
 	this.code = null;
 	this.comp = null;
-	this.deps = null;
+	this.imports = null;
+	this.namedImports = null;
+	this.scripts = null;
+	this.styles = null;
 
 	this.run = function() {
 		// adding sourceURL for chrom dev tools.
 		var comp = (new Function(this.code+"\n//# sourceURL="+this.name+".js\n"))();
 		this.comp = comp;
 		return comp;
+	}
+
+	this.resolveDependencies = function(resolveFn) {
+		var set = {};
+		if (this.scripts) {
+			this.scripts.forEach(function(script) {
+				set[script] = script;
+			});
+		}
+
+		if (resolveFn !== false) {
+			var imports = this.imports;
+			var namedImports = this.namedImports;
+			if (!resolveFn) resolveFn = unpkgResolver;
+
+			imports && imports.forEach(function(name) {
+				var url = resolveFn(name);
+				if (url) {
+					set[url] = url;
+				}
+			});
+
+			namedImports && Object.keys(namedImports).forEach(function(key) {
+				var name = namedImports[key];
+				var url = resolveFn(name);
+				if (url) {
+					set[url] = url;
+				}
+			});
+		}
+
+		return Object.keys(set);
 	}
 
 	this.load = function(wnd) {
@@ -106,5 +166,5 @@ function Script() {
 }
 
 
-export default ScriptLoader;
+export default JSQLoader;
 

@@ -214,16 +214,7 @@
 		<script>
 
             function createPreviewRequest(source) {
-                var msg = {};
-                msg.code = source.replace(/^\/\/@([a-z]+)\s+(\S+)$/gm, function(m, p1, p2) {
-	                var list = msg[p1];
-	                if (!list) {
-	                    msg[p1] = list = [];
-	                }
-	                list.push(p2);
-	                return '';
-                }).trim();
-                return msg;
+                return {code:source};
             }
 
 			function fetchPage(url, cb) {

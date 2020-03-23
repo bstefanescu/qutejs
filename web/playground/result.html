@@ -144,51 +144,10 @@ ul.playground-navbar > li {
   		if (toLoad) {
   			window.localStorage.removeItem(PREVIEW_PENDING_KEY);
   			var data = JSON.parse(toLoad);
-  			initWithData(data);
-  		} else {
-  			document.getElementById('content').style.display = 'block';
+  			updatePreview(data.code);
   		}
+  		document.getElementById('content').style.display = 'block';
 
-  		function initWithData(data) {
-
-  			function update() {
-				updatePreview(data.code);
-  				document.getElementById('content').style.display = 'block';
-  			}
-
-  			var scripts = data.script || [];
-  			var styles = data.style || [];
-  			for (var i=0,l=styles.length; i<l; i++) {
-  				insertStyle(styles[i]);
-  			}
-  			var scriptsLoaded = 0;
-  			var scriptsToLoad = scripts.length;
-  			for (var i=0; i<scriptsToLoad; i++) {
-  				insertScript(scripts[i], function() {
-  					scriptsLoaded++;
-  					if (scriptsLoaded === scriptsToLoad) {
-  						update();
-  					}
-  				});
-  			}
-  			if (!scriptsToLoad) {
-  				update();
-  			}
-  		}
-
-  		function insertScript(url, cb) {
-  			console.log('insert script', url);
-  			var script = document.createElement('script');
-  			script.setAttribute('src', url);
-  		    script.onload = function() {
-  		    	cb(url, true);
-    		};
-    		script.onerror = function() {
-				cb(url, false);
-    		}
-
-			document.head.appendChild(script);
-  		}
 
   		function insertStyle(url) {
   			console.log('insert style', url);
@@ -205,8 +164,48 @@ ul.playground-navbar > li {
 				else return m;
 			});
 		}
+
+		function insertScript(url) {
+			console.log('insert script', url);
+			return new Promise(function(resolve, reject) {
+				var script = document.createElement('script');
+				script.setAttribute('src', url);
+			    script.onload = function() {
+			    	resolve(url);
+				};
+				script.onerror = function() {
+					reject(url);
+				}
+				document.head.appendChild(script);
+			});
+		}
+
+		function loadScripts(urls) {
+			var promises = [];
+			for (var i=0,l=urls.length; i<l; i++) {
+				promises.push(insertScript(urls[i]));
+			}
+			return Promise.all(promises);
+		}
+
+
+		function runJSQScript(script, appEl) {
+			var VM;
+  			try {
+  				VM = script.run();
+	  			if (!VM) {
+	  				console.warn('No component was exported: You may want to export a component to mount using "export default"');
+	  			} else {
+	  				new VM().mount('app');
+	  			}
+  			} catch (e) {
+  				appEl.innerHTML = "<pre style='color:red'>Error: "+escapeHTML(e.stack)+"</pre><p>You may find out more details by looking in the javascript console";
+  				throw e;
+  			}
+		}
+
 		function updatePreview(source) {
-			Qute.runWithScriptLoader(function(loader) {
+			Qute.runWithLoader(function(loader) {
 	  			appEl.__qute__ && appEl.__qute__.disconnect();
 	  			Qute.restoreRegistry(initialQuteRegistry); // restore initial registry
 
@@ -224,6 +223,10 @@ ul.playground-navbar > li {
 
 	  			var script = loader.create(source);
 
+	  			script.styles && script.styles.forEach(function(url) {
+	  				insertStyle(url);
+	  			});
+
 				// update code view
 				var preEl = document.createElement('PRE');
 				var langEl = document.createElement('CODE');
@@ -240,20 +243,19 @@ ul.playground-navbar > li {
 					sourceEl.innerHTML = source;
 				}, 100);
 
-				// run script
-	  			var VM;
-	  			try {
-	  				VM = script.run();
-		  			if (!VM) {
-		  				console.warn('No component was exported: You may want to export a component to mount using "export default"');
-		  			} else {
-		  				new VM().mount('app');
-		  			}
-	  			} catch (e) {
-	  				appEl.innerHTML = "<pre style='color:red'>Error: "+escapeHTML(e.stack)+"</pre><p>You may find out more details by looking in the javascript console";
-	  				throw e;
-	  			}
+				var urls = script.resolveDependencies();
+				var r;
+				if (urls) {
+						r = loadScripts(urls).then(function() {
+						// run script
+						runJSQScript(script, appEl);
+					}, function(e) {
+						console.error(e);
+						alert('Failed to load script dependencies');
+					});
+				}
 
+				return r || Promise.resolve();
 			});
 		}
 
