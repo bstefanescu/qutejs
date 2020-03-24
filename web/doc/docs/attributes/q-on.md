@@ -6,6 +6,9 @@ See the **[Templates](#/templates)** section for more details.
 ## Example
 
 ```jsq
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
   <div>
     <button @click='handleClick'>Click me: using @</button>
@@ -15,7 +18,7 @@ See the **[Templates](#/templates)** section for more details.
 
 export default Qute('root', {
 	handleClick() {
-		alert('hello!');
+		window.alert('hello!');
 	}
 });
 ```

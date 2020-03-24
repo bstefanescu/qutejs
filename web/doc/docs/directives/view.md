@@ -28,6 +28,8 @@ If the **is** attribute is evaluated to a **falsy** value then no component will
 Here is a simple tabs panel implementation:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='tab1'>
   <div>
   	<p>Hello {{$attrs.user}}!</p>

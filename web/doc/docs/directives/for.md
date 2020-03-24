@@ -24,6 +24,8 @@ Any object having a `length` property will be treated as an **array like object*
 #### Simple iteration:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 <for value='item in list'>
 	<li> <a href={item.href}>{{item.title}}</a></li>
@@ -44,6 +46,8 @@ export default Qute('root', {
 #### Retrieving the index:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 <for value='item,index in list'>
 	<li>{{index+1}}. <a href={item.href}>{{item.title}}</a></li>
@@ -64,6 +68,8 @@ export default Qute('root', {
 #### Using hasNext:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 <for value='item,index,hasNext in list'>
 	<li>{{index+1}}. <a href={item.href}>{{item.title}}</a> <if value='hasNext'><hr></if></li>
@@ -86,6 +92,8 @@ export default Qute('root', {
 When using a regular object instead of an array like object to iterate on then, the list to iterate is obtained using the `Object.keys()` method.
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 <for value='key in dict'>
 	<li>{{key}} = {{dict[key]}}</li>
@@ -106,6 +114,8 @@ export default Qute('root', {
 ### List instance reactivity
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 <div>
 	<button @click='changeList'>Change the list</button>

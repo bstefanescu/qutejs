@@ -1,6 +1,9 @@
 # Popup demo
 
 ```jsq
+import Qute from '@qutejs/runtime';
+import '@qutejs/popup';
+
 <q:template name='root'>
   <div>
     <b>Animation:</b> <select @change='changeAnimation'>

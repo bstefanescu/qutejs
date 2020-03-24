@@ -95,28 +95,30 @@ Qute('my-list', {
 The following example is displaying a list of items and allows the used to add a new item by clicking on the `Add` button.
 
 ```jsq
-  <q:template name='item'>
-    <div>{{$attrs.text}}</div>
-  </q:template>
+import Qute from '@qutejs/runtime';
 
-  <q:template name='root'>
-    <div>
-      <item q:for='item in list' q:key='.' text={item} />
-      <button @click='add'>Add</button>
-    </div>
-  </q:template>
+<q:template name='item'>
+  <div>{{$attrs.text}}</div>
+</q:template>
 
-  export default Qute('root', {
-    counter: 0,
-    add() {
-      this.list = this.list.concat('Item '+(this.counter++));
-    },
-    init() {
-      return {
-        list: ['Item X', 'Item Y']
-      };
-    }
-  });
+<q:template name='root'>
+  <div>
+    <item q:for='item in list' q:key='.' text={item} />
+    <button @click='add'>Add</button>
+  </div>
+</q:template>
+
+export default Qute('root', {
+  counter: 0,
+  add() {
+    this.list = this.list.concat('Item '+(this.counter++));
+  },
+  init() {
+    return {
+      list: ['Item X', 'Item Y']
+    };
+  }
+});
 ```
 
 ### Removing items
@@ -124,6 +126,8 @@ The following example is displaying a list of items and allows the used to add a
 Let's adding a remove button.
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='item'>
   <tr>
     <td>{{$attrs.text}}</td>
@@ -198,6 +202,8 @@ Let's rewrite the example above, and attach a ViewNodel to the `item` template.
 Also, since we can chamnge the item text, we need to use an immutable id property to identify the item.
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='item'>
   <tr>
     <td>{{text}}</td>

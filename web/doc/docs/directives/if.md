@@ -21,6 +21,8 @@ If you want to conditionaly hide or show an element then use the **[q:show](#/at
 ### Example
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 <if value='hasSection2'>
   <h1>Section 2</h1>
@@ -52,6 +54,8 @@ The else directive can be used in conjuction with the *if* directive. It can onl
 ### Example
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 <if value='user' onchange='onUserChanged'>
   <div>Hello {{user.name}}. <a href='#logout' @click='doLogout'>Logout</a></div>
@@ -99,6 +103,8 @@ The else-if directive allows you to create conditional if / else if / else chain
 ### Example
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 	<div>
 		Select status:

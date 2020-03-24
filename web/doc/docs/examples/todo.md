@@ -19,7 +19,8 @@ The `todo-list` component is responsible for managing the list structure, while 
 ```jsq
 //@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
 
-//import Qute from '@qutejs/runtime';
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
 
 // ------------------------------------------ Styles
 
@@ -132,7 +133,8 @@ Because we don't use a component for each item we need to explicitly update the 
 ```jsq
 //@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
 
-//import Qute from '@qutejs/runtime';
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
 
 // ------------------------------------------ Styles
 
@@ -231,7 +233,8 @@ Here is the same example as before, but without using the Qute list helper. The 
 ```jsq
 //@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
 
-//import Qute from '@qutejs/runtime';
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
 
 // ------------------------------------------ Styles
 

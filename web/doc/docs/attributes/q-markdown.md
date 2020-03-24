@@ -22,6 +22,8 @@ It **only works on DOM elements** and cannot be used on component tags.
 ## Example
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 <div q:markdown>
 # My Header
@@ -45,6 +47,8 @@ Qute.converters.typeName = theConvertFunction;
 ## Example
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 <div q:content-random />
 </q:template>

@@ -13,6 +13,8 @@ Also, you can use this to send events between components inside different roots 
 ## Example
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='tbar'>
 	<a href='#' data-message-type='info' data-message-content='hello!'>Send message</a>
 </q:template>

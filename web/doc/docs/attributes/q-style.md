@@ -49,6 +49,8 @@ When using `q:style` attribute on components it will modify the style on the com
 Example:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='test-style'>
 	<div><slot/></div>
 </q:template>

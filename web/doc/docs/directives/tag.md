@@ -10,6 +10,9 @@ You can use both `is='expr'` or `is={expr}` syntaxes to specify the `is` value.
 #### A dynamic HTML tag
 
 ```jsq
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+
 <q:template name='action'>
 <tag is='$attrs.is||"a"' href='#' q:emit-click><slot/></tag>
 </q:template>
@@ -24,6 +27,9 @@ export default Qute('root');
 #### A dynamic Qute component
 
 ```jsq
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+
 <q:template name='link'>
 <a class='link' href='#' q:emit-click><slot/></a>
 </q:template>

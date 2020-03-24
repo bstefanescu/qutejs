@@ -20,7 +20,7 @@ module.exports = function(project, args) {
     var webFileName = project.kebabCaseName.replace('qutejs-', 'qute-');
 
     // if the project is not in components group directory then the project doesn't need postcss and qute rollup plugins
-    hasJSQ = project.group === 'components';
+    var hasJSQ = input.endsWith('.jsq');
 
 
     const basePlugins = [

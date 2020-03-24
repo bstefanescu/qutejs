@@ -1,6 +1,8 @@
 # The q:emit attribute
 
 ```jsq
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
 
 <q:template name='fun-button'>
 	<div>
@@ -26,7 +28,7 @@ export default Qute('root', {
 	handleAction(e) {
 		console.log('Action Event', e, e.detail);
 		console.log('Original Event', e.originalEvent)
-			alert('Handling Action!');
+		window.alert('Handling Action!');
 	}
 });
 ```

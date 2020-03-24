@@ -13,6 +13,8 @@ The following examples demonstrates the usage of:
 The following component is just printing "Hello World!".
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='hello'>
 	<div>Hello World!</div>
 </q:template>
@@ -25,6 +27,9 @@ export default Qute('hello');
 The following compopnent is displaying a "Hello World!" alert when clicking a button.
 
 ```jsq
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+
 <q:template name='hello'>
 	<button @click='sayHello'>Say Hello</button>
 </q:template>
@@ -42,6 +47,9 @@ The following component is displaying a "Hello {name}!" where `{name}` is the va
 
 
 ```jsq
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+
 <q:template name='hello'>
 	<div>
 		<input type='text' value="World" q:call="element => this.inputElement = element" />
@@ -63,6 +71,8 @@ Use a reactive property to store the user name to greet. When changing the user 
 **Note** that the property is updated using the input on `change` event, so you need to press enter to trigger a `change` event.
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='hello'>
 	<div>
 		Enter an user name: <input type='text' value={name} @change='e => name = e.target.value' />
@@ -88,6 +98,8 @@ The initial property value will be correctly displayed, but when changed the dis
 
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='hello'>
 	<div>
 		Enter an user name: <input type='text' value={name} @change='e => name = e.target.value' />
@@ -109,6 +121,9 @@ export default Qute('hello', {
 The same as the reactive property example, but we will use the `q:model` directive to bind a reactive property to an input value. The binding is bidirectional so we don't need anymore to explicitly handle the `change` event (this will be done under the hood).
 
 ```jsq
+import Qute from '@qutejs/runtime';
+import '@qutejs/form';
+
 <q:template name='hello'>
 	<div>
 		Enter an user name: <input type='text' q:model='name' />
@@ -126,13 +141,15 @@ export default Qute('hello', {
 });
 ```
 
+**Note** that we need to import the `form` plugin since the `q:model` directive is defined there.
 
 ## Internationalziation
 
 This example is using the **[i18n plugin](#/plugins/i18n)**.
 
 ```jsq
-//import '@qutejs/i18n';
+import Qute from '@qutejs/runtime';
+import '@qutejs/i18n';
 
 <q:template name='hello'>
 	<div>

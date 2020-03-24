@@ -10,9 +10,7 @@ These examples demonstrates the usage of:
 ## A Simple Tab Bar
 
 ```jsq
-
-//import Qute from '@qutejs/runtime';
-//import '@qutejs/group';
+import Qute from '@qutejs/runtime';
 
 // -------------------------------------------------- Tab Bar styles
 
@@ -116,9 +114,8 @@ In this example we will define a custom tab that contains a `remove` action, and
 Note that most of the code in the example is `css` code. The javascript code of the tabbar component is in contrast ver short, thanks to the Qute expressive model.
 
 ```jsq
-
-//import Qute from '@qutejs/runtime';
-//import '@qutejs/group';
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
 
 // -------------------------------------------------- Tab Bar styles
 

@@ -1,6 +1,9 @@
 # Modal Demo
 
 ```jsq
+import Qute from '@qutejs/runtime';
+import '@qutejs/modal';
+
 <q:template name='root'>
   <div>
     <b>Animation:</b> <select @change='changeAnimation'>

@@ -128,6 +128,9 @@ The `event.detail` field points to an object like:
 ## Example
 
 ```jsq
+import Qute from '@qutejs/runtime';
+import '@qutejs/modal';
+
 <q:template name='root'>
   <div>
     <button style='margin-left: 10px; margin-top: 10px; padding: 10px'

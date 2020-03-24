@@ -20,6 +20,9 @@ When using `q:call` on a `ViewModel` or functional component tag the `q:call` fu
 ### Fetch a DOM element instance from a `ViewModel` component
 
 ```jsq
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 	<div>
 	<input type='text' name='name' q:call='el => this.inputEl = el'><button @click='onClick'>Click me!</button>
@@ -28,7 +31,7 @@ When using `q:call` on a `ViewModel` or functional component tag the `q:call` fu
 
 export default Qute('root', {
 	onClick() {
-		alert('Input value is '+this.inputEl.value);
+		window.alert('Input value is '+this.inputEl.value);
 	}
 });
 ```
@@ -40,6 +43,9 @@ Here we used an arrow function to store the input element instance as a componen
 Let's do more, we can initialize the input if empty:
 
 ```jsq
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 	<div>
 	<input type='text' name='name' q:call='onInputCreate' />
@@ -53,7 +59,7 @@ export default Qute('root', {
 		if (!el.value) el.value = 'Hello!';
 	},
 	onClick() {
-		alert('Input value is '+this.inputEl.value);
+		window.alert('Input value is '+this.inputEl.value);
 	}
 });
 ```
@@ -64,6 +70,8 @@ A functional component doesn't take part on the component life cycle.  \
 Anyway, we can use the `q:call` directive to register a handler for connect and disconnect life cycle events on the current rendering context.
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='functional' import='handleFuncLoad'>
     <div q:call='handleFuncLoad'>I am a functional component</div>
 </q:template>

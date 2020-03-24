@@ -6,7 +6,7 @@
     "build": "ws build",
     "dist": "ws dist",
     "test": "ws test",
-    "start": "ws build dev all && ws dev run 'watch dev all' 'start doc'"
+    "start": "ws build && ws doc run 'watch doc' 'start doc'"
   },
   "author": "Bogdan Stefanescu <bogdan@quandora.com>",
   "license": "MIT",
@@ -57,7 +57,8 @@
       "plugins/*",
       "components/*",
       "web/polyfill",
-      "web/dev"
+      "web/dev",
+      "web/doc"
     ],
     "devServer": [
       {
@@ -66,7 +67,12 @@
         "index": "doc/index.html",
         "livereload": true,
         "open": true,
-        "verbose": false
+        "verbose": false,
+        "host": "localhost",
+        "https": {
+          "key": "./build/localhost.key",
+          "cert": "./build/localhost.crt"
+        }
       }
     ],
     "tasks": {

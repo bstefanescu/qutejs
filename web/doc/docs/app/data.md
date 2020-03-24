@@ -24,6 +24,8 @@ The property object provides two methods: `get()` and `set(value)` to get and re
 You can also register a listener on the property to be notified when the property value changes:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 var app = new Qute.App();
 var prop = app.defineProp("Session/user", null);
 prop.addChangeListener(function(newValue, oldValue) {
@@ -38,6 +40,8 @@ Another useful method is the property `link(target, name)` method which will cre
 In this way, you can link application properties to a service instance, to simplify accessing the application property:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 function SessionManager(app) {
 	// this will create an application property named 'Session/user'
 	// and then will create a local mirror property named 'user'.
@@ -86,6 +90,10 @@ Application properties which are bound to component properties will trigger a co
 ### Example - Binding an async property to a ViewModel Component
 
 ```jsq
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+import '@qutejs/spinner';
+
 <q:template name='root'>
 	<if value='user'>
 		<div style='display:inline-block'>Hello {{user}}!</div>

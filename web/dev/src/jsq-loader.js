@@ -11,6 +11,7 @@ function identityTransform(code) {
 	return code;
 }
 
+
 function JSQLoader(transpileES6) {
 	// parse playground directives like @script @style etc.s
 	// return {code, script, style}
@@ -33,11 +34,12 @@ function JSQLoader(transpileES6) {
 
 		var dirs = parseDirectives(code);
 		code = dirs.code;
-
 		code = code.replace(IMPORT_RX, function(m, p1, p2, p3, p4) {
 			var path = p2 || p3 || p4;
-
 			if (path) {
+				if (path.startsWith('\'') || path.startsWith("\"")) {
+					path = path.substring(1, path.length-1);
+				}
 				if (p1) {
 					namedImports[p1] = path;
 				} else {
@@ -47,6 +49,7 @@ function JSQLoader(transpileES6) {
 
 			return m.replace('import ', '//import ');
 		});
+
 		var hasExport = false;
 		code = code.replace(EXPORT_RX, function(m) {
 			hasExport = true;
@@ -122,7 +125,6 @@ function Script() {
 			var imports = this.imports;
 			var namedImports = this.namedImports;
 			if (!resolveFn) resolveFn = unpkgResolver;
-
 			imports && imports.forEach(function(name) {
 				var url = resolveFn(name);
 				if (url) {

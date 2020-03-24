@@ -11,6 +11,8 @@ In this example we will implement a custom form control to increment / decrement
 Let's start with a simple counter:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 // ------------------------------------------ Templates
 
 <q:template name='counter'>
@@ -48,6 +50,9 @@ Let's update the component as follows:
 - trigger a `change` event omn the hidden input when the counter value changes.
 
 ```jsq
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+
 // ------------------------------------------ Templates
 
 <q:template name='counter'>
@@ -156,7 +161,9 @@ Then you can use the `q:model` directive to bind the control value to a reactive
 Here is the final code for the counter component:
 
 ```jsq
-//import { registerControl } from '@qutejs/form';
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+import '@qutejs/form';
 
 // ------------------------------------------ Templates
 

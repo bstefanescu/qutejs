@@ -3,6 +3,10 @@
 ```jsq
 //@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
 
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+import '@qutejs/spinner';
+
 <q:style>
 .tbar {
 	list-style:none;

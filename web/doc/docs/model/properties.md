@@ -66,6 +66,8 @@ If an attribute [camel case](https://en.wikipedia.org/wiki/Camel_case) name matc
 ### Example
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='my-component'>
 	<div>
 	<div>reactiveProp value: {{reactiveProp}}</div>

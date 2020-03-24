@@ -33,6 +33,9 @@ and
 ### Example
 
 ```jsq
+import Qute from '@qutejs/runtime';
+import '@qutejs/form';
+
 <q:style>
 div {
 	padding: 10px
@@ -211,6 +214,9 @@ where checkPassword is a function provided by the current component model, that 
 Here is a complete example on form validation
 
 ```jsq
+import Qute from '@qutejs/runtime';
+import '@qutejs/form';
+
 <q:style>
 .row {
 	margin: 8px 0;

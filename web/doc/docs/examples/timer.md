@@ -10,6 +10,9 @@ There are cases when you don't want to use reactive properties to trigger DOM up
 The following component is regularly updating the DOM to display the current time:
 
 ```jsq
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+
 <q:template name='time'>
 	<div>{{now()}}</div>
 </q:template>

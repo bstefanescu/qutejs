@@ -6,7 +6,6 @@ const uglify = require('rollup-plugin-uglify').uglify;
 
 module.exports = function(project, args) {
     const PROD = args.indexOf('prod') > -1;
-    const ALL = args.indexOf('all') > -1;
 
     const basePlugins = [
         nodeResolve( {preferBuiltins: true} ),
@@ -14,13 +13,9 @@ module.exports = function(project, args) {
         buble({exclude: ["node_modules/**", "**/node_modules/**"]})
     ];
 
-    function webConfig(prod, all) {
+    function webConfig(prod) {
     	var index = 'src/index.js';
     	var libName = 'qute-dev';
-    	if (all) {
-    		index = 'src/index-all.js';
-    		libName = 'qute-dev-all'
-    	}
         return {
             input: project.file(index),
             external: [ '@qutejs/window' ],
@@ -42,7 +37,7 @@ module.exports = function(project, args) {
 
     return [
     	// the dev package is not usable as esm or cjs - only web dist.
-        webConfig(false, ALL),
-        PROD && webConfig(true, ALL)
+        webConfig(false),
+        PROD && webConfig(true)
     ];
 }

@@ -58,6 +58,8 @@ Or, even more simple, is to use an **[application property](#/app/data)** to set
 Here is an example that change the content of a view from a **Qute Application** service (we are not using a real router for the sake of brevity):
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='app-root'>
     <div>
         <div>

@@ -127,6 +127,8 @@ If you register a global directive (i.e. not restricted to a tag name) named `va
 In this example we change the font color to green, for all `span` elements contained in the target `div` when it is created.
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 	<div q:color-spans>Hello <span>world</span>!</div>
 </q:template>
@@ -148,6 +150,8 @@ export default Qute('root');
 Let's now modify the previous example and use a value to specify a color.
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 	<div q:color-spans='red'>Hello <span>world</span>!</div>
 </q:template>
@@ -186,6 +190,8 @@ and the code will work under any circumstances.
 Let's now use a component reactive property to store the color to use. When the color is changed we re-run the `color-spans` directive to re-run the directice using the new color:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
     <div color={color} q:color-spans={color}>
         Hello <span>world</span>!

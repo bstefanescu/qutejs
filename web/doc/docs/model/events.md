@@ -24,6 +24,8 @@ You can register a DOM event listener directly in the template by using a specia
 #### Example
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
   <button @click='handleClick'>Click me</button>
 </q:template>
@@ -38,6 +40,8 @@ export default Qute('root', {
 You can also use simple expressions instead of passing a listener method name:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
   <button @click='console.log("Handling event: ", this, $1)'>Click me</button>
 </q:template>
@@ -50,6 +54,8 @@ In that case the event object is accessible as a variable named `$1`.
 An alternate way to write inline expressions is to use an arrow functions:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
   <button @click='event => console.log("Handling event: ", this, event)'>Click me</button>
 </q:template>
@@ -66,6 +72,8 @@ The component factory **API** provides you an easy way to do it.
 You can declare a listener when defining the component **ViewModel** by using the `on(event[, selector], listener)` method like in the example below:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
   <button>Click me</button>
 </q:template>
@@ -81,6 +89,8 @@ The listener will be automatically registered when the component is connected to
 The `on` method used above can be chained to easily register multiple listeners:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 <div>
   <input type='text' name='text' value={text} />
@@ -109,6 +119,8 @@ You can also use the `$on` method on the **ViewModel** instance to register a li
 When using this registration method it is recommended to do the registration when the component is connected to the DOM.
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
   <button>Click me</button>
 </q:template>
@@ -150,6 +162,9 @@ Emitting an event from a `ViewModel` instance is firing the event at the compone
 ### Example
 
 ```jsq
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+
 <q:template name='my-button'>
 	<button @click='handleClick'><slot/></button>
 </q:template>
@@ -167,7 +182,7 @@ Qute('my-button', {
 
 export default Qute('root', {
 	performAction(event) {
-		alert('The button was clicked');
+		window.alert('The button was clicked');
 	}
 });
 ```
@@ -177,6 +192,9 @@ export default Qute('root', {
 Functional components are also exposing `emit` and `emitAsync`. In that case the event will be dispatched at the functional component root element.
 
 ```jsq
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+
 <q:template name='my-button'>
 	<button @click='emitAsync("action")'><slot/></button>
 </q:template>
@@ -187,7 +205,7 @@ Functional components are also exposing `emit` and `emitAsync`. In that case the
 
 export default Qute('root', {
 	performAction(event) {
-		alert('The button was clicked');
+		window.alert('The button was clicked');
 	}
 });
 ```
@@ -211,6 +229,8 @@ You can also use the **[q:async-emit](#/templates/q-async-emit)** directive to e
 ## Example
 
 ```jsq
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
 
 <q:template name='my-action'>
 	<a href='#' q:emit-action-onclick='$attrs.id'><slot/></a>

@@ -1,0 +1,44 @@
+{
+  "name": "@qutejs/doc",
+  "version": "1.0.0-rc.2",
+  "description": "Qute Popup component",
+  "private": true,
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "browser": "lib/qute-doc.js",
+  "unpkg": "lib/qute-doc.min.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bogdan Stefanescu <bogdan@quandora.com>",
+  "license": "MIT",
+  "keywords": [
+    "qute",
+    "doc",
+    "documentation"
+  ],
+  "homepage": "https://qutejs.org",
+  "repository": {
+    "url": "https://github.com/bstefanescu/qutejs",
+    "type": "git"
+  },
+  "dependencies": {
+    "@qutejs/runtime": "1.0.0-rc.2",
+    "@qutejs/window": "1.0.0-rc.2",
+    "@qutejs/router": "1.0.0-rc.2",
+    "@qutejs/spinner": "1.0.0-rc.2",
+    "@qutejs/polyfill": "1.0.0-rc.2"
+  },
+  "devDependencies": {
+    "@qutejs/rollup-plugin-qute": "1.0.0-rc.2"
+  },
+  "build": {
+    "config": "component",
+    "external": [
+      "@qutejs/window"
+    ]
+  }
+}

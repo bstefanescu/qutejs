@@ -86,6 +86,9 @@ The `event.detail` field points to the popup root element.
 ## Example
 
 ```jsq
+import Qute from '@qutejs/runtime';
+import '@qutejs/popup';
+
 <q:template name='root'>
   <div>
     <button style='margin-left: 50px; margin-top: 50px; padding: 10px'

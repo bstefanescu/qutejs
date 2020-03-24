@@ -14,7 +14,7 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-	<script type="text/javascript" src='../dev/lib/qute-dev-all.js'></script>
+	<script type="text/javascript" src='../dev/lib/qute-dev.js'></script>
 	<script type="text/javascript" src='hh.js'></script>
 
 	<script>
@@ -105,6 +105,15 @@ ul.playground-navbar > li {
 #content {
 	display:none;
 }
+
+#loader {
+	display:none;
+	color: #337ab7;
+	text-align: center;
+	font-size: 24pt;
+	opacity: 0.7;
+	margin-top: 100px;
+}
 	</style>
   </head>
 
@@ -119,6 +128,9 @@ ul.playground-navbar > li {
 			<li><a id='close' href='#close'><i title='Close Preview' class="fa fa-times"></i></a></li>
 	  	</ul>
 	  	<div id='main'>
+	  		<div id='loader'>
+	  			<i class='fas fa-spinner fa-spin'></i>
+	  		</div>
 	  	  	<p id='run-panel' style='text-align: center; font-size: 64pt'>
 	  	  		<a href='#play' id='play'><i class='far fa-play-circle'></i></a>
 	  	  	</p>
@@ -246,11 +258,14 @@ ul.playground-navbar > li {
 				var urls = script.resolveDependencies();
 				var r;
 				if (urls) {
-						r = loadScripts(urls).then(function() {
+					document.getElementById('loader').style.display = 'block';
+					r = loadScripts(urls).then(function() {
 						// run script
 						runJSQScript(script, appEl);
+						document.getElementById('loader').style.display = 'none';
 					}, function(e) {
 						console.error(e);
+						document.getElementById('loader').style.display = 'none';
 						alert('Failed to load script dependencies');
 					});
 				}

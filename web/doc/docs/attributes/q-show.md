@@ -25,6 +25,8 @@ When using `q:show` attribute on components it will modify the display style pro
 Example:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='test-show'>
     <div><slot/></div>
 </q:template>

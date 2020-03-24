@@ -3,6 +3,8 @@
 You can also use the ES6 class syntax to define components. Let's look at an example
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 <div>{{message}}</div>
 </q:template>
@@ -32,6 +34,9 @@ A component class must extends the Qute.ViewModel. Apart this the class is ident
 If you want to use a custom render method (and not to use a template) then you need to define the render method in your class.
 
 ```jsq
+import {document} from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+
 class MyComponent extends Qute.ViewModel {
 	init() {
 		// let's define a reactive property

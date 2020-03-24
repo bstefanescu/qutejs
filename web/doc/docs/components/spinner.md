@@ -35,6 +35,9 @@ This is the only directive supported by this component.
 ## Example
 
 ```jsq
+import Qute from '@qutejs/runtime';
+import '@qutejs/spinner';
+
 <q:template name='root'>
     <div style='margin-top: 20px'>
 	    <spinner color='green' size='16px' />

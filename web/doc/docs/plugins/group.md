@@ -36,6 +36,9 @@ The value attribute can be used on `LI` elements, and it will simply store the g
 Let's implement a tabs bar using the **actions group** custom attributes.
 
 ```jsq
+import Qute from '@qutejs/runtime';
+import '@qutejs/group';
+
 <q:style>
 ul.group {
     margin: 0 0 10px -4px; padding: 0; list-style-type: none;
@@ -85,6 +88,9 @@ export default Qute('root', {
 We will rewrite the previous example by using an expression binding and an explicit change listener to update back the component.
 
 ```jsq
+import Qute from '@qutejs/runtime';
+import '@qutejs/group';
+
 <q:style>
 ul.group {
     margin: 0 0 10px -4px; padding: 0; list-style-type: none;

@@ -5,6 +5,8 @@ The slot directive can be used to inject templates inside a component from the c
 Let's say you want to create a component which display an alert message. You want this alert message to contain rich HTML text which can be specified by the caller when the component is used:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='alert-message'>
 <div class='alert'><slot/></div>
 </q:template>
@@ -32,6 +34,8 @@ In some situations you may want more than one injectable content. In this case y
 #### Example
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='alert-message'>
 <div>
   <h3><slot name='title' /></h3>
@@ -62,6 +66,8 @@ A slot can have a default value. If no content is injected in the slot (i.e. no 
 #### Example
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='alert-message'>
 <div class='alert'><slot>Unknown Error!</slot></div>
 </q:template>
@@ -94,6 +100,8 @@ In the same way a `nested` directive can be used without a name. In this case it
 Slots can be propagated down to components on any nested level. Here is an example:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='my-title'>
 	<h3><slot/></h3>
 </q:template>
@@ -130,6 +138,8 @@ You can also inject variable content inside slots. To do this, use the **[q:html
 We can rewrite the previous example like this:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='my-title'>
 	<h3><slot/></h3>
 </q:template>

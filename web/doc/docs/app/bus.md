@@ -1,4 +1,3 @@
-
 # Message Bus
 
 No matter which application you build, components need a way to communicate with each other.
@@ -14,6 +13,8 @@ When instantiating a child component the parent is passing down some information
 This is the most basic form of communication.
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='child'>
 	<div>{{$attrs.message}}</div>
 </q:template>
@@ -41,6 +42,7 @@ A common use case is for example to inform the parent component that some action
 This type of communication can be done through DOM events that bubbles up to ancestor elements and can be intercepted by the parent component.
 
 ```jsq
+import Qute from '@qutejs/runtime';
 
 <q:template name='child'>
 	<button>Remove Me!</button>
@@ -75,6 +77,8 @@ This can be done by using the **message bus** provided by the [application insta
 Let's take the example of a dropdown menu:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='alert'>
 	<div style='display:none;position:fixed; left:40%; top:40%; border: 1px solid red; padding: 10px'>
 	<div><slot/></div>
@@ -133,6 +137,8 @@ This is because the message bus is provided to components via the [application i
 Let's see an example:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='child1'>
 <div>
 	<button @click='askSeconds'>Ask Seconds!</button>
@@ -184,6 +190,8 @@ Let's rewrite the previous example to pass a callback to retrieve the informatio
 
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='child1'>
 <div>
 	<button @click='askSeconds'>Ask Seconds! {{seconds}}</button>
@@ -254,6 +262,8 @@ When installing a root component we can use the same application instance used b
 ### Example
 
 ```jsq
+import {document} from '@qutejs/window';
+import Qute from '@qutejs/runtime';
 
 <q:template name='child1'>
 <div>I am child1 from root1</div>

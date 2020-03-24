@@ -50,6 +50,8 @@ Why **functional**? Because the component is practically a rendering function. T
 Here is an example:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='message'>
     <div>{{$attrs.msg}}</div>
 </q:template>
@@ -441,6 +443,8 @@ There are cases when you want to manually update the DOM sub-tree corresponding 
 ## Complete Example
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='my-component'>
   <button>{{buttonLabel}}</button>
 </q:template>

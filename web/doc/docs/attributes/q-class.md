@@ -70,6 +70,8 @@ When using `q:class` attribute on components it will modify the classes on the c
 Example:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='test-class'>
 	<div><slot/></div>
 </q:template>
@@ -92,6 +94,8 @@ Here is a simple example on how to use the `q:class` object notation to conditio
 
 ```jsq
 //@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
+
+import Qute from '@qutejs/runtime';
 
 <q:template name='root'>
 <ul class="nav nav-pills" @click='e => page = e.target.getAttribute("data-key")'>

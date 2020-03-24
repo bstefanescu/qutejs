@@ -15,6 +15,8 @@ It **only works on DOM elements** and cannot be used on component tags.
 where `someVar` resolve to a valid HTML text. The HTML text will be injected as the content of the div tag without being interpreted as a template.
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 <div q:html='content' />
 </q:template>
@@ -32,6 +34,8 @@ changing the `content` property value will be reflected in the DOM:
 
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 <div>
   <div q:html='content' />
@@ -60,6 +64,8 @@ export default Qute('root', {
 **Example:**
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 <div q:html>
     <p>This is some <b>HTML</b> content</p>

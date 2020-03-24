@@ -66,6 +66,8 @@ If you want to insert unescaped HTML content then use the **[q:html](#/attribute
 **Example:**
 
 ```jsq-norun
+import Qute from '@qutejs/runtime';
+
 <q:template name='root'>
 <div>
   <div>Hello {{fullName}}!</div>

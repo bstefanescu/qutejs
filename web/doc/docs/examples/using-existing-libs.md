@@ -8,6 +8,9 @@ As Qute is working directly on the DOM you can easily use any plain javascript c
 //playground directives
 //@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
 
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+
 <q:template name='bs-button'>
 	<button class={$attrs['bs-type']?'btn btn-'+$attrs['bs-type']:'btn'} q:attrs='!bs-type' q:emit-click><slot/></button>
 </q:template>
@@ -26,6 +29,8 @@ export default Qute('my-component')
 //@script https://code.jquery.com/jquery-3.4.1.slim.min.js
 //@script ../doc/files/selectivity-jquery.min.js
 //@style ../doc/files/selectivity-jquery.min.css
+
+import Qute from '@qutejs/runtime';
 
 <q:template name='my-component'>
 	<div></div>

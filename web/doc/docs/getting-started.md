@@ -309,8 +309,8 @@ Before releasing your components it is recommended to create a **Qute Component 
       });
     </script>
     <script>
-      // load components declared in the page
-      Qute.loadScripts();
+      // load inlined components
+      Qute.load();
       // get the Component ViewModel by name
       var MyTemplate = Qute.vm('my-template');
       // create a new instance and mount it in the document body.

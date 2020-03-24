@@ -15,6 +15,7 @@ Both of these notations are equivalent.
 ## Example
 
 ```jsq
+import Qute from '@qutejs/runtime';
 
 <q:template name='root'>
 	<div>
@@ -41,6 +42,8 @@ export default Qute('root', {
 When using `q:toggle` attribute on components it will modify the attributes on the component root element. This works for both **functional** and **ViewModel** components.
 
 ```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='button1'>
 	<button><slot/></button>
 </q:template>
