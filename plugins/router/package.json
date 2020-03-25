@@ -38,7 +38,6 @@
     "@qutejs/window": "1.0.0-rc.2"
   },
   "build": {
-    "config": "component",
-    "input": "src/index.js"
+    "config": "component"
   }
 }

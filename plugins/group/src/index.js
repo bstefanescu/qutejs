@@ -8,7 +8,7 @@ function liValueDirective(xattrs, valueExpr) {
     }
 }
 
-export default function groupDirective(xattrs, valueExpr) {
+const Group = function groupDirective(xattrs, valueExpr) {
     var rendering = this, value, boundProp = (typeof valueExpr === 'string') ? valueExpr : null;
 
     if (boundProp && !rendering.vm) {
@@ -65,3 +65,6 @@ export default function groupDirective(xattrs, valueExpr) {
 Qute.registerDirective('li', 'value', liValueDirective);
 Qute.registerDirective('ul', 'model', groupDirective);
 Qute.registerDirective('ol', 'model', groupDirective);
+
+Qute.Group = Group;
+export default Group;

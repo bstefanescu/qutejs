@@ -37,7 +37,6 @@
   },
   "build": {
     "config": "component",
-    "input": "src/index.js",
     "external": [
       "@qutejs/window",
       "@qutejs/runtime"

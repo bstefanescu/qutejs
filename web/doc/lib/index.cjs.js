@@ -2856,7 +2856,7 @@ function updateStyle(div, color, size) {
 	}
 }
 
-var ellipsis = Qute('spinner', function(r, xattrs) {
+var Spinner = Qute('spinner', function(r, xattrs) {
 	var el = window.document.createElement('DIV');
 
 	var color, size, classes = 'spinner';
@@ -2895,6 +2895,8 @@ var ellipsis = Qute('spinner', function(r, xattrs) {
 
 	return el;
 });
+
+Qute.Spinner = Spinner;
 
 /*
 * Extracted from Backbone.js History 1.1.0

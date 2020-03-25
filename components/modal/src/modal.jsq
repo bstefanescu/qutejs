@@ -1,4 +1,4 @@
-
+import {document} from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import Modal from './modal.js';
 import css from './modal.css';
@@ -9,7 +9,7 @@ var modal_id = 0;
 
 /**
  */
-export default Qute("modal", {
+const QuteModal = Qute("modal", {
 	init: function() {
 		return {
 			animation: null,
@@ -77,3 +77,6 @@ export default Qute("modal", {
 	return false;
 });
 
+Qute.Modal = QuteModal;
+
+export default QuteModal;

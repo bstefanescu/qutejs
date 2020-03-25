@@ -221,7 +221,7 @@ Qute('counter', {
 	}
 });
 
-Qute.$.form.registerControl("counter");
+Qute.Form.registerControl("counter");
 
 // ------------------------------------------ Testing
 

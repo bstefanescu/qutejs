@@ -16,25 +16,24 @@ module.exports = function(project, args) {
     const PROD = args.indexOf('prod') > -1;
     var globals = project.config.globals || {};
     var external = project.config.external || project.runtimeDeps;
-    var input = project.file(project.config.input || 'src/index.jsq');
+    var input = project.file('src/index.js');
+    var inputWeb = project.file('src/index-web.js');
+    // project.file(project.config.input || 'src/index.jsq');
+    // var inputWeb = project.config.webInput ? project.file(project.config.webInput) : input;
     var webFileName = project.kebabCaseName.replace('qutejs-', 'qute-');
-
-    // if the project is not in components group directory then the project doesn't need postcss and qute rollup plugins
-    var hasJSQ = input.endsWith('.jsq');
-
 
     const basePlugins = [
         replace({ 'process.env.NODE_ENV': '"production"' }), // used by polyglot
         nodeResolve( {preferBuiltins: true} ),
         commonjs(),
-        hasJSQ && require('rollup-plugin-postcss')({inject: false}),
-        hasJSQ && require('@qutejs/rollup-plugin-qute')(),
+        require('rollup-plugin-postcss')({inject: false}),
+        require('@qutejs/rollup-plugin-qute')(),
         buble({exclude: ["node_modules/**", "**/node_modules/**"], include: ["**/*.js", "**/*.jsq"]})
     ];
 
     function webConfig(prod) {
         return {
-            input: input,
+            input: inputWeb,
             external: external,
             plugins: [
                 ...basePlugins,
@@ -44,7 +43,7 @@ module.exports = function(project, args) {
                 format: 'iife',
                 file: project.file(`lib/${webFileName}.${prod?'min.js':'js'}`),
                 sourcemap: true,
-                name: project.pascalCaseName,
+                name: project.pascalCaseName.replace('Qutejs', 'Qute'),
                 globals: {
                     '@qutejs/window': 'window',
                     '@qutejs/runtime': 'Qute',

@@ -21,6 +21,5 @@ var FormApi = {
 		Qute.registerDirective(tag, 'model', controlModelDirective);
 	}
 }
-//TODO use Qute.registerModule('form', FormApi) which in prod does nothing
-Qute.$.form = FormApi;
+Qute.Form = FormApi;
 export default FormApi;

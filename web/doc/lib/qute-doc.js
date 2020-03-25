@@ -1,4 +1,4 @@
-var QutejsDoc = (function (window) {
+(function (window) {
   'use strict';
 
   var window__default = 'default' in window ? window['default'] : window;
@@ -2854,7 +2854,7 @@ var QutejsDoc = (function (window) {
   	}
   }
 
-  var ellipsis = Qute('spinner', function(r, xattrs) {
+  var Spinner = Qute('spinner', function(r, xattrs) {
   	var el = window.document.createElement('DIV');
 
   	var color, size, classes = 'spinner';
@@ -2893,6 +2893,8 @@ var QutejsDoc = (function (window) {
 
   	return el;
   });
+
+  Qute.Spinner = Spinner;
 
   /*
   * Extracted from Backbone.js History 1.1.0
@@ -3861,8 +3863,6 @@ var QutejsDoc = (function (window) {
   }
 
   new App$1().mount();
-
-  return App$1;
 
 }(window));
 //# sourceMappingURL=qute-doc.js.map

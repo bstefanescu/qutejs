@@ -122,7 +122,9 @@ The router is registering a `route` channel that you can use to change routes. A
 Usage:
 
 ```javascript
-var router = new QuteRouter({
+import Router from '@qutejs/router';
+
+var router = new Router({
   "some/<path>+": function(vars) {
     // do somehting
   },

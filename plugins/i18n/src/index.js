@@ -31,7 +31,7 @@ function guessLanguage(defaultLang) {
     return defaultLang;
 }
 
-export default function QuteIntl(config) {
+function QuteIntl(config) {
     var lang = null;
     if (!config) {
         config = { locale: lang };
@@ -89,3 +89,6 @@ QuteIntl.prototype = {
 }
 
 Qute.Intl = QuteIntl;
+
+export default QuteIntl;
+
