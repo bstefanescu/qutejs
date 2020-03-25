@@ -9,8 +9,7 @@
 		<div id='app'></div>
 		<script src='./%%name%%-dev.js'></script>
 		<script>
-		var Component = Qute.vm("%%componentName%%");
-		new Component().mount('app');
+		new %%componentName%%().mount('app');
 		</script>
 	</body>
 </html>

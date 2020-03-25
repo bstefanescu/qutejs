@@ -10,6 +10,12 @@ import devServer from 'rollup-plugin-koa-devserver'
 import pkg from '../package.json'
 
 const devMode = process.env.NODE_ENV === 'development';
+var deps;
+if (pkg.dependencies) {
+    deps = Object.keys(pkg.dependencies);
+} else {
+   deps = ['@qutejs/window'];
+}
 
 let plugins = [
 	nodeResolve( {preferBuiltins: true} ),
@@ -25,12 +31,11 @@ let plugins = [
 
 let componentName = "%%componentName%%";
 let moduleName = "%%name%%";
-let moduleVersion = pkg.version;
 let config;
 
 if (devMode) { // dev mode
 	config = {
-		input: './src/index.jsq',
+		input: './src/index.js',
 		output: {
 	        name: componentName,
 	        file: './build/dev/'+moduleName+'-dev.js',
@@ -53,51 +58,49 @@ if (devMode) { // dev mode
 	};
 } else { // build for production
 	config = [{
-		input: './src/index.jsq',
+		input: './src/index.js',
 		output: {
-	        name: componentName,
 	        file: './lib/index.cjs.js',
 	        format: 'cjs',
 	        globals: {'@qutejs/window': 'window'},
 	        sourcemap: true
 		},
-	    external: ['@qutejs/window'],
+	    external: deps,
     	plugins
 	},
 	{
-		input: './src/index.jsq',
+		input: './src/index.js',
 		output: {
-	        name: componentName,
 	        file: './lib/index.esm.js',
 	        format: 'esm',
 	        globals: {'@qutejs/window': 'window'},
 	        sourcemap: true
 		},
-	    external: ['@qutejs/window'],
+	    external: deps,
     	plugins
 	},
 	{
-		input: './src/index.jsq',
+		input: './src/index.web.js',
 		output: {
 	        name: componentName,
-	        file: './dist/'+moduleName+'-'+moduleVersion+'.js',
+	        file: './lib/'+moduleName+'.js',
 	        format: 'iife',
 	        globals: {'@qutejs/window': 'window', '@qutejs/runtime': 'Qute'},
 	        sourcemap: true
 		},
-	    external: ['@qutejs/window', '@qutejs/runtime'],
+	    external: deps,
     	plugins
 	},
 	{
-		input: './src/index.jsq',
+		input: './src/index.web.js',
 		output: {
 	        name: componentName,
-	        file: './dist/'+moduleName+'-'+moduleVersion+'.min.js',
+	        file: './lib/'+moduleName+'.min.js',
 	        format: 'iife',
 	        globals: {'@qutejs/window': 'window', '@qutejs/runtime': 'Qute'},
 	        sourcemap: true
 		},
-	    external: ['@qutejs/window', '@qutejs/runtime'],
+	    external: deps,
     	plugins: [
 	    	...plugins,
 	    	uglify()

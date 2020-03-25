@@ -56,7 +56,7 @@ if (devMode) { // dev mode
 		input: './src/index.js',
 		output: {
 	        name: componentName,
-	        file: './dist/'+moduleName+'-'+moduleVersion+'.js',
+	        file: './lib/'+moduleName+'-'+moduleVersion+'.js',
 	        format: 'iife',
 	        globals: {'@qutejs/window': 'window'},
 	        sourcemap: true
@@ -68,7 +68,7 @@ if (devMode) { // dev mode
 		input: './src/index.js',
 		output: {
 	        name: componentName,
-	        file: './dist/'+moduleName+'-'+moduleVersion+'.min.js',
+	        file: './lib/'+moduleName+'-'+moduleVersion+'.min.js',
 	        format: 'iife',
 	        globals: {'@qutejs/window': 'window'},
 	        sourcemap: true

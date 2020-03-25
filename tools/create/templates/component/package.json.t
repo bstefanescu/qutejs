@@ -4,6 +4,8 @@
   "description": "%%description%%",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
+  "browser": "lib/%%name%%.js",
+  "unpkg": "lib/%%name%%.min.js",
   "files": [
     "lib"
   ],

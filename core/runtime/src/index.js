@@ -82,10 +82,6 @@ function Qute(tag, def, BaseVm) {
 	return VMType;
 }
 
-// A place where plugins may expose custom API
-// A plugin named @qutejs/plugin-name should use `pluginName` as the key (in camel case format)
-Qute.$ = {};
-
 Qute.ViewModel = ViewModel;
 Qute.isVM = function(obj) {
 	return obj instanceof ViewModel;
