@@ -10,6 +10,7 @@ plugins/*/lib/
 tools/*/lib/
 web/polyfill/lib/
 web/dev/lib/
+web/doc/lib/
 web/dist/
 
 ### OSX ###
