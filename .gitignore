@@ -21,6 +21,7 @@ web/dist/
 # Icon must end with two \r
 Icon
 
+/TODO.txt
 /old/
 
 # Thumbnails
