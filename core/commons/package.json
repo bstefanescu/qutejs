@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/commons",
-  "version": "1.0.0-rc.2",
+  "version": "1.0.0-rc.3",
   "description": "Qute commons",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
