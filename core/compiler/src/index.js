@@ -407,6 +407,9 @@ var QATTRS = {
 	},
 	key(attr) {
 		this.attr('q:key', attrValue(attr));
+	},
+	slot(attr) {
+		this.attr("$slot", attr.value === true ? 'default' : attr.value);
 	}
 }
 
@@ -546,21 +549,34 @@ function DomNode(name, attrs) {
 				_r(_nodes(this.children, ctx)) // childrenFn
 			);
 		}
+		var name = this.name;
+
+		if (name === 'nested' || name === 'q:nested') {
+			// we prefix a 'nested:' if q:slot was used on nested tag
+			var slotName = this.attrs && this.attrs.$slot;
+			if (!slotName) {
+				// otherwise we use the name attribute to ghet the slot name
+				slotName = this.attrs && this.attrs.name ? this.attrs.name : 'default';
+			}
+			this.attr('$slot', 'nested:'+slotName);
+			delete this.attrs.name; // delete the name atttribute if any
+			name = 'div';
+		}
 		var fname, tag;
-		//if (ctx.isXTag(this.name))
-		if (this.name in HTML_TAGS) { // a dom element
+		//if (ctx.isXTag(name))
+		if (name in HTML_TAGS) { // a dom element
 			fname = 'h'; // h from html
-			tag = _s(this.name);
+			tag = _s(name);
 		} else { // a component
-			var tag = ctx.resolve(this.name);
+			var tag = ctx.resolve(name);
 			if (tag) { // resolved compile time
 				fname = 'v'; // v from view model
 			} else { // should resolve at runtime
 				fname = 'r'; // r from runtime
-				tag = _s(this.name);
+				tag = _s(name);
 			}
 		}
-		if (this.name==='pre') {
+		if (name==='pre') {
 			ctx = ctx.push();
 			ctx.pre = true;
 		}

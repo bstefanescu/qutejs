@@ -48,13 +48,20 @@ function extractSlots(children) {
 			var nodeType = child.nodeType;
 			switch (nodeType) {
 				case 1:
-					if (child.nodeName === 'NESTED' || child.nodeName === 'Q:NESTED') { // select only 'nested' elements
-						var slot = child.getAttribute('name') || 'default';
+					if (child.__qute_slot__) {
+						console.log('!!!!!!! found slot', );
 						var slotChildren = [];
-						var node = child.firstChild;
-						while (node) {
-							slotChildren.push(node);
-							node = node.nextSibling;
+						var slot = child.__qute_slot__;
+						if (slot.startsWith('nested:')) {
+							// a fragment
+							slot = slot.substring(7);
+							var node = child.firstChild;
+							while (node) {
+								slotChildren.push(node);
+								node = node.nextSibling;
+							}
+						} else { // use the element itself to inject in the target slot
+							slotChildren.push(child);
 						}
 						namedSlots[slot] = slotChildren;
 						nestedCnt++;
@@ -121,6 +128,9 @@ var RenderingProto = {
 						up = SetDOMAttrs(el, model, val);
 					} else if (key === '$emit') {
 						applyEmiters(el, model, val);
+					} else if (key === '$slot') {
+						el.__qute_slot__ = val;
+						console.log('created slot::::', val, el);
 					} else if (key === '$channel') {
 						ERR("q:channel cannot be used on regular DOM elements: %s", tag);
 					}
