@@ -319,6 +319,6 @@ Before releasing your components it is recommended to create a **Qute Component 
   </body>
 </html>
 ```
-The `Qute.loadScripts()` call is loading all components declared in the page inside `<script type='text/jsq'></script>` tags.
+The `Qute.load()` call is loading all components declared in the page inside `<script type='text/jsq'></script>` tags.
 
 You **notice** that when writing inlined components you can omit importing the `Qute` runtime since imports are not supported in browser. The development environment will take care of injecting the Qute runtime in your component code.

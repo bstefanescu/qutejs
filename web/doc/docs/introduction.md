@@ -27,7 +27,8 @@ Less than **8K** gzipped.
 * **Quickly design components** using the playground or browser inlined components.
 * Provides a **project generator** tool for a modern development experience.
 * You can reuse any plain javascript UI component (e.g. jQuey UI etc.).
-* Provides a concise **Application Data Model** which replace the verbose state management frameworks like **redux**. You write less code and focus on bussiness logic.
+* Provides a concise **Application Data Model** which replace the verbose state management frameworks like **redux**. You write less code and focus on business logic.  \
+Though, you can still integrate **redux** like state managers with Qute if needed.
 * Accepts both xml and jsx like attribute binding notations.
 * Provides a message bus between components: solve edge case problems like communicating between components in different roots.
 * DOM updates are optimized. In theory, updates should be very fast - no reconciliation is needed. Only nodes listening for changes are updated.  \

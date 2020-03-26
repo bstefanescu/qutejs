@@ -11,11 +11,11 @@ import loadES6Transpiler from './buble-loader.js';
 
 // ----------- Qute runtime
 
-import window, {document, Promise} from '@qutejs/window';
+import window, {document} from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import Compiler from '@qutejs/compiler';
 import JSQLoader from './jsq-loader.js';
-
+import { serialLoadScripts } from './script-loader.js';
 
 Qute.Compiler = Compiler;
 Qute.JSQLoader = JSQLoader;
@@ -39,13 +39,6 @@ Qute.getLoader = function() {
 
 Qute.runWithLoader = function(fn) {
 	return Qute.getLoader().then(fn);
-}
-
-// TODO remove this - replaced by load
-Qute.loadScripts = function() {
-	Qute.getLoader().then(function(loader) {
-		loader.loadAll();
-	});
 }
 
 Qute.loadTemplates = function(idOrElement) {
@@ -79,5 +72,7 @@ Qute.load = function(idOrElement) {
 		});
 	}
 }
+
+Qute.import = serialLoadScripts;
 
 export default Qute;

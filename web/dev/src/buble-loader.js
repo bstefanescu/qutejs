@@ -1,4 +1,5 @@
 import window, {document, Promise} from '@qutejs/window';
+import { loadScripts } from './script-loader.js';
 
 function testES6() {
 	try {
@@ -18,18 +19,9 @@ export default function loadES6Transpiler() {
 		return Promise.resolve(null); // browser supports ES6 syntax
 	} else if (window.buble && window.buble.transform) {
 		return Promise.resolve(bubleTransform);
-	} else {
-		var url = 'https://unpkg.com/buble';
-		return new Promise(function (resolve, reject) {
-			var script = document.createElement('SCRIPT');
-			script.setAttribute('src', url);
-			script.onload = function() {
-				resolve(bubleTransform);
-			};
-			script.onerror = function() {
-				reject(new Error("Failed to load buble from: ", url));
-			};
-			document.head.appendChild(script);
+	} else { // lopad buble package from unpkg.com
+		return loadScripts('buble').then(function() {
+			return bubleTransform;
 		});
 	}
 }

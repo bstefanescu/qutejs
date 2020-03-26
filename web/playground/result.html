@@ -161,14 +161,6 @@ ul.playground-navbar > li {
   		document.getElementById('content').style.display = 'block';
 
 
-  		function insertStyle(url) {
-  			console.log('insert style', url);
-  			var link = document.createElement('link');
-  			link.setAttribute('rel', 'stylesheet');
-  			link.setAttribute('href', url);
-  			document.head.appendChild(link);
-  		}
-
 		function escapeHTML(html) {
 			return html.replace(/<|>/g, function(m) {
 				if (m === '<') return '&lt;';
@@ -176,30 +168,6 @@ ul.playground-navbar > li {
 				else return m;
 			});
 		}
-
-		function insertScript(url) {
-			console.log('insert script', url);
-			return new Promise(function(resolve, reject) {
-				var script = document.createElement('script');
-				script.setAttribute('src', url);
-			    script.onload = function() {
-			    	resolve(url);
-				};
-				script.onerror = function() {
-					reject(url);
-				}
-				document.head.appendChild(script);
-			});
-		}
-
-		function loadScripts(urls) {
-			var promises = [];
-			for (var i=0,l=urls.length; i<l; i++) {
-				promises.push(insertScript(urls[i]));
-			}
-			return Promise.all(promises);
-		}
-
 
 		function runJSQScript(script, appEl) {
 			var VM;
@@ -235,10 +203,6 @@ ul.playground-navbar > li {
 
 	  			var script = loader.create(source);
 
-	  			script.styles && script.styles.forEach(function(url) {
-	  				insertStyle(url);
-	  			});
-
 				// update code view
 				var preEl = document.createElement('PRE');
 				var langEl = document.createElement('CODE');
@@ -255,11 +219,22 @@ ul.playground-navbar > li {
 					sourceEl.innerHTML = source;
 				}, 100);
 
-				var urls = script.resolveDependencies();
+				return script.load(function() { // before load deps
+						document.getElementById('loader').style.display = 'block';
+					}).then(function() {
+						runJSQScript(script, appEl);
+						document.getElementById('loader').style.display = 'none';
+					}, function() {
+						console.error(e);
+						document.getElementById('loader').style.display = 'none';
+						alert('Failed to load script dependencies');
+					});
+/*
+				var urls = script.getDependencies();
 				var r;
 				if (urls) {
 					document.getElementById('loader').style.display = 'block';
-					r = loadScripts(urls).then(function() {
+					r = Qute.import(urls).then(function() {
 						// run script
 						runJSQScript(script, appEl);
 						document.getElementById('loader').style.display = 'none';
@@ -271,6 +246,7 @@ ul.playground-navbar > li {
 				}
 
 				return r || Promise.resolve();
+*/
 			});
 		}
 
