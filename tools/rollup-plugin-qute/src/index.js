@@ -13,10 +13,10 @@ function isQuteFile(file) {
     return false;
 }
 
-function genCode(path, source, symbols) {
+function genCode(path, source, symbols, sourceMap) {
     // TODO use symbols to customize compiler
-    var out = new Compiler().transpile(source);
-    //console.log("===================\n", out, "\n=======================");
+    var out = new Compiler().transpile(source, { sourceMap: sourceMap });
+    //console.log("===================\n", out.code, "\n=======================");
     return out;
 
 }
@@ -25,15 +25,13 @@ function genCode(path, source, symbols) {
 export default function qute (options = {}) {
 
     var symbols = options.symbols || null;
+    var sourceMap = options.sourceMap || true;
 
     return {
         name: 'qute',
         transform (source, path) {
             if (isQuteFile(path)) {
-                return {
-                    code: genCode(path, source, symbols),
-                    map: null // we don't move code inside the file
-                }
+                return genCode(path, source, symbols, sourceMap);
             }
         }
     }

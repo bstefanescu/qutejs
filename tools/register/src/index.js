@@ -72,7 +72,7 @@ function mtime(filename) {
 }
 
 function transpile(code) {
-	return new Compiler().transpile(code);
+	return new Compiler().transpile(code, {sourceMap: false}).code;
 }
 
 function cachedTranspile(code, filename) {

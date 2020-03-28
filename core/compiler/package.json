@@ -29,7 +29,8 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/commons": "1.0.0-rc.3"
+    "@qutejs/commons": "1.0.0-rc.3",
+    "magic-string": "^0.25.7"
   },
   "build": {
     "config": "lib"

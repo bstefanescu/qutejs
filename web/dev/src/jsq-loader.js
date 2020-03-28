@@ -63,11 +63,10 @@ function JSQLoader(transpileES6) {
 			hasExport = true;
 			return "var __DEFAULT_EXPORT__ = ";
 		});
-		code = new Compiler().transpile(code, {
-			removeNewLines: true,
-			// apply buble if needed
-			js: transpileES6 || identityTransform
-		});
+		code = new Compiler().transpile(code, {sourceMap: false}).code;
+		if (transpileES6) {
+			code = transpileES6(code);
+		}
 
 		if (hasExport) code += '\nreturn __DEFAULT_EXPORT__;\n';
 

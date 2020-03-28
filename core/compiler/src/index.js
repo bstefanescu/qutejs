@@ -1,6 +1,6 @@
 import { ERR, makeSymbols } from './utils.js';
 import parseHTML from './html-parser.js';
-import { transpile, loadXTags } from './xtag-parser.js';
+import JSQ from './jsq.js';
 
 import HTML_ENT_MAP from './html-entities.js';
 
@@ -1074,11 +1074,11 @@ function Compiler() {
 	}
 
 	this.transpile = function(source, opts) {
-		return transpile(this, source, opts);
+		return new JSQ(this, source).transpile(opts);
 	}
 
-	this.loadXTags = function(source, cb) {
-		return loadXTags(this, source, cb);
+	this.jsq = function(source) {
+		return new JSQ(this, source);
 	}
 
 }
