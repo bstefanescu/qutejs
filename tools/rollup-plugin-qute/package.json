@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/rollup-plugin-qute",
-  "version": "1.0.0-rc.3",
+  "version": "1.0.0-rc.4",
   "description": "Qute plugin for rollup",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
@@ -27,7 +27,7 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/compiler": "1.0.0-rc.3"
+    "@qutejs/compiler": "1.0.0-rc.4"
   },
   "build": {
     "config": "lib"

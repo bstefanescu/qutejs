@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/modal",
-  "version": "1.0.0-rc.3",
+  "version": "1.0.0-rc.4",
   "description": "Qute Modal component",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
@@ -28,11 +28,11 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/runtime": "1.0.0-rc.3",
-    "@qutejs/window": "1.0.0-rc.3"
+    "@qutejs/runtime": "1.0.0-rc.4",
+    "@qutejs/window": "1.0.0-rc.4"
   },
   "devDependencies": {
-    "@qutejs/rollup-plugin-qute": "1.0.0-rc.3"
+    "@qutejs/rollup-plugin-qute": "1.0.0-rc.4"
   },
   "build": {
     "config": "component"
