@@ -49,7 +49,6 @@ function extractSlots(children) {
 			switch (nodeType) {
 				case 1:
 					if (child.__qute_slot__) {
-						console.log('!!!!!!! found slot', );
 						var slotChildren = [];
 						var slot = child.__qute_slot__;
 						if (slot.startsWith('nested:')) {
@@ -130,7 +129,6 @@ var RenderingProto = {
 						applyEmiters(el, model, val);
 					} else if (key === '$slot') {
 						el.__qute_slot__ = val;
-						console.log('created slot::::', val, el);
 					} else if (key === '$channel') {
 						ERR("q:channel cannot be used on regular DOM elements: %s", tag);
 					}
