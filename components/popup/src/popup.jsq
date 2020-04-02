@@ -1,4 +1,4 @@
-import {document} from '@qutejs/window';
+import window, {document} from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import Popup from './popup.js';
 import css from './popup.css';
@@ -19,6 +19,11 @@ Attributes:
 - auto-close: boolean - toggle close on click. Defaults to true
 
 The defaults are: animation: null, position: "bottom start", auto-close: true
+
+API:
+	open(anchor)
+	toggle(anchor)
+	close()
 */
 const QutePopup = Qute('popup', {
 	init() {
@@ -43,17 +48,39 @@ const QutePopup = Qute('popup', {
 			self.emit("close", self.popup.el);
 		}
 	},
-	open: function(target) {
-		this.popup.open(target);
+	open: function(target, now) {
+		if (now) {
+			this.popup.open(target);
+		} else {
+			var popup = this.popup;
+			window.setTimeout(function() {
+				popup.open(target);
+			}, 0);
+		}
+	},
+	toggle: function(target, now) {
+		if (now) {
+			this.popup.toggle(target);
+		} else {
+			var popup = this.popup;
+			window.setTimeout(function() {
+				popup.toggle(target);
+			}, 0);
+		}
 	},
 	close: function() {
 		this.popup.close();
+	},
+	get isOpen() {
+		return this.popup.isOpen();
 	}
 }).channel(function(msg, data) {
 	if (msg === 'open') {
-		this.open(data);
+		this.popup.open(data);
+	} else if (msg === 'toggle') {
+		this.popup.toggle(data);
 	} else if (msg === 'close') {
-		this.close();
+		this.popup.close();
 	}
 }).watch('position', function(value) {
 	this.popup.position(value);

@@ -207,6 +207,7 @@ Popup.prototype = {
 		return this;
 	},
 	open: function(anchor) {
+		if (!anchor) throw new Error('Attempting to open a popup without specifying a target element!');
 		// compute overflowing parents and register scroll listeners
 		if (this.el.parentNode) { // already opened
 			return;
@@ -285,6 +286,16 @@ Popup.prototype = {
 			el.style.visibility = 'hidden';
 			el.parentNode.removeChild(el);
 		}
+	},
+	toggle: function(anchor) {
+		if (this.el.parentNode) { // already opened
+			this.close();
+		} else {
+			this.open(anchor);
+		}
+	},
+	isOpen: function() {
+		return this.el.parentNode;
 	},
 	position: function(position, align) {
 		if (align === undefined) {

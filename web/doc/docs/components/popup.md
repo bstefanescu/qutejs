@@ -2,13 +2,35 @@
 
 The popup component display a popup element that can be positioned relative to a **target** element.
 
+The Popup component is intended to be used through the `q:ref` attribute, to get the popup instance and call its API.
+
+When the popup component is not accessible from the component who want to open (or manipulate) the popup then you can also access a popup by posting a message to the popup channel.
+
+## Popup API
+
+### `open(anchor[, openNow])`
+
+Open the popup relative to the given anchor element. The `openNow` attribute is optional and defaults to false. If false, the popup will be open _asynchrounously_ (i.e. after the current UI loop task is processed)
+
+### `toggle(anchor[, toggleNow])`
+
+Toggle the popup relative to the given anchor element. The `toggleNow` attribute is optional and defaults to false. If false, the popup will be toggled _asynchrounously_ (i.e. after the current UI loop task is processed)
+
+### `close()`
+
+Close the popup
+
+### `isOpen`
+
+A read only property to get the open status of a popup component.
+
 ## Attributes
 
 ### q:channel
 
 This attribute is **required**.
 
-Indicates, the channel name to use when interacting with the popup instance. The popup channel provides two message types **open** and **close**.
+Indicates, the channel name to use when interacting with the popup instance. The popup channel provides three message types **open**, **toggle** and **close**.
 
 #### open
 
@@ -18,6 +40,16 @@ Open the popup. You must specify the **target** element as the extra data attrib
 ```
 app.post('popup-channel', 'open', targetEl);
 ```
+
+#### toggle
+
+Toggle the popup. You must specify the **target** element as the extra data attribute of the message.
+
+**Example**
+```
+app.post('popup-channel', 'toggle', targetEl);
+```
+
 
 #### close
 
@@ -82,8 +114,42 @@ Fired when the popup is closed.
 
 The `event.detail` field points to the popup root element.
 
+## Example: Using the API to toggle the popup
 
-## Example
+To open the popup through the API we need to obtain the popup component instance using the `q:ref` attribute.
+
+```jsq
+import Qute from '@qutejs/runtime';
+import '@qutejs/popup';
+
+<q:template name='root'>
+  <div>
+    <button style='margin-left: 50px; margin-top: 50px; padding: 10px'
+      @click='openPopup'>Open popup</button>
+    <popup q:ref='thePopup' position='bottom start' animation='slide'
+      @open='onOpen' @close='onClose'>
+      <div style='border: 1px solid gray; padding: 10px'>
+        <h3 style='margin-top:0'>Popup header</h3>
+        <div>The popup content</div>
+      </div>
+    </popup>
+  </div>
+</q:template>
+
+export default Qute('root', {
+  openPopup(event) {
+    this.thePopup.toggle(event.target);
+  },
+  onOpen(event) {
+    console.log('popup about to open', event.detail);
+  },
+  onClose(event) {
+    console.log('popup closed', event.detail);
+  }
+});
+```
+
+## Example: Using a channel to open the popup
 
 ```jsq
 import Qute from '@qutejs/runtime';
