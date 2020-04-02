@@ -74,6 +74,9 @@ export default function Modal(name, content, settings) {
 	this.cleanup = null;
 }
 Modal.prototype = {
+	isOpen: function() {
+		return this.el.firstChild.classList.contains('md-show');
+	},
 	open: function() {
 		var modal = this.el.firstChild;
 		var cl = modal.classList;

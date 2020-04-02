@@ -51,11 +51,21 @@ const QuteModal = Qute("modal", {
 	disconnected: function() {
 		document.body.removeChild(this.modal.el);
 	},
-	open: function() {
-		this.modal.open();
+	open: function(now) {
+		if (now) {
+			this.modal.open();
+		} else {
+			var modal = this.modal;
+			window.setTimeout(function() {
+				modal.open();
+			}, 0);
+		}
 	},
 	close: function() {
 		this.modal.close();
+	},
+	get isOpen() {
+		return this.isOpen();
 	}
 }).channel(function(msg) {
 	if (msg === 'open') {

@@ -4,7 +4,7 @@ The popup component display a popup element that can be positioned relative to a
 
 The Popup component is intended to be used through the `q:ref` attribute, to get the popup instance and call its API.
 
-When the popup component is not accessible from the component who want to open (or manipulate) the popup then you can also access a popup by posting a message to the popup channel.
+When the popup component is not accessible from the component who want to open (or manipulate) the popup then you can also access it by posting a message to the popup channel.
 
 ## Popup API
 

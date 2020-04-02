@@ -2,6 +2,24 @@
 
 The modal component display a modal dialog.
 
+The modal component is intended to be used through the `q:ref` attribute, to get the modal instance and call its API.
+
+When the modal component is not accessible from the component who want to open (or manipulate) the modal then you can also access it by posting a message to the modal channel.
+
+## Modal API
+
+### `open([openNow])`
+
+Open the modal. The `openNow` attribute is optional and defaults to false. If false, the modal will be open _asynchrounously_ (i.e. after the current UI loop task is processed)
+
+### `close()`
+
+Close the modal.
+
+### `isOpen`
+
+A read only property to get the open status of a modal component.
+
 ## Attributes
 
 ### q:channel
@@ -124,8 +142,54 @@ The `event.detail` field points to an object like:
 
 **Example:** `<button data-md-action='next'>Next</button>`.
 
+## Example: Using the API to open the modal
 
-## Example
+To open the modal through the API we need to obtain the modal component instance using the `q:ref` attribute.
+
+```jsq
+import Qute from '@qutejs/runtime';
+import '@qutejs/modal';
+
+<q:template name='root'>
+  <div>
+    <button style='margin-left: 10px; margin-top: 10px; padding: 10px'
+      @click='openModal'>Open modal</button>
+    <modal q:ref='theModal' animation='scale-up'
+      @open='onOpen' @close='onClose' @ready='onReady' @action='onAction'>
+      <div style='border: 1px solid gray'>
+        <h3 style='padding: 10px;margin-top:0; border-bottom: 1px solid gray'>Modal header</h3>
+        <div style='padding: 10px'>
+            The modal content.
+            <hr>
+            <button data-md-action='my-action'>Modal Action</button>
+        </div>
+      </div>
+    </modal>
+  </div>
+</q:template>
+
+export default Qute('root', {
+  openModal(event) {
+    this.theModal.open();
+  },
+  onOpen(event) {
+    console.log('modal about to open', event.detail);
+  },
+  onReady(event) {
+    console.log('modal ready', event.detail);
+  },
+  onClose(event) {
+    console.log('modal about to close', event.detail);
+  },
+  onAction(event) {
+    console.log('modal action', event.detail);
+    alert("Action: "+event.detail.name+" Dialog will be closed.");
+    this.post('my-modal', 'close');
+  }
+});
+```
+
+## Example: Using a channel to open the modal
 
 ```jsq
 import Qute from '@qutejs/runtime';
