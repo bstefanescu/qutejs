@@ -129,6 +129,8 @@ var RenderingProto = {
 						applyEmiters(el, model, val);
 					} else if (key === '$slot') {
 						el.__qute_slot__ = val;
+					} else if (key === '$ref') {
+						this.model[val] = el;
 					} else if (key === '$channel') {
 						ERR("q:channel cannot be used on regular DOM elements: %s", tag);
 					}

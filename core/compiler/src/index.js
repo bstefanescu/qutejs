@@ -410,6 +410,10 @@ var QATTRS = {
 	},
 	slot(attr) {
 		this.attr("$slot", attr.value === true ? 'default' : attr.value);
+	},
+	ref(attr) {
+		if (attr.value === true || !attr.value) ERR('q:ref attribtue must point to a property name');
+		this.attr("$ref", attr.value);
 	}
 }
 

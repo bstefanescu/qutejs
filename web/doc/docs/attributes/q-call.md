@@ -38,6 +38,8 @@ export default Qute('root', {
 
 Here we used an arrow function to store the input element instance as a component property.
 
+**Note** that `Qute` provides a simpler method to fetch a reference to a DOM element: the **[q:ref](#/attributes/q-ref)** attribute.
+
 ### Initialize a DOM element at creation time
 
 Let's do more, we can initialize the input if empty:

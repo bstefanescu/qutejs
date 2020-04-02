@@ -144,6 +144,7 @@ var TOC = [
 		{ title: 'q:async-emit', href: 'attributes/q-async-emit' },
 		{ title: 'q:channel', href: 'attributes/q-channel' },
 		{ title: 'q:call', href: 'attributes/q-call' },
+		{ title: 'q:ref', href: 'attributes/q-ref' },
 		{ title: 'q:toggle', href: 'attributes/q-toggle' },
 		{ title: 'q:bind', href: 'attributes/q-bind' },
 		{ title: 'q:on', href: 'attributes/q-on' },

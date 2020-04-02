@@ -209,6 +209,7 @@ ViewModel.prototype = {
 		if (xattrs && xattrs.$use) {
 			$use = applyUserDirectives(parentRendering, this.$tag, xattrs, this);
 		}
+
 		// load definition
 		var bindings = parentRendering && this.$load(parentRendering, xattrs, slots);
 		var rendering = new Rendering(parentRendering, this);
@@ -231,6 +232,9 @@ ViewModel.prototype = {
 		this.created && this.created(el);
 		// should use parent vm as context for custom directives
 		if ($use) $use(parentRendering, el);
+		if (parentRendering && xattrs && xattrs.$ref) {
+			parentRendering.model[xattrs.$ref] = this;
+		}
 
 		// this can trigger a connect if tree is already connected (for example when inserting a comp in a connected list)
 		parentRendering && parentRendering.$push(rendering);

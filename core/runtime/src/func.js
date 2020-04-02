@@ -126,6 +126,7 @@ FunComp.prototype = {
 		if ($use) {
 			$use(rendering, el);
 		}
+		if (xattrs.$ref) rendering.model[xattrs.$ref] = this;
 
 		// we must push the rendering context of the fun comp
 		// to propagate connect / disconnect handlers
