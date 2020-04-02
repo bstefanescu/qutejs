@@ -1,4 +1,4 @@
-# The q:html attribute
+# The `q:html` attribute
 
 This attribute can be used to inject static or dynamic HTML content into an element.
 

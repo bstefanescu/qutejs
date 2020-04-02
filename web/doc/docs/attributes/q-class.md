@@ -1,4 +1,4 @@
-# The q:class attribute
+# The `q:class` attribute
 
 To specify classes for elements you can use the regular HTML **class** attribute. Example:
 

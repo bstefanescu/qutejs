@@ -1,4 +1,4 @@
-# The q:show attribute
+# The `q:show` attribute
 
 This attribute can be used to dynamically hide or show an element based on the state of the model.
 

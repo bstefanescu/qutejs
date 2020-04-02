@@ -1,4 +1,4 @@
-# The q:markdown attribute
+# The `q:markdown` attribute
 
 This is a marker attribute (doesn't take a value) and can be used to inject static markdown content.
 The markdown content will be converted into an HTML string before being inserted.

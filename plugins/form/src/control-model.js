@@ -28,9 +28,7 @@ export default function controlModelDirective(xattrs, valueExpr, compOrEl) {
     return function(el) {
         if (boundProp) {
             // then automatically update prop when changed
-            console.log('!!!!!!!!!!!', el);
             el.addEventListener('change', function(e) {
-                console.log('@@@@@@@@@@@@@@@@@changed')
                 rendering.vm[boundProp] = compOrEl.value;
             });
         }

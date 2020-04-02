@@ -1,4 +1,4 @@
-# The q:call attribute
+# The `q:call` attribute
 
 Call a user function after the target DOM element was created (including its content).
 

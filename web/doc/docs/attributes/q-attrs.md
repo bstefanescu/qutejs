@@ -1,4 +1,4 @@
-# The q:attrs attribute
+# The `q:attrs` attribute
 
 This attribute can be used to pass attributes specified on the parent component down to a nested element.
 It is very usefull to implement components that acts more as wrappers over an HTML element.

@@ -1,4 +1,4 @@
-# The q:on attribute
+# The `q:on` attribute
 
 This attribute is an alternative notation for **event attributes**.  \
 See the **[Templates](#/templates)** section for more details.

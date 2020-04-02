@@ -1,4 +1,4 @@
-# The q:channel attribute
+# The `q:channel` attribute
 
 This property can be used on components which defines a `channel`.
 It takes as a value a channel name that should be opened by the target component.

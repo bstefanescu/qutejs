@@ -1,4 +1,4 @@
-# The q:toggle attribute
+# The `q:toggle` attribute
 
 You can use this directive to conditionally add or remove `flag` like attributes on HTML elements. The attribute to be toggled must be prefixed with `q:toggle` and takes as value an expression. If the value evaluates to a truthy value then the attribute is added otherwise it is removed
 

@@ -1,4 +1,4 @@
-# The q:emit attribute
+# The `q:emit` attribute
 
 ```jsq
 import window from '@qutejs/window';

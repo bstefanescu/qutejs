@@ -1,4 +1,4 @@
-# The q:for attribute
+# The `q:for` attribute
 
 This attribute can be used to render **reactive array like objects**. Any object having a `length` property is assumed to be an array like object.
 
