@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/spinner-ellipsis",
-  "version": "1.0.0-rc.8",
+  "version": "1.0.0-rc.9",
   "description": "Qute Spinner ellipsis implementation",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
@@ -29,12 +29,12 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/runtime": "1.0.0-rc.8",
-    "@qutejs/window": "1.0.0-rc.8",
-    "@qutejs/spinner": "1.0.0-rc.8"
+    "@qutejs/runtime": "1.0.0-rc.9",
+    "@qutejs/window": "1.0.0-rc.9",
+    "@qutejs/spinner": "1.0.0-rc.9"
   },
   "devDependencies": {
-    "@qutejs/rollup-plugin-qute": "1.0.0-rc.8"
+    "@qutejs/rollup-plugin-qute": "1.0.0-rc.9"
   },
   "build": {
     "globals": {
