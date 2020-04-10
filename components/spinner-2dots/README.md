@@ -1,11 +1,8 @@
 # Qute Spinner Component (@qutejs/spinner)
 
-The **[Qute](https://qutejs.org)** spinner component. This package implements a CSS spinner similar to the [material design circular progress indicator](https://material.io/components/progress-indicators/#circular-progress-indicators). The spinner works in IE10+.
+A **[Qute](https://qutejs.org)** spinner plugin implementing a pure CSS spinner.
 
-The spinner component is customizable, so you can completely change the appearance through spinner plugins.
- Look at the [@qutejs/spinner-ellipsis](https://www.npmjs.com/package/@qutejs/spinner-ellipsis) project as an example.
-
-The spinner is inspired from the https://loading.io/css/ project.
+The spinner is based on the https://github.com/tobiasahlin/SpinKit project.
 
 Qute is a **reactive component model** designed for **plain old javascript** lovers.
 
@@ -26,10 +23,22 @@ npm install @qutejs/spinner
 # Usage
 
 ```javascript
-import '@qutejs/spinner';
+import '@qutejs/spinner-2dots';
+```
+then to use the spinner
+
+```xml
+<spinner type='2dots' />
+```
+or
+
+```xml
+<spinner size='32px' color='green' />
 ```
 
-The spinner supports the following attributes: `style`, `class`, `center`, `size`, `width` and `color`.
+if this spinner is the only (or default) spinner implementation included in your Qute app.
+
+The spinner supports the following attributes: `style`, `class`, `size`, `center`, `color`, `color1` and `color2`.
 
 Go to the **[Qute Spinner Component documentation](https://qutejs.org/doc/#/components/spinner)** for more information about spinner components.
 

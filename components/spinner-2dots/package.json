@@ -1,12 +1,11 @@
 {
-  "name": "@qutejs/doc",
+  "name": "@qutejs/spinner-2dots",
   "version": "1.0.0-rc.4",
-  "description": "Qute Popup component",
-  "private": true,
+  "description": "Qute Spinner 2dots component",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
-  "browser": "lib/qute-doc.js",
-  "unpkg": "lib/qute-doc.min.js",
+  "browser": "lib/qute-spinner.js",
+  "unpkg": "lib/qute-spinner.min.js",
   "files": [
     "lib"
   ],
@@ -16,9 +15,13 @@
   "author": "Bogdan Stefanescu <bogdan@quandora.com>",
   "license": "MIT",
   "keywords": [
+    "component",
     "qute",
-    "doc",
-    "documentation"
+    "spinner",
+    "loading",
+    "icon",
+    "DOM",
+    "view"
   ],
   "homepage": "https://qutejs.org",
   "repository": {
@@ -28,18 +31,15 @@
   "dependencies": {
     "@qutejs/runtime": "1.0.0-rc.4",
     "@qutejs/window": "1.0.0-rc.4",
-    "@qutejs/router": "1.0.0-rc.4",
-    "@qutejs/spinner": "1.0.0-rc.4",
-    "@qutejs/spinner-ellipsis": "1.0.0-rc.4",
-    "@qutejs/polyfill": "1.0.0-rc.4"
+    "@qutejs/spinner": "1.0.0-rc.4"
   },
   "devDependencies": {
     "@qutejs/rollup-plugin-qute": "1.0.0-rc.4"
   },
   "build": {
-    "config": "component",
-    "external": [
-      "@qutejs/window"
-    ]
+    "globals": {
+      "@qutejs/spinner": "Qute.Spinner"
+    },
+    "config": "component"
   }
 }

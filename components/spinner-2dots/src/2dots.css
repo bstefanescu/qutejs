@@ -1,0 +1,96 @@
+/*
+https://tobiasahlin.com/spinkit
+
+<div class="qute-spinner-2dots">
+  <div class="dot1"></div>
+  <div class="dot2"></div>
+</div>
+*/
+
+.qute-spinner-2dots {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  text-align: center;
+
+  -webkit-animation: qute-spinner-2dots-rotate 2.0s infinite linear;
+  animation: qute-spinner-2dots-rotate 2.0s infinite linear;
+}
+
+.qute-spinner-2dots > div {
+  width: 60%;
+  height: 60%;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  background-color: #333;
+  border-radius: 100%;
+
+  -webkit-animation: qute-spinner-2dots-bounce 2.0s infinite ease-in-out;
+  animation: qute-spinner-2dots-bounce 2.0s infinite ease-in-out;
+}
+
+.qute-spinner-2dots > .dot2 {
+  top: auto;
+  bottom: 0;
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+.qute-spinner-2dots-colors > div {
+  -webkit-animation: qute-spinner-2dots-bounce 2.0s infinite ease-in-out, qute-spinner-2dots-colors 5.6s ease-in-out infinite;
+  animation: qute-spinner-2dots-bounce 2.0s infinite ease-in-out, qute-spinner-2dots-colors 5.6s ease-in-out infinite;
+}
+
+@-webkit-keyframes qute-spinner-2dots-rotate { 100% { -webkit-transform: rotate(360deg) }}
+@keyframes qute-spinner-2dots-rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+@-webkit-keyframes qute-spinner-2dots-bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+@keyframes qute-spinner-2dots-bounce {
+  0%, 100% {
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% {
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
+
+@-webkit-keyframes qute-spinner-2dots-colors {
+  0% {
+    background-color: #4285F4;
+  }
+  25% {
+    background-color: #DE3E35;
+  }
+  50% {
+    background-color: #F7C223;
+  }
+  75% {
+    background-color: #1B9A59;
+  }
+  100% {
+    background-color: #4285F4;
+  }
+}
+@keyframes qute-spinner-2dots-colors {
+  0% {
+    background-color: #4285F4;
+  }
+  25% {
+    background-color: #DE3E35;
+  }
+  50% {
+    background-color: #F7C223;
+  }
+  75% {
+    background-color: #1B9A59;
+  }
+  100% {
+    background-color: #4285F4;
+  }
+}

@@ -26,7 +26,10 @@ module.exports = function(project, args) {
         replace({ 'process.env.NODE_ENV': '"production"' }), // used by polyglot
         nodeResolve( {preferBuiltins: true} ),
         commonjs(),
-        require('rollup-plugin-postcss')({inject: false}),
+        require('rollup-plugin-postcss')({
+            inject: false,
+            plugins: [require('cssnano')()]
+        }),
         require('@qutejs/rollup-plugin-qute')(),
         buble({exclude: ["node_modules/**", "**/node_modules/**"], include: ["**/*.js", "**/*.jsq"]})
     ];

@@ -15,6 +15,11 @@
 	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 	<script type="text/javascript" src='../dev/lib/qute-dev.js'></script>
+	<script type="text/javascript" src='../qute-popup.js'></script>
+	<script type="text/javascript" src='../qute-modal.js'></script>
+	<script type="text/javascript" src='../qute-spinner.js'></script>
+	<script type="text/javascript" src='../qute-spinner-ellipsis.js'></script>
+	<script type="text/javascript" src='../qute-spinner-2dots.js'></script>
 	<script type="text/javascript" src='hh.js'></script>
 
 	<script>
@@ -229,24 +234,6 @@ ul.playground-navbar > li {
 						document.getElementById('loader').style.display = 'none';
 						alert('Failed to load script dependencies');
 					});
-/*
-				var urls = script.getDependencies();
-				var r;
-				if (urls) {
-					document.getElementById('loader').style.display = 'block';
-					r = Qute.import(urls).then(function() {
-						// run script
-						runJSQScript(script, appEl);
-						document.getElementById('loader').style.display = 'none';
-					}, function(e) {
-						console.error(e);
-						document.getElementById('loader').style.display = 'none';
-						alert('Failed to load script dependencies');
-					});
-				}
-
-				return r || Promise.resolve();
-*/
 			});
 		}
 

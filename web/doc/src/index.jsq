@@ -1,5 +1,6 @@
 import '@qutejs/polyfill';
 import '@qutejs/spinner';
+import '@qutejs/spinner-ellipsis';
 import window, { document, navigator } from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import Router from '@qutejs/router';
@@ -69,7 +70,7 @@ import Router from '@qutejs/router';
 			<if docPageContent>
 				<div q:html='docPageContent' class='markdown-body' />
 			<else>
-				<spinner/>
+				<spinner type='ellipsis' center />
 			</if>
 		</div>
     </div>

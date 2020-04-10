@@ -1,0 +1,92 @@
+/*
+
+https://tobiasahlin.com/spinkit/
+
+<div class="qute-spinner-ellipsis">
+  <div class="bounce1"></div>
+  <div class="bounce2"></div>
+  <div class="bounce3"></div>
+</div>
+
+*/
+
+.qute-spinner-ellipsis {
+  display: inline-block;
+  text-align: center;
+}
+.qute-spinner-ellipsis > div {
+  width: 18px;
+  height: 18px;
+  background-color: #333;
+
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: qute-spinner-ellipsis-bouncedelay 1.4s infinite ease-in-out both;
+  animation: qute-spinner-ellipsis-bouncedelay 1.4s infinite ease-in-out both;
+}
+.qute-spinner-ellipsis-colors > div {
+  -webkit-animation: qute-spinner-ellipsis-bouncedelay 1.4s infinite ease-in-out both, qute-spinner-ellipsis-colors 5.6s ease-in-out infinite;
+  animation: qute-spinner-ellipsis-bouncedelay 1.4s infinite ease-in-out both, qute-spinner-ellipsis-colors 5.6s ease-in-out infinite;
+}
+.qute-spinner-ellipsis .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+.qute-spinner-ellipsis .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+@-webkit-keyframes qute-spinner-ellipsis-bouncedelay {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0)
+  }
+  40% {
+    -webkit-transform: scale(1.0)
+  }
+}
+@keyframes qute-spinner-ellipsis-bouncedelay {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  }
+  40% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+  }
+}
+
+
+@-webkit-keyframes qute-spinner-ellipsis-colors {
+  0% {
+    background-color: #4285F4;
+  }
+  25% {
+    background-color: #DE3E35;
+  }
+  50% {
+    background-color: #F7C223;
+  }
+  75% {
+    background-color: #1B9A59;
+  }
+  100% {
+    background-color: #4285F4;
+  }
+}
+@keyframes qute-spinner-ellipsis-colors {
+  0% {
+    background-color: #4285F4;
+  }
+  25% {
+    background-color: #DE3E35;
+  }
+  50% {
+    background-color: #F7C223;
+  }
+  75% {
+    background-color: #1B9A59;
+  }
+  100% {
+    background-color: #4285F4;
+  }
+}

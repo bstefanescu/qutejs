@@ -1,6 +1,0 @@
-import Qute from '@qutejs/runtime';
-import Spinner from './ellipsis.jsq';
-
-Qute.Spinner = Spinner;
-
-export default Spinner;

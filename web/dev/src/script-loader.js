@@ -42,18 +42,45 @@ export function resolveScript(nameOrUrl) {
 	}
 }
 
+function UrlSet() {
+	this.map = {};
+	this.list = [];
+}
+UrlSet.prototype = {
+	add: function(url) {
+		if (this.map[url]) return false;
+		this.list.push(url);
+		return true;
+	},
+	forEach: function(fn) {
+		return this.list.forEach(fn);
+	}
+}
+
+export function resolveScripts(urls) {
+	var set = new UrlSet();
+	urls.forEach(function(url) {
+		url = resolveScript(url);
+		if (url) {
+			if (url.indexOf("@qutejs/qute-spinner-") > -1) {
+				set.add('https://unpkg.com/@qutejs/qute-spinner');
+			}
+			set.add(url);
+		}
+	});
+	return set.list;
+}
+
 // usage: loadScripts('buble', 'jquery').then(...)
 // or loadScripts(['buble', 'jquery']).then(...)
 export function loadScripts(urls) {
 	if (!Array.isArray(urls)) {
 		urls = Array.prototype.slice.call(arguments);
 	}
+	urls = resolveScripts(urls);
 	var promises = [];
 	for (var i=0,l=urls.length; i<l; i++) {
-		var url = resolveScript(urls[i]);
-		if (url) {
-			promises.push(insertScript(url));
-		}
+		promises.push(insertScript(urls[i]));
 	}
 	return Promise.all(promises);
 }
@@ -68,12 +95,10 @@ export function serialLoadScripts(urls) {
 	if (!Array.isArray(urls)) {
 		urls = Array.prototype.slice.call(arguments);
 	}
+	urls = resolveScripts(urls);
 	var tasks = [];
 	for (var i=0,l=urls.length; i<l; i++) {
-		var url = resolveScript(urls[i]);
-		if (url) {
-			tasks.push(SerialTask(url));
-		}
+		tasks.push(SerialTask(urls[i]));
 	}
 	return serial(tasks);
 }
