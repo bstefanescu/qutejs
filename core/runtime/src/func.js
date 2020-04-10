@@ -60,7 +60,7 @@ FunComp.prototype = {
 		this.$r = rendering.spawn(this);
 		this.$slots = slots;
 
-		var model = rendering.model, attrs = this.$attrs, $use,
+		var model = rendering.model, attrs = this.$attrs, $use, $ref,
 			bindings, listeners;
 
 		if (model) {
@@ -68,6 +68,7 @@ FunComp.prototype = {
 		}
 
 		if (xattrs) {
+			$ref = xattrs.$ref;
 			if (xattrs.$use) {
 				$use = applyUserDirectives(rendering, XTag.$tag, xattrs, this);
 			}
@@ -126,7 +127,7 @@ FunComp.prototype = {
 		if ($use) {
 			$use(rendering, el);
 		}
-		if (xattrs.$ref) rendering.model[xattrs.$ref] = this;
+		if ($ref) rendering.model[$ref] = this;
 
 		// we must push the rendering context of the fun comp
 		// to propagate connect / disconnect handlers
