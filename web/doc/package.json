@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/doc",
-  "version": "1.0.0-rc.6",
+  "version": "1.0.0-rc.7",
   "description": "Qute Popup component",
   "private": true,
   "main": "lib/index.cjs.js",
@@ -26,15 +26,15 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/runtime": "1.0.0-rc.6",
-    "@qutejs/window": "1.0.0-rc.6",
-    "@qutejs/router": "1.0.0-rc.6",
-    "@qutejs/spinner": "1.0.0-rc.6",
-    "@qutejs/spinner-ellipsis": "1.0.0-rc.6",
-    "@qutejs/polyfill": "1.0.0-rc.6"
+    "@qutejs/runtime": "1.0.0-rc.7",
+    "@qutejs/window": "1.0.0-rc.7",
+    "@qutejs/router": "1.0.0-rc.7",
+    "@qutejs/spinner": "1.0.0-rc.7",
+    "@qutejs/spinner-ellipsis": "1.0.0-rc.7",
+    "@qutejs/polyfill": "1.0.0-rc.7"
   },
   "devDependencies": {
-    "@qutejs/rollup-plugin-qute": "1.0.0-rc.6"
+    "@qutejs/rollup-plugin-qute": "1.0.0-rc.7"
   },
   "build": {
     "config": "component",

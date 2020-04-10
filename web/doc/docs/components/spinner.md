@@ -45,7 +45,7 @@ import '@qutejs/spinner';
 
 <q:template name='root'>
     <div style='margin-top: 20px'>
-	    <spinner color='green' size='32px'/>
+	    <spinner color='green' size='32px' width='4px'/>
 	</div>
 </q:template>
 
