@@ -62,8 +62,8 @@ export function resolveScripts(urls) {
 	urls.forEach(function(url) {
 		url = resolveScript(url);
 		if (url) {
-			if (url.indexOf("@qutejs/qute-spinner-") > -1) {
-				set.add('https://unpkg.com/@qutejs/qute-spinner');
+			if (url.indexOf("@qutejs/spinner-") > -1) {
+				set.add('https://unpkg.com/@qutejs/spinner');
 			}
 			set.add(url);
 		}

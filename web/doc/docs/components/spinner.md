@@ -45,7 +45,7 @@ import '@qutejs/spinner';
 
 <q:template name='root'>
     <div style='margin-top: 20px'>
-	    <spinner color='green' size='32px' width='4px'/>
+	    <spinner color='green' size='32px' width='4pxp'/>
 	</div>
 </q:template>
 
@@ -68,7 +68,7 @@ import '@qutejs/spinner-ellipsis';
 
 <q:template name='root'>
     <div style='margin-top: 20px'>
-	    <spinner type='ellipsis' size='32px'/>
+	    <spinner type='ellipsis' size='32px' center/>
 	</div>
 </q:template>
 
@@ -93,7 +93,7 @@ import '@qutejs/spinner-2dots';
 
 <q:template name='root'>
     <div style='margin-top: 20px'>
-	    <spinner type='2dots' size='32px'/>
+	    <spinner type='2dots' size='32px' center/>
 	</div>
 </q:template>
 
