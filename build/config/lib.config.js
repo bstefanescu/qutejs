@@ -14,7 +14,7 @@ module.exports = function(project) {
 		plugins: [
 			nodeResolve( {preferBuiltins: true} ),
 			commonjs(),
-        	useBuble && require('rollup-plugin-buble')({exclude: ["node_modules/**", "**/node_modules/**"]})
+        	useBuble && require('@rollup/plugin-buble')({exclude: ["node_modules/**", "**/node_modules/**"]})
 		],
 		output: [
 		 	{

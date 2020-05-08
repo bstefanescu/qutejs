@@ -1,7 +1,7 @@
 const replace = require('@rollup/plugin-replace');
 const commonjs = require('rollup-plugin-commonjs');
 const nodeResolve = require('rollup-plugin-node-resolve');
-const buble = require('rollup-plugin-buble');
+const buble = require('@rollup/plugin-buble');
 const uglify = require('rollup-plugin-uglify').uglify;
 
 //NOTE: replace and external are only used by i18n
