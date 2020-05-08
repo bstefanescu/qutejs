@@ -15,7 +15,6 @@ import window, {document} from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import Compiler from '@qutejs/compiler';
 import JSQLoader from './jsq-loader.js';
-import { serialLoadScripts } from './script-loader.js';
 
 Qute.Compiler = Compiler;
 Qute.JSQLoader = JSQLoader;
@@ -72,7 +71,5 @@ Qute.load = function(idOrElement) {
 		});
 	}
 }
-
-Qute.import = serialLoadScripts;
 
 export default Qute;

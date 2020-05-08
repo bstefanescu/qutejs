@@ -224,7 +224,7 @@ ul.playground-navbar > li {
 					}).then(function() {
 						runJSQScript(script, appEl);
 						document.getElementById('loader').style.display = 'none';
-					}, function() {
+					}, function(e) {
 						console.error(e);
 						document.getElementById('loader').style.display = 'none';
 						alert('Failed to load script dependencies');

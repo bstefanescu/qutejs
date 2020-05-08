@@ -28,7 +28,7 @@ function resolveScript(nameOrUrl) {
 
 export function insertScript(url, onload, onerror) {
     if (insertedUrls[url]) {
-        onload(url);
+        onload && onload(url);
     } else {
         var script = document.createElement('script');
         script.setAttribute('src', url);
@@ -61,26 +61,24 @@ function _importNext(imports, index, onload, onerror) {
             function() {
                 _importNext(imports, index+1, onload, onerror);
             },
-            function() {
-                onerror(script);
-            }
+            onerror
         );
     } else {
-        onload(imports);
+        onload && onload(imports);
     }
 }
 
 function _importAll(imports, onload, onerror) {
     var cnt = imports.length, errors = [];
     for (var i=0,l=imports.length; i<l; i++) {
-        var url = resolveScript(script);
+        var url = resolveScript(imports[i]);
         if (url) {
             insertScript(url,
                 function(url) {
                     cnt--;
                     if (!cnt) {
                         cnt--;
-                        onload(imports);
+                        onload && onload(imports);
                     }
                 },
                 function(url) {
@@ -88,7 +86,7 @@ function _importAll(imports, onload, onerror) {
                     cnt--;
                     if (!cnt) {
                         cnt--; // cnt will be -1
-                        onerror(errors);
+                        onerror && onerror(errors);
                     }
                 }
             );
@@ -98,7 +96,7 @@ function _importAll(imports, onload, onerror) {
     }
     if (!cnt) {
         cnt--;
-        onload(imports);
+        onload && onload(imports);
     }
 }
 
@@ -112,7 +110,7 @@ export function serialImport(imports, onload, onerror) {
 
 export function importAll(imports, onload, onerror) {
     if (Array.isArray(imports)) {
-        _importAll(imports, 0, onload, onerror);
+        _importAll(imports, onload, onerror);
     } else {
         importScript(imports, onload, onerror);
     }
