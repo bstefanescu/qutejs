@@ -15,7 +15,7 @@ import './object-assign.js';
 import './starts-with.js';
 // custom event (No IE support)
 import './custom-event.js';
-// Element closest and matches For IE>=9
+// Element closest and matches For IE>=9 (impl in edge 15)
 import './element-closest.js';
 // Array.findIndex for IE - used by list helper
 import './array-find-index.js';

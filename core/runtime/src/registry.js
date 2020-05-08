@@ -1,4 +1,7 @@
+import { LazyComponent } from './importer.js';
 
+var IMPORTS = {};
+var ALIASES = {};
 var VMS = {};
 var XTAGS = {};
 var ATTRS = {};
@@ -22,7 +25,8 @@ export function QName(tag) {
 }
 
 export function getTag(tag) {
-	return XTAGS[tag];
+    var target = ALIASES[tag] || tag;
+	return XTAGS[target];
 }
 
 
@@ -39,7 +43,8 @@ export function registerTag(tag, templateFn, isCompiled) {
 }
 
 export function getVM(tag) {
-	return VMS[tag];
+    var target = ALIASES[tag] || tag;
+	return VMS[target];
 }
 
 export function registerVM(tag, vm) {
@@ -51,8 +56,26 @@ export function registerVM(tag, vm) {
 	return qname;
 }
 
+// do not use aliases neither imports
+function _getVMOrTag(tag) {
+    return VMS[tag] || XTAGS[tag];
+}
+
 export function getVMOrTag(tag) {
-	return VMS[tag] || XTAGS[tag];
+    var target = ALIASES[tag] || tag;
+    var comp = VMS[target] || XTAGS[target];
+    if (!comp) {
+        // may be a lazy component?
+        var imports = IMPORTS[target];
+        if (imports) {
+            comp = LazyComponent(target, imports, _getVMOrTag);
+        }
+    }
+	return comp;
+}
+
+export function addImports(map) {
+    Object.assign(IMPORTS, map);
 }
 
 export function getDirective(key) {
@@ -79,3 +102,8 @@ export function restoreRegistry(snapshot) {
 	VMS = snapshot.VMS;
 	XTAGS = snapshot.XTAGS;
 }
+
+export function alias(aliasName, target) {
+    ALIASES[aliasName] = target;
+}
+

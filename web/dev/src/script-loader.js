@@ -25,7 +25,6 @@ var IGNORE_PACKAGES = {
 // A task returns a Promise. the serial function is serializing tasks and run
 // each task after the previous one finished
 export function serial(tasks, arg) {
-	Promise.resolve
 	return tasks.reduce(function (chain, currentTask) {
 		return chain.then(function(val) {
 			return currentTask(val);

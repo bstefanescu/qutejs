@@ -2,7 +2,7 @@ import {document} from '@qutejs/window';
 import ERR from './error.js';
 
 import App from './app.js';
-import { getVMOrTag, getVM, converters } from './registry.js';
+import { getVMOrTag, converters } from './registry.js';
 import {applyListeners, applyEmiters, SetClass, SetStyle,
 			SetDisplay, SetToggle, SetText, SetInnerHTML, SetAttr} from './binding.js';
 import { filterKeys } from './utils.js';
@@ -179,7 +179,7 @@ var RenderingProto = {
 			return vm.$create(this, xattrs, slots);
 		} else if (XTag.$compiled) { // a compiled template
 			return new FunComp().render(this, XTag, xattrs, slots);
-		} else { // a hand written function
+		} else { // a hand written function or a lazy component
 			return XTag(this, xattrs, slots);
 		}
 	},

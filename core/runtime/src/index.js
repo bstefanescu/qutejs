@@ -8,8 +8,10 @@ import Rendering from './rendering.js';
 import ViewModel from './vm.js';
 import App from './app.js';
 import { createListener } from './binding.js';
-import { registerTag, registerVM, getTag, getVM, getVMOrTag, snapshotRegistry, restoreRegistry, registerDirective, converters } from './registry.js';
+import { addImports, alias, registerTag, registerVM, getTag, getVM, getVMOrTag, snapshotRegistry, restoreRegistry, registerDirective, converters } from './registry.js';
 import {StringProp,NumberProp,BooleanProp} from './prop-types';
+import { serialImport, importAll, setImporterOptions } from './importer.js';
+
 
 /**
  * We cannot use Object.assign since getter are lost. So we copy the prop def itself
@@ -131,6 +133,11 @@ Qute.restoreRegistry = restoreRegistry;
 Qute.vm = getVM;
 Qute.vmOrTemplate = getVMOrTag;
 Qute.registerDirective = registerDirective;
+Qute.alias = alias;
+Qute.importAll = importAll;
+Qute.import = serialImport;
+Qute.addImports = addImports;
+Qute.setImporterOptions = setImporterOptions;
 
 Qute.runAfter = function(cb) { UpdateQueue.runAfter(cb); }
 Qute.closest = closestVM;
@@ -141,6 +148,9 @@ Qute.ERR = ERR;
 Qute.string = function(value) { return new StringProp(value) }
 Qute.number = function(value) { return new NumberProp(value) }
 Qute.boolean = function(value) { return new BooleanProp(value) }
+
+// stiore QUte innstance in window - this is important so that imported components can register in a sharted qute instance
+window.Qute = Qute;
 
 export default Qute;
 
