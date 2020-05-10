@@ -88,6 +88,63 @@ The model can any object. You can thus use Qute templates to render anyhting, no
 
 Define a method on `ViewModel` and functional component prototype. Can be used to extend the component API. See **[Internationalization Support](#/app/i18n)** for an example.
 
+### `Qute.import(urlOrName, onLoad, onError)`
+
+Import a javascript library in the current page. The library is located using the specified `urlOrName` which is either the URL (or a path) to the javascript resource, either the npm package name (in this case https://unpkg.com will be used to fetch the resource).
+
+The `onLoad` callback will be invoked after the javascript code is loaded.  \
+The `onError` callback will be invoked if any error occurs.
+
+The `urlOrName` parameter **can be also an array of locations**. In that case each location is converted to an URL if it is not already an URL, then each library will be loaded after the previous one was completely loaded.
+
+For example if you want to load a library located at 'libs/x.js' that depends on 'libs/y.js' you should use:
+
+```javascript
+Qute.import(['libs/y.js', 'libs/x.js'], function() { ... }, function() { ... });
+```
+
+The `onLoad` function will be called after the complete chain of library was loaded.
+
+### `Qute.importAll(urlOrNames, onLoad, onError)`
+
+The same as `Qute.import` but can load multiple javascript libraries in parallel.
+
+### `Qute.addImports(importMap)`
+
+Configure the package locations to be used for lazy component loading.
+
+The `importMap` should map a component name to a remote javascript resource. Example:
+
+```javascript
+Qute.addImports({
+	'popup': '@qute/popup',
+	'my-component': ['libs/my-component-dependency.js', 'libs/my-component.js']
+})
+```
+
+The location of a lazy loaded component can be either a string on an array of string locations. If an array then all the locations are loaded one after the other (as done by `Qute.import`).
+A resource location is either an URL or path to the javascript resource, either the npm package name containing the component (in this case the resource is loaded through https://unpkg.com).
+
+### `Qute.setImporterOptions(opts)`
+
+Configure some aspects of the lazy component loading. The `opts` argument can specify the following properties:
+
+* `resolve(location)` - an optional function to resolve a string location to an URL. If `null` is returned the resource will be ignored. If `false` is returned then the default resolver is used.
+* `renderError(rendering, error)` - an optional function to return a DOM element to be displayed in case of an error. The error object contains an url field which points to the javascript resource that failed loading
+* `renderPending(rendering)` - an optional function to return a DOM element to be displayed while a lazy component is loading.
+
+### `Qute.addAliases(aliasMap)`
+
+Define a component alias. Example:
+
+```javascript
+Qute.addALiases({
+	'app-button': 'my-app-button'
+})
+```
+
+where `my-app-button` is the real name of the component.
+
 ### `Qute.App`
 
 The **Qute Application** type.

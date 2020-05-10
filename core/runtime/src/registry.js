@@ -103,7 +103,6 @@ export function restoreRegistry(snapshot) {
 	XTAGS = snapshot.XTAGS;
 }
 
-export function alias(aliasName, target) {
-    ALIASES[aliasName] = target;
+export function addAliases(aliasMap) {
+    Object.assign(ALIASES, aliasMap);
 }
-

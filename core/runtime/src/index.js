@@ -8,7 +8,7 @@ import Rendering from './rendering.js';
 import ViewModel from './vm.js';
 import App from './app.js';
 import { createListener } from './binding.js';
-import { addImports, alias, registerTag, registerVM, getTag, getVM, getVMOrTag, snapshotRegistry, restoreRegistry, registerDirective, converters } from './registry.js';
+import { addImports, addAliases, registerTag, registerVM, getTag, getVM, getVMOrTag, snapshotRegistry, restoreRegistry, registerDirective, converters } from './registry.js';
 import {StringProp,NumberProp,BooleanProp} from './prop-types';
 import { serialImport, importAll, setImporterOptions } from './importer.js';
 
@@ -133,10 +133,10 @@ Qute.restoreRegistry = restoreRegistry;
 Qute.vm = getVM;
 Qute.vmOrTemplate = getVMOrTag;
 Qute.registerDirective = registerDirective;
-Qute.alias = alias;
 Qute.importAll = importAll;
 Qute.import = serialImport;
 Qute.addImports = addImports;
+Qute.addAliases = addAliases;
 Qute.setImporterOptions = setImporterOptions;
 
 Qute.runAfter = function(cb) { UpdateQueue.runAfter(cb); }

@@ -111,6 +111,7 @@ var TOC = [
 		{ title: 'Getting Started', href: 'getting-started'},
 		{ title: 'Templates', href: 'templates'},
 		{ title: 'Components', href: 'components'},
+		{ title: 'Building Large Applications', href: 'modularity'},
 	]},
 	{ title: 'Application Model', expand: true, items: [
 		{ title: 'Application Instance', href: 'app/instance'},
@@ -426,7 +427,5 @@ function isInViewport(elem) {
 	);
 };
 
-
-new App().mount();
 
 export default App;

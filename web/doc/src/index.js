@@ -1,1 +1,5 @@
-export {default} from './index.jsq';
+import App from './index.jsq';
+
+export default new App().mount();
+
+
