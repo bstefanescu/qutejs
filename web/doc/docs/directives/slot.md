@@ -176,4 +176,50 @@ export default Qute('root', {
 In that case the `title` slot will get its HTML content from the variable named `title`. Of course the `title` variable is resolved in the context of the `my-panel` component.
 
 
+## The `q:slot` attribute directive
 
+A `<nested></nested>` element behaves like an HTML fragment that will be injected in a target slot.
+Sometimes you may want to inject a single element in a target slot and not an HTML fragment. In that case you can use the `q:slot` directive.
+
+A `q:slot` may take a value: the target slot name, or no value at all if the target slot is the default one.
+
+**Example:**
+
+```xml
+<dialog>
+	<h3 q:slot='title'>The title</h3>
+	<div class='dialog-body' q:slot>The dialog body.</div>
+</dialog>
+```
+
+The above example is equivalent to:
+
+```xml
+<dialog>
+	<nested><h3>The title</h3></nested>
+	<nested><div class='dialog-body'>The dialog body.</div></nested>
+</dialog>
+```
+
+Here is an working example:
+
+```jsq
+import Qute from '@qutejs/runtime';
+
+<q:template name='dialog'>
+<div class='dialog' style='border:1px solid #cecece'>
+<div><slot name='title'/></div>
+<hr/>
+<div><slot/></div>
+</div>
+</q:template>
+
+<q:template name='root'>
+<dialog>
+	<h3 q:slot='title'>The title</h3>
+	<div class='dialog-body' q:slot>The dialog body.</div>
+</dialog>
+</q:template>
+
+export default Qute('root');
+```
