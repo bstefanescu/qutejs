@@ -119,7 +119,8 @@ import Qute from '@qutejs/runtime';
 export default Qute('root', {
   counter: 0,
   add() {
-    this.list = this.list.concat('Item '+(this.counter++));
+    this.list.push('Item '+(this.counter++));
+    this.update(); // schedule a DOM update
   },
   init() {
     return {
@@ -161,11 +162,12 @@ export default Qute('root', {
     var i = this.list.indexOf(e.detail);
     if (i > -1) {
         this.list.splice(i, 1);
-        this.list = this.list.splice(0);
+        this.update(); // schedule a DOM update
     }
   },
   add() {
-    this.list = this.list.concat('Item '+(this.counter++));
+    this.list.push('Item '+(this.counter++));
+    this.update(); // schedule a DOM update
   },
   init() {
     return {
@@ -253,7 +255,6 @@ export default Qute('root', {
       });
       if (i > -1) {
         this.list.splice(i, 1);
-        this.list = this.list.slice(0);
         this.update();
       }
   },
