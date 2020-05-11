@@ -353,3 +353,11 @@ This has the same effect as `ComponentConstructor.on()`. The difference is that 
 
 Render the component given a rendering instance. Returns the rendered DOM element.
 
+#### `getList(listPropertyName, keyField)`
+
+Get a list update helper for the given reactive list property and the given key field. The key field is the field in the list items that are used as keys. If nopt specified or if the special `'.'` value is specified as the key field that String(item) will be used to get the key (this works with primitive types).
+
+The `ListHelper` can be used to facilitate reactive list manipuilation and update.
+
+See the **[List Helper](#/advanced/list)** section for more details.
+

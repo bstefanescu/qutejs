@@ -1,14 +1,34 @@
+/*
+Detecting item updates
+-----------------------
+
+A solution to detect item updates is to clone the item so that we can check if the item instance
+changed and doing the update.
+The pb is that bindings are using the initial instance so we need to completely re-render the item
+Another solution is to copy the modified clone over the initial instance to apply changes.
+We must take care to update back the 'from' array to use the same initial instance of the changed item.
+This is beacause changing the instance of the item is the signal to trigger the update.
+
+We can also use another approach to use __dirty__ field on the array to indicate if an item changed:
+__dirty__: ['key1', 'key2']
+
+We implement both approaches
+
+*/
+
 const CLEAR = 0;
 const SET = 1;
 const REMOVE = 2;
 const INSERT = 3;
 const APPEND = 4;
 const MOVE = 5;
+// individual item updates
+const UPDATE = 6;
 
 function valueAsKey(item) {
 	return String(item);
 }
-
+// supports a modification coiunt field to force updates
 export default function ArrayDiff(key) {
 	this.ar = null;
 	this.map = null;
@@ -44,7 +64,7 @@ ArrayDiff.prototype = {
 		} else {
 			this.map = {};
 		}
-		this.ar = from.slice(0); // store a copy
+		this.ar = from.slice(); // store a copy
 		return [ SET, this.ar, keyOf ];
 	},
 	update(from) {
@@ -76,9 +96,10 @@ ArrayDiff.prototype = {
 
 		var i = 0, j = 0;
 		for (; j<l1 && i<l2; i++) {
+            var it1 = ar[j];
 			var it2 = from[i];
 			var key2 = keyOf(it2);
-			var key1 = keyOf(ar[j]);
+			var key1 = keyOf(it1);
 
 			if (moved[key1]) {
 				j++; // skip moved items from dst array
@@ -99,7 +120,17 @@ ArrayDiff.prototype = {
 			} else {
 				// item already exists
 				if (key1 === key2) {
-					// unchanged - continue
+                    // detect individual item updates
+                    if (it1 !== it2) {
+                        // the item instance changed - we copy the changes back to the original instance
+                        // and then restore the original instance on the from array otherwise we will broke the link
+                        // between the item bound in the DOM change listeners and the one in the from list.
+                        Object.assign(it1, it2);
+                        from[i] = it1; // revert back to the original instance
+                        // and we trigger an update
+                        diff.push(UPDATE, key2);
+                    }
+					// else unchanged - continue
 					j++;
 				} else if (fromMap[key1]) {
 					// items differs - moved
@@ -136,8 +167,19 @@ ArrayDiff.prototype = {
 			}
 		}
 
+        // detect individual item changes through the hidden __dirty__ field
+        if (from.__dirty__) {
+            var dirty = from.__dirty__;
+            if (Array.isArray(dirty)) {
+                for (var i=0,l=dirty.length; i<l; i++) {
+                    diff.push(UPDATE, dirty[i]);
+                }
+            }
+            delete from.__dirty__;
+        }
+
 		if (diff.length) {
-			this.ar = from.slice(0); // store a copy
+			this.ar = from.slice(); // store a copy
 			this.map = fromMap;
 		} // else unchanged
 
@@ -174,6 +216,10 @@ ArrayDiff.run = function(OPS, diff) {
 					OPS.clear();
 					i++;
 					break;
+                case UPDATE: // individual item update: update(key)
+                    OPS.updateItem(diff[i+1]);
+                    i+=2;
+                    break;
 				default: throw new Error('Invalid diff op '+diff[i]);
 			}
 		}

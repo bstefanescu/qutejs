@@ -88,6 +88,14 @@ Qute('my-list', {
 });
 ```
 
+## The ViewModel List Helper
+
+The Qute `ViewModel` provides a helper to deal with reactive list modification and udpates. You can use this helper to minimize the code needed to modify lists, or you can directly modify the list and then call `ViewModel.update()` to trigger an update.
+
+For more information see the **[List Helper Documentation](#/advanced/list)**
+
+Also, you can find a complete example of a reactive list (and a comparision between using the List Helper and not using it) in the **[Todo List Example](#/examples/todo)**.
+
 ## Examples
 
 ### Adding Items

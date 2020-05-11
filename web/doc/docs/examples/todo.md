@@ -6,7 +6,6 @@ The following examples demonstrates the usage of:
 
 1. the **[q:for](#/attributes/q-for)** directive.
 2. the `ViewModel.getList()` helper to easily manipulate reactive list properties.
-3. the `Qute.closestListItem(el)` method to retrieve the closest list item rendering context containing a DOM element.
 
 
 ## Example 1: Using a component for the todo item
@@ -15,6 +14,7 @@ We will create 2 ViewModel components: `todo-list` and `todo-item`.
 
 The `todo-list` component is responsible for managing the list structure, while the `todo-item` is rendering a single item and is responsible for updating the item status.
 
+We are using the `ViewModel.getList()` method to get a list helper which is providing methods to ease list manipulation and DOM update.
 
 ```jsq
 //@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
@@ -92,15 +92,16 @@ Qute('todo-list', {
 		return this.getList('todos', 'id');
 	},
 	removeItem(e) {
-		this.todoList().remove(e.detail);
+		this.todoList().removeItem(e.detail);
 		return false;
 	},
 	addItem() {
 		var text = this.input.value;
 		if (text) {
 			var randomId = 'todo-'+Date.now()+'-'+(CNT++);
-			this.todoList().push({id: randomId, text: text, done: false});
+			this.todos.push({id: randomId, text: text, done: false});
 			this.input.value = '';
+			this.update();
 		}
 		return false;
 	},
@@ -128,8 +129,6 @@ In this example the todo item template will be inlined in the todo list template
 
 This approach is better in term of memory usage since it doesn't instantiate a component for each item.
 
-Because we don't use a component for each item we need to explicitly update the DOM corresponding to the updated item through the `list.updateItem(el)` method.
-
 ```jsq
 //@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
 
@@ -151,7 +150,7 @@ import Qute from '@qutejs/runtime';
 		<ul class="list-group">
 			<li q:for='item in todos' q:key='id' class="list-group-item d-flex justify-content-between align-items-center">
 	            <span>
-		            <a href='#' @click='e=>checkItem(item.id, e.target)'>&#x2714;</a>
+		            <a href='#' @click='e=>checkItem(item.id)'>&#x2714;</a>
 		            <span q:class='{done:item.done}'>{{item.text}}</span>
 	            </span>
 				<span><a href='#' class='close' @click='e=>removeItem(item.id)'>&times;</a></span>
@@ -186,24 +185,22 @@ Qute('todo-list', {
 		this.input.focus();
 	},
 	removeItem(key) {
-		this.todoList().remove(key);
+		this.todoList().removeItem(key);
 		return false;
 	},
-	checkItem(key, el) {
-		var list = this.todoList();
-		var item = list.get(key);
-		if (item) {
+	checkItem(key) {
+		this.todoList().updateItem(key, item => {
 			item.done = !item.done;
-			list.updateItem(el);
-		}
+		});
 		return false;
 	},
 	addItem() {
 		var text = this.input.value;
 		if (text) {
 			var randomId = 'todo-'+Date.now()+'-'+(CNT++);
-			this.todoList().push({id: randomId, text: text, done: false});
+			this.todos.push({id: randomId, text: text, done: false});
 			this.input.value = '';
+			this.update();
 		}
 		return false;
 	},
@@ -228,7 +225,7 @@ export default Qute('root', {
 
 Here is the same example as before, but without using the Qute list helper. The code is therefore a little more verbose.
 
-**Note** that we use `Qute.closestListItem(el).update()` to do the same as `list.updateItem(el)`.
+**Note** that we use a special property `__dirty__` on the list instance to inform the udpater that a list item content changed. We can also clone the modified item and then replace the original item to force an item update.
 
 ```jsq
 //@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
@@ -251,7 +248,7 @@ import Qute from '@qutejs/runtime';
 		<ul class="list-group">
 			<li q:for='item in todos' q:key='id' class="list-group-item d-flex justify-content-between align-items-center">
 	            <span>
-		            <a href='#' @click='e=>checkItem(item.id, e.target)'>&#x2714;</a>
+		            <a href='#' @click='e=>checkItem(item.id)'>&#x2714;</a>
 		            <span q:class='{done:item.done}'>{{item.text}}</span>
 	            </span>
 				<span><a href='#' class='close' @click='e=>removeItem(item.id)'>&times;</a></span>
@@ -284,24 +281,31 @@ Qute('todo-list', {
 	connected() {
 		this.input.focus();
 	},
-	findItemIndex(key) {
-		return this.todos ? this.todos.findIndex(item => item.id === key) : -1;
+	findTodoIndex(key) {
+		var list = this.todos;
+		if (list) {
+			for (var i=0,l=list.length; i<l; i++) {
+				if (list[i].id === key) return i;
+			}
+		}
+		return -1;
 	},
 	removeItem(key) {
-		var i = this.findItemIndex(key);
+		var i = this.findTodoIndex(key);
 		if (i > -1) {
 			var todos = this.todos;
 			todos.splice(i, 1);
-			this.todos = todos.slice();
+			this.update();
 		}
 		return false;
 	},
-	checkItem(key, el) {
-		var i = this.findItemIndex(key);
+	checkItem(key) {
+		var i = this.findTodoIndex(key);
 		if (i > -1) {
 			this.todos[i].done = !this.todos[i].done;
+			this.todos.__dirty__ = [ key ];
+			this.update();
 		}
-		Qute.closestListItem(el).update();
 		return false;
 	},
 	addItem(e) {
@@ -310,8 +314,8 @@ Qute('todo-list', {
 			var todos = this.todos || [];
 			var randomId = 'todo-'+Date.now()+'-'+(CNT++);
 			todos.push({id: randomId, text: text, done: false})
-			this.todos = todos.slice(); // change the list instance to force update
 			this.input.value = '';
+			this.update();
 		}
 		return false;
 	},

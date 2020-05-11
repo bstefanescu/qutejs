@@ -36,6 +36,7 @@ list.$version=0 which we need to increment and then manually call vm.update() to
 
 WARN: If list is not defining an item key then updates will be costly and will render the entire list fragment. and not only the differences
 (you can use '.' for primitive sets to use the value as the key)
+
 */
 
 export default function ListFragment(rendering, listFn, itemFn, key) {
@@ -78,7 +79,7 @@ ListFragment.prototype = {
 		this.callItemR('refresh');
 	},
 	// TODO not uet used
-	uupdateItems() {
+	updateItems() {
 		this.callItemR('update');
 	},
 
@@ -86,6 +87,7 @@ ListFragment.prototype = {
 		var itemR = r.spawn();
 		var el = this.itemFn(itemR, item);
 		el.__qute_ctx__ = itemR;
+        el.__qute_key__ = key;
 		if (key) items[key] = el;
 		r.isc && itemR.connect();
 		return el;
@@ -170,6 +172,15 @@ ListFragment.prototype = {
 		} else {
 			console.error('cannot find cached element', key, beforeKey); // TODO
 		}
-	}
+	},
+    // inidividual item update
+    updateItem(key) {
+        var el = this.items && this.items[key];
+        if (el) {
+            el.__qute_ctx__ && el.__qute_ctx__.update();
+        } else {
+            console.error('cannot find cached element', key); // TODO
+        }
+    }
 }
 
