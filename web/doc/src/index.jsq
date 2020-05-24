@@ -144,6 +144,7 @@ var TOC = [
 		{ title: 'q:attrs', href: 'attributes/q-attrs' },
 		{ title: 'q:emit', href: 'attributes/q-emit' },
 		{ title: 'q:async-emit', href: 'attributes/q-async-emit' },
+		{ title: 'q:slot', href: 'attributes/q-slot' },
 		{ title: 'q:channel', href: 'attributes/q-channel' },
 		{ title: 'q:call', href: 'attributes/q-call' },
 		{ title: 'q:ref', href: 'attributes/q-ref' },

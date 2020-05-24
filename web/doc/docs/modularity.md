@@ -6,7 +6,7 @@ Qute provides some mechanisms to help developing smaller applications and easily
 
 ## Changing Component Implementations
 
-Let's say you are building an application using [boostratp](https://getbootstrap.com/). So you use some Qute bootstrap wrapper components like a `bs-button`.
+Let's say you are building an application using [boostrap](https://getbootstrap.com/). So you use some Qute bootstrap wrapper components like a `bs-button`.
 
 Later, you decide to switch to [foundation](https://get.foundation/). And you want to replace all your bootstrap components with the foundation equivalent ones.
 

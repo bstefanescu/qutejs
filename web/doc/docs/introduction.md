@@ -22,7 +22,7 @@ It's time to adopt the **green programming**!
 Some quick facts:
 
 * Small and fast **MVVM** framework for building modern javascript applications or UI components.  \
-Less than **8K** gzipped.
+About **8K** gzipped.
 * Resource friendly: No Virtual DOM. It's **green software**!
 * **Quickly design components** using the playground or browser inlined components.
 * Provides a **project generator** tool for a modern development experience.
@@ -31,8 +31,7 @@ Less than **8K** gzipped.
 Though, you can still integrate **redux** like state managers with Qute if needed.
 * Accepts both xml and jsx like attribute binding notations.
 * Provides a message bus between components: solve edge case problems like communicating between components in different roots.
-* DOM updates are optimized. In theory, updates should be very fast - no reconciliation is needed. Only nodes listening for changes are updated.  \
-Though, no benchmarks are available yet.
+* DOM updates are optimized. Updates are very fast - no reconciliation is needed. Only nodes listening for changes are updated.
 * **ES6** compliant.
 * **MIT** License.
 
