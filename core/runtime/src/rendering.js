@@ -100,8 +100,9 @@ var RenderingProto = {
 		var XTag = getVMOrTag(tag);
 		return XTag ? this.v(XTag, xattrs, children) : this.h(tag, xattrs, children);
 	},
-	h: function(tag, xattrs, children) { // dom node
-		var el = document.createElement(tag), $use = null;
+	h: function(tag, xattrs, children, svg) { // dom node
+		var el = svg ? document.createElementNS('http://www.w3.org/2000/svg', tag)
+            : document.createElement(tag), $use = null;
 		if (xattrs) {
 			var model = this.model;
 			if (xattrs.$use) {

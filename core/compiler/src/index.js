@@ -43,7 +43,9 @@ var OBJ_RX = /((?:'(?:\\.|[^'])*')|(?:"(?:\\.|[^"])*")|(?:[\{,]\s*[a-zA-Z_\$][0-
 
 var ARROW_FN_RX = /^(\(?)\s*((?:[a-zA-Z_$][a-zA-Z_$0-9]*)(?:\s*,\s*[a-zA-Z_$][a-zA-Z_$0-9]*)*)(\)?)\s*=>\s*(.*)$/;
 // nested is a special tag we added for convenience in the regular html tags - it is used as a more meaningful replacement of template or div
-var HTML_TAGS = makeSymbols("nested html head meta link title base body style nav header footer main aside article section h1 h2 h3 h4 h5 h6 div p pre blockquote hr ul ol li dl dt dd span a em strong b i u s del ins mark small sup sub dfn code var samp kbd q cite ruby rt rp br wbr bdo bdi table caption tr td th thead tfoot tbody colgroup col img figure figcaption map area video audio source track script noscript object param embed iframe canvas abbr address meter progress time form button input textarea select option optgroup label fieldset legend datalist menu output details summary command keygen acronym applet bgsound basefont big center dir font frame frameset noframes strike tt xmp template".split(" "));
+// svg need special treatments to avoid listing possible svg related tags.
+// any tag enclosed inside svg tags will be treated as svg tags (not component tags)
+var HTML_TAGS = makeSymbols("nested svg html head meta link title base body style nav header footer main aside article section h1 h2 h3 h4 h5 h6 div p pre blockquote hr ul ol li dl dt dd span a em strong b i u s del ins mark small sup sub dfn code var samp kbd q cite ruby rt rp br wbr bdo bdi table caption tr td th thead tfoot tbody colgroup col img figure figcaption map area video audio source track script noscript object param embed iframe canvas abbr address meter progress time form button input textarea select option optgroup label fieldset legend datalist menu output details summary command keygen acronym applet bgsound basefont big center dir font frame frameset noframes strike tt xmp template".split(" "));
 
 var HTML_ENT_RX = /&(?:([a-zA-Z]+)|(#[0-9]+)|(#x[abcdefABCDEF0-9]+));/g;
 
@@ -568,7 +570,7 @@ function DomNode(name, attrs) {
 		}
 		var fname, tag;
 		//if (ctx.isXTag(name))
-		if (name in HTML_TAGS) { // a dom element
+		if ((name in HTML_TAGS) || this.svg) { // a dom element
 			fname = 'h'; // h from html
 			tag = _s(name);
 		} else { // a component
@@ -587,7 +589,7 @@ function DomNode(name, attrs) {
 		return _fn(fname, tag,
 			//_attrs(this.attrs),
 			_xattrs(this.attrs, this.bindings, this.xattrs, this.directives, this.events, ctx),
-			_nodes(this.children, ctx));
+			_nodes(this.children, ctx), this.svg?1:0);
 	}
 
 	this.xcontent = function(type, attr) {
@@ -923,7 +925,6 @@ function SlotNode(tagName, attrs) {
 	this.slotName = attrs.length ? attrValue(attrs[0]) : null;
 }
 
-
 var MUSTACHE_RX = /\{\{([^\}]+)\}\}/g;
 //var BLANK_RX = /^\s*$/;
 
@@ -957,6 +958,7 @@ function Compiler() {
 	// collector is used only when static html should be collected sue to an q:html attribute
 	// See StaticNode
 	this.collector = null;
+    this.svg = false; // set to true when a svg sub tree is parsed
 	this.top = null;
 	this.stack = [];
 	this.lastText = null; // used to merge adjacent text nodes
@@ -1035,8 +1037,11 @@ function Compiler() {
 					// allow <div q:conent-{random} />
 					//if (isVoid) ERR("Static node (q:html) must have some content");
 					this.collector = node;
-				}
+				} else if (tagName === 'svg') {
+                    this.svg = true; // enter svg tree
+                }
 			}
+            node.svg = this.svg;
 			this.push(node, isVoid);
 		}
 	}
@@ -1049,6 +1054,7 @@ function Compiler() {
 			// subtree traversed - remove collector
 			this.collector = null;
 		}
+        if (tagName === 'svg') this.svg = false; // exit svg tree
 		this.pop();
 	}
 

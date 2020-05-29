@@ -10,11 +10,11 @@ Also, **custom elements** (i.e. component tags) **must always be closed** event 
 **Example:** `<my-component title='My Component' />`
 
 
-### Element Attributes
+## Element Attributes
 
 In HTML, attributes can take a string value or can take no value at all (like for example the `disabled` attribute). When specified, attribute values are surrounded by quotes or double quotes. `JSQ` supports any HTML like attribute.
 
-#### Bounded Attributes
+### Bounded Attributes
 
 In `JSQ` you can also use **bounded attributes** which are attributes which values are assigned from a javascript expression. These attributes can change during the life on an element: any time the expression changes the attribute value will change too.
 
@@ -37,7 +37,7 @@ You can use anyone you prefer or mix notations if you want.
 
 In the rest of the documentation we will use the `jsx` like notation.
 
-#### Event Attributes
+### Event Attributes
 
 In HTML, you can declare listeners on elements using an on{event-name} attribute. In `JSQ` you should prefix the event name with a `@` character.
 
@@ -51,13 +51,13 @@ There is an alternative notation for an event attribute: `q:on{event-name}`
 
 See the **[Working with DOM Events](#/model/events)** section for more details.
 
-#### Other Special attributes
+### Other Special attributes
 
 Other special attribute notations are:
 1. **`#newevent@srcevent`** - to define emit attributes. See **[q:emit](#/attributes/q-emit)** for more details.
 2. **`?attrName`** - to toggle **flag** like attributes. See **[q:toggle](#/attributes/q-toggle)** for more details.
 
-### Text Expressions (aka mustaches)
+## Text Expressions (aka mustaches)
 
 Any text node containing **mustache** expressions `{{ ... }}` will evaluate the javascript expression inside the  double braces and will render the output as text (escaping any special HMTL character)
 
@@ -133,6 +133,76 @@ or even
 </div>
 ```
 
+## Static content
+
+If you just need to write a static HTML fragment that is not using any variable or directive you can do it by using the **[q:html](#/attributes/q-html)** directive:
+
+```xml
+<div q:html>
+  <p>Some static HTML {{variable}}</p>
+</div>
+```
+
+In the previous example the `{{variable}}` will not be expanded. The entire HTML content of the `div` tag will be injected using `innerHTML`.
+
+## SVG and MathML support
+
+Qute templates let's you use XML elements from any XML namespace like `SVG` or `MathML`.
+
+This can be done by wrapping the XML fragment in a static content component using the **[q:html](#/attributes/q-html)** directive as shown below.
+
+**Example:**
+
+```xml
+<button q:html>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><title>ic_crop_original_48px</title>
+    <g fill='#333'>
+        <path d="M38 6H10c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4V10c0-2.21-1.79-4-4-4zm0 32H10V10h28v28zM27.93 24.57l-5.5 7.08-3.93-4.72L13 34h22l-7.07-9.43z"></path>
+    </g>
+</svg>
+</button>
+```
+
+**SVG** elements are also natively supported by `Qute` so you can write dynamic SVG elements and use variable expansion. Note that, you cannot use **custom component elements** in a SVG context.
+
+This can be useful to create SVG images with dynamic properties.
+
+**Example:**
+
+```jsq
+import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+
+// ---------- Templates
+<q:template name='root'>
+<button class='btn-icon' @click={ev => window.alert("Hello!")}>
+<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 48 48"><title>ic_sentiment_satisfied_48px</title>
+    <g fill={color}>
+        <path d="M31 22c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-14 0c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm6.98-18C12.94 4 4 12.96 4 24s8.94 20 19.98 20C35.04 44 44 35.04 44 24S35.04 4 23.98 4zM24 40c-8.84 0-16-7.16-16-16S15.16 8 24 8s16 7.16 16 16-7.16 16-16 16zm0-8c-2.95 0-5.5-1.62-6.89-4h-3.35c1.6 4.09 5.58 7 10.24 7s8.64-2.91 10.24-7h-3.35c-1.39 2.38-3.94 4-6.89 4z"></path>
+    </g>
+</svg>
+</button>
+</q:template>
+
+// ------------ Styles
+<q:style>
+.btn-icon {
+  background: transparent;
+  padding: 0;
+  border: none
+}
+</q:style>
+
+// ----------- Javascript
+export default Qute('root', {
+  init() {
+    return {
+      size: 32,
+      color: 'green'
+    }
+  }
+});
+```
 
 ## Directives
 
