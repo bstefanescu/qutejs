@@ -62,3 +62,12 @@ export default Qute('root', {
 });
 ```
 
+## The `#new-event@source-event` notation.
+
+There is an alternative notation you can use: `#new-event@source-event` as a shortcut to the `q:emit` attribute.
+
+The following are equivalent:
+
+1. `q:emit-action-onclick` with `#action@click`
+2. `q:emit-click` with `#click`
+
