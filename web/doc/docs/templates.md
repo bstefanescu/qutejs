@@ -247,6 +247,8 @@ A Template is nested in a top-level `q:template` tag to isolate it from the surr
 This method **should not be used in production environments**.  \
 It is only provided to quickly design components without creating a **Qute project**.
 
+The `qute-dev.js` library is provided by the `@qutejs/dev` package so you can use the **unpkg.com** CDN to get it: **[https://unpkg.com/@qutejs/dev](https://unpkg.com/@qutejs/dev)**
+
 ### Declaring template style sheets
 
 A `JSQ` file may declare style sheets that are used in templates by nesting the style sheet rules inside a top-level `q:style` tag.

@@ -195,6 +195,18 @@ In the rest of the documentation we will use the local name (i.e. without prefix
 
 Go to **[Templates](#/templates)** and **[Components](#/components)** sections to find out more about Qute Components.
 
+## CDN
+
+All qute packages are available through the **[unpkg.com](https://unpkg.com)** CDN.
+
+## Using Qute
+
+There are three ways to use Qute to create commponents:
+
+1. **Create a Qute project** and deploy the generated javascript file. This method is required for production projects.
+2. **Inline components in the web page**. This method is suitable to quickly designing Qute components.
+3. **Use [Qute Playground](https://qutejs.org/playground)**. This method is suitable to quickly design components.
+
 ## Qute Project Generator
 
 In order to help you with the _build_ process, Qute is providing a **project generator** that initialize a **Qute Project**, generating the project structure and all the configuration files needed by the build process.
@@ -287,7 +299,10 @@ Two web bundles are generated: a regular and a minified bundle ready to be used 
 
 As mentioned you can use the **[Playground](../playground/index.html)** to quickly design your components, but also, you can directly write **Qute Components** inlined in a web page using the editor of your choice.
 
-To be able to test your inlined components you must include the **[qute-dev.js](../dist/qute-dev-0.9.0.js)** bundle which contains everything is needed to transpile and run components. Do not use the **qute-dev.js** bundle in production.
+To be able to test your inlined components you must include the **qute-dev.js** bundle which contains everything is needed to transpile and run components. Do not use the **qute-dev.js** bundle in production.
+
+The `qute-dev.js` is provided by the `@qutejs/dev` package so that you can use **unpkg.com** to get the library: **[https://unpkg.com/@qutejs/dev](https://unpkg.com/@qutejs/dev)**.
+
 
 Before releasing your components it is recommended to create a **Qute Component Project** and copy your component code there (and adapting it to use import / export statements). Then build the component and release to npm registry if needed.
 
@@ -298,7 +313,7 @@ Before releasing your components it is recommended to create a **Qute Component 
 <html>
   <head>
     <meta charset="utf-8"/>
-    <script type="text/javascript" src='../dev/lib/qute-dev.js'></script>
+    <script type="text/javascript" src='https://unpkg.com/@qutejs/dev'></script>
   </head>
   <body>
     <script type='text/jsq'>

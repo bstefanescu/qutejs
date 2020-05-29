@@ -12,7 +12,7 @@ Later, you decide to switch to [foundation](https://get.foundation/). And you wa
 
 To achieve this you can use component aliases. So instead of writing `<bs-button>Click Me</bs-button>`, you can write `<my-button>Click Me</my-button>` and define an alias:
 
-```
+```javascript
 Qute.addAliases({
 	'my-button': 'bs-button'
 });
@@ -20,7 +20,7 @@ Qute.addAliases({
 
 When you want to move to Zurb Foundation you just redefine the corresponding aliases like this:
 
-```
+```javascript
 Qute.addAliases({
 	'my-button': 'zf-button'
 });
@@ -40,9 +40,9 @@ To keep your application small, Qute let's you dynamically load components from 
 
 Thus, instead of packaging all the optional components insie your main application code, you can load these optional components on demand.
 
-To specify a remote component location you can either use an URL to the component javascript, either use the **npm package** name containing the component in which case the component will be downloaded https://unpkg.com. TO create the binding between the component name and its location you need to use the `Qute.addImports` method:
+To specify a remote component location you can either use an URL to the component javascript, either use the **npm package** name containing the component in which case the component will be downloaded at **https://unpkg.com**. To create the binding between the component name and its location you need to use the `Qute.addImports` method:
 
-```
+```javascript
 Qute.addImports({
 	'my-component': '@qutejs/my-component',
 	'my-private-component': 'https://myserver.com/my-private-component.js'
