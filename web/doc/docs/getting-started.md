@@ -195,10 +195,6 @@ In the rest of the documentation we will use the local name (i.e. without prefix
 
 Go to **[Templates](#/templates)** and **[Components](#/components)** sections to find out more about Qute Components.
 
-## CDN
-
-All qute packages are available through the **[unpkg.com](https://unpkg.com)** CDN.
-
 ## Using Qute
 
 There are three ways to use Qute to create commponents:
@@ -303,8 +299,23 @@ To be able to test your inlined components you must include the **qute-dev.js** 
 
 The `qute-dev.js` is provided by the `@qutejs/dev` package so that you can use **unpkg.com** to get the library: **[https://unpkg.com/@qutejs/dev](https://unpkg.com/@qutejs/dev)**.
 
+### CDN
 
-Before releasing your components it is recommended to create a **Qute Component Project** and copy your component code there (and adapting it to use import / export statements). Then build the component and release to npm registry if needed.
+All **Qute packages** are available through the **[unpkg.com](https://unpkg.com)** CDN.
+
+For example, to download the latest **Qute runtime** you can use: https://unpkg.com/@qutejs/runtime
+
+Loading Qute through the **unpkg** CDN is suitable to quickly develop components inlined in a web page.  \
+When building production applications you should consider creating a Qute project and include dependencies in your production bundle.
+
+### Importing dependencies
+
+When writing inlined components in a web page you can import dependencies using **ES6 import** keyword.  \
+The **imports** are handled by `@qutejs/dev` and the dependencies are fetched from **unpkg.com** and then injected in the page.
+
+**Note** that you can only import libraries that inject themselves in the page (e.g. that alters some global object like the window itself or the current Qute instance).
+
+All Qute components or standalone libraries (like `jquery`) can be imported like this.
 
 ### Inlined Component Example
 
@@ -317,6 +328,9 @@ Before releasing your components it is recommended to create a **Qute Component 
   </head>
   <body>
     <script type='text/jsq'>
+      import Qute from '@qutejs/runtime';
+      import 'jquery';
+
       <q:template name='my-template'>
       <div q:class='{authenticated:user}'>
         <if value='!user'>
@@ -336,6 +350,10 @@ Before releasing your components it is recommended to create a **Qute Component 
             }
           };
         },
+        connected() {
+          // we imported jquery so use it...
+          $("body").css({background: "lightyellow"})
+        },
         doLogin() {
           this.user = {firstName: 'John', lastName: 'Doe'};
         },
@@ -346,18 +364,19 @@ Before releasing your components it is recommended to create a **Qute Component 
     </script>
     <script>
       // load inlined components
-      Qute.load();
-      // get the Component ViewModel by name
-      var MyTemplate = Qute.vm('my-template');
-      // create a new instance and mount it in the document body.
-      new MyTemplate().mount();
+      Qute.load().then(function() {
+        // get the Component ViewModel by name
+        var MyTemplate = Qute.vm('my-template');
+        // create a new instance and mount it in the document body.
+        new MyTemplate().mount();
+      });
     </script>
   </body>
 </html>
 ```
-The `Qute.load()` call is loading all components declared in the page inside `<script type='text/jsq'></script>` tags.
 
-You **notice** that when writing inlined components you can omit importing the `Qute` runtime since imports are not supported in browser. The development environment will take care of injecting the Qute runtime in your component code.
+`Qute.load()` is loading all components declared in the page inside `<script type='text/jsq'></script>` tags, and return a promise which is fulfilled when all the components are loaded.
+
 
 ## Browser Support and Polyfills
 

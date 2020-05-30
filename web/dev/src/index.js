@@ -61,13 +61,13 @@ Qute.load = function(idOrElement) {
 			script = idOrElement;
 		}
 		if (script) {
-			Qute.getLoader().then(function(loader) {
-				loader.load(script);
+			return Qute.getLoader().then(function(loader) {
+				return loader.load(script);
 			});
 		}
 	} else { // load all
-		Qute.getLoader().then(function(loader) {
-			loader.loadAll();
+		return Qute.getLoader().then(function(loader) {
+			return loader.loadAll();
 		});
 	}
 }
