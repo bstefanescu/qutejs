@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/spinner",
-  "version": "1.0.0-rc.9",
+  "version": "1.0.0-rc.10",
   "description": "Qute Spinner component",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
@@ -29,11 +29,11 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/runtime": "1.0.0-rc.9",
-    "@qutejs/window": "1.0.0-rc.9"
+    "@qutejs/runtime": "1.0.0-rc.10",
+    "@qutejs/window": "1.0.0-rc.10"
   },
   "devDependencies": {
-    "@qutejs/rollup-plugin-qute": "1.0.0-rc.9"
+    "@qutejs/rollup-plugin-qute": "1.0.0-rc.10"
   },
   "build": {
     "config": "component"
