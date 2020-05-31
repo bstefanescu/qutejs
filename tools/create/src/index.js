@@ -54,6 +54,7 @@ function installDeps(target) {
       ['-D', 'rollup-plugin-buble'],
       ['-D', 'rollup-plugin-uglify'],
       ['-D', 'rollup-plugin-postcss'],
+      ['-D', 'cssnano'],
       ['-D', 'rollup-plugin-koa-devserver'],
       // test deps
       ['-D', 'mocha'],

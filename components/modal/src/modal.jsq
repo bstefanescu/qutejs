@@ -87,6 +87,6 @@ const QuteModal = Qute("modal", {
 	return false;
 });
 
-Qute.Modal = QuteModal;
+Qute.Modal = Modal;
 
 export default QuteModal;

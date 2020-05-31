@@ -93,6 +93,6 @@ const QutePopup = Qute('popup', {
 	return false;
 });
 
-Qute.Popup = QutePopup;
+Qute.Popup = Popup;
 
 export default QutePopup;

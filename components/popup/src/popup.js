@@ -4,6 +4,25 @@ import window, {document} from '@qutejs/window';
 // 2. remove popup.css and use some global animation css?
 // 3. use same api notations and styles with modal.js
 
+// TODO share this with modal - put it directly on Qute.Animation?
+function whichTransitionend() {
+    var transitions = {
+        "transition"      : "transitionend",
+        "OTransition"     : "oTransitionEnd",
+        "MozTransition"   : "transitionend",
+        "WebkitTransition": "webkitTransitionEnd"
+    }
+    var bodyStyle = document.body.style;
+    for(var transition in transitions) {
+        if(bodyStyle[transition] != undefined) {
+            return transitions[transition];
+        }
+    }
+}
+
+var TRANSITION_END = whichTransitionend();
+
+
 function toBottom(erect, rect, crect, out) {
 	out.top = rect.bottom;
 	if (out.top + erect.height > crect.bottom) { // flip to top
@@ -276,12 +295,14 @@ Popup.prototype = {
 		var el = this.el;
 		el.classList.remove('qute-show');
 		if (this.effectName) {
-			var fn = function() {
-				el.style.visibility = 'hidden';
-				el.parentNode && el.parentNode.removeChild(el);
-				el.removeEventListener('transitionend', fn);
-			}
-			el.addEventListener('transitionend', fn);
+            if (TRANSITION_END) {
+    			var fn = function() {
+    				el.style.visibility = 'hidden';
+    				el.parentNode && el.parentNode.removeChild(el);
+    				el.removeEventListener(TRANSITION_END, fn);
+    			}
+    			el.addEventListener(TRANSITION_END, fn);
+            }
 		} else {
 			el.style.visibility = 'hidden';
 			el.parentNode.removeChild(el);

@@ -168,6 +168,7 @@ var TOC = [
 		{ title: 'Qute API', href: 'advanced/api'},
 		{ title: 'List Helper', href: 'advanced/list'},
 		{ title: 'JSQ File Format', href: 'advanced/jsq'},
+		{ title: 'Writing Plugins', href: 'advanced/plugins' }
 	]},
 	{ title: 'Examples', expand: true, items: [
 		{ title: 'Hello World', href: 'examples/hello'},

@@ -271,6 +271,7 @@ ViewModel.prototype = {
 	$update: function() {
 		if (this.$r) { // TODO only if connected
 			this.$r.update();
+            //TODO fire an update event?
 		}
 	},
 	update: function() {

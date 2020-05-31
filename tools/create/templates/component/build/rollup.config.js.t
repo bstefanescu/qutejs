@@ -6,6 +6,7 @@ import buble from 'rollup-plugin-buble'
 import {uglify} from 'rollup-plugin-uglify'
 import postcss from 'rollup-plugin-postcss'
 import devServer from 'rollup-plugin-koa-devserver'
+import cssnano fro 'cssnano'
 
 import pkg from '../package.json'
 
@@ -20,7 +21,10 @@ if (pkg.dependencies) {
 let plugins = [
 	nodeResolve( {preferBuiltins: true} ),
 	commonjs(),
-	postcss({inject: false}),
+	postcss({
+		inject: false,
+		plugins: [cssnano()]
+	}),
 	qute(),
     buble({
         objectAssign: 'Object.assign',

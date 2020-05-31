@@ -5,6 +5,24 @@ import {document} from '@qutejs/window';
 @see https://davidwalsh.name/css-vertical-center for vertical centering using translate
 */
 
+// TODO share this with popup - put it directly on Qute.Animation?
+function whichTransitionend() {
+    var transitions = {
+        "transition"      : "transitionend",
+        "OTransition"     : "oTransitionEnd",
+        "MozTransition"   : "transitionend",
+        "WebkitTransition": "webkitTransitionEnd"
+    }
+    var bodyStyle = document.body.style;
+    for(var transition in transitions) {
+        if(bodyStyle[transition] != undefined) {
+            return transitions[transition];
+        }
+    }
+}
+
+var TRANSITION_END = whichTransitionend();
+
 function toggleScroll(enable) {
 	var body = document.body;
 	if (enable) {
@@ -146,11 +164,13 @@ Modal.prototype = {
 			settings.ready && settings.ready(this);
 		}
 		if (settings.effect) {
-			var transitionEnd = function() {
-				acquireFocus();
-				modal.firstChild.removeEventListener('transitionend', transitionEnd);
-			}
-			modal.firstChild.addEventListener('transitionend', transitionEnd);
+            if (TRANSITION_END) {
+    			var transitionEnd = function() {
+    				acquireFocus();
+    				modal.firstChild.removeEventListener(TRANSITION_END, transitionEnd);
+    			}
+    			modal.firstChild.addEventListener(TRANSITION_END, transitionEnd);
+            }
 		} else {
 			acquireFocus();
 		}

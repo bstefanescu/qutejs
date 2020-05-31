@@ -388,6 +388,7 @@ Qute works on any modern browser. On Internet Explorer browsers you need to load
 * **[CustomEvent](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent)** - Not supported on IE.
 * **[Element.matches](https://developer.mozilla.org/en-US/docs/Web/API/Element/matches)** - IE uses the non standard name: `msMatchesSelector`.
 * **[Element.closest](https://developer.mozilla.org/en-US/docs/Web/API/Element/closest)** - Not supported on IE.
+* **[requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame)** - On some older browsers requires a vendor prefix. Not supported on IE9.
 
 Or you can just load the `@qutejs/polyfill` library, which also provides a **Promise** polyfill which is, in my opinion, mandatory for modern applications.
 

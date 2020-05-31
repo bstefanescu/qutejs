@@ -17,6 +17,8 @@ import './starts-with.js';
 import './custom-event.js';
 // Element closest and matches For IE>=9 (impl in edge 15)
 import './element-closest.js';
+// used by popup, modal etc. (impl in IE10, on older firefox requires a vendor prefix)
+import './requestAnimationFrame.js';
 // Promise: optional polyfill. Not required by the Qute runtime, but nice to have.
 // (it is required by qute-dev.js and qute-i18n.js)
 import './promise.js';
