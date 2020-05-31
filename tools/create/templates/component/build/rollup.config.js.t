@@ -6,7 +6,7 @@ import buble from 'rollup-plugin-buble'
 import {uglify} from 'rollup-plugin-uglify'
 import postcss from 'rollup-plugin-postcss'
 import devServer from 'rollup-plugin-koa-devserver'
-import cssnano fro 'cssnano'
+import cssnano from 'cssnano'
 
 import pkg from '../package.json'
 
