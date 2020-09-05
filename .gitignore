@@ -72,7 +72,6 @@ obj
 
 node_modules/
 typings/
-.vscode/
 
 
 .idea

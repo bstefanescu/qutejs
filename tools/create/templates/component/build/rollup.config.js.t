@@ -7,15 +7,25 @@ import {uglify} from 'rollup-plugin-uglify'
 import postcss from 'rollup-plugin-postcss'
 import devServer from 'rollup-plugin-koa-devserver'
 import cssnano from 'cssnano'
+import quteCss from 'postcss-qute'
 
 import pkg from '../package.json'
 
+const DEFAULT_DEV_SERVER_PORT = 8090;
 const devMode = process.env.NODE_ENV === 'development';
-var deps;
+let deps;
 if (pkg.dependencies) {
     deps = Object.keys(pkg.dependencies);
 } else {
    deps = ['@qutejs/window'];
+}
+
+// use DEV_SERVER_PORT = 0 to disable the DevServer
+let devServerPort = parseInt(process.env.DEV_SERVER_PORT);
+if (isNaN(devServerPort)) {
+    devServerPort = DEFAULT_DEV_SERVER_PORT;
+} else if (!devServerPort) { // if port is 0 we disable the dev server
+    devServerPort = void(0);
 }
 
 let plugins = [
@@ -23,7 +33,10 @@ let plugins = [
 	commonjs(),
 	postcss({
 		inject: false,
-		plugins: [cssnano()]
+		plugins: [
+            quteCss(),
+            cssnano()
+        ]
 	}),
 	qute(),
     buble({
@@ -50,8 +63,8 @@ if (devMode) { // dev mode
 	    external: ['@qutejs/window'],
     	plugins: [
 	    	...plugins,
-		    devServer({
-		    	port: 8090,
+		    devServerPort && devServer({
+		    	port: devServerPort,
 		    	root: '.',
 		    	open: '/build/dev/index.html',
 		    	livereload: {
