@@ -39,10 +39,12 @@ function Qute(tag, def, BaseVm) {
 			VMType = def;
 			VMProto = VMType.prototype;
 		} else {
-			// a rendering function - we simply register the rendering fucntion for the given tag
-			return registerTag(tag, def);
+            // a rendering function - a shorcut to { render: function(){}}
+            registerTag(tag, def);
+			def = { render: def };
 		}
-	} else { // VM definition object
+    }
+    if (!VMType) { // VM definition object
 		if (!BaseVm) BaseVm = ViewModel;
 		VMProto = Object.create(BaseVm.prototype, {
 			constructor: {value:ViewModelImpl},
@@ -78,8 +80,14 @@ function Qute(tag, def, BaseVm) {
 	}
 	VMType.channel = function(listenFn) {
 		VMProto.$channel = listenFn;
-		return this;
+		return VMType;
 	}
+    VMType.mixin = function() {
+        for (var i=0,l=arguments.length; i<l; i++) {
+            Object.assign(VMProto, arguments[i]);
+        }
+        return VMType;
+    }
 
 	return VMType;
 }
@@ -126,7 +134,8 @@ Qute.defineMethod = function(name, fn) {
     Rendering.FunComp.prototype[name] = fn;
 }
 
-Qute.register = registerTag;
+Qute.register = registerTag; // TODO remove register
+Qute.registerTemplate = registerTag;
 Qute.template = getTag;
 Qute.snapshotRegistry = snapshotRegistry;
 Qute.restoreRegistry = restoreRegistry;

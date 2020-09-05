@@ -3,12 +3,14 @@ import Qute from '../..';
 import './fn-item.jsq';
 import './vm-item.jsq';
 import './js-item.js';
+import './js-template.js';
 
 <q:template name='root'>
 	<ul>
 		<vm-item text='ViewModel' href='#vm'/>
 		<fn-item text='Functional' href='#functional'/>
 		<js-item text='Javascript' href='#js'/>
+        <js-template text='Javascript Template' href='#js'/>
 	</ul>
 </q:template>
 

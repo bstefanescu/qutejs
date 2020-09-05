@@ -56,14 +56,25 @@ describe('FN component', function() {
 		assert.equal(xtag.$compiled, true);
 	});
 });
-describe('JS component', function() {
-	var xtag = Qute.template('js-item');
+describe('Rendering function as template', function() {
+	var xtag = Qute.template('js-template');
 	it('should be registered', function() {
 		assert.ok(xtag);
 	});
 	it('should be a rendering function', function() {
-		assert.equal(xtag.$tag, 'js-item');
+		assert.equal(xtag.$tag, 'js-template');
 		assert.equal(xtag.$compiled, false);
+	});
+});
+describe('Rendering function as VM', function() {
+	var xtag = Qute.vm('js-item');
+	it('should be registered', function() {
+		assert.ok(xtag);
+    });
+	it('should be a rendering function', function() {
+        var vm = new xtag();
+		assert.equal(vm.$tag, 'js-item');
+		assert.equal(vm.render, Qute.template('js-item'));
 	});
 });
 describe('Root component', function() {
