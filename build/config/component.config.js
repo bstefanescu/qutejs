@@ -31,7 +31,10 @@ module.exports = function(project, args) {
             plugins: [require('cssnano')()]
         }),
         require('@qutejs/rollup-plugin-qute')(),
-        buble({exclude: ["node_modules/**", "**/node_modules/**"], include: ["**/*.js", "**/*.jsq"]})
+        buble({
+            exclude: ["node_modules/**", "**/node_modules/**"],
+            include: ["**/*.js", "**/*.jsq"]
+        })
     ];
 
     function webConfig(prod) {

@@ -218,6 +218,8 @@ ViewModel.prototype = {
 		var el = this.render(rendering) || document.createComment('<'+this.$tag+'/>');
 		el.__qute__ = this;
 		this.$el = el;
+        this.created && this.created(el);
+
 		if (bindings) for (var i=0,l=bindings.length; i<l; i+=2) {
 			var binding = bindings[i];
 			var up = bindings[i](el, model, bindings[i+1]);
@@ -228,7 +230,6 @@ ViewModel.prototype = {
 			applyListeners(el, model, listeners);
 		}
 
-		this.created && this.created(el);
 		// should use parent vm as context for custom directives
 		if ($use) $use(parentRendering, el);
 		if (parentRendering && xattrs && xattrs.$ref) {
@@ -237,6 +238,8 @@ ViewModel.prototype = {
 
 		// this can trigger a connect if tree is already connected (for example when inserting a comp in a connected list)
 		parentRendering && parentRendering.$push(rendering);
+
+        this.ready && this.ready(el);
 
 		return el;
 	},
