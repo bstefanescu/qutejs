@@ -1,6 +1,6 @@
 {
   "name": "qute",
-  "version": "1.0.0-rc.11",
+  "version": "1.0.0-rc.12",
   "private": true,
   "scripts": {
     "build": "ws build",
@@ -20,9 +20,9 @@
     "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.11.5",
     "@babel/register": "^7.11.5",
-    "@qutejs/register": "^1.0.0-rc.11",
-    "@qutejs/rollup-plugin-qute": "^1.0.0-rc.11",
-    "@qutejs/test-utils": "^1.0.0-rc.11",
+    "@qutejs/register": "1.0.0-rc.12",
+    "@qutejs/rollup-plugin-qute": "1.0.0-rc.12",
+    "@qutejs/test-utils": "1.0.0-rc.12",
     "@rollup/plugin-buble": "^0.21.3",
     "cssnano": "^4.1.10",
     "mocha": "^6.2.3",

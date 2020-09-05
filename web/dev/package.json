@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/dev",
-  "version": "1.0.0-rc.11",
+  "version": "1.0.0-rc.12",
   "description": "Qute Development runtime",
   "browser": "lib/qute-dev.js",
   "unpkg": "lib/qute-dev.js",
@@ -28,11 +28,11 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/commons": "1.0.0-rc.11",
-    "@qutejs/compiler": "1.0.0-rc.11",
-    "@qutejs/polyfill": "1.0.0-rc.11",
-    "@qutejs/runtime": "1.0.0-rc.11",
-    "@qutejs/window": "1.0.0-rc.11"
+    "@qutejs/commons": "1.0.0-rc.12",
+    "@qutejs/compiler": "1.0.0-rc.12",
+    "@qutejs/polyfill": "1.0.0-rc.12",
+    "@qutejs/runtime": "1.0.0-rc.12",
+    "@qutejs/window": "1.0.0-rc.12"
   },
   "build": {
     "config": "dev"
