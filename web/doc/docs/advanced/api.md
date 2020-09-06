@@ -168,7 +168,7 @@ A converter registry. To be used with  __[q:content-\*](#/attributes/q-markdown)
 ## The Component Constructor API
 
 Components are defined using the `Qute()` function. `Qute()` returns a **Component Constructor**.
-The returned constructor can be used to instantiate the component, but it also provides several methods usefull to further configure the component: `watch`, `on` and `channel`.
+The returned constructor can be used to instantiate the component, but it also provides several methods usefull to further configure the component: `watch`, `on`, `channel` and `mixin`.
 
 **Example:**
 
@@ -181,7 +181,7 @@ var MyComponent = Qute('my-component', {
 	// do something when the title property changes.
 }).channel(function(message, data) {
 	// do something when a message is posted to the component channel.
-});
+}).mixin(Mixin1, Mixin2, ...);
 ```
 
 #### `watch(prop, watcher)`
@@ -211,6 +211,30 @@ The `handler` has the signature: `function(message, data)`
 The channel is not opened by registering the handler. To open a channel you must use a `q:channel` attribute on the component element toi give the channel a name, or, for root components use the `listen(channelName)` method.
 
 For more details see the **[Message Bus](#/app/bus)** and the **[Components](#/components)** section.
+
+#### `mixin(mixin1, mixin2, ...)`
+
+Add mixins to a component type.
+
+**Example**
+
+```jsq
+import Qute from '@qutejs/runtime'
+
+<q:template name='root'>
+    <div>
+        {{message}} <button @click={changeGreeting}>Change Greeting</button>
+    </div>
+</q:template>
+
+export default Qute('root', {
+   init() { return { message: 'Hello!' } }
+}).mixin({
+    changeGreeting() {
+        this.message= 'Hi!';
+    }
+});
+```
 
 ## The Component Instance API
 
