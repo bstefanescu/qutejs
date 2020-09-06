@@ -168,12 +168,12 @@ function onButtonClick(context, event) {
 
 As we saw, there are two special constructs in a `JSQ` file that are transpiled to javascript:
 
-1. `q:template` - this construct will be tranbspiled into something like `Qute.register("template-name", function($){return  ... }, true);`
+1. `q:template` - this construct will be tranbspiled into something like `Qute.registerTemplate("template-name", function($){return  ... }, true);`
 2. `q:style` - this construct will be transpiled into something like `Qute.css("q:style content ...");`
 
 This is why you mmust always **import Qute** at the top of the `JSQ` file.
 
-The `Qute.register` is registering the template in a global template registry.
+The `Qute.registerTemplate` is registering the template in a global template registry.
 
 The `Qute.css` is registering the style rules so that it will be inserted in the head of the HTML page using the component.
 

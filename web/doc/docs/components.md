@@ -100,6 +100,8 @@ A ViewModel is created using the `Qute()` function.
 * **tagName** - the tag name to use for the component. This argument is **required** even for root components (that are never used by tag name in templates).
 * **definitionOrClass** - an object or a class defining the component. We will focus here on the definition objects. This argument is **optional**. If not specified the **tagName** argument is expected to be a template name and the ViewModel will wrap the template without defining any own data model.
 
+You can also pass a rendering function as the `definitionOrClass` argument. This is a a shortcut to the following object definition: `{render: renderingFunction}`. Anyway, it makes no much sense to create a `ViewModel` defining only a rendering method. If you need this it is better to register the rendering function as a template: `Qute.registerTemplate("tagName", renderingFunction)` which will create a **functional component** which is lighter than a **ViewModel component**.
+
 For more information on how to use classes check the **[Class Syntax](#/model/class)** section.
 
 ### ViewModel Tag Name
@@ -140,7 +142,10 @@ A ViewModel definition is a plain javascript object used to define the ViewModel
 	// you can define lifecycle event handlers
 	created(element) {
 		console.log('component was created');
-	},
+    },
+	ready(element) {
+		console.log('the component element was created and properties / listeners initialized');
+    },
 	connected() {
 		console.log('component was connected');
 	},
@@ -237,10 +242,16 @@ There are three life cycle handlers that can be defined in a definition object:
 
 Called just after the component root element was created (i.e. component was rendered). The component is not yet connected to the DOM.
 
-This handler is called only once in the component life-cycle, after the init method and after attributes are bound to properties.
+This handler is called only once in the component life-cycle, after the init method and before element attributes are injected into component properties.
 
 The **element** argument is the DOM element created by the rendering function.  \
 It is also available at any time as the **`$el`** property of the component instance.
+
+#### `ready(element)`
+
+Called after the component root element is created and after the component properties are initialized from element attributes and all declarative listeners are registered. The component is ready to be connected to the DOM.
+
+As for the `created` handler the `ready` handler is called only once in the component life cycle.
 
 #### `connected()`
 
@@ -258,7 +269,7 @@ This handler can be used to clean up resources setup by the `connected` handler.
 
 ### Methods
 
-Any method specified in a definition object which is not a getter and neither none of `init`, `created`, `connected`, `disconnected` will become a **Component Method**.
+Any method specified in a definition object which is not a getter and neither none of `init`, `created`, `ready`, `connected`, `disconnected` will become a **Component Method**.
 
 Component methods are injected at the ViewModel's prototype level, and can be used from templates.
 

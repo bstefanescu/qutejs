@@ -40,7 +40,7 @@ If a `<style id='--qute-inline-styles'>` already exists in the page then it will
 
 Usefull to define CSS rules directly in component files.
 
-### `Qute.register(tag, templateFn, isCompiled)`
+### `Qute.registerTemplate(tag, templateFn, isCompiled)`
 
 Register a template function given its (tag) name.
 

@@ -35,7 +35,7 @@ function compileTemplate(compiler, attrs, text) {
     var imports = attrs.import || null;
 
     var compiledFn = compiler.compile(text, splitList(imports));
-    return 'Qute.register("'+name+'", '+compiledFn+', true);';
+    return 'Qute.registerTemplate("'+name+'", '+compiledFn+', true);';
 }
 
 function compileStyle(compiler, attrs, text) {

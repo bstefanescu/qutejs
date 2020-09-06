@@ -134,7 +134,8 @@ Qute.defineMethod = function(name, fn) {
     Rendering.FunComp.prototype[name] = fn;
 }
 
-Qute.register = registerTag; // TODO remove register
+// deprectaed method -> t=TODO remove the register method. Use registerTemplate
+Qute.register = registerTag;
 Qute.registerTemplate = registerTag;
 Qute.template = getTag;
 Qute.snapshotRegistry = snapshotRegistry;
