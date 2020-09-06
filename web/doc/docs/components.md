@@ -361,6 +361,36 @@ var MyComponent = Qute('my-component', {
 });
 ```
 
+### Adding Mixins
+
+You can group common methods in shareable objects and then add the methods as `mixins` to a component.
+
+**Example**
+
+```jsq
+import Qute from '@qutejs/runtime'
+
+<q:template name='root'>
+    <div>
+        {{message}} <button @click={changeGreeting}>Change Greeting</button>
+    </div>
+</q:template>
+
+export default Qute('root', {
+   init() { return { message: 'Hello!' } }
+}).mixin({
+    changeGreeting() {
+        this.message= 'Hi!';
+    }
+});
+```
+
+**Note** that you can pass any number of mixins: `Component.mixin(Mixin1, Mixin2, Mixin3, ...)`
+
+
+
+
+
 ### Chaining registrations
 
 You can chain all these methods to easily define listeners, watchers and a channel.
