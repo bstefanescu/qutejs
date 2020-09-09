@@ -1,0 +1,38 @@
+import { document } from '@qutejs/window';
+import assert from 'assert';
+import Qute from '..';
+
+<q:template name='root'>
+    <div id={id} title={"Hello"+(1+3)} class={"bla"} q:style={{left:"10px"}} q:class={{enabled: enabled, active: active}}>
+        <if value={testValue}>Hello</if>
+        <for value={item in items}>{{item}},</for>
+    </div>
+</q:template>
+const Root = Qute('root', {
+    init() {
+        return {
+            enabled: true,
+            active: false,
+            id: 'test-mustache-attr-root',
+            testValue: true,
+            items: [1,2,3]
+        }
+    }
+});
+
+describe("Mustache attribute value", () => {
+    it("works on all attributes", () => {
+        const root = new Root().mount();
+        let cl = root.$el.classList;
+        assert.ok(cl.contains('bla'));
+        assert.ok(cl.contains('enabled'));
+        assert.ok(!cl.contains('active'));
+        assert.strictEqual(root.$el.id, 'test-mustache-attr-root');
+        assert.strictEqual(root.$el.title, 'Hello4');
+        assert.strictEqual(root.$el.style.left, '10px');
+    });
+    it ('works on if and for value attribute', () => {
+        const root = new Root().mount();
+        assert.strictEqual(root.$el.textContent.trim().replace(/\s+/, ' '), 'Hello 1,2,3,');
+    });
+});
