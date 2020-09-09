@@ -6,12 +6,6 @@ const uglify = require('rollup-plugin-uglify').uglify;
 
 //NOTE: replace and external are only used by i18n
 
-// we need to avoid requiring qute for projects that don't depend on rollup-plugin-qute
-// since after a clean the rollup-plugin-qute link is removed from node_modules
-// instead we load qute and postcss only if needed - see hasJSQ below
-//const postcss = require('rollup-plugin-postcss');
-//const qute = require('@qutejs/rollup-plugin-qute');
-
 module.exports = function(project, args) {
     const PROD = args.indexOf('prod') > -1;
     var globals = project.config.globals || {};
@@ -22,15 +16,21 @@ module.exports = function(project, args) {
     // var inputWeb = project.config.webInput ? project.file(project.config.webInput) : input;
     var webFileName = project.kebabCaseName.replace('qutejs-', 'qute-');
 
+    // we need to avoid requiring qute in global section for projects that don't depend on rollup-plugin-qute
+    // since after a clean the rollup-plugin-qute link is removed from node_modules
+    // instead we load qute and postcss only if needed - see hasJSQ below
+    const postcss = require('rollup-plugin-postcss');
+    const qute = require('@qutejs/rollup-plugin-qute');
+
     const basePlugins = [
         replace({ 'process.env.NODE_ENV': '"production"' }), // used by polyglot
         nodeResolve( {preferBuiltins: true} ),
         commonjs(),
-        require('rollup-plugin-postcss')({
-            inject: false,
+        postcss({
+            inject: qute.injectStyle,
             plugins: [require('cssnano')()]
         }),
-        require('@qutejs/rollup-plugin-qute')(),
+        qute(),
         buble({
             exclude: ["node_modules/**", "**/node_modules/**"],
             include: ["**/*.js", "**/*.jsq"]

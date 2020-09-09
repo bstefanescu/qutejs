@@ -26,7 +26,7 @@ let plugins = [
 	nodeResolve( {preferBuiltins: true} ),
 	commonjs(),
 	postcss({
-		inject: false,
+		inject: qute.injectStyle,
 		plugins: [
             quteCss(),
             cssnano()

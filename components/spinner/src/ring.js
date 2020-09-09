@@ -1,6 +1,6 @@
 import { document } from '@qutejs/window';
 import Qute from '@qutejs/runtime';
-import css from './ring.css';
+import './ring.css';
 
 /*
 <div class="qute-spinner-ring">
@@ -10,8 +10,6 @@ import css from './ring.css';
   <div></div>
 </div>
 */
-
-Qute.css(css);
 
 function createPart(color, width) {
 	var div = document.createElement('DIV');

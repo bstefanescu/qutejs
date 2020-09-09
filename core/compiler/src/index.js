@@ -1084,11 +1084,11 @@ function Compiler() {
 	}
 
 	this.transpile = function(source, opts) {
-		return new JSQ(this, source).transpile(opts);
+		return new JSQ(source, this, opts.compileStyle).transpile(opts);
 	}
 
-	this.jsq = function(source) {
-		return new JSQ(this, source);
+	this.jsq = function(source, compileStyle) {
+		return new JSQ(source, this, compileStyle);
 	}
 
 }

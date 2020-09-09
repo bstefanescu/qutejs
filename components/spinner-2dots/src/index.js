@@ -1,7 +1,6 @@
 import { document } from '@qutejs/window';
-import Qute from '@qutejs/runtime';
 import Spinner from '@qutejs/spinner';
-import css from './2dots.css';
+import './2dots.css';
 
 
 /*
@@ -42,8 +41,6 @@ function create(el, xattrs) {
 	el.appendChild(createDot('dot2', color2));
 	return el;
 }
-
-Qute.css(css);
 
 Spinner.add('2dots', {
 	tag: 'DIV',

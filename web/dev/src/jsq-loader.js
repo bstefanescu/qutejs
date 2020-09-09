@@ -19,6 +19,10 @@ function insertStyle(url) {
 	document.head.appendChild(link);
 }
 
+function compileStyle(compiler, attrs, text) {
+    text = text.trim();
+    return text ? 'Qute.css('+JSON.stringify(text)+');' : '';
+}
 
 function JSQLoader(transpileES6) {
 	// parse playground directives like @script @style etc.s
@@ -63,10 +67,14 @@ function JSQLoader(transpileES6) {
 			hasExport = true;
 			return "var __DEFAULT_EXPORT__ = ";
 		});
-		code = new Compiler().transpile(code, {sourceMap: false}).code;
+        code = new Compiler().transpile(code, {
+            sourceMap: false,
+            compileStyle: compileStyle
+        }).code;
 		if (transpileES6) {
 			code = transpileES6(code);
 		}
+
 
 		if (hasExport) code += '\nreturn __DEFAULT_EXPORT__;\n';
 

@@ -102,24 +102,6 @@ Qute.link = function(VMType, renderFn) {
 	VMType.prototype.render = renderFn;
 }
 
-
-var QUTE_STYLE=null;
-Qute.css = function(css) {
-	var doc = window.document;
-	if (!QUTE_STYLE) {
-		var style = doc.getElementById('--qute-inline-styles');
-		if (!style) {
-			style = doc.createElement('STYLE');
-			style.id = '--qute-inline-styles';
-			style.type = 'text/css';
-			style.textContent = "\n";
-			doc.head.insertBefore(style, doc.head.firstChild);
-		}
-		QUTE_STYLE = style;
-	}
-	QUTE_STYLE.textContent += css;
-}
-
 Qute.converters = converters;
 Qute.App = App;
 Qute.UpdateQueue = UpdateQueue;

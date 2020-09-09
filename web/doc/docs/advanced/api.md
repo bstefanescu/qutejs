@@ -32,14 +32,6 @@ Because the updates are run asynchronously you cannot know when the update job r
 
 This is usefull when writing tests, to make assertions after the DOM changed in response to model change.
 
-### `Qute.css(cssRules)`
-
-Inject a `CSS` fragment into a `<style>` element in the page `<head>`.
-
-If a `<style id='--qute-inline-styles'>` already exists in the page then it will be used to host the injected CSS rules, otherwise a new style element will be created. This enable to choose where in the page to position the inlined CSS rules.
-
-Usefull to define CSS rules directly in component files.
-
 ### `Qute.registerTemplate(tag, templateFn, isCompiled)`
 
 Register a template function given its (tag) name.

@@ -38,9 +38,18 @@ function compileTemplate(compiler, attrs, text) {
     return 'Qute.registerTemplate("'+name+'", '+compiledFn+', true);';
 }
 
-function compileStyle(compiler, attrs, text) {
-	text = text.trim();
-    return text ? 'Qute.css('+JSON.stringify(text)+');' : '';
+function defaultCompileStyle(compiler, attrs, text) {
+    text = text.trim();
+    return text ? '__qutejs_runtime_lib_injectStyle__('+JSON.stringify(text)+');' : '';
+}
+
+function PrependText(code) {
+	this.code = code;
+}
+PrependText.prototype = {
+	compile(ms) {
+        ms.prepend(this.code);
+    }
 }
 
 function Text(from, to, code) {
@@ -74,9 +83,10 @@ Style.prototype = {
 	}
 }
 
-export default function JSQ(compiler, source) {
+export default function JSQ(source, compiler, compileStyle) {
 	this.source = source;
-	this.parts = [];
+    this.parts = [];
+    this.compileStyle = compileStyle || defaultCompileStyle;
 	this.load(source, compiler);
 }
 JSQ.prototype = {
@@ -105,7 +115,8 @@ JSQ.prototype = {
 		TAG_RX.lastIndex = 0;
 		TAG_END_RX.lastIndex = 0;
 		var offset = 0;
-		var m = TAG_RX.exec(source);
+        var m = TAG_RX.exec(source);
+        var foundStyle = false;
 		while (m) {
 			if (!m[1] && !m[2]) ERR('BUG?');
 			if (offset < m.index) {
@@ -124,7 +135,8 @@ JSQ.prototype = {
 			} else if (m[2]) { // a style
 				if (!end[2]) ERR('No matching style end tag was found: </q:style>.');
 				PartType = Style;
-				code = compileStyle(compiler, attrs, content);
+                code = this.compileStyle(compiler, attrs, content);
+                foundStyle = true;
 			} else {
 				ERR('BUG?');
 			}
@@ -137,7 +149,12 @@ JSQ.prototype = {
 
 		if (TAG_RX.lastIndex < source.length) {
 			parts.push(new Text(TAG_RX.lastIndex, source.length, source.substring(TAG_RX.lastIndex, source.length)));
-		}
+        }
+
+        if (foundStyle && this.compileStyle === defaultCompileStyle) {
+            // the default compileStyle method needs to add an import on top of the file.
+            parts.unshift(new PrependText('import __qutejs_runtime_lib_injectStyle__ from "@qutejs/runtime/lib/inject-style.js";\n'));
+        }
 	}
 
 }

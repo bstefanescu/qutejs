@@ -38,7 +38,7 @@ export function insertScript(url, onload, onerror) {
         script.onerror = function() {
             var error = new Error("Failed to fetch script from: " + url);
             error.url = url;
-            console.error(msg);
+            console.error(error);
             onerror && onerror(error);
         }
         document.head.appendChild(script);

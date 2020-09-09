@@ -81,16 +81,7 @@ It means, that both of these templates will be regsitered as global templates, a
 
 #### Style Sheets
 
-In the previous example, style sheets are injected as is. If you want more control over style sheets you should use a `CSS` plugin for your build tool (e.g. `rollup`) to import `CSS` content from an external file and register it using `Qute.css(cssContent)` call.
-
-**Example**
-
-```javascript
-import Qute from '@qutejs/runtime';
-import myCss from './stylesheet.css';
-
-Qute.css(myCss); // this will inject the css into the HTML page using the component
-```
+In the previous example, styles are inlined in the file using a `<q:style>...</q:style>` element. If you want more control over style sheets (like using postcss plugins) you should import the css file (e.g. `import my.css`) so you can setup a postcss pipeline in your build.
 
 ### Components Section
 
@@ -130,7 +121,7 @@ In that case we don't need any component definition nor export statement.
 
 ### Example
 
-```xml
+```jsq-norun
 import Qute from '@qutejs/runtime';
 
 <q:template name='my-link'>
@@ -148,7 +139,7 @@ When creating functional components it may be usefull to be able to use external
 
 In the following example we define a onclick handler in the `JSQ` file context and we import it in the template so we can use it in the template context.
 
-```xml
+```jsq-norun
 import Qute from '@qutejs/runtime';
 
 <q:template name='my-link'>
@@ -169,13 +160,11 @@ function onButtonClick(context, event) {
 As we saw, there are two special constructs in a `JSQ` file that are transpiled to javascript:
 
 1. `q:template` - this construct will be tranbspiled into something like `Qute.registerTemplate("template-name", function($){return  ... }, true);`
-2. `q:style` - this construct will be transpiled into something like `Qute.css("q:style content ...");`
+2. `q:style` - this construct will be transpiled to a javascript code that will inject the style rules into a `<style>` tag inside the page `<head>`.
 
-This is why you mmust always **import Qute** at the top of the `JSQ` file.
+Because `q:template` is generating code depending on `Qute` you must always **`import Qute from "@qutejs/runtime"`** at the top of the `JSQ` file.
 
-The `Qute.registerTemplate` is registering the template in a global template registry.
-
-The `Qute.css` is registering the style rules so that it will be inserted in the head of the HTML page using the component.
+The `Qute.registerTemplate` function is registering the template in a global template registry.
 
 You can see the transpilation output for any playable example in the Qute documentation by clicking the `Javascript` tab in the **[Qute Playground](/playground/index.html)**.
 

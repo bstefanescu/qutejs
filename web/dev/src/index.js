@@ -13,6 +13,7 @@ import loadES6Transpiler from './buble-loader.js';
 
 import window, {document} from '@qutejs/window';
 import Qute from '@qutejs/runtime';
+import injectStyle from '@qutejs/runtime/lib/inject-style.js';
 import Compiler from '@qutejs/compiler';
 import JSQLoader from './jsq-loader.js';
 
@@ -71,5 +72,7 @@ Qute.load = function(idOrElement) {
 		});
 	}
 }
+
+Qute.css = injectStyle;
 
 export default Qute;

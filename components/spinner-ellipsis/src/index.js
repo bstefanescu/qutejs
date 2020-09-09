@@ -1,7 +1,6 @@
 import { document } from '@qutejs/window';
-import Qute from '@qutejs/runtime';
 import Spinner from '@qutejs/spinner';
-import css from './ellipsis.css';
+import './ellipsis.css';
 
 /*
 <div class="qute-spinner-ellipsis">
@@ -38,8 +37,6 @@ function create(el, xattrs) {
 	el.appendChild(createDot('bounce3', color, size));
 	return el;
 }
-
-Qute.css(css);
 
 Spinner.add('ellipsis', {
 	tag: 'DIV',

@@ -1,9 +1,7 @@
-import {document} from '@qutejs/window';
+import window, {document} from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import Modal from './modal.js';
-import css from './modal.css';
-
-Qute.css(css);
+import './modal.css';
 
 var modal_id = 0;
 

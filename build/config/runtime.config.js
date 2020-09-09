@@ -39,6 +39,21 @@ module.exports = function(project, args) {
 
     return [
         {
+            input: project.file('src/entries/inject-style.js'),
+            plugins: basePlugins,
+            output: [
+                {
+                    format: 'esm',
+                    file: project.file('lib/inject-style.js'),
+                },
+                {
+                    format: 'cjs',
+                    file: project.file('lib/inject-style.cjs'),
+                    sourcemap: true
+                }
+            ]
+        },
+        {
             input: project.file('src/index.js'),
             external: project.runtimeDeps,
             plugins: basePlugins,
