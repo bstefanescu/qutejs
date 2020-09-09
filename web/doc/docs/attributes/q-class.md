@@ -21,6 +21,12 @@ The **q:class** attribute was introduced to ease managing dynamic classes. It ta
 <li q:class="{ active: isActive, item: true }">
 ```
 
+**Note** that you can also use parentheses to enclose the `q:class` value. The following notation is equivalent to the previous one:
+
+```xml
+<li q:class={{ active: isActive, item: true }}>
+```
+
 When using this syntax the class names are the keys and the values indicates either the class should be added (a true value) either it should be removed (a false value).
 
 This notation is reactive: when the model changes the element class is automatically updated

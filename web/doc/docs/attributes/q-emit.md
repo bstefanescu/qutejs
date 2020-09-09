@@ -2,7 +2,7 @@
 
 This directive can be used to declaratively emit DOM events in response to received DOM events. It can be used to forward received events to upper components and optionally rewrite them into more meaningfull events.
 
-The syntax of `q:emit` attribute is `q-emit-[new-event-name]-on[original-event-name]` where the `new-event-name` is optional (if not specified the new event will have the same name as the original event).
+The syntax of `q:emit` attribute is `q-emit-[new-event-name]-on[original-event-name]` or `q-emit-[event-name]`. In the first form the the original event is `forwarded` as a new custom event event having the gigen name. In the later form the original event is `forwarded` as a custom event having the same event name than the original one.
 
 Let's say for example that you have a `remove-button` component which wraps a `button` and need to emit a 'remove' event whe the button is clicked. This can be simply done usiong a `q:emit` directive:
 
@@ -26,7 +26,7 @@ You can change the event detail to store some meaningfull value like for example
 
 This button will trigger a 'remove' event with. the `detail` field set to the item id.
 
-Sometimes you may want to preserve the original event name. For example you may want to create a custom form control that emits a 'change' events when some internal text input emit a change event. In that case you simply ommit the new event name from the `q:emit` attribute: `q-emit-onchange`.
+Sometimes you may want to preserve the original event name. For example you may want to create a custom form control that emits a 'change' events when some internal text input emit a change event. In that case you simply specify the original event name without the `on` prefix: `q-emit-change`.
 
 Here is an working example, demontsrating the `q-emit` usage from both a fucntional component and a `ViewModel` component.
 

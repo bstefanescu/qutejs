@@ -12,7 +12,7 @@ You can also bind the style attribute to some javascript expression in order to 
 <a style = { 'text-decoration: '+(hasUnderline?'underline':'none') }>A link</a>
 ```
 
-The `q:style` attribute was introduces to ease dynamic styles binding. It takes as a value a javascript expression than is evaluated to either an object or an array.
+The `q:style` attribute was introduced to ease dynamic styles binding. It takes as a value a javascript expression than is evaluated to either an object or an array.
 
 
 ## The `q:style` object notation
@@ -21,6 +21,12 @@ When using the object notation all style properties must use the camel cae (and 
 
 ```xml
 <a q:style="{textDecoration: hasUnderline?'underline':'none', fontSize: '110%'}">A link</a>
+```
+
+**Note** that you can also use parentheses to enclose the `q:style` value. The following notation is equivalent to the previous one:
+
+```xml
+<a q:style={{textDecoration: hasUnderline?'underline':'none', fontSize: '110%'}}>A link</a>
 ```
 
 ## The `q:style` array notation
