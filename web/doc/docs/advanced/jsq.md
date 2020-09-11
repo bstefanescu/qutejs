@@ -139,12 +139,8 @@ When creating functional components it may be usefull to be able to use external
 
 In the following example we define a onclick handler in the `JSQ` file context and we import it in the template so we can use it in the template context.
 
-```jsq-norun
+```jsq
 import Qute from '@qutejs/runtime';
-
-<q:template name='my-link'>
-	<a class='my-link' q:attrs><slot/></a>
-</q:template>
 
 <q:template name='my-button' import='onButtonClick'>
 	<a class='my-button' q:attrs @click='onButtonClick(this, $1)'><slot/></a>
@@ -152,7 +148,15 @@ import Qute from '@qutejs/runtime';
 
 function onButtonClick(context, event) {
 	console.log('On Click!', context, event);
+    alert('Hello!');
 }
+
+// use the template above in a root VM
+<q:template name='root'>
+    <my-button href='#'>Click me!</my-button>
+</q:template>
+
+export default Qute('root');
 ```
 
 ## Transpiling

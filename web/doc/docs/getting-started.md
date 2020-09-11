@@ -235,6 +235,12 @@ The generated `package.json` is defining all the commands you need:
 Both of the project types have the following file structure:
 
 ```
+.vscode/
+    build.js
+    server.js
+    extensions.json
+    launch.json
+    tasks.json
 build/
 	dev/
 		index.html
@@ -252,6 +258,9 @@ test/
 	...
 package.json
 ```
+
+* The **`.vscode`** directory contains configuration for the `Visual Studio Code` editor. It provides a `development server task`,  a `development build task`, a `production build task`, `debugging support in Chrome` (you can modify the `launch.json` file to launch any vscode supported browser).  \
+__Note__ that for the full support of `Qute` components (including `.jsq` files syntax, component preview etc.) you need to install the  **[vscode-qutejs](https://marketplace.visualstudio.com/items?itemName=quandora.vscode-qutejs)** extension.
 
 * The **`src`** directory contains the project sources (usually `.js` and `.jsq` files). The build expect to find a `index.js` which will be the entry point to your application or component.
 * The **`test`** directory contains  test sources (usually `.js` and `.jsq` files). Test files should be suffixed by `.test.js` or `.test.jsq`.

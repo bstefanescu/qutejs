@@ -26,6 +26,7 @@ About **8K** gzipped.
 * Resource friendly: No Virtual DOM. It's **green software**!
 * **Quickly design components** using the playground or browser inlined components.
 * Provides a **project generator** tool for a modern development experience.
+* Development extension for **Visual Studio Code**: **[vscode-qutejs](https://marketplace.visualstudio.com/items?itemName=quandora.vscode-qutejs)**.
 * You can reuse any plain javascript UI component (e.g. jQuey UI etc.).
 * Provides a concise **Application Data Model** which replace the verbose state management frameworks like **redux**. You write less code and focus on business logic.  \
 Though, you can still integrate **redux** like state managers with Qute if needed.
