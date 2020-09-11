@@ -20,7 +20,18 @@
         "type": "process",
         "command": "node",
         "args": ["./.vscode/build.js"],
-        "group": "test",
+        "group": "build",
+        "presentation": {
+          "reveal": "always",
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "Qute: Production Build",
+        "type": "process",
+        "command": "npm",
+        "args": ["run", "build"],
+        "group": "build",
         "presentation": {
           "reveal": "always",
           "panel": "shared"
