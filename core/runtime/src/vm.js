@@ -7,7 +7,7 @@ import UpdateQueue from './update.js';
 import App from './app.js';
 import {applyListeners, SetProp, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
 import Emitter from './emit.js';
-import applyUserDirectives from './q-attr.js';
+import {applyUserDirectives} from './q-attr.js';
 import {createProp} from './prop-types';
 import ListHelper from './list.js';
 
@@ -83,9 +83,8 @@ function ViewModel(app, attrs) {
 }
 
 ViewModel.prototype = {
-	__VM__: true,
 	toString: function() {
-		return 'ViewModel <'+this.$tag+'/>';
+		return 'ViewModel <'+this.render.name+'/>';
 	},
 	// set an attribute value (can be either a free property (i.e $attrs[key]) or managed property (i.e. $data[key]))
 	$set: function(key, value) {

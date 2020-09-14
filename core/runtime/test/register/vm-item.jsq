@@ -1,9 +1,9 @@
 
 import Qute from '../..';
 
-<q:template name='vm-item'>
+<q:template name='VmItem'>
 <li><a href={$attrs.href}>{{$attrs.text}}</a></li>
 </q:template>
 
 
-export default Qute('vm-item');
+export default Qute(VmItem);

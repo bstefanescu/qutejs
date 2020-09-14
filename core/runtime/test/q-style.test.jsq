@@ -4,32 +4,32 @@ import window, {document} from '@qutejs/window';
 import Qute from '..';
 import { mountTest, runAfter } from './utils.js';
 
-<q:template name='test-style-0'>
+<q:template name='Test0Template'>
 	<span style={"max-width:300px;flex:"+theFlex}></span>
 </q:template>
 
-<q:template name='test-style-1'>
+<q:template name='Test1Template'>
 	<span q:style='theStyle'></span>
 </q:template>
 
-<q:template name='test-style-2'>
+<q:template name='Test2Template'>
 	<div q:style='getStyle()'>Is Visible</div>
 </q:template>
 
-<q:template name='test-style-3'>
+<q:template name='Test3Template'>
 	<span q:style='{textDecoration: "underline", maxWidth: "100px", flex: 1}'></span>
 </q:template>
 
-<q:template name='test-style-4'>
+<q:template name='Test4Template'>
 	<span q:style='{maxWidth: "100px"}' style='max-width: 200px; max-height: 200px'></span>
 </q:template>
 
 
-<q:template name='test-style-5'>
+<q:template name='Test5Template'>
 	<div q:style='[{maxWidth: "100px", maxHeight: "100px"}, {flex: 1}, {maxHeight:"300px"}]'>Is Visible</div>
 </q:template>
 
-var Test0 = Qute('test-style-0', {
+var Test0 = Qute(Test0Template, {
 	init() {
 		return {
 			theFlex: 1
@@ -37,7 +37,7 @@ var Test0 = Qute('test-style-0', {
 	}
 })
 
-var Test1 = Qute('test-style-1', {
+var Test1 = Qute(Test1Template, {
 	init() {
 		return {
 			theStyle: {
@@ -49,7 +49,7 @@ var Test1 = Qute('test-style-1', {
 	}
 });
 
-var Test2 = Qute('test-style-2', {
+var Test2 = Qute(Test2Template, {
 	getStyle() {
 		return {
 			maxWidth: '300px',
@@ -59,22 +59,22 @@ var Test2 = Qute('test-style-2', {
 	}
 });
 
-var Test3 = Qute('test-style-3');
-var Test4 = Qute('test-style-4');
-var Test5 = Qute('test-style-5');
+var Test3 = Qute(Test3Template);
+var Test4 = Qute(Test4Template);
+var Test5 = Qute(Test5Template);
 
 // vm components test
-<q:template name='test-style-vm'>
+<q:template name='TestStyleVmTemplate'>
     <div><slot/></div>
 </q:template>
 
-<q:template name='test-style-vm-root'>
+<q:template name='TestStyleVmRootTemplate'>
     <test-style-vm q:style="{textAlign: align}">Hello!</test-style-vm>
 </q:template>
 
 
-Qute('test-style-vm');
-var TestStyleVM = Qute('test-style-vm-root', {
+const TestStyleVm = Qute(TestStyleVmTemplate);
+var TestStyleVmRoot = Qute(TestStyleVmRootTemplate, {
 	init() {
     	return {align: 'center'};
 	}
@@ -150,7 +150,7 @@ describe('q:style attribute', function() {
 	});
 
 	it('works on VM components', function(done) {
-		var test = mountTest(TestStyleVM);
+		var test = mountTest(TestStyleVmRoot);
 		assert.equal(test.firstChild.style.textAlign, 'center');
 
 		test.firstChild.__qute__.align = 'left';

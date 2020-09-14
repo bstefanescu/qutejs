@@ -1,6 +1,7 @@
 
 import MagicString from 'magic-string';
 import { ERR, splitList } from './utils.js';
+import { kebabToCompName } from '@qutejs/commons';
 
 const TAG_RX = /^\s*<(?:(q\:template)|(q\:style))(\s+[^>]*)?>/gm;
 const TAG_END_RX = /\s*<\/(?:(q\:template)|(q\:style))\s*>/g;
@@ -30,12 +31,12 @@ function compileTemplate(compiler, attrs, text) {
 	text = text.trim();
 	if (!text) return '';
 
-    var name = attrs.name;
+    var name = kebabToCompName(attrs.name);
     //var fname = kebabToCamel(name);
     var imports = attrs.import || null;
 
     var compiledFn = compiler.compile(text, splitList(imports));
-    return 'Qute.registerTemplate("'+name+'", '+compiledFn+', true);';
+    return "var "+name+" = "+compiledFn+';\n'+name+'.$compiled = true;\n';
 }
 
 function defaultCompileStyle(compiler, attrs, text) {

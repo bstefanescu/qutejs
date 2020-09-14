@@ -1,9 +1,25 @@
 import ERR from './error.js';
-import {findDirective} from './registry.js';
 
+var ATTRS = {};
+
+export function getDirective(key) {
+	return ATTRS[key];
+}
+
+export function findDirective(tag, name) {
+	return ATTRS[tag+':'+name] || ATTRS[name];
+}
+
+export function registerDirective(/*[tag, ]name, dirFn*/) {
+	if (arguments.length === 3) {
+		ATTRS[arguments[0]+':'+arguments[1]] = arguments[2];
+	} else {
+		ATTRS[arguments[0]] = arguments[1];
+	}
+}
 
 // el is defined only when called on a DOM element
-export default function applyUserDirectives(rendering, tag, xattrs, compOrEl) {
+export function applyUserDirectives(rendering, tag, xattrs, compOrEl) {
 	var xcall, fns = [], directives = xattrs.$use;
 	for (var key in directives) {
 		var val = directives[key];

@@ -7,7 +7,7 @@ var modal_id = 0;
 
 /**
  */
-const QuteModal = Qute("modal", {
+const QuteModal = Qute({
 	init: function() {
 		return {
 			animation: null,

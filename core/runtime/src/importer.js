@@ -26,14 +26,16 @@ function resolveScript(nameOrUrl) {
     }
 }
 
-export function insertScript(url, onload, onerror) {
-    if (insertedUrls[url]) {
-        onload && onload(url);
+export function insertScript(url, exportName, onload, onerror) {
+    if (url in insertedUrls) {
+        onload && onload(url, insertedUrls[url]);
     } else {
         var script = document.createElement('script');
         script.setAttribute('src', url);
         script.onload = function() {
-            onload && onload(url);
+            var scriptObj = exportName ? window[exportName] : null;
+            insertedUrls[url] = scriptObj;
+            onload && onload(url, scriptObj);
         };
         script.onerror = function() {
             var error = new Error("Failed to fetch script from: " + url);
@@ -42,14 +44,13 @@ export function insertScript(url, onload, onerror) {
             onerror && onerror(error);
         }
         document.head.appendChild(script);
-        insertedUrls[url] = true;
     }
 }
 
-export function importScript(script, onload, onerror) {
+export function importScript(script, exportName, onload, onerror) {
     var url = resolveScript(script);
     if (url) {
-        insertScript(url, onload, onerror);
+        insertScript(url, exportName, onload, onerror);
     }
 }
 
@@ -58,6 +59,7 @@ function _importNext(imports, index, onload, onerror) {
     if (index < imports.length) {
         var script = imports[index];
         importScript(script,
+            null,
             function() {
                 _importNext(imports, index+1, onload, onerror);
             },
@@ -74,11 +76,12 @@ function _importAll(imports, onload, onerror) {
         var url = resolveScript(imports[i]);
         if (url) {
             insertScript(url,
-                function(url) {
+                null,
+                function() {
                     cnt--;
                     if (!cnt) {
                         cnt--;
-                        onload && onload(imports);
+                        onload && onload(null, imports);
                     }
                 },
                 function(url) {
@@ -104,7 +107,7 @@ export function serialImport(imports, onload, onerror) {
     if (Array.isArray(imports)) {
         _importNext(imports, 0, onload, onerror);
     } else {
-        importScript(imports, onload, onerror);
+        importScript(imports, null, onload, onerror);
     }
 }
 
@@ -112,7 +115,7 @@ export function importAll(imports, onload, onerror) {
     if (Array.isArray(imports)) {
         _importAll(imports, onload, onerror);
     } else {
-        importScript(imports, onload, onerror);
+        importScript(imports, null, onload, onerror);
     }
 }
 
@@ -133,42 +136,30 @@ function _deleteNodes(from, to) {
         node = node.nextSibling;
     }
 }
-/*
-function _insertNodes(before, nodes) {
-    if (nodes) {
-        var parent = before.parentNode;
-        for (var i=0,l=nodes.length; i<l; i++) {
-            parent.insertBefore(nodes[i], before);
-        }
-    }
-}
 
-function _replaceNodes(start, end, nodes) {
-    _deleteNodes(start, end);
-    _insertNodes(end, nodes);
-}
-*/
-export function LazyComponent(tag, imports, lookupTag) {
-    // return a custom rendering function
-    return function(r, xattrs, slots) {
+export function LazyComponent(location, exportName) {
+    // return a render function that will inject the component when loaded
+    return function renderLazyComponent(r, xattrs, slots) {
         var frag = document.createDocumentFragment();
-        var start = document.createComment('[lazy:'+tag+']');
-        var end = document.createComment('[/lazy:'+tag+']');
+        var start = document.createComment('[lazy '+location+']');
+        var end = document.createComment('[/lazy '+location+']');
         frag.appendChild(start);
-        //TODO show a spinner?
         frag.appendChild(end);
 
         if (renderPending) {
             var el = renderPending(r);
-            el && end.parentNode.insertBefore(el, end);
+            if (el) {
+                end.parentNode.insertBefore(el, end);
+            }
         }
 
-        serialImport(imports,
-            function() {
+        importScript(location,
+            exportName,
+            function(url, result) {
                 //console.log('Loaded lazy tag', tag);
                 var XTag = lookupTag(tag);
-                if(!XTag) ERR("Could not resolve lazy component for tag: '%s'", tag);
-                var node = r._v(XTag, xattrs, slots);
+                if(!XTag) ERR("Could not resolve lazy component at '%s'", location);
+                var node = r._c(XTag, xattrs, slots);
                 _deleteNodes(start, end);
                 end.parentNode.insertBefore(node, end);
             },
@@ -184,6 +175,3 @@ export function LazyComponent(tag, imports, lookupTag) {
         return frag;
     }
 }
-
-
-

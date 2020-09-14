@@ -1,18 +1,17 @@
 
 import Qute from '../..';
-import './fn-item.jsq';
-import './vm-item.jsq';
-import './js-item.js';
-import './js-template.js';
+import FnItem from './fn-item.jsq';
+import VmItem from './vm-item.jsq';
+import JsItem from './js-item.js';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<ul>
 		<vm-item text='ViewModel' href='#vm'/>
 		<fn-item text='Functional' href='#functional'/>
 		<js-item text='Javascript' href='#js'/>
-        <js-template text='Javascript Template' href='#js'/>
 	</ul>
 </q:template>
 
 
-export default Qute('root');
+const RootComponent = Qute(RootTemplate);
+export { RootComponent, FnItem, VmItem, JsItem };

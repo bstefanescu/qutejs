@@ -7,8 +7,7 @@ import UpdateQueue from './update.js';
 import Rendering from './rendering.js';
 import ViewModel from './vm.js';
 import App from './app.js';
-import { createListener } from './binding.js';
-import { addImports, addAliases, registerTag, registerVM, getTag, getVM, getVMOrTag, snapshotRegistry, restoreRegistry, registerDirective, converters } from './registry.js';
+import { registerDirective } from './q-attr.js';
 import {StringProp,NumberProp,BooleanProp} from './prop-types';
 import { serialImport, importAll, setImporterOptions } from './importer.js';
 
@@ -25,8 +24,19 @@ function assignPropDefs(dst, src) {
     return dst;
 }
 
-function Qute(tag, def, BaseVm) {
-	if (!tag) ERR("Usage: Qute(tag[, VM_Definition, Base_VM])");
+function Qute(renderFn, def) {
+    if (!def) {
+        // Qute({... def ...}) or Qute(class)
+        if (typeof renderFn !== 'function') { // Qute({...})
+            def = renderFn;
+            renderFn = null;
+        } else if (renderFn.prototype instanceof ViewModel) { // Qute(class)
+            def = renderFn;
+            renderFn = null;
+        } // else Qute(renderingFn)
+    } else if (typeof renderFn !== 'function') {
+        ERR("Usage: Qute(renderFunction[, VM_Definition])");
+    }
 
 	function ViewModelImpl(app, attrs) {
 		ViewModel.call(this, app, attrs);
@@ -39,33 +49,26 @@ function Qute(tag, def, BaseVm) {
 			VMType = def;
 			VMProto = VMType.prototype;
 		} else {
-            // a rendering function - a shorcut to { render: function(){}}
-            registerTag(tag, def);
-			def = { render: def };
+            ERR('Unsupported ViewModel definition: expecting a class extending Qute.ViewModel');
 		}
     }
     if (!VMType) { // VM definition object
-		if (!BaseVm) BaseVm = ViewModel;
+		var BaseVm = ViewModel;
 		VMProto = Object.create(BaseVm.prototype, {
-			constructor: {value:ViewModelImpl},
+			constructor: { value: ViewModelImpl },
 		});
 		if (def) assignPropDefs(VMProto, def); // this is preserving getters
 		VMProto.$super = BaseVm.prototype; // to be able to override methods and call the super method if needed
 		ViewModelImpl.prototype = VMProto;
 
 		VMType = ViewModelImpl;
-	}
+    }
+    // we store the VMType on the prototype
+    VMProto.__VM__ = VMType;
+    // add the rendering method of the tag if no one was provided
+    if (renderFn) VMProto.render = renderFn;
 
-	// add the rendering method of the tag if no one was provided
-	if (!VMProto.render) {
-		VMProto.render = Qute.template(tag);
-		if (!VMProto.render) {
-			ERR("No template found for tag '%s'", tag);
-		}
-	}
-	// add the tag meta property
-	VMProto.$tag = tag;
-	VMProto.$qname = registerVM(tag, VMType);
+    if (!VMProto.render) ERR('Unsupported ViewModel definition: No rendering function was defined');
 
 	VMType.watch = function(prop, fn) {
 		if (!VMProto.$watch) Object.defineProperty(VMProto, '$watch', {value:{}});
@@ -97,18 +100,12 @@ Qute.isVM = function(obj) {
 	return obj instanceof ViewModel;
 }
 
-// link a viewmodel to a template. Usefull for classes where defining prototype methods is not part of the class syntax
-Qute.link = function(VMType, renderFn) {
-	VMType.prototype.render = renderFn;
-}
-
-Qute.converters = converters;
 Qute.App = App;
 Qute.UpdateQueue = UpdateQueue;
 Qute.Rendering = Rendering;
-// render a functional template given its tag name and a model
-Qute.render = function(xtagName, model) {
-	return getTag(xtagName)(new Rendering(null, model));
+// render a functional template given its render function name and a model
+Qute.render = function(renderFn, model) {
+	return renderFn(new Rendering(null, model));
 }
 Qute.defineMethod = function(name, fn) {
 	//define method on both ViewModel and Functional components prototype
@@ -117,18 +114,9 @@ Qute.defineMethod = function(name, fn) {
 }
 
 // deprectaed method -> t=TODO remove the register method. Use registerTemplate
-Qute.register = registerTag;
-Qute.registerTemplate = registerTag;
-Qute.template = getTag;
-Qute.snapshotRegistry = snapshotRegistry;
-Qute.restoreRegistry = restoreRegistry;
-Qute.vm = getVM;
-Qute.vmOrTemplate = getVMOrTag;
 Qute.registerDirective = registerDirective;
 Qute.importAll = importAll;
 Qute.import = serialImport;
-Qute.addImports = addImports;
-Qute.addAliases = addAliases;
 Qute.setImporterOptions = setImporterOptions;
 
 Qute.runAfter = function(cb) { UpdateQueue.runAfter(cb); }
@@ -141,7 +129,7 @@ Qute.string = function(value) { return new StringProp(value) }
 Qute.number = function(value) { return new NumberProp(value) }
 Qute.boolean = function(value) { return new BooleanProp(value) }
 
-// stiore QUte innstance in window - this is important so that imported components can register in a sharted qute instance
+// store Qute instance in window - this is important so that imported components use the same Qute instance
 window.Qute = Qute;
 
 export default Qute;

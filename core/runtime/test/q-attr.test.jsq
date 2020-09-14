@@ -5,11 +5,11 @@ import Qute from '..';
 import { mountTest, click, runAfter } from './utils.js';
 
 
-<q:template name='color-spans-1'>
+<q:template name='ColorSpans1Template'>
 	<div q:color-spans>Hello <span>world</span>!</div>
 </q:template>
 
-<q:template name='color-spans-2'>
+<q:template name='ColorSpans2Template'>
 	<div q:color-spans='{color:"red"}'>Hello <span>world</span>!</div>
 </q:template>
 
@@ -22,18 +22,18 @@ Qute.registerDirective('color-spans', function(xattrs, valueFn) {
 	}
 });
 
-var TestColorSpans1 = Qute('color-spans-1');
-var TestColorSpans2 = Qute('color-spans-2');
+var TestColorSpans1 = Qute(ColorSpans1Template);
+var TestColorSpans2 = Qute(ColorSpans2Template);
 
 // -------
 
-<q:template name='test-lambda-1'>
+<q:template name='TestLambda1Template'>
     <div>
     <input type='text' name='name' value='Hello World!' q:call='el => this.inputEl = el'><button @click='onClick'>Click me!</button>
     </div>
 </q:template>
 
-var TestLambda1 = Qute('test-lambda-1', {
+var TestLambda1 = Qute(TestLambda1Template, {
 	init() {
 		this.clicked = 0;
 	},
@@ -46,33 +46,33 @@ var TestLambda1 = Qute('test-lambda-1', {
 // -------
 
 
-<q:template name='my-fn'>
+<q:template name='MyFn'>
 	<div>Hello <span>world</span>!</div>
 </q:template>
 
-<q:template name='test-fn'>
+<q:template name='TestFnTemplate'>
 	<my-fn q:call='testOnCreate' q:color-spans='{color:"cyan"}' />
 </q:template>
 
-var TestFn = Qute('test-fn', {
+var TestFn = Qute(TestFnTemplate, {
 	testOnCreate(el) {
-		assert.equal(this.$tag, 'test-fn');
+        assert.equal(this.render.name, 'TestFnTemplate');
 		assert.equal(el.tagName, 'DIV');
 		assert.equal(el.textContent, 'Hello world!');
 	}
 });
 
-<q:template name='my-vm'>
+<q:template name='MyVm'>
 	<div>Hello <span>world</span>!</div>
 </q:template>
 
-<q:template name='test-vm'>
+<q:template name='TestVmTemplate'>
 	<my-vm q:call='testOnCreate' q:color-spans='{color:"blue"}' />
 </q:template>
 
-var TestVm = Qute('test-vm', {
+var TestVm = Qute(TestVmTemplate, {
 	testOnCreate(el) {
-		assert.equal(this.$tag, 'test-vm');
+		assert.equal(this.render.name, 'TestVmTemplate');
 		assert.equal(el.tagName, 'DIV');
 		assert.equal(el.textContent, 'Hello world!');
 	}

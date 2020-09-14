@@ -5,52 +5,52 @@ import Qute from '..';
 import { mountTest, runAfter } from './utils.js';
 
 
-<q:template name='dom-test-root'>
+<q:template name='DomTestRootTemplate'>
 	<div>
 		<span q:for='item in list'>{{item}} </span>
 	</div>
 </q:template>
 
 
-<q:template name='fn-comp-vm'><span><slot/></span> </q:template>
-<q:template name='fn-comp'><fn-comp-vm><template name='default'><slot/></template></fn-comp-vm></q:template>
+<q:template name='FnCompVmTemplate'><span><slot/></span> </q:template>
+<q:template name='FnComp'><fn-comp-vm><template name='default'><slot/></template></fn-comp-vm></q:template>
 
-<q:template name='func-test-root'>
+<q:template name='FuncTestRootTemplate'>
 	<div>
 		<fn-comp q:for='item in list'>{{item}} </fn-comp>
 	</div>
 </q:template>
 
-<q:template name='vm-comp'><span><slot/></span> </q:template>
+<q:template name='VmCompTemplate'><span><slot/></span> </q:template>
 
-<q:template name='vm-test-root'>
+<q:template name='VmTestRootTemplate'>
 	<div>
 		<vm-comp q:for='item in list'>{{item}} </vm-comp>
 	</div>
 </q:template>
 
 
-<q:template name='vm-comp-2'><span>{{id}}:{{text}} </span> </q:template>
+<q:template name='VmComp2Template'><span>{{id}}:{{text}} </span> </q:template>
 
-<q:template name='vm-test-root-2'>
+<q:template name='VmTestRoot2Template'>
 	<div>
-		<vm-comp-2 q:for='item in list' text={item.text} id={item.id} />
+		<vm-comp2 q:for='item in list' text={item.text} id={item.id} />
 	</div>
 </q:template>
 
-var DomTestRoot = Qute('dom-test-root', {
+var DomTestRoot = Qute(DomTestRootTemplate, {
 	init() {
 		this.list = ['item1', 'item2', 'item3'];
 	}
 });
 
-var FuncTestRoot = Qute('func-test-root', {
+var FuncTestRoot = Qute(FuncTestRootTemplate, {
 	init() {
 		this.list = ['item1', 'item2', 'item3'];
 	}
 });
 
-var VmTestRoot = Qute('vm-test-root', {
+var VmTestRoot = Qute(VmTestRootTemplate, {
 	init() {
 		this.list = ['item1', 'item2', 'item3'];
 	}
@@ -59,7 +59,7 @@ var VmTestRoot = Qute('vm-test-root', {
 var vmFnCompCnt = 0;
 var vmCompCnt = 0;
 var vmComp2Cnt = 0;
-Qute('fn-comp-vm', {
+const FnCompVm = Qute(FnCompVmTemplate, {
 	connected: function() {
 		vmFnCompCnt++;
 	},
@@ -68,7 +68,7 @@ Qute('fn-comp-vm', {
 	}
 });
 
-Qute('vm-comp', {
+const VmComp = Qute(VmCompTemplate, {
 	connected: function() {
 		vmCompCnt++;
 	},
@@ -77,13 +77,13 @@ Qute('vm-comp', {
 	}
 });
 
-var VmTestRoot2 = Qute('vm-test-root-2', {
+var VmTestRoot2 = Qute(VmTestRoot2Template, {
 	init() {
 		this.list = [{id:1, text:'item1'}, {id:2, text:'item2'}, {id:3, text:'item3'}];
 	}
 });
 
-Qute('vm-comp-2', {
+const VmComp2 = Qute(VmComp2Template, {
 	connected: function() {
 		vmComp2Cnt++;
 	},

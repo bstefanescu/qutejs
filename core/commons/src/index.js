@@ -25,6 +25,28 @@ function kebabToCamel(value) {
 	return out;
 }
 
+/**
+ * ns:my-component <=> nsMyComponent
+ * ns:component <=> nsComponent
+ * my-component <=> MyComponent
+ * component <=> component
+ * Component <=> Component
+ * @param {string} name
+ */
+function kebabToCompName(name) {
+    var ns, localName = name, i = name.indexOf(':');
+    if (i > -1) {
+        ns = name.substring(0, i);
+        localName = name.substring(i+1);
+    }
+    var localName = kebabToCamel(localName);
+    if (localName === name) {
+        return name;
+    } else {
+        localName = capitalizeFirst(localName);
+        return ns ? ns+localName : localName;
+    }
+}
 
-export { capitalizeFirst, kebabToCamel, camelToKebab };
+export { capitalizeFirst, kebabToCamel, camelToKebab, kebabToCompName };
 

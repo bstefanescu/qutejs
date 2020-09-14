@@ -4,6 +4,7 @@ import JSQ from './jsq.js';
 
 import HTML_ENT_MAP from './html-entities.js';
 
+import { kebabToCompName } from '@qutejs/commons';
 /*
 attrs: {key: value, $, @}
 
@@ -437,8 +438,10 @@ function parseXAttrs(val) {
 	return _s(ar);
 }
 
-function DomNode(name, attrs) {
-	this.name = name;
+function DomNode(name, caseSensitiveName, attrs) {
+    this.name = name;
+    this.csName = caseSensitiveName;
+    this.isHtmlTag = !!HTML_TAGS[name];
 	this.attrs = null;
 	this.bindings = null;
 	this.xattrs = null; // directives like q:show
@@ -502,7 +505,9 @@ function DomNode(name, attrs) {
 	}
 
 	this.compile = function(ctx) {
-		if (this.name === 'tag' || this.name === 'q:tag') {
+        var name = this.name;
+
+		if (name === 'tag' || name === 'q:tag') {
 			var isAttr, attrs = this.attrs, bindings = this.bindings;
 			if (bindings && bindings.is) {
 				isAttr = _v(_x(bindings.is, ctx));
@@ -521,7 +526,7 @@ function DomNode(name, attrs) {
 				_xattrs(this.attrs, this.bindings, this.xattrs, this.directives, this.events, ctx),
 				_nodes(this.children, ctx));
 		}
-		if (this.name === 'view' || this.name === 'q:view') {
+		if (name === 'view' || name === 'q:view') {
 			var isAttr, attrs = this.attrs, bindings = this.bindings;
 			if (bindings && bindings.is) {
 				isAttr = _v(_x(bindings.is, ctx));
@@ -547,7 +552,7 @@ function DomNode(name, attrs) {
 					delete attrs['onchange'];
 				}
 			}
-			return _fn('w', // w from view ?
+			return _fn('v', // v from view
 				isAttr,
 				onChange,
 				noCache,
@@ -555,7 +560,6 @@ function DomNode(name, attrs) {
 				_r(_nodes(this.children, ctx)) // childrenFn
 			);
 		}
-		var name = this.name;
 
 		if (name === 'nested' || name === 'q:nested') {
 			// we prefix a 'nested:' if q:slot was used on nested tag
@@ -570,17 +574,15 @@ function DomNode(name, attrs) {
 		}
 		var fname, tag;
 		//if (ctx.isXTag(name))
-		if ((name in HTML_TAGS) || this.svg) { // a dom element
+		if (this.isHtmlTag || this.svg) { // a dom element
 			fname = 'h'; // h from html
-			tag = _s(name);
-		} else { // a component
-			var tag = ctx.resolve(name);
-			if (tag) { // resolved compile time
-				fname = 'v'; // v from view model
-			} else { // should resolve at runtime
-				fname = 'r'; // r from runtime
-				tag = _s(name);
-			}
+            tag = _s(name);
+        } else if (this.name === 'self' || this.name === 'q:self') {
+            tag = "null"; // recursion - see rendering.js
+            fname = 'c'; // c from component
+        } else { // a component
+            tag = kebabToCompName(this.csName);
+            fname = 'c'; // c from component
 		}
 		if (name==='pre') {
 			ctx = ctx.push();
@@ -943,16 +945,13 @@ var SYMBOLS = {
 	"JSON": true, "Object": true, "console": true, "window": true
 };
 
-
-
 function Compiler() {
-	function Context(symbols, imports, resolve, pre) {
+	function Context(symbols, imports, pre) {
 		this.pre = pre; // if pre then do not compact spaces in TextNodes
-		this.resolve = resolve;
 		this.symbols = symbols;
 		this.imports = imports;
 		this.push = function() {
-			return new Context(Object.assign({}, this.symbols), this.imports, this.resolve, this.pre);
+			return new Context(Object.assign({}, this.symbols), this.imports, this.pre);
 		}
 	}
 	// collector is used only when static html should be collected sue to an q:html attribute
@@ -962,10 +961,6 @@ function Compiler() {
 	this.top = null;
 	this.stack = [];
 	this.lastText = null; // used to merge adjacent text nodes
-
-	this.resolve = function(tag) {
-		return null;// the default is to resolve at runtime
-	}
 
 	this.pushText = function(text) {
 		if (this.lastText) this.lastText.append(text);
@@ -1023,7 +1018,8 @@ function Compiler() {
 	    this.pushText(text);
 	}
 
-	this.start = function(tagName, attrs, isVoid) {
+	this.start = function(tagName, caseSensitiveTagName, attrs, isVoid) {
+        // tagName is to lowercase
 		if (this.collector) {
 			this.collector.start(tagName, attrs, isVoid);
 		} else {
@@ -1032,7 +1028,7 @@ function Compiler() {
 			if (NodeType) {
 				node = new NodeType(tagName, attrs, isVoid);
 			} else {
-				node = new DomNode(tagName, attrs, isVoid);
+				node = new DomNode(tagName, caseSensitiveTagName, attrs, isVoid);
 				if (node instanceof StaticNode) {
 					// allow <div q:conent-{random} />
 					//if (isVoid) ERR("Static node (q:html) must have some content");
@@ -1070,14 +1066,14 @@ function Compiler() {
 	}
 
     this.compile = function(text, imports, pre) { // r is the Renderer
-    	var ctx = new Context(Object.assign(imports || {}, SYMBOLS), imports || {}, this.resolve, pre);
+    	var ctx = new Context(Object.assign(imports || {}, SYMBOLS), imports || {}, pre);
     	var r = this.parse(text).compile(ctx);
     	//console.log("COMPILED:",r);
         return 'function($){return '+r+';}';
     }
 
 	this.compileFn = function(text, imports, pre) {
-		var ctx = new Context(Object.assign(imports || {}, SYMBOLS), imports || {}, this.resolve, pre);
+		var ctx = new Context(Object.assign(imports || {}, SYMBOLS), imports || {}, pre);
     	var r = this.parse(text).compile(ctx);
     	//console.log("COMPILED:",r);
 		return new Function('$', 'return '+r+';');

@@ -4,31 +4,31 @@ import window, {document} from '@qutejs/window';
 import Qute from '..';
 import { mountTest, runAfter } from './utils.js';
 
-<q:template name='test-class-0'>
+<q:template name='TestClass0'>
 	<span class = { (isActive ? "active " : "")+"link" }></span>
 </q:template>
 
-<q:template name='test-class-1'>
+<q:template name='TestClass1'>
 	<span q:class='["active", "link", null]'></span>
 </q:template>
 
-<q:template name='test-class-2'>
+<q:template name='TestClass2'>
 	<span q:class='{"active": isActive, "link": true}'></span>
 </q:template>
 
-<q:template name='test-class-3'>
+<q:template name='TestClass3'>
 	<span q:class='theClass'></span>
 </q:template>
 
-<q:template name='test-class-5'>
+<q:template name='TestClass5'>
 	<span class='link' q:class='{active: isActive}'></span>
 </q:template>
 
-<q:template name='test-class-6'>
+<q:template name='TestClass6'>
 	<span q:class='[ isActive && "active", "link" ]'></span>
 </q:template>
 
-var Test0 = Qute('test-class-0', {
+var Test0 = Qute(TestClass0, {
 	init() {
 		return {
 			isActive: true
@@ -36,10 +36,10 @@ var Test0 = Qute('test-class-0', {
 	}
 });
 
-var Test1 = Qute('test-class-1');
+var Test1 = Qute(TestClass1);
 
 
-var Test2 = Qute('test-class-2', {
+var Test2 = Qute(TestClass2, {
 	init() {
 		return {
 			isActive: true
@@ -47,7 +47,7 @@ var Test2 = Qute('test-class-2', {
 	}
 });
 
-var Test3 = Qute('test-class-3', {
+var Test3 = Qute(TestClass3, {
 	init() {
 		return {
 			theClass: { active: true, link: true }
@@ -57,7 +57,7 @@ var Test3 = Qute('test-class-3', {
 
 // we need to use computed properties to compute dynamic class bindings
 // Note that the array notation [this.isActive && 'active', 'link'] is not reactive (it will work only for the first rendering)
-var Test4 = Qute('test-class-3', {
+var Test4 = Qute(TestClass3, {
 	get theClass() {
 		return [ {active: this.isActive}, "link" ];
 	},
@@ -68,7 +68,7 @@ var Test4 = Qute('test-class-3', {
 	}
 });
 
-var Test5 = Qute('test-class-5', {
+var Test5 = Qute(TestClass5, {
 	init() {
 		return {
 			isActive: true
@@ -76,7 +76,7 @@ var Test5 = Qute('test-class-5', {
 	}
 });
 
-var Test6 = Qute('test-class-6', {
+var Test6 = Qute(TestClass6, {
 	init() {
 		return {
 			isActive: true
@@ -86,17 +86,16 @@ var Test6 = Qute('test-class-6', {
 
 // q:class on components
 
-<q:template name='test-q-class-vm'>
+<q:template name='TestQClassVm'>
     <div><slot/></div>
 </q:template>
 
-<q:template name='test-q-class-on-vm-root'>
+<q:template name='TestQClassOnVmRoot'>
     <test-q-class-vm q:class='{active: selected}'>Hello!</test-q-class-vm>
 </q:template>
 
 
-Qute('test-q-class-on-vm-root');
-var TestXClassOnVM = Qute('test-q-class-on-vm-root', {
+var TestQClassOnVM = Qute(TestQClassOnVmRoot, {
     init() {
     	return {
     		selected: true
@@ -204,7 +203,7 @@ describe('q:class attribute', function() {
 	});
 
 	it('works on vm components', function(done) {
-		var test = mountTest(TestXClassOnVM);
+		var test = mountTest(TestQClassOnVM);
 		var cl = test.firstChild.classList;
 		assert.ok(cl.contains('active'));
 

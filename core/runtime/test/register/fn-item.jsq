@@ -1,7 +1,8 @@
 import Qute from '../..';
 
-<q:template name='fn-item'>
+<q:template name='FnItem'>
 <li><a href={$attrs.href}>{{$attrs.text}}</a></li>
 </q:template>
 
 
+export default FnItem;

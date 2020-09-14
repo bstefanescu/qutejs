@@ -15,7 +15,7 @@ import Qute from '..';
 import { createMountPoint, runAfter } from './utils.js';
 
 
-<q:template name='if-else-test'>
+<q:template name='IfElseTestTemplate'>
 <div>
 	<if value='user'>
 		<nested-vm user={user} msg={msg} />
@@ -28,11 +28,11 @@ import { createMountPoint, runAfter } from './utils.js';
 </div>
 </q:template>
 
-<q:template name='nested-vm'>
+<q:template name='NestedVmTemplate'>
 	<div id='if-true'>Hello {{user}}</div>
 </q:template>
 
-<q:template name='if-elseif-test'>
+<q:template name='IfElseIfTestTemplate'>
 <div>
 	<if value='state===0' onchange='stateChanged'>
 		<div id='if-state-0'>State {{state}}</div>
@@ -42,7 +42,7 @@ import { createMountPoint, runAfter } from './utils.js';
 </div>
 </q:template>
 
-<q:template name='if-elseif-else-test'>
+<q:template name='IfElseIfElseTestTemplate'>
 <div>
 	<if value='state===0' onchange='stateChanged'>
 		<div id='ifeie-state-0'>State {{state}}</div>
@@ -56,7 +56,7 @@ import { createMountPoint, runAfter } from './utils.js';
 
 var NESTED_MSG = null;
 
-var NestedVm = Qute('nested-vm', {
+var NestedVm = Qute(NestedVmTemplate, {
 	init: function() {
 		return { user: null, msg: null }
 	}
@@ -64,7 +64,7 @@ var NestedVm = Qute('nested-vm', {
 	NESTED_MSG = val;
 });
 
-var IfElseTest = Qute('if-else-test', {
+var IfElseTest = Qute(IfElseTestTemplate, {
 	init: function() {
 		this.changes = 0;
 		return { user: null, msg: null };
@@ -78,7 +78,7 @@ var IfElseTest = Qute('if-else-test', {
 	}
 });
 
-var IfElseIfTest = Qute('if-elseif-test', {
+var IfElseIfTest = Qute(IfElseIfTestTemplate, {
 	init: function() {
 		this.lastChange = 0;
 		return { state: 0 };
@@ -88,7 +88,7 @@ var IfElseIfTest = Qute('if-elseif-test', {
 	}
 });
 
-var IfElseIfElseTest = Qute('if-elseif-else-test', {
+var IfElseIfElseTest = Qute(IfElseIfElseTestTemplate, {
 	init: function() {
 		this.lastChange = 0;
 		return { state: 0 };

@@ -1,0 +1,58 @@
+
+import assert from 'assert';
+import window, {document} from '@qutejs/window';
+import Qute from '..';
+import { createMountPoint } from './utils.js';
+
+
+<q:template name='myComponent'>
+	<div id='my-component'>My Component</div>
+</q:template>
+<q:template name='qComponent'>
+	<div id='q-component'><q:if value='true'>Q Component</q:if></div>
+</q:template>
+<q:template name='XComponent'>
+	<div id='x-component'><if value='true'>X Component</if></div>
+</q:template>
+
+<q:template name='myVmcompTemplate'>
+	<div id='my-vmcomp'><if value='true'>My VM Component</if></div>
+</q:template>
+<q:template name='qVmcompTemplate'>
+	<div id='q-vmcomp'><if value='true'>Q VM Component</if></div>
+</q:template>
+
+<q:template name='RootTemplate'>
+	<div>
+		<my:component />
+		<q:component />
+		<q:x-component />
+		<x-component />
+
+		<my:vmcomp />
+		<q:vmcomp />
+	</div>
+</q:template>
+const qXComponent= XComponent;
+const myVmcomp = Qute(myVmcompTemplate);
+const qVmcomp = Qute(qVmcompTemplate);
+var Root = Qute(RootTemplate);
+
+
+describe('Components are part of a namespace', function() {
+	var root = createMountPoint('root');
+	new Root().mount(root);
+
+	it('custom template namespace works', function() {
+		assert.equal(document.getElementById('my-component').textContent.trim(), "My Component");
+	});
+
+	it('qute template namespace works', function() {
+		assert.equal(document.getElementById('q-component').textContent.trim(), "Q Component");
+	});
+
+	it('default template namespace works', function() {
+		assert.equal(document.getElementById('x-component').textContent.trim(), "X Component");
+	});
+
+});

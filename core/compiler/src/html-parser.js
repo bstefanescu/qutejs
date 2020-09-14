@@ -9,20 +9,22 @@ var voids = {else:true, case:true, area:true, base:true, br:true, col:true, embe
 
 export default function parseHTML(html, handler) {
     function handleStartTag(tagName, attrsDecl, isVoid) { // void elements are tags with no close tag
+        var caseSensitiveTagName = tagName;
         tagName = tagName.toLowerCase();
         isVoid = isVoid || voids[tagName];
         if (!isVoid) stack.push(tagName);
 
         var attrs = parseAttrs(attrsDecl);
 
-        handler.start(tagName, attrs, !!isVoid);
+        handler.start(tagName, caseSensitiveTagName, attrs, !!isVoid);
     }
 
     function handleEndTag(tagName) {
+        var caseSensitiveTagName = tagName;
         tagName = tagName.toLowerCase();
         var top = stack.pop();
         if (top !== tagName) throw new Error('Unmatched close tag. Current Open tag is <'+top+'> but found </'+tagName+'>')
-        handler.end(tagName);
+        handler.end(tagName, caseSensitiveTagName);
     }
 
     var text = '', match = null, stack = [];

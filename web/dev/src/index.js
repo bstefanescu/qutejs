@@ -42,7 +42,7 @@ Qute.runWithLoader = function(fn) {
 }
 
 Qute.loadTemplates = function(idOrElement) {
-	var script; // tje script element
+	var script; // the script element
 	if (typeof idOrElement === 'string') {
 		script = document.getElementById(idOrElement);
 	} else {

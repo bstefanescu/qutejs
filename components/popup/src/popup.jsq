@@ -23,8 +23,10 @@ API:
 	toggle(anchor)
 	close()
 */
-const QutePopup = Qute('popup', {
-	init() {
+
+
+const QutePopup = Qute({
+	init: function() {
 		return {
 			position: 'bottom start',
 			animation: null,

@@ -4,17 +4,17 @@ import window, {document} from '@qutejs/window';
 import Qute from '..';
 import { mountTest, runAfter } from './utils.js';
 
-<q:template name='test-html'>
+<q:template name='TestHtmlTemplate'>
 	<div q:html='content'/>
 </q:template>
 
-<q:template name='test-static-html'>
+<q:template name='TestStaticHtmlTemplate'>
 	<div q:html>
 		Some <b>static</b> HTML
 	</div>
 </q:template>
 
-<q:template name='test-static-markdown'>
+<q:template name='TestStaticMarkdownTemplate'>
 	<div q:markdown>
 		# Header
 
@@ -22,22 +22,22 @@ import { mountTest, runAfter } from './utils.js';
 	</div>
 </q:template>
 
-<q:template name='test-static-text'>
+<q:template name='TestStaticTextTemplate'>
 	<div q:content-text>
 		bla bla
 	</div>
 </q:template>
 
-var TestHtml = Qute('test-html', {
+var TestHtml = Qute(TestHtmlTemplate, {
 	init() {
 		return {
 			content: "<div id='theDiv'>Some <b>HTML</b> content</div>"
 		}
 	}
 });
-var TestStaticHtml = Qute('test-static-html');
-var TestStaticMarkdown = Qute('test-static-markdown');
-var TestStaticText = Qute('test-static-text');
+var TestStaticHtml = Qute(TestStaticHtmlTemplate);
+var TestStaticMarkdown = Qute(TestStaticMarkdownTemplate);
+var TestStaticText = Qute(TestStaticTextTemplate);
 
 
 describe('q:html attribute', function() {
@@ -66,7 +66,7 @@ describe('q:html attribute', function() {
 });
 
 describe('q:markdown attribute', function() {
-	Qute.converters.markdown = function(content) {
+	Qute.Rendering.converters.markdown = function(content) {
 		// we don't use a real converter for testing
 		assert.ok(content.trim().startsWith('# Header'));
 		return "<h1>Header</h1><p>Some markdown</p>";
@@ -81,7 +81,7 @@ describe('q:markdown attribute', function() {
 });
 
 describe('q:content attribute', function() {
-	Qute.converters.text = function(content) {
+	Qute.Rendering.converters.text = function(content) {
 		assert.equal(content.trim(), 'bla bla');
 		return "Some <b>generated</b> HTML";
 	}

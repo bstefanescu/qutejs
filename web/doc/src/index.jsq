@@ -1,26 +1,26 @@
 import '@qutejs/polyfill';
-import '@qutejs/spinner';
+import Spinner from '@qutejs/spinner';
 import '@qutejs/spinner-ellipsis';
 import window, { document, navigator } from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import Router from '@qutejs/router';
 
-<q:template name='toc-item'>
+<q:template name='TocItem'>
 	<li class='toc-item' id={"toc_item:/"+$attrs.href}>
 		<a href={$attrs.href} q:html='$attrs.title'></a>
 	</li>
 </q:template>
 
-<q:template name='toc-section'>
+<q:template name='TocSection'>
 	<li class='toc-section'>
 		<a href='#' q:html='$attrs.title'></a>
 		<div class='toc-items' q:class='{expanded: $attrs.expand}'>
 			<ul>
 			<for value='item in $attrs.items'>
 				<if value='item.items'>
-					<toc-section :title='item.title' :items='item.items' :expand='item.expand' />
+					<self title={item.title} items={item.items} expand={item.expand} />
 				<else/>
-					<toc-item :href='item.href' :title='item.title' />
+					<toc-item href={item.href} title={item.title} />
 				</if>
 			</for>
 			</ul>
@@ -28,7 +28,7 @@ import Router from '@qutejs/router';
 	</li>
 </q:template>
 
-<q:template name='toc'>
+<q:template name='TocTemplate'>
 <ul class='toc'>
 	<for value='item in $attrs.items'>
 		<if value='item.items'>
@@ -40,7 +40,7 @@ import Router from '@qutejs/router';
 </ul>
 </q:template>
 
-<q:template name='app'>
+<q:template name='AppTemplate'>
 <div class='app'>
 	<div class='topbar clearfix'>
 		<div class='pull-left'>
@@ -62,7 +62,7 @@ import Router from '@qutejs/router';
 	</div>
 	<div id='sidebar'>
 		<div class='sidebar-nav'>
-			<toc :items='toc' @select='openTocItem' q:channel='toc' />
+			<Toc items={toc} @select='openTocItem' q:channel='toc' />
 		</div>
 	</div>
 	<div id='main'>
@@ -70,7 +70,7 @@ import Router from '@qutejs/router';
 			<if docPageContent>
 				<div q:html='docPageContent' class='markdown-body' />
 			<else>
-				<spinner type='ellipsis' center />
+				<Spinner type='ellipsis' center />
 			</if>
 		</div>
     </div>
@@ -103,7 +103,7 @@ function fetchPage(url, cb) {
   	xhttp.send();
 }
 
-Qute.converters.markdown = marked;
+Qute.Rendering.converters.markdown = marked;
 
 var TOC = [
 	{ title: 'Overview', expand: true, items: [
@@ -197,7 +197,7 @@ function highlightItem(root, target) {
 	active && active.classList.remove('active');
 	target.classList.add('active');
 }
-var Toc = new Qute('toc').on('click', 'a', function(e) {
+var Toc = new Qute(TocTemplate).on('click', 'a', function(e) {
 		var parentNode = e.target.parentNode;
 		if (parentNode.matches('li.toc-section')) {
 			var href = e.target.getAttribute('href');
@@ -228,7 +228,7 @@ var Toc = new Qute('toc').on('click', 'a', function(e) {
 	}
 });
 
-var App = new Qute('app', {
+var App = new Qute(AppTemplate, {
 	get docPageContent() {
 		return this.docPage ? this.docPages[this.docPage] : '';
 	},

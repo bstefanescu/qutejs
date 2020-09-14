@@ -4,15 +4,15 @@ import window, {document} from '@qutejs/window';
 import Qute from '..';
 import { mountTest, runAfter } from './utils.js';
 
-<q:template name='test-show'>
+<q:template name='TestShowTemplate'>
 	<div q:show='isVisible'>Is Visible</div>
 </q:template>
 
-<q:template name='test-show-2'>
+<q:template name='TestShow2Template'>
 	<div q:show='isVisible' style='display:inline-block'>Is Visible</div>
 </q:template>
 
-var Test = Qute('test-show', {
+var TestShow = Qute(TestShowTemplate, {
 	init() {
 		return {
 			isVisible: false
@@ -20,7 +20,7 @@ var Test = Qute('test-show', {
 	}
 });
 
-var Test2 = Qute('test-show-2', {
+var TestShow2 = Qute(TestShow2Template, {
 	init() {
 		return {
 			isVisible: true
@@ -29,16 +29,16 @@ var Test2 = Qute('test-show-2', {
 });
 
 
-<q:template name='test-show-vm'>
+<q:template name='TestShowVmTemplate'>
     <div><slot/></div>
 </q:template>
 
-<q:template name='test-show-vm-root'>
+<q:template name='TestShowVmRootTemplate'>
     <test-show q:show="showIt">Hello!</test-show>
 </q:template>
 
 
-var TestShowVM = Qute('test-show-vm-root', {
+var TestShowVmRoot = Qute(TestShowVmRootTemplate, {
 	init() {
 		return {
 			showIt: false
@@ -46,11 +46,11 @@ var TestShowVM = Qute('test-show-vm-root', {
 	}
 });
 
-Qute('test-show-vm');
+const TestShowVm = Qute(TestShowVmTemplate);
 
 
 describe('q:show attribute', function() {
-	var test = mountTest(Test);
+	var test = mountTest(TestShow);
 
 	it('should not be visible', function(done) {
 		assert.equal(test.firstChild.style.display, 'none');
@@ -73,7 +73,7 @@ describe('q:show attribute', function() {
 		});
 	});
 
-	var test2 = mountTest(Test2);
+	var test2 = mountTest(TestShow2);
 	context('should restore original display', function(done) {
 
 		it('should be visible', function(done) {
@@ -100,7 +100,7 @@ describe('q:show attribute', function() {
 	});
 
 	context('works on VM components', function(done) {
-		var testVM = mountTest(TestShowVM);
+		var testVM = mountTest(TestShowVmRoot);
 
 		it('should not be visible', function(done) {
 			assert.equal(testVM.firstChild.style.display, 'none');

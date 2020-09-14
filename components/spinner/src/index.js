@@ -6,7 +6,7 @@ var spinners = {
 };
 var defSpinner = "default";
 
-function renderSpinner(r, xattrs) {
+function Spinner(r, xattrs) {
 	var type, show, clazz, style, center;
 	// x-small, small, large, x-large
 	if (xattrs) {
@@ -42,8 +42,6 @@ function renderSpinner(r, xattrs) {
 	}
 	return el;
 }
-
-var Spinner = Qute('spinner', renderSpinner);
 
 Spinner.add = function(type, spinner) {
 	spinners[type] = spinner;

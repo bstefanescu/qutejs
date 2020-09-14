@@ -2,13 +2,13 @@ import { document } from '@qutejs/window';
 import assert from 'assert';
 import Qute from '..';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
     <div id={id} title={"Hello"+(1+3)} class={"bla"} q:style={{left:"10px"}} q:class={{enabled: enabled, active: active}}>
         <if value={testValue}>Hello</if>
         <for value={item in items}>{{item}},</for>
     </div>
 </q:template>
-const Root = Qute('root', {
+const Root = Qute(RootTemplate, {
     init() {
         return {
             enabled: true,

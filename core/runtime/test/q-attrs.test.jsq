@@ -4,7 +4,7 @@ import window, {document} from '@qutejs/window';
 import Qute from '..';
 import { mountTest, runAfter } from './utils.js';
 
-<q:template name='test-fn-attrs'>
+<q:template name='TestFnAttrs'>
 	<div>
 		<span q:attrs><slot/></span>
 		<span q:attrs='class, msg'>Include test</span>
@@ -12,31 +12,35 @@ import { mountTest, runAfter } from './utils.js';
 	</div>
 </q:template>
 
-<q:template name='test-fn-root'>
+<q:template name='TestFnRootTemplate'>
 	<test-fn-attrs class={theClass} title='Some tooltip' msg='hello'>Hello!</test-fn-attrs>
 </q:template>
 
-<q:template name='func-comp'>
+<q:template name='FuncComp'>
     <div q:attrs='class'>
         A <a q:attrs='!class'>functional</a> component
     </div>
 </q:template>
 
-<q:template name='func-comp-wrapper'><func-comp q:attrs /></q:template>
-<q:template name='test-func-comp'><func-comp-wrapper class={theClass} title='Some tooltip' href='#action' /></q:template>
+<q:template name='FuncCompWrapper'><func-comp q:attrs /></q:template>
+<q:template name='TestFuncCompTemplate'><func-comp-wrapper class={theClass} title='Some tooltip' href='#action' /></q:template>
 
-<q:template name='vm-comp'>
+<q:template name='VmCompTemplate'>
     <div q:attrs='class'>
         A <a q:attrs='!class'>VM</a> component: {{someProp}}
     </div>
 </q:template>
 
-<q:template name='vm-comp-wrapper'><vm-comp q:attrs /></q:template>
-<q:template name='test-vm-comp'><vm-comp-wrapper class={theClass} title='Some tooltip' href='#action' some-prop='the injected prop' /></q:template>
+<q:template name='VmCompWrapper'>
+    <vm-comp q:attrs />
+</q:template>
+<q:template name='TestVmCompTemplate'>
+    <vm-comp-wrapper class={theClass} title='Some tooltip' href='#action' some-prop='the injected prop' />
+</q:template>
 
 
 
-var TestFnRoot = Qute('test-fn-root', {
+var TestFnRoot = Qute(TestFnRootTemplate, {
 	init() {
 		return {
 			theClass: 'the_class'
@@ -44,7 +48,7 @@ var TestFnRoot = Qute('test-fn-root', {
 	}
 });
 
-var TestFuncComp = Qute('test-func-comp', {
+var TestFuncComp = Qute(TestFuncCompTemplate, {
 	init() {
 		return {
 			theClass: 'the_class'
@@ -52,14 +56,14 @@ var TestFuncComp = Qute('test-func-comp', {
 	}
 });
 
-var TestVMComp = Qute('test-vm-comp', {
+var TestVMComp = Qute(TestVmCompTemplate, {
 	init() {
 		return {
 			theClass: 'the_class'
 		};
 	}
 });
-var VMComp = Qute('vm-comp', {
+var VmComp = Qute(VmCompTemplate, {
 	init() {
 		return {
 			someProp: 'the_value'

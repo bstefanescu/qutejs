@@ -5,7 +5,7 @@ import Qute from '..';
 import { createMountPoint, runAfter } from './utils.js';
 
 
-<q:template name='for-test'>
+<q:template name='ForTestTemplate'>
 <div>
 
 <ul>
@@ -33,14 +33,14 @@ import { createMountPoint, runAfter } from './utils.js';
 </div>
 </q:template>
 
-<q:template name='for-expr-compact'>
+<q:template name='ForExprCompact'>
 <ul>
 	<for value='it,i,next in items'>
 		<li>{{i+1}}. <a href={it.href}>{{it.title}}</a></li><if value='next'>,</if>
 	</for>
 </ul>
 </q:template>
-<q:template name='for-expr-spaces'>
+<q:template name='ForExprSpaces'>
 <ul>
 	<for value='   item    ,    index   ,   	hasNext     in     items   '>
 		<li>{{index+1}}. <a href={item.href}>{{item.title}}</a></li><if value='hasNext'>,</if>
@@ -49,7 +49,7 @@ import { createMountPoint, runAfter } from './utils.js';
 </q:template>
 
 
-var ForTest = Qute('for-test', {
+var ForTest = Qute(ForTestTemplate, {
 	init: function() {
 		return { items: [
 				{ href:'item1', title: 'Item 1' },
@@ -62,11 +62,11 @@ var ForTest = Qute('for-test', {
 });
 
 
-<q:template name='for-test-reactivity'>
+<q:template name='ForTestReactivityTemplate'>
 <div><for value='item in list'>{{item}} </for></div>
 </q:template>
 
-var ForTestReactivity = Qute('for-test-reactivity', {
+var ForTestReactivity = Qute(ForTestReactivityTemplate, {
 	changeList() {
 		this.list = this.list === this.list1 ? this.list2 : this.list1;
 	},
@@ -89,8 +89,8 @@ describe('For Directive', function() {
 	});
 
 	it('expression extra spaces are ignored', function() {
-		var r1 = Qute.render('for-expr-compact', root).innerHTML;
-		var r2 = Qute.render('for-expr-spaces', root).innerHTML;
+		var r1 = Qute.render(ForExprCompact, root).innerHTML;
+		var r2 = Qute.render(ForExprSpaces, root).innerHTML;
 		assert.equal(r1, r2);
 	});
 

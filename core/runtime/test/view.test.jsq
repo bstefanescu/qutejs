@@ -16,25 +16,25 @@ import Qute from '..';
 import { createMountPoint, runAfter } from './utils.js';
 
 
-<q:template name='view-test'>
+<q:template name='ViewTestTemplate'>
 <div>
 	<view is='activeView' user={user} onchange='viewChanged'>Are you fine?</view>
 </div>
 </q:template>
 
-<q:template name='nocache-view-test'>
+<q:template name='NoCacheViewTestTemplate'>
 <div>
 	<view is='activeView' user={user} nocache  onchange='viewChanged'>Are you fine?</view>
 </div>
 </q:template>
 
 // a func template
-<q:template name='hello-user'>
+<q:template name='HelloUser'>
 	<div id='hello-user'>Hello {{$attrs.user}}. <slot/></div>
 </q:template>
 
 // a VM
-<q:template name='bye-user'>
+<q:template name='ByeUserTemplate'>
 	<div id='bye-user'>Bye {{user}}. <slot/></div>
 </q:template>
 
@@ -43,7 +43,7 @@ import { createMountPoint, runAfter } from './utils.js';
 var VIEW_SWITCH_CNT = 0;
 var NOCACHE_VIEW_SWITCH_CNT = 0;
 
-var ViewTest = Qute('view-test', {
+var ViewTest = Qute(ViewTestTemplate, {
 	viewChanged: function() {
 		VIEW_SWITCH_CNT++;
 	},
@@ -51,7 +51,7 @@ var ViewTest = Qute('view-test', {
 		return { activeView: null, user: 'John' };
 	}
 });
-var NoCacheViewTest = Qute('nocache-view-test', {
+var NoCacheViewTest = Qute(NoCacheViewTestTemplate, {
 	viewChanged: function() {
 		NOCACHE_VIEW_SWITCH_CNT++;
 	},
@@ -59,7 +59,7 @@ var NoCacheViewTest = Qute('nocache-view-test', {
 		return { activeView: null, user: 'John' };
 	}
 });
-var ByeUser = Qute('bye-user', {
+var ByeUser = Qute(ByeUserTemplate, {
 	init: function() {
 		return { user: null };
 	}
@@ -78,7 +78,7 @@ describe('View Directive - cache ON', function() {
 	});
 
 	specify('view should change to hello-user', function(done) {
-		root.activeView = 'hello-user';
+		root.activeView = HelloUser;
 		runAfter(function() {
 			assert.ok(document.getElementById('hello-user'));
 			assert.ok(!document.getElementById('bye-user'));
@@ -88,7 +88,7 @@ describe('View Directive - cache ON', function() {
 	});
 
 	specify('view should change to bye-user', function(done) {
-		root.activeView = 'bye-user';
+		root.activeView = ByeUser;
 		runAfter(function() {
 			assert.ok(!document.getElementById('hello-user'));
 			assert.ok(document.getElementById('bye-user'));
@@ -108,7 +108,7 @@ describe('View Directive - cache ON', function() {
 
 	specify('hidden components should refresh on model updates', function(done) {
 		// change the view -> user Bill should reflect on that component too.
-		root.activeView = 'hello-user';
+		root.activeView = HelloUser;
 		runAfter(function() {
 			assert.ok(document.getElementById('hello-user'));
 			assert.ok(!document.getElementById('bye-user'));
@@ -146,7 +146,7 @@ describe('View Directive - cache OFF', function() {
 	});
 
 	specify('view should change to hello-user', function(done) {
-		root.activeView = 'hello-user';
+		root.activeView = HelloUser;
 		runAfter(function() {
 			assert.ok(document.getElementById('hello-user'));
 			assert.ok(!document.getElementById('bye-user'));
@@ -156,7 +156,7 @@ describe('View Directive - cache OFF', function() {
 	});
 
 	specify('view should change to bye-user', function(done) {
-		root.activeView = 'bye-user';
+		root.activeView = ByeUser;
 		runAfter(function() {
 			assert.ok(!document.getElementById('hello-user'));
 			assert.ok(document.getElementById('bye-user'));
@@ -177,7 +177,7 @@ describe('View Directive - cache OFF', function() {
 	// this test doesn't really apply when cache is off snice the component is recreated
 	specify('hidden components should refresh on model updates', function(done) {
 		// change the view -> user Bill should reflect on that component too.
-		root.activeView = 'hello-user';
+		root.activeView = HelloUser;
 		runAfter(function() {
 			assert.ok(document.getElementById('hello-user'));
 			assert.ok(!document.getElementById('bye-user'));

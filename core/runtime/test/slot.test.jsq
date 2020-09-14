@@ -4,16 +4,16 @@ import window, {document} from '@qutejs/window';
 import Qute from '..';
 import { mountTest } from './utils.js';
 
-<q:template name='single-wrapper'>
+<q:template name='SingleWrapper'>
 	<blockquote><slot/></blockquote>
 </q:template>
 
-<q:template name='single-wrapper-with-default'>
+<q:template name='SingleWrapperWithDefault'>
 	<blockquote><slot>Default content</slot></blockquote>
 </q:template>
 
 
-<q:template name='multi-wrapper'>
+<q:template name='MultiWrapper'>
 	<div>
 		<h3><slot name='title'>The default title</slot></h3>
 		<div><slot name='content'>The default content</slot></div>
@@ -21,15 +21,15 @@ import { mountTest } from './utils.js';
 	</div>
 </q:template>
 
-<q:template name='my-title'>
+<q:template name='MyTitle'>
     <h3><slot/></h3>
 </q:template>
 
-<q:template name='my-content'>
+<q:template name='MyContent'>
     <div class='content'><slot/></div>
 </q:template>
 
-<q:template name='my-panel'>
+<q:template name='MyPanel'>
     <div class='panel'>
         <my-title>
             <nested><slot name='title'/></nested>
@@ -41,24 +41,24 @@ import { mountTest } from './utils.js';
 </q:template>
 
 
-<q:template name='test-single-wrapper'>
+<q:template name='TestSingleWrapperTemplate'>
 	<div>
 		<single-wrapper>The <b>wrapped</b> content</single-wrapper>
 	</div>
 </q:template>
-<q:template name='test-single-wrapper-override'>
+<q:template name='TestSingleWrapperOverrideTemplate'>
 	<div>
 		<single-wrapper-with-default>The <b>wrapped</b> content</single-wrapper-with-default>
 	</div>
 </q:template>
-<q:template name='test-single-wrapper-default'>
+<q:template name='TestSingleWrapperDefaultTemplate'>
 	<div>
 		<single-wrapper-with-default>
 
 		</single-wrapper-with-default>
 	</div>
 </q:template>
-<q:template name='test-multi-wrapper'>
+<q:template name='TestMultiWrapperTemplate'>
 	<div>
 		<multi-wrapper>
 			<nested name='title'>The <b>named</b> title</nested>
@@ -66,7 +66,7 @@ import { mountTest } from './utils.js';
 		</multi-wrapper>
 	</div>
 </q:template>
-<q:template name='test-multi-wrapper-extra-content'>
+<q:template name='TestMultiWrapperExtraContentTemplate'>
 	<div>
 		<multi-wrapper>
 			some <b>ingored</b> content
@@ -75,7 +75,7 @@ import { mountTest } from './utils.js';
 		</multi-wrapper>
 	</div>
 </q:template>
-<q:template name='test-multi-wrapper-override'>
+<q:template name='TestMultiWrapperOverrideTemplate'>
 	<div>
 		<multi-wrapper>
 			<nested name='title'>The <b>named</b> title</nested>
@@ -85,7 +85,7 @@ import { mountTest } from './utils.js';
 	</div>
 </q:template>
 
-<q:template name='test-nested-context'>
+<q:template name='TestNestedContextTemplate'>
 	<div>
 		<multi-wrapper>
 			<nested name='title'>The <b>{{title}}</b> title</nested>
@@ -94,7 +94,7 @@ import { mountTest } from './utils.js';
 </q:template>
 
 
-<q:template name='test-nested-propagation'>
+<q:template name='TestNestedPropagationTemplate'>
 	<my-panel>
     	<nested name='title'>{{title}}</nested>
     	<nested name='content'>The panel content</nested>
@@ -102,30 +102,30 @@ import { mountTest } from './utils.js';
 </q:template>
 
 
-<q:template name='test-variable-content'>
+<q:template name='TestVariableContentTemplate'>
 	<my-panel>
     	<nested name='title' q:html='title' />
     	<nested name='content'>The panel content</nested>
 	</my-panel>
 </q:template>
 
-var TestSingleWrapper = Qute('test-single-wrapper');
-var TestSingleWrapperOverride = Qute('test-single-wrapper-override');
-var TestSingleWrapperDefault = Qute('test-single-wrapper-default');
-var TestMultiWrapper = Qute('test-multi-wrapper');
-var TestMultiWrapperExtraContent = Qute('test-multi-wrapper-extra-content');
-var TestMultiWrapperOverride = Qute('test-multi-wrapper-override');
-var TestNestedContext = Qute('test-nested-context', {
+var TestSingleWrapper = Qute(TestSingleWrapperTemplate);
+var TestSingleWrapperOverride = Qute(TestSingleWrapperOverrideTemplate);
+var TestSingleWrapperDefault = Qute(TestSingleWrapperDefaultTemplate);
+var TestMultiWrapper = Qute(TestMultiWrapperTemplate);
+var TestMultiWrapperExtraContent = Qute(TestMultiWrapperExtraContentTemplate);
+var TestMultiWrapperOverride = Qute(TestMultiWrapperOverrideTemplate);
+var TestNestedContext = Qute(TestNestedContextTemplate, {
 	get title() {
 		return "The Context Title!";
 	}
 });
-var TestNestedPropagation = Qute('test-nested-propagation', {
+var TestNestedPropagation = Qute(TestNestedPropagationTemplate, {
 	get title() {
 		return "The panel title";
 	}
 });
-var TestVariableContent = Qute('test-variable-content', {
+var TestVariableContent = Qute(TestVariableContentTemplate, {
 	get title() {
 		return "The panel title";
 	}

@@ -143,7 +143,6 @@ ul.playground-navbar > li {
   	<script>
   		var PREVIEW_PENDING_KEY='qute-playground-preview-pending';
 
-  		var initialQuteRegistry = Qute.snapshotRegistry();
 		var appEl = document.getElementById('app');
 		var sourceEl = document.getElementById('source');
 		var codeEl = document.getElementById('code');
@@ -187,7 +186,6 @@ ul.playground-navbar > li {
 		function updatePreview(source) {
 			Qute.runWithLoader(function(loader) {
 	  			appEl.__qute__ && appEl.__qute__.disconnect();
-	  			Qute.restoreRegistry(initialQuteRegistry); // restore initial registry
 
 	  			// remove current content
 	  			while (appEl.firstChild) appEl.removeChild(appEl.firstChild);

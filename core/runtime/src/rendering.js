@@ -1,17 +1,17 @@
 import {document} from '@qutejs/window';
 import ERR from './error.js';
 
-import App from './app.js';
-import { getVMOrTag, converters } from './registry.js';
+
 import {applyListeners, applyEmiters, SetClass, SetStyle,
 			SetDisplay, SetToggle, SetText, SetInnerHTML, SetAttr} from './binding.js';
 import { filterKeys } from './utils.js';
-import Emitter from './emit.js';
-import applyUserDirectives from './q-attr.js';
+import {applyUserDirectives} from './q-attr.js';
 import ListFragment from './list-fragment.js';
 import SwitchFragment from './switch-fragment.js';
 import ForFragment from './for-fragment.js';
 import FunComp from './func.js';
+
+const converters = {};
 
 function SetDOMAttrs(el, model, filter) {
 	return function() {
@@ -96,9 +96,11 @@ var RenderingProto = {
 		return document.createTextNode(value);
 	},
 	g: function(isFn, xattrs, children) { // dynamic tag using 'is'
-		var tag = isFn(this.model);
-		var XTag = getVMOrTag(tag);
-		return XTag ? this.v(XTag, xattrs, children) : this.h(tag, xattrs, children);
+        var tagOrFn = isFn(this.model);
+        if (!tagOrFn) {
+            ERR('<q:tag> directive failed: "is" attribute resolve to a falsy value');
+        }
+        return typeof tagOrFn === 'string' ? this.h(tagOrFn, xattrs, children) : this.c(tagOrFn, xattrs, children);
 	},
 	h: function(tag, xattrs, children, svg) { // dom node
 		var el = svg ? document.createElementNS('http://www.w3.org/2000/svg', tag)
@@ -164,17 +166,18 @@ var RenderingProto = {
 		}
 		el.innerHTML = content;
 		return el;
-	},
-	r: function(tag, xattrs, children) {
-		var XTag = getVMOrTag(tag);
-		if (!XTag) ERR("Could not resolve component for tag: '%s'", tag);
-		return this._v(XTag, xattrs, extractSlots(children));
-	},
-	v: function(XTag, xattrs, children) { // xtag is specified as a func reference. TODO No more used
-		return this._v(XTag, xattrs, extractSlots(children));
-	},
+    },
+    // a component
+    c: function(renderFn, xattrs, children) {
+        if (!renderFn) { // recursivity -> use the current render fn
+            var vm = this.closestVM(); //TODO impl a closestComp? to support fucnctional templates too?
+            if (!vm) ERR('Calling "self" is only allowed inside a Viewodel context');
+            renderFn = vm.__VM__;
+        }
+        return this._c(renderFn, xattrs, extractSlots(children));
+    },
 	// vm component
-	_v: function(XTag, xattrs, slots) { // a vm component (viewmodel)
+    _c: function(XTag, xattrs, slots) { // a vm component (viewmodel)
 		if (isVM(XTag)) {
 			var vm = new XTag(this.model.$app);
 			return vm.$create(this, xattrs, slots);
@@ -195,9 +198,9 @@ var RenderingProto = {
 		}
 		return document.createComment('[slot/]'); // placeholder
 	},
-	w: function(isExpr, changeCb, noCache, xattrs, childrenFn) { // dynamic view
+	v: function(isExpr, changeCb, noCache, xattrs, childrenFn) { // dynamic view
 		var renderFn = function(r, key) {
-			return key ? r.r(key, xattrs, childrenFn(r)) : null;
+			return key ? r.c(key, xattrs, childrenFn(r)) : null;
 		}
 		return new SwitchFragment(this, 'view', isExpr, renderFn, changeCb, noCache).$create();
 	},
@@ -342,5 +345,5 @@ Rendering.FunComp = FunComp;
 // add more bindigns here if needed
 Rendering.SetAttr = SetAttr;
 Rendering.SetDisplay = SetDisplay;
-
+Rendering.converters = converters;
 export default Rendering;
