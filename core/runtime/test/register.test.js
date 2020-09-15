@@ -67,3 +67,4 @@ describe('Rendering root', function() {
 		snapshot('register', mountPoint.innerHTML, true);
 	});
 });
+

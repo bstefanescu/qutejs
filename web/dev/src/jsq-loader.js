@@ -150,6 +150,7 @@ function Script() {
 	}
 
 	this.load = function(beforeLoadDeps) {
+        var imports = this.imports;
 		var styles = this.styles;
 		var deps = this.getDependencies();
 
@@ -161,7 +162,18 @@ function Script() {
 		// load script deps
 		if (deps) {
 			if (beforeLoadDeps) beforeLoadDeps();
-			return serialLoadScripts(deps);
+			return serialLoadScripts(deps).then(function(vars) {
+                // map vars to import names
+                Object.keys(vars).forEach(function(url) {
+                    var obj = vars[url];
+                    if (obj) {
+                        var name = imports[url];
+                        if (name) {
+                            window[name] = obj;
+                        }
+                    }
+                });
+            });
 		} else {
 			return Promise.resolve(); // no scripts to load return an empty promise
 		}

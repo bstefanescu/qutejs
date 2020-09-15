@@ -178,6 +178,9 @@ var RenderingProto = {
     },
 	// vm component
     _c: function(XTag, xattrs, slots) { // a vm component (viewmodel)
+        if (typeof XTag !== 'function') {
+            ERR('component tag is not a function: %s', XTag);
+        }
 		if (isVM(XTag)) {
 			var vm = new XTag(this.model.$app);
 			return vm.$create(this, xattrs, slots);
@@ -185,7 +188,7 @@ var RenderingProto = {
 			return new FunComp().render(this, XTag, xattrs, slots);
 		} else { // a hand written function or a lazy component
 			return XTag(this, xattrs, slots);
-		}
+        }
 	},
 	s: function(slotName, defaultChildren) {
 		var model = this.model;

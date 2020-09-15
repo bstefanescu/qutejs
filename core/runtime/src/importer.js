@@ -1,4 +1,4 @@
-import { document } from '@qutejs/window';
+import window, { document } from '@qutejs/window';
 import ERR from './error.js';
 
 /**
@@ -28,14 +28,15 @@ function resolveScript(nameOrUrl) {
 
 export function insertScript(url, exportName, onload, onerror) {
     if (url in insertedUrls) {
-        onload && onload(url, insertedUrls[url]);
+        onload && onload(insertedUrls[url]);
     } else {
         var script = document.createElement('script');
         script.setAttribute('src', url);
         script.onload = function() {
-            var scriptObj = exportName ? window[exportName] : null;
+            // TODO if !exportName we can try to use window.__QUTE_IMPORT__ if any
+            var scriptObj = exportName ? window[exportName] : window.__QUTE_IMPORT__;
             insertedUrls[url] = scriptObj;
-            onload && onload(url, scriptObj);
+            onload && onload(scriptObj);
         };
         script.onerror = function() {
             var error = new Error("Failed to fetch script from: " + url);
@@ -44,6 +45,7 @@ export function insertScript(url, exportName, onload, onerror) {
             onerror && onerror(error);
         }
         document.head.appendChild(script);
+        window.__QUTE_IMPORT__ = null;
     }
 }
 
@@ -55,18 +57,19 @@ export function importScript(script, exportName, onload, onerror) {
 }
 
 
-function _importNext(imports, index, onload, onerror) {
+function _importNext(imports, index, result, onload, onerror) {
     if (index < imports.length) {
         var script = imports[index];
         importScript(script,
             null,
-            function() {
-                _importNext(imports, index+1, onload, onerror);
+            function(exportVar) {
+                result[script] = exportVar;
+                _importNext(imports, index+1, result, onload, onerror);
             },
             onerror
         );
     } else {
-        onload && onload(imports);
+        onload && onload(result);
     }
 }
 
@@ -105,7 +108,7 @@ function _importAll(imports, onload, onerror) {
 
 export function serialImport(imports, onload, onerror) {
     if (Array.isArray(imports)) {
-        _importNext(imports, 0, onload, onerror);
+        _importNext(imports, 0, {}, onload, onerror);
     } else {
         importScript(imports, null, onload, onerror);
     }
@@ -155,11 +158,9 @@ export function LazyComponent(location, exportName) {
 
         importScript(location,
             exportName,
-            function(url, result) {
-                //console.log('Loaded lazy tag', tag);
-                var XTag = lookupTag(tag);
-                if(!XTag) ERR("Could not resolve lazy component at '%s'", location);
-                var node = r._c(XTag, xattrs, slots);
+            function(result) {
+                if(!result) ERR("Could not resolve lazy component at '%s'", location);
+                var node = r._c(result, xattrs, slots);
                 _deleteNodes(start, end);
                 end.parentNode.insertBefore(node, end);
             },
