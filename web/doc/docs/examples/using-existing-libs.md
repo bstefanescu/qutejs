@@ -26,11 +26,11 @@ export default Qute(MyComponent)
 
 ```jsq
 //playground directives
-//@script https://code.jquery.com/jquery-3.4.1.slim.min.js
-//@script ../doc/files/selectivity-jquery.min.js
 //@style ../doc/files/selectivity-jquery.min.css
 
 import Qute from '@qutejs/runtime';
+import "https://code.jquery.com/jquery-3.4.1.slim.min.js";
+import "../doc/files/selectivity-jquery.min.js";
 
 <q:template name='MyComponent'>
 	<div></div>
