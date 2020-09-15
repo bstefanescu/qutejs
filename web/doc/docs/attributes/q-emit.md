@@ -34,15 +34,15 @@ Here is an working example, demontsrating the `q-emit` usage from both a fucntio
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
-<q:template name='fun-button'>
+<q:template name='FunButton'>
 	<a href='#' q:emit-action-onclick><slot/></a>
 </q:template>
 
-<q:template name='my-button'>
+<q:template name='MyButtonTemplate'>
 	<a href='#' q:emit-click={$attrs.id}><slot/></a>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<div>
 	<fun-button @action='handleAction'>Fun Button - Click Me</fun-button>
 	<hr/>
@@ -51,9 +51,9 @@ import Qute from '@qutejs/runtime';
 </q:template>
 
 
-Qute('my-button');
+var MyButton = Qute(MyButtonTemplate);
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	handleAction(e) {
 		console.log('Action Event', e, e.detail);
 		console.log('Original Event', e.originalEvent)

@@ -15,16 +15,16 @@ This is the most basic form of communication.
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='child'>
+<q:template name='ChildComponent'>
 	<div>{{$attrs.message}}</div>
 </q:template>
 
-<q:template name='root'>
-	<child message={message}></child>
+<q:template name='RootTemplate'>
+	<child-component message={message}></child-component>
 </q:template>
 
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		return {
 			message: "Hello!"
@@ -44,20 +44,20 @@ This type of communication can be done through DOM events that bubbles up to anc
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='child'>
+<q:template name='ChildComponent'>
 	<button>Remove Me!</button>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<if value='hasButton'>
-	<child @click='removeButton'/>
+	<child-component @click='removeButton'/>
 	<else/>
 	Button was removed!
 	</if>
 </q:template>
 
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	removeButton() {
 		this.hasButton = false;
 	},
@@ -79,21 +79,21 @@ Let's take the example of a dropdown menu:
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='alert'>
+<q:template name='AlertBoxTemplate'>
 	<div style='display:none;position:fixed; left:40%; top:40%; border: 1px solid red; padding: 10px'>
 	<div><slot/></div>
 	<button @click='hideAlert'>Close</button>
 	</div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <div>
-	<alert q:channel='hello'>Hello!</alert>
+	<alert-box q:channel='hello'>Hello!</alert-box>
 	<button @click='showAlert'>Show Alert!</button>
 </div>
 </q:template>
 
-Qute('alert', {
+const AlertBox = Qute(AlertBoxTemplate, {
 	hideAlert() {
 		this.postAsync('hello', 'hide');
 	}
@@ -105,7 +105,7 @@ Qute('alert', {
 	}
 });
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	showAlert() {
 		this.postAsync('hello', 'show');
 	}
@@ -139,32 +139,32 @@ Let's see an example:
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='child1'>
+<q:template name='ChildOneTemplate'>
 <div>
 	<button @click='askSeconds'>Ask Seconds!</button>
 </div>
 </q:template>
 
-<q:template name='child2'>
+<q:template name='ChildTwoTemplate'>
 <div>
 	<button @click='askMinutes'>Ask Minutes!</button>
 </div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <div>
-	<child1 />
-	<child2 />
+	<child-one />
+	<child-two />
 </div>
 </q:template>
 
-Qute('child1', {
+const ChildOne = Qute(ChildOneTemplate, {
 	askSeconds() {
 		this.postAsync('time-channel', 'seconds');
 	}
 });
 
-Qute('child2', {
+const ChildTwo = Qute(ChildTwoTemplate, {
 	askMinutes() {
 		this.postAsync('time-channel', 'minutes');
 	}
@@ -180,7 +180,7 @@ app.subscribe('time-channel', function(message) {
 	}
 });
 
-var Root = Qute('root');
+var Root = Qute(RootTemplate);
 new Root(app).mount('app');
 
 ```
@@ -192,26 +192,26 @@ Let's rewrite the previous example to pass a callback to retrieve the informatio
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='child1'>
+<q:template name='ChildOneTemplate'>
 <div>
 	<button @click='askSeconds'>Ask Seconds! {{seconds}}</button>
 </div>
 </q:template>
 
-<q:template name='child2'>
+<q:template name='ChildTwoTemplate'>
 <div>
 	<button @click='askMinutes'>Ask Minutes! {{minutes}}</button>
 </div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <div>
-	<child1 />
-	<child2 />
+	<child-one />
+	<child-two />
 </div>
 </q:template>
 
-Qute('child1', {
+const ChildOne = Qute(ChildOneTemplate, {
 	init() {
 		return {seconds: ''};
 	},
@@ -223,7 +223,7 @@ Qute('child1', {
 	}
 });
 
-Qute('child2', {
+const ChildTwo = Qute(ChildTwoTemplate, {
 	init() {
 		return {minutes: ''};
 	},
@@ -245,7 +245,7 @@ app.subscribe('time-channel', function(message, cb) {
 	}
 });
 
-var Root = Qute('root');
+var Root = Qute(RootTemplate);
 new Root(app).mount('app');
 
 ```
@@ -265,29 +265,29 @@ When installing a root component we can use the same application instance used b
 import {document} from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
-<q:template name='child1'>
+<q:template name='ChildOneTemplate'>
 <div>I am child1 from root1</div>
 </q:template>
 
-<q:template name='root1'>
+<q:template name='FirstRootTemplate'>
 <div style='border: 1px solid green; padding: 10px;'>
     <h3>Root1</h3>
-	<child1 q:channel='child1-channel' />
+	<child-one q:channel='child1-channel' />
 </div>
 </q:template>
 
-<q:template name='root2'>
+<q:template name='SecondRootTemplate'>
 <div style='border: 1px solid green; padding: 10px;'>
 	<h3>Root2</h3>
 	<button @click='sendMessage'>Change child1 color</button>
 </div>
 </q:template>
 
-Qute('child1').channel(function(message, data) {
+const ChildOne = Qute(ChildOneTemplate).channel(function(message, data) {
 	if (message === 'color') this.$el.style.color = data;
 });
-var Root1 = Qute('root1');
-var Root2 = Qute('root2', {
+var Root1 = Qute(FirstRootTemplate);
+var Root2 = Qute(SecondRootTemplate, {
 	init() {
 		this.colorIndex = 0;
 		this.colors = ['green', 'blue', 'yellow', 'red', 'cyan', 'magenta', 'brown', 'black'];

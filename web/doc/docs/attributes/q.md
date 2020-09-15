@@ -70,7 +70,7 @@ Evaluate an `xattr` value. An `xattr` can hold literal values when the attribute
 
 **Example:**
 
-```
+```javascript
 function myDirectiveFactory(xattrs, valueExpr) {
 	var config = this.eval(valueExpr); // evaluate the directive value if any
 }
@@ -129,7 +129,7 @@ In this example we change the font color to green, for all `span` elements conta
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<div q:color-spans>Hello <span>world</span>!</div>
 </q:template>
 
@@ -142,7 +142,7 @@ Qute.registerDirective('color-spans', function(xattrs, valueExpr) {
 		for (var i=0,l=spans.length; i<l; i++) spans[i].style.color = 'green';
 	}
 });
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 ### A simple directive with configuration
@@ -152,7 +152,7 @@ Let's now modify the previous example and use a value to specify a color.
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<div q:color-spans='red'>Hello <span>world</span>!</div>
 </q:template>
 
@@ -165,7 +165,7 @@ Qute.registerDirective('color-spans', function(xattrs, valueExpr) {
 	}
 });
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 **Note:** Here we used `valueExpr` as is (without evaluating it). This is because we expect the value to be a string literal and not an expression. But, you cannot know how the directive will be used by users. If someone is passing the value using an expression value like `q:color-spans={colorValue}`, then the previous code will no more work.
@@ -192,7 +192,7 @@ Let's now use a component reactive property to store the color to use. When the 
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
     <div color={color} q:color-spans={color}>
         Hello <span>world</span>!
         <br>
@@ -229,7 +229,7 @@ Qute.registerDirective('color-spans', function(xattrs, colorExpr) {
     };
 });
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
     init() {
         return {
             color: null

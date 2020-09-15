@@ -32,7 +32,7 @@ import Qute from '@qutejs/runtime';
 
 // ------------------------------------------ Templates
 
-<q:template name='todo-item'>
+<q:template name='TodoItemTemplate'>
 	<li class="list-group-item d-flex justify-content-between align-items-center">
         <span>
 	        <a href='#' @click='toggleDone'>&#x2714;</a>
@@ -42,7 +42,7 @@ import Qute from '@qutejs/runtime';
 	</li>
 </q:template>
 
-<q:template name='todo-list'>
+<q:template name='TodoListTemplate'>
 	<div>
 		<ul class="list-group">
 			<todo-item q:for='item in todos' q:key='id' todo={item} @remove='removeItem' />
@@ -57,13 +57,13 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<todo-list todos={todos}/>
 </q:template>
 
 // ------------------------------------------ Javascript
 
-Qute('todo-item', {
+const TodoItem = Qute(TodoItemTemplate, {
 	init() {
 		return { todo: null };
 	},
@@ -78,7 +78,7 @@ Qute('todo-item', {
 });
 
 var CNT = 0;
-Qute('todo-list', {
+const TodoList = Qute(TodoListTemplate, {
 	init() {
 		this.input = null;
 		return {
@@ -110,7 +110,7 @@ Qute('todo-list', {
 	}
 });
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		return {
 			todos: [
@@ -145,7 +145,7 @@ import Qute from '@qutejs/runtime';
 
 // ------------------------------------------ Templates
 
-<q:template name='todo-list'>
+<q:template name='TodoListTemplate'>
 	<div>
 		<ul class="list-group">
 			<li q:for='item in todos' q:key='id' class="list-group-item d-flex justify-content-between align-items-center">
@@ -166,14 +166,14 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<todo-list todos={todos}/>
 </q:template>
 
 // ------------------------------------------ Javascript
 
 var CNT = 0;
-Qute('todo-list', {
+const TodoList = Qute(TodoListTemplate, {
 	init() {
 		this.input = null;
 		return { todos: null };
@@ -209,7 +209,7 @@ Qute('todo-list', {
 	}
 });
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		return {
 			todos: [
@@ -243,7 +243,7 @@ import Qute from '@qutejs/runtime';
 
 // ------------------------------------------ Templates
 
-<q:template name='todo-list'>
+<q:template name='TodoListTemplate'>
 	<div>
 		<ul class="list-group">
 			<li q:for='item in todos' q:key='id' class="list-group-item d-flex justify-content-between align-items-center">
@@ -264,14 +264,14 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<todo-list todos={todos}/>
 </q:template>
 
 // ------------------------------------------ Javascript
 
 var CNT = 0;
-Qute('todo-list', {
+const TodoList = Qute(TodoListTemplate, {
 	init() {
 		this.input = null;
 		return {
@@ -324,7 +324,7 @@ Qute('todo-list', {
 	}
 });
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		return {
 			todos: [

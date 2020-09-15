@@ -27,23 +27,21 @@ Example:
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='test-show'>
+<q:template name='TestShow'>
     <div><slot/></div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
   <div>
-    <test-show q:show="showIt">Hello!</test-show>
-    <button @click='e => showIt=!showIt'>{{showIt?'Hide':'Show'}}</button>
+    <test-show q:show={showIt}>Hello!</test-show>
+    <button @click={e => showIt=!showIt}>{{showIt?'Hide':'Show'}}</button>
   </div>
 </q:template>
 
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
     init() {
       return {showIt: true}
     }
 });
-
-Qute('test-show'); // remove this line to use test-show as a functional component
 ```

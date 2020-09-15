@@ -148,13 +148,13 @@ To open the modal through the API we need to obtain the modal component instance
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import '@qutejs/modal';
+import qModal from '@qutejs/modal';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
   <div>
     <button style='margin-left: 10px; margin-top: 10px; padding: 10px'
       @click='openModal'>Open modal</button>
-    <modal q:ref='theModal' animation='scale-up'
+    <q:modal q:ref='theModal' animation='scale-up'
       @open='onOpen' @close='onClose' @ready='onReady' @action='onAction'>
       <div style='border: 1px solid gray'>
         <h3 style='padding: 10px;margin-top:0; border-bottom: 1px solid gray'>Modal header</h3>
@@ -164,11 +164,11 @@ import '@qutejs/modal';
             <button data-md-action='my-action'>Modal Action</button>
         </div>
       </div>
-    </modal>
+    </q:modal>
   </div>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
   openModal(event) {
     this.theModal.open();
   },
@@ -193,13 +193,13 @@ export default Qute('root', {
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import '@qutejs/modal';
+import qModal from '@qutejs/modal';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
   <div>
     <button style='margin-left: 10px; margin-top: 10px; padding: 10px'
       @click='this.post("my-modal", "open")'>Open modal</button>
-    <modal animation='scale-up' q:channel='my-modal'
+    <q:modal animation='scale-up' q:channel='my-modal'
       @open='onOpen' @close='onClose' @ready='onReady' @action='onAction'>
       <div style='border: 1px solid gray'>
         <h3 style='padding: 10px;margin-top:0; border-bottom: 1px solid gray'>Modal header</h3>
@@ -209,11 +209,11 @@ import '@qutejs/modal';
             <button data-md-action='my-action'>Modal Action</button>
         </div>
       </div>
-    </modal>
+    </q:modal>
   </div>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
   onOpen(event) {
     console.log('modal about to open', event.detail);
   },

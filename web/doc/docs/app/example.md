@@ -5,7 +5,7 @@
 
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
-import '@qutejs/spinner';
+import qSpinner from '@qutejs/spinner';
 
 <q:style>
 .tbar {
@@ -30,20 +30,20 @@ import '@qutejs/spinner';
 }
 </q:style>
 
-<q:template name='page-placeholder'>
+<q:template name='PagePlaceholder'>
 	<div>Click on the tab bar to open a page</div>
 </q:template>
-<q:template name='page1'>
+<q:template name='PageOne'>
 	<div>Page 1 content</div>
 </q:template>
-<q:template name='page2'>
+<q:template name='PageTwo'>
 	<div>Page 2 content</div>
 </q:template>
-<q:template name='page3'>
+<q:template name='PageThree'>
 	<div>Page 3 content</div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<div>
 		<div class='clearfix'>
 			<ul class='tbar' style='float:left' @click='onTabClick'>
@@ -56,7 +56,7 @@ import '@qutejs/spinner';
 				Hello {{user}}!
 				<button @click='logout'>Logout</button>
 				<else />
-				<spinner size='8px' inline q:show='loginPending'/>
+				<q:spinner size='8px' inline q:show='loginPending'/>
 				<button @click='login' q:toggle-disabled={loginPending}>Login</button>
 				</if>
 			</div>
@@ -67,7 +67,13 @@ import '@qutejs/spinner';
 	</div>
 </q:template>
 
-var Root = Qute('root', {
+var pages = {
+    page1: PageOne,
+    page2: PageTwo,
+    page3: PageThree
+}
+
+var Root = Qute(RootTemplate, {
 	init(app) {
 		return {
 			user: app.prop('Session/user'),
@@ -83,11 +89,11 @@ var Root = Qute('root', {
 		this.$app.session.logout();
 	},
 	onTabClick(e) {
-		var key = e.target.getAttribute('data-key');
-		if (key) {
+        var page = pages[e.target.getAttribute('data-key')]
+		if (page) {
 			e.currentTarget.querySelectorAll('li').forEach(li => li.classList.remove('active'));
 			e.target.closest('li').classList.add('active');
-			this.currentPage = key;
+			this.currentPage = page;
 		}
 	}
 });
@@ -108,7 +114,7 @@ function SessionManager(app) {
 }
 
 function PageManager(app) {
-	app.defineProp('Pages/current', 'page-placeholder').link(this, 'currentPage');
+	app.defineProp('Pages/current', PagePlaceholder).link(this, 'currentPage');
 	this.open = function(page) {
 		this.currentPage = page;
 	}

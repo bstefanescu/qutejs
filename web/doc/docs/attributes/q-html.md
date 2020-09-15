@@ -17,11 +17,11 @@ where `someVar` resolve to a valid HTML text. The HTML text will be injected as 
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
-<div q:html='content' />
+<q:template name='RootTemplate'>
+    <div q:html='content' />
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		return {
 			content: "<p>This is some <b>HTML</b> content</p><p>Expressions are not interpreted: {{someProperty}}</p>",
@@ -36,14 +36,14 @@ changing the `content` property value will be reflected in the DOM:
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <div>
   <div q:html='content' />
   <button @click='changeContent' q:toggle-disabled={changed}>Click to change</button>
 </div>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		return {
 			content: "<p>This is some <b>HTML</b> content</p><p>Expressions are not interpreted: {{someProperty}}</p>",
@@ -66,14 +66,14 @@ export default Qute('root', {
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <div q:html>
     <p>This is some <b>HTML</b> content</p>
     <p>Expressions are not interpreted: {{someProperty}}</p>
 </div>
 </q:template>
 
-export default Qute('root', {someProperty: "hello!"})
+export default Qute(RootTemplate, {someProperty: "hello!"})
 ```
 
 This construct is usefull to nest static content which will be never interpreted. It will be rendered as is.

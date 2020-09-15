@@ -15,33 +15,33 @@ Also, you can use this to send events between components inside different roots 
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='tbar'>
+<q:template name='PageHeaderTemplate'>
 	<a href='#' data-message-type='info' data-message-content='hello!'>Send message</a>
 </q:template>
 
-<q:template name='content'>
+<q:template name='PageContentTemplate'>
 	<div>{{message}}</div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <div>
-	<tbar />
-	<content q:channel='messages' />
+	<page-header />
+	<page-content q:channel='messages' />
 </div>
 </q:template>
 
-Qute('tbar').on('click', 'a[data-message-type]', function(event) {
+var PageHeader = Qute(PageHeaderTemplate).on('click', 'a[data-message-type]', function(event) {
 	var msgType = event.target.getAttribute('data-message-type');
 	var msg = event.target.getAttribute('data-message-content');
 	this.postAsync('messages', msgType, msg);
 	return false;
 });
-Qute('content', {
+var PageContent = Qute(PageContentTemplate, {
 	init() {
 		return { message: '' }
 	}
 }).channel(function(event, data) {
 	this.message = 'Received '+event+': '+data;
 });
-export default Qute('root');
+export default Qute(RootTemplate);
 ```

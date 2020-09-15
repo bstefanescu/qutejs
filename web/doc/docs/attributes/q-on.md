@@ -9,14 +9,14 @@ See the **[Templates](#/templates)** section for more details.
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
   <div>
     <button @click='handleClick'>Click me: using @</button>
     <button q:onclick='handleClick'>Click me: using q:on</button>
   </div>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	handleClick() {
 		window.alert('hello!');
 	}

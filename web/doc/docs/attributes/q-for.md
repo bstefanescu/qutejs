@@ -22,11 +22,11 @@ If you need to render immutable lists you should use the `for` directive to avoi
 Let say `myList` is a reactive property on the following component:
 
 ```javascript
-<q:template name='my-list'>
+<q:template name='MyList'>
   <div q:for='item in myList'>...</div>
 </q:template>
 
-Qute('my-list', {
+Qute(MyList, {
   init() {
     return {myList: ["item 1", "item 2", "item 3"]}
   }
@@ -77,11 +77,11 @@ If you are using `q:for` without a related `q:key` attribute then the DOM update
 The correct way to write the example above is:
 
 ```javascript
-<q:template name='my-list'>
+<q:template name='MyList'>
   <div q:for='item in myList' q:key='.'>...</div>
 </q:template>
 
-Qute('my-list', {
+Qute(MyList, {
   init() {
     this.myList = ["item 1", "item 2", "item 3"];
   }
@@ -105,18 +105,18 @@ The following example is displaying a list of items and allows the used to add a
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='item'>
+<q:template name='MyItem'>
   <div>{{$attrs.text}}</div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
   <div>
-    <item q:for='item in list' q:key='.' text={item} />
+    <my-item q:for='item in list' q:key='.' text={item} />
     <button @click='add'>Add</button>
   </div>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
   counter: 0,
   add() {
     this.list.push('Item '+(this.counter++));
@@ -137,7 +137,7 @@ Let's adding a remove button.
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='item'>
+<q:template name='MyItem'>
   <tr>
     <td>{{$attrs.text}}</td>
     <td>
@@ -146,17 +146,17 @@ import Qute from '@qutejs/runtime';
   </tr>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
   <div>
 	  <table width='100%'>
-    	<item q:for='item in list' q:key='.' text={item} @remove='onRemove' />
+    	<my-item q:for='item in list' q:key='.' text={item} @remove='onRemove' />
 	  </table>
   	<button @click='add'>Add</button>
   </div>
 </q:template>
 
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
   counter: 0,
   onRemove(e) {
     var i = this.list.indexOf(e.detail);
@@ -209,12 +209,12 @@ init() {
 
 You can use reactive components (i.e. ViewModel components) if you need property reactivity inside list items.
 Let's rewrite the example above, and attach a ViewNodel to the `item` template.
-Also, since we can chamnge the item text, we need to use an immutable id property to identify the item.
+Also, since we can change the item text, we need to use an immutable id property to identify the item.
 
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='item'>
+<q:template name='MyItemTemplate'>
   <tr>
     <td>{{text}}</td>
     <td>
@@ -224,10 +224,10 @@ import Qute from '@qutejs/runtime';
   </tr>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
   <div>
       <table width='100%'>
-        <item q:for='item in list' q:key='id' id={item.id} text={item.text} @remove='onRemove'/>
+        <my-item q:for='item in list' q:key='id' id={item.id} text={item.text} @remove='onRemove'/>
       </table>
       <button @click='add'>Add</button>
   </div>
@@ -235,7 +235,7 @@ import Qute from '@qutejs/runtime';
 
 var counter = 1;
 
-Qute('item', {
+const MyItem = Qute(MyItemTemplate, {
     edit() {
         var r = prompt("Item text", this.text);
         if (r != null) {
@@ -247,7 +247,7 @@ Qute('item', {
     }
 });
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
   onRemove(e) {
       var idToRemove = e.detail;
       var i = this.list.findIndex(function(item) {

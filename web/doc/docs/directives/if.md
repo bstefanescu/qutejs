@@ -23,7 +23,7 @@ If you want to conditionaly hide or show an element then use the **[q:show](#/at
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <if value='hasSection2'>
   <h1>Section 2</h1>
   <div>
@@ -32,7 +32,7 @@ import Qute from '@qutejs/runtime';
 </if>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		return {
 			hasSection2: true
@@ -56,7 +56,7 @@ The else directive can be used in conjuction with the *if* directive. It can onl
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <if value='user' onchange='onUserChanged'>
   <div>Hello {{user.name}}. <a href='#logout' @click='doLogout'>Logout</a></div>
 <else/>
@@ -64,7 +64,7 @@ import Qute from '@qutejs/runtime';
 </if>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	doLogin() {
 		this.user = {name: 'Foo'};
 	},
@@ -105,7 +105,7 @@ The else-if directive allows you to create conditional if / else if / else chain
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<div>
 		Select status:
 		<select @change='updateStatus'>
@@ -124,7 +124,7 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		return {
 			status: 'active'

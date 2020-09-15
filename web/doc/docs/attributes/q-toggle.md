@@ -17,7 +17,7 @@ Both of these notations are equivalent.
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<div>
 		<button @click='e => disableButton1 = true'>Click to disable button 1</button>
 		<button @click='e => disableButton2 = true'>Click to disable button 2</button>
@@ -27,7 +27,7 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		return {
 			disableButton1: false,
@@ -44,26 +44,26 @@ When using `q:toggle` attribute on components it will modify the attributes on t
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='button1'>
+<q:template name='FirstButtonTemplate'>
 	<button><slot/></button>
 </q:template>
-<q:template name='button2'>
+<q:template name='SecondButton'>
 	<button><slot/></button>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<div>
 		<button @click='e => disableButton1 = true'>Click to disable button 1</button>
 		<button @click='e => disableButton2 = true'>Click to disable button 2</button>
 		<hr/>
-		<button1 q:toggle-disabled={disableButton1}>Button 1</button1>
-		<button2 ?disabled={disableButton2}>Button 2</button2>
+		<first-button q:toggle-disabled={disableButton1}>Button 1</first-button>
+		<second-button ?disabled={disableButton2}>Button 2</second-button>
 	</div>
 </q:template>
 
-Qute('button1');
+const FirstButton = Qute(FirstButtonTemplate);
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		return {
 			disableButton1: false,

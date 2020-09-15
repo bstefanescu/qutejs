@@ -8,18 +8,18 @@ Let's see an example of an input allows you to specify an additional label that 
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='my-input'>
+<q:template name='MyInput'>
 <div class='row'>
 	<div class='col-md-4'><label><slot/></label></div>
 	<div class='col-md-8'><input q:attrs/></div>
 </div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <my-input name='theName' type='text' class='form-control' placeholder='Type your name'>Your name:</my-input>
 </q:template>
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 The root component will render as
@@ -44,18 +44,18 @@ Example:
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='my-input'>
+<q:template name='MyInput'>
 <div class='row' q:attrs='class'>
 	<div class='col-md-4'><label><slot/></label></div>
 	<div class='col-md-8'><input q:attrs='!class'/></div>
 </div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <my-input name='theName' type='text' class='my-row'>Your name:</my-input>
 </q:template>
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 This component is injecting parts of the `q:attrs` attributes in different places in the nesting content.
@@ -79,27 +79,27 @@ Example:
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='my-link'>
-<a href='#' q:class="{btn: $attrs.type === 'button'}" q:attrs>{{linkText}}</a>
+<q:template name='MyLinkTemplate'>
+    <a href='#' q:class="{btn: $attrs.type === 'button'}" q:attrs>{{linkText}}</a>
 </q:template>
 
-<q:template name='my-button'>
-<my-link type='button' q:attrs />
+<q:template name='MyButton'>
+    <my-link type='button' q:attrs />
 </q:template>
 
-<q:template name='root'>
-<my-button title='Click me' link-text='My Button' />
+<q:template name='RootTemplate'>
+    <my-button title='Click me' link-text='My Button' />
 </q:template>
 
-Qute('my-link', {
+const MyLink = Qute(MyLinkTemplate, {
   init() {
     return {
       linkText: "Placeholder"
     }
   }
-})
-export default Qute('root');
+});
 
+export default Qute(RootTemplate);
 ```
 
 The `root` component will render as:

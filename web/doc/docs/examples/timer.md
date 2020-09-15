@@ -13,11 +13,11 @@ The following component is regularly updating the DOM to display the current tim
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
-<q:template name='time'>
+<q:template name='TimeTemplate'>
 	<div>{{now()}}</div>
 </q:template>
 
-export default Qute('time', {
+export default Qute(TimeTemplate, {
 	now() {
 		return new Date().toTimeString();
 	},

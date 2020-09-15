@@ -92,19 +92,19 @@ Application properties which are bound to component properties will trigger a co
 ```jsq
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
-import '@qutejs/spinner';
+import qSpinner from '@qutejs/spinner';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<if value='user'>
 		<div style='display:inline-block'>Hello {{user}}!</div>
 		<button @click='session.logout()'>Logout</button>
 	<else/>
-		<spinner size='8px' inline q:show='loginPending' />
+		<q:spinner size='8px' inline q:show='loginPending' />
 		<button @click='session.login("Foo")' q:toggle-disabled={loginPending}>Login</button>
 	</if>
 </q:template>
 
-var Root = Qute('root', {
+var Root = Qute(RootTemplate, {
 	init(app) {
 		this.session = app.session;
 		return {

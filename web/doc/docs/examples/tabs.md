@@ -38,7 +38,7 @@ import Qute from '@qutejs/runtime';
 
 // --------------------------------------------------- Tab Bar template
 
-<q:template name='tab-bar'>
+<q:template name='TabBarTemplate'>
 	<div q:attrs>
 		<ul class='tabs'>
 			<for value='tab in tabs'>
@@ -48,14 +48,14 @@ import Qute from '@qutejs/runtime';
 			</for>
 		</ul>
 		<div>
-			<view is='activeView'></view>
+			<view is={activeView}></view>
 		</div>
 	</div>
 </q:template>
 
 // --------------------------------------------------- Tab Bar component
 
-Qute('tab-bar', {
+const TabBar = Qute(TabBarTemplate, {
 	init() {
 		return { tabs: null }
 	},
@@ -79,23 +79,23 @@ Qute('tab-bar', {
 
 // --------------------------------------------------- Usage
 
-<q:template name='home-page'>
+<q:template name='HomePage'>
 	<div>The home page</div>
 </q:template>
-<q:template name='settings-page'>
+<q:template name='SettingsPage'>
 	<div>The settings page</div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<tab-bar tabs={tabs} />
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		return {
 			tabs: [
-				{name: 'home', label: 'Home', view: 'home-page', active: true},
-				{name: 'settings', label: 'Settings', view: 'settings-page'}
+				{name: 'home', label: 'Home', view: HomePage, active: true},
+				{name: 'settings', label: 'Settings', view: SettingsPage}
 			]
 		}
 	}
@@ -164,7 +164,7 @@ import Qute from '@qutejs/runtime';
 
 // --------------------------------------------------- Tab Bar template
 
-<q:template name='tab-bar'>
+<q:template name='TabBarTemplate'>
 	<div q:attrs>
 		<div class='tbar'>
 			<ul class='tbar-tabs'>
@@ -181,14 +181,14 @@ import Qute from '@qutejs/runtime';
 			<div class='tbar-actions'><slot/></div>
 		</div>
 		<div class='tb-view'>
-			<view is='activeView'></view>
+			<view is={activeView}></view>
 		</div>
 	</div>
 </q:template>
 
 // --------------------------------------------------- Tab Bar component
 
-Qute('tab-bar', {
+const TabBar = Qute(TabBarTemplate, {
 	init() {
 		return { tabs: null }
 	},
@@ -212,31 +212,31 @@ Qute('tab-bar', {
 
 // --------------------------------------------------- Usage
 
-<q:template name='home-page'>
+<q:template name='HomePage'>
 	<div>The home page</div>
 </q:template>
-<q:template name='settings-page'>
+<q:template name='SettingsPage'>
 	<div>The settings page</div>
 </q:template>
-<q:template name='custom-tab'>
+<q:template name='CustomTab'>
 	<div class='custom-tab'>
 		<a href='#' q:html={$attrs.tab.label} q:emit-select-onclick></a>
 		<a href='#' q:emit-remove-onclick class='close'>&times;</a>
 	</div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<tab-bar tabs={tabs} @remove='onTabRemove' @add='onTabAdd'>
 		<button q:emit-add-onclick>Add</button>
 	</tab-bar>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		return {
 			tabs: [
-				{name: 'home', label: 'Home', view: 'home-page', active: true},
-				{name: 'settings', label: 'Settings', view: 'settings-page', component: 'custom-tab'},
+				{name: 'home', label: 'Home', view: HomePage, active: true},
+				{name: 'settings', label: 'Settings', view: SettingsPage, component: CustomTab},
 			]
 		}
 	},

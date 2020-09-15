@@ -11,15 +11,15 @@ As Qute is working directly on the DOM you can easily use any plain javascript c
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
-<q:template name='bs-button'>
+<q:template name='BsButton'>
 	<button class={$attrs['bs-type']?'btn btn-'+$attrs['bs-type']:'btn'} q:attrs='!bs-type' q:emit-click><slot/></button>
 </q:template>
 
-<q:template name='my-component'>
+<q:template name='MyComponent'>
 	<bs-button bs-type='primary' @click='window.alert("Hello!")'>My Button</bs-button>
 </q:template>
 
-export default Qute('my-component')
+export default Qute(MyComponent)
 ```
 
 ### Example 2: Using [jQuery](https://jquery.com/) with [selectivity](https://arendjr.github.io/selectivity/)
@@ -32,11 +32,11 @@ export default Qute('my-component')
 
 import Qute from '@qutejs/runtime';
 
-<q:template name='my-component'>
+<q:template name='MyComponent'>
 	<div></div>
 </q:template>
 
-export default Qute('my-component', {
+export default Qute(MyComponent, {
 	created(el) {
 		$(this.$el).selectivity({
 	    	allowClear: true,

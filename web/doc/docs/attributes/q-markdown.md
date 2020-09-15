@@ -14,7 +14,7 @@ where markdownConverter is a function that takes as argument the markdown conten
 As an example, to use [marked.js](https://github.com/markedjs/marked) you will need include the `marked.js` script and to register it like this:
 
 ```javascript
-Qute.converters.markdown = marked;
+Qute.Rendering.converters.markdown = marked;
 ```
 
 It **only works on DOM elements** and cannot be used on component tags.
@@ -24,7 +24,7 @@ It **only works on DOM elements** and cannot be used on component tags.
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <div q:markdown>
 # My Header
 
@@ -32,7 +32,7 @@ Some content
 </div>
 </q:template>
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 # The q:content-* attribute
@@ -41,7 +41,7 @@ In the same way, you can use any type of static content to be converted into HTM
 Just use the attribute `q:content-typeName` where **typeName** is the name of the type to convert and register the converter using the same type name:
 
 ```javascript
-Qute.converters.typeName = theConvertFunction;
+Qute.Rendering.converters.typeName = theConvertFunction;
 ```
 
 ## Example
@@ -49,15 +49,15 @@ Qute.converters.typeName = theConvertFunction;
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <div q:content-random />
 </q:template>
 
-Qute.converters.random = function() {
+Qute.Rendering.converters.random = function() {
 	return Math.random().toString(36).substring(2, 15);
 }
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 

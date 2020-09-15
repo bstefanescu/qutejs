@@ -15,11 +15,11 @@ The following component is just printing "Hello World!".
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='hello'>
+<q:template name='HelloTemplate'>
 	<div>Hello World!</div>
 </q:template>
 
-export default Qute('hello');
+export default Qute(HelloTemplate);
 ```
 
 ## Using event listeners
@@ -30,11 +30,11 @@ The following compopnent is displaying a "Hello World!" alert when clicking a bu
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
-<q:template name='hello'>
+<q:template name='HelloTemplate'>
 	<button @click='sayHello'>Say Hello</button>
 </q:template>
 
-export default Qute('hello', {
+export default Qute(HelloTemplate, {
 	sayHello() {
 		window.alert('Hello world!');
 	}
@@ -50,14 +50,14 @@ The following component is displaying a "Hello {name}!" where `{name}` is the va
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
-<q:template name='hello'>
+<q:template name='HelloTemplate'>
 	<div>
 		<input type='text' value="World" q:call="element => this.inputElement = element" />
 		<button @click='sayHello'>Say Hello</button>
 	</div>
 </q:template>
 
-export default Qute('hello', {
+export default Qute(HelloTemplate, {
 	sayHello() {
 		window.alert('Hello '+this.inputElement.value+'!');
 	}
@@ -73,14 +73,14 @@ Use a reactive property to store the user name to greet. When changing the user 
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='hello'>
+<q:template name='HelloTemplate'>
 	<div>
 		Enter an user name: <input type='text' value={name} @change='e => name = e.target.value' />
 		<div>Hello {{name}}!</div>
 	</div>
 </q:template>
 
-export default Qute('hello', {
+export default Qute(HelloTemplate, {
 	init() {
 		// define a reactive property
 		return {
@@ -100,7 +100,7 @@ The initial property value will be correctly displayed, but when changed the dis
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='hello'>
+<q:template name='HelloTemplate'>
 	<div>
 		Enter an user name: <input type='text' value={name} @change='e => name = e.target.value' />
 		<div>Hello {{name}}!</div>
@@ -108,7 +108,7 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-export default Qute('hello', {
+export default Qute(HelloTemplate, {
 	init() {
 		// define a none reactive property
 		this.name = 'Foo';
@@ -124,14 +124,14 @@ The same as the reactive property example, but we will use the `q:model` directi
 import Qute from '@qutejs/runtime';
 import '@qutejs/form';
 
-<q:template name='hello'>
+<q:template name='HelloTemplate'>
 	<div>
 		Enter an user name: <input type='text' q:model='name' />
 		<div>Hello {{name}}!</div>
 	</div>
 </q:template>
 
-export default Qute('hello', {
+export default Qute(HelloTemplate, {
 	init() {
 		// define a reactive property
 		return {
@@ -151,7 +151,7 @@ This example is using the **[i18n plugin](#/plugins/i18n)**.
 import Qute from '@qutejs/runtime';
 import '@qutejs/i18n';
 
-<q:template name='hello'>
+<q:template name='HelloTemplate'>
 	<div>
 		<div>
 			Choose Language:
@@ -173,7 +173,7 @@ var i18n = new Qute.Intl({
     }
 });
 
-var Hello = Qute('hello', {
+var Hello = Qute(HelloTemplate, {
 	changeLanguage(event) {
 		var lang = event.target.value;
 		var self = this;

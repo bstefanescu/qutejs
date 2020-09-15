@@ -10,14 +10,14 @@ When the `q:ref` attribute is used on a DOM element then a reference to the elem
 In this example we will inject the span element instance in the current view model as a regular property named `spanElement`.
 
 ```jsq
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<div>
 		<button @click='increment'>Increment</button>
 		&nbsp; Value: <span q:ref='spanElement'>0</span>
 	</div>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	increment() {
 		var value = parseInt(this.spanElement.textContent);
 		this.spanElement.textContent = value+1;
@@ -32,18 +32,18 @@ As mentioned when using `q:ref` on a component, a reference to the component its
 Let's rewrite the example as above but using a `ViewModel` component to wrap the `span`.
 
 ```jsq
-<q:template name='my-span'>
+<q:template name='MySpanTemplate'>
 	<span><slot/></span>
 </q:template>
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<div>
 		<button @click='increment'>Increment</button>
 		&nbsp; Value: <my-span q:ref='mySpan'>0</my-span>
 	</div>
 </q:template>
 
-Qute('my-span');
-export default Qute('root', {
+const MySpan = Qute(MySpanTemplate);
+export default Qute(RootTemplate, {
 	increment() {
 		var value = parseInt(this.mySpan.$el.textContent);
 		this.mySpan.$el.textContent = value+1;
@@ -57,24 +57,24 @@ Let's rewrite the example above by encapsulating the increment logic in the `my-
 
 
 ```jsq
-<q:template name='my-span'>
+<q:template name='MySpanTemplate'>
 	<span><slot/></span>
 </q:template>
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<div>
 		<button @click='increment'>Increment</button>
 		&nbsp; Value: <my-span q:ref='mySpan'>0</my-span>
 	</div>
 </q:template>
 
-Qute('my-span', {
+const MySpan = Qute(MySpanTemplate, {
 	increment() {
 		var value = parseInt(this.$el.textContent);
 		this.$el.textContent = value+1;
 	}
 });
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	increment() {
 		this.mySpan.increment();
 	}

@@ -57,19 +57,17 @@ Example:
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='test-style'>
+<q:template name='TestStyle'>
 	<div><slot/></div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<test-style q:style="{textAlign: align}">Hello!</test-style>
 </q:template>
 
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
     align: 'center'
 });
-
-Qute('test-style'); // remove this line to use test-style as a functional component
 ```
 

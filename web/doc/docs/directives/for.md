@@ -2,7 +2,7 @@
 
 The `for` directive should be used to iterate over **immutable** array like objects or object keys.
 
-Although the `for` directive is **reactive** (i.e. if the target list is a reactive property which is replaced by another list then the DOM is updated), it will use brute force to update the DOM: the previous elements are replaced with the new ones.
+Although the `for` directive is **reactive** (i.e. if the target list is a reactive property and is replaced by another list then the DOM is updated), it will use brute force to update the DOM: the previous elements are replaced with the new ones.
 
 If you need a `for` directive **optimized for reactivity and DOM updates** then you should use **[q:for](#/attributes/q-for)** which is only updating the changed items.
 
@@ -26,13 +26,13 @@ Any object having a `length` property will be treated as an **array like object*
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <for value='item in list'>
 	<li> <a href={item.href}>{{item.title}}</a></li>
 </for>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		this.list = [
 			{href: '#1', title: 'Item 1'},
@@ -48,13 +48,13 @@ export default Qute('root', {
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <for value='item,index in list'>
 	<li>{{index+1}}. <a href={item.href}>{{item.title}}</a></li>
 </for>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		this.list = [
 			{href: '#1', title: 'Item 1'},
@@ -70,13 +70,13 @@ export default Qute('root', {
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <for value='item,index,hasNext in list'>
 	<li>{{index+1}}. <a href={item.href}>{{item.title}}</a> <if value='hasNext'><hr></if></li>
 </for>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		this.list = [
 			{href: '#1', title: 'Item 1'},
@@ -94,13 +94,13 @@ When using a regular object instead of an array like object to iterate on then, 
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <for value='key in dict'>
 	<li>{{key}} = {{dict[key]}}</li>
 </for>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		this.dict = {
 			a: 1,
@@ -116,7 +116,7 @@ export default Qute('root', {
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <div>
 	<button @click='changeList'>Change the list</button>
 	<ul>
@@ -127,7 +127,7 @@ import Qute from '@qutejs/runtime';
 </div>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	changeList() {
 		this.list = this.list === this.list1 ? this.list2 : this.list1;
 	},

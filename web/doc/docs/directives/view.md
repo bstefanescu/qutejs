@@ -30,7 +30,7 @@ Here is a simple tabs panel implementation:
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='tab1'>
+<q:template name='TabOne'>
   <div>
   	<p>Hello {{$attrs.user}}!</p>
   	<p>This is tab 1.</p>
@@ -38,7 +38,7 @@ import Qute from '@qutejs/runtime';
   </div>
 </q:template>
 
-<q:template name='tab2'>
+<q:template name='TabTwo'>
   <div>
   	<p>Hello {{$attrs.user}}!</p>
   	<p>This is tab 2.</p>
@@ -46,18 +46,18 @@ import Qute from '@qutejs/runtime';
   </div>
 </q:template>
 
-<q:template name='my-tabs'>
+<q:template name='MyTabs' import='TabOne, TabTwo'>
   <div>
 	<ul class='tabs'>
-	  <li><a href='#tab1' @click='activeTab="tab1"'>Tab 1</a></li>
-	  <li><a href='#tab2' @click='activeTab="tab2"'>Tab 2</a></li>
+	  <li><a href='#tab1' @click={activeTab=TabOne}>Tab 1</a></li>
+	  <li><a href='#tab2' @click={activeTab=TabTwo}>Tab 2</a></li>
 	</ul>
 
 	<view is='activeTab' user={user} onchange='viewChanged'>Some common content</view>
   </div>
 </q:template>
 
-export default Qute('my-tabs', {
+export default Qute(MyTabs, {
 	init: function() {
 		return {
 			user: 'Foo',
@@ -65,9 +65,10 @@ export default Qute('my-tabs', {
 		}
 	},
 	viewChanged() {
-		console.log('View changed: ', this.activeTab);
+		console.log('View changed: ', this.activeTab ? this.activeTab.name : null);
 	}
 });
 ```
 
+**Note** that we used the `import` attribute on the template to be able to reference the template functions TabOne and TabTwo in the template javascript blocks.
 

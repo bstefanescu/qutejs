@@ -11,11 +11,11 @@ import Qute from '@qutejs/runtime';
 <div class='alert'><slot/></div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <alert-message><b>Error:</b> {{errorMessage}}</alert-message>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		this.errorMessage = "Something bad happened!"
 	}
@@ -36,21 +36,21 @@ In some situations you may want more than one injectable content. In this case y
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='alert-message'>
+<q:template name='AlertMessage'>
 <div>
   <h3><slot name='title' /></h3>
   <div class='alert'><slot name='content'/></div>
 </div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <alert-message>
 	<nested name='title'>Error</nested>
 	<nested name='content'>{{errorMessage}}</nested>
 </alert-message>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		this.errorMessage = "Something bad happened!"
 	}
@@ -68,15 +68,15 @@ A slot can have a default value. If no content is injected in the slot (i.e. no 
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='alert-message'>
+<q:template name='AlertMessage'>
 <div class='alert'><slot>Unknown Error!</slot></div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <alert-message />
 </q:template>
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 By calling `<alert-message/>` (with no content) then the slot will use the default value: `Unknown Error!`
@@ -102,15 +102,15 @@ Slots can be propagated down to components on any nested level. Here is an examp
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='my-title'>
+<q:template name='MyTitle'>
 	<h3><slot/></h3>
 </q:template>
 
-<q:template name='my-content'>
+<q:template name='MyContent'>
 	<div class='content'><slot/></div>
 </q:template>
 
-<q:template name='my-panel'>
+<q:template name='MyPanel'>
 	<div class='panel'>
 		<my-title>
 			<nested><slot name='title'/></nested>
@@ -121,14 +121,14 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <my-panel>
 	<nested name='title'>The panel title</nested>
 	<nested name='content'>The panel content</nested>
 </my-panel>
 </q:template>
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 ## Injecting variable content
@@ -140,15 +140,15 @@ We can rewrite the previous example like this:
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='my-title'>
+<q:template name='MyTitle'>
 	<h3><slot/></h3>
 </q:template>
 
-<q:template name='my-content'>
+<q:template name='MyContent'>
 	<div class='content'><slot/></div>
 </q:template>
 
-<q:template name='my-panel'>
+<q:template name='MyPanel'>
 	<div class='panel'>
 		<my-title>
 			<nested><slot name='title'/></nested>
@@ -159,14 +159,14 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <my-panel>
     <nested name='title' q:html='title'/>
     <nested name='content'>The panel content</nested>
 </my-panel>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		this.title = "The <span style='color: green'>title</span>";
 	}
@@ -186,19 +186,19 @@ A `q:slot` may take a value: the target slot name, or no value at all if the tar
 **Example:**
 
 ```xml
-<dialog>
+<my-dialog>
 	<h3 q:slot='title'>The title</h3>
 	<div class='dialog-body' q:slot>The dialog body.</div>
-</dialog>
+</my-dialog>
 ```
 
 The above example is equivalent to:
 
 ```xml
-<dialog>
+<my-dialog>
 	<nested><h3>The title</h3></nested>
 	<nested><div class='dialog-body'>The dialog body.</div></nested>
-</dialog>
+</my-dialog>
 ```
 
 Here is an working example:
@@ -206,20 +206,20 @@ Here is an working example:
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='dialog'>
-<div class='dialog' style='border:1px solid #cecece'>
-<div><slot name='title'/></div>
-<hr/>
-<div><slot/></div>
-</div>
+<q:template name='MyDialog'>
+    <div class='dialog' style='border:1px solid #cecece'>
+        <div><slot name='title'/></div>
+        <hr/>
+        <div><slot/></div>
+    </div>
 </q:template>
 
-<q:template name='root'>
-<dialog>
-	<h3 q:slot='title'>The title</h3>
-	<div class='dialog-body' q:slot>The dialog body.</div>
-</dialog>
+<q:template name='RootTemplate'>
+    <my-dialog>
+        <h3 q:slot='title'>The title</h3>
+        <div class='dialog-body' q:slot>The dialog body.</div>
+    </my-dialog>
 </q:template>
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```

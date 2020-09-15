@@ -120,23 +120,23 @@ To open the popup through the API we need to obtain the popup component instance
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import '@qutejs/popup';
+import qPopup from '@qutejs/popup';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
   <div>
     <button style='margin-left: 50px; margin-top: 50px; padding: 10px'
       @click='openPopup'>Open popup</button>
-    <popup q:ref='thePopup' position='bottom start' animation='slide'
+    <q:popup q:ref='thePopup' position='bottom start' animation='slide'
       @open='onOpen' @close='onClose'>
       <div style='border: 1px solid gray; padding: 10px'>
         <h3 style='margin-top:0'>Popup header</h3>
         <div>The popup content</div>
       </div>
-    </popup>
+    </q:popup>
   </div>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
   openPopup(event) {
     this.thePopup.toggle(event.target);
   },
@@ -153,23 +153,23 @@ export default Qute('root', {
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import '@qutejs/popup';
+import qPopup from '@qutejs/popup';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
   <div>
     <button style='margin-left: 50px; margin-top: 50px; padding: 10px'
       @click='this.post("my-popup", "open", $1.target)'>Open popup</button>
-    <popup position='bottom start' animation='slide' q:channel='my-popup'
+    <q:popup position='bottom start' animation='slide' q:channel='my-popup'
       @open='onOpen' @close='onClose'>
       <div style='border: 1px solid gray; padding: 10px'>
         <h3 style='margin-top:0'>Popup header</h3>
         <div>The popup content</div>
       </div>
-    </popup>
+    </q:popup>
   </div>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
   onOpen(event) {
     console.log('popup about to open', event.detail);
   },

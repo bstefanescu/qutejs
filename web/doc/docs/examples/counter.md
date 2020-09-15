@@ -15,7 +15,7 @@ import Qute from '@qutejs/runtime';
 
 // ------------------------------------------ Templates
 
-<q:template name='counter'>
+<q:template name='CounterTemplate'>
 	<div>
 		<button @click='value--'>-</button>
 		{{value}}
@@ -23,19 +23,19 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-<q:template name='root'>
-	<counter value='2' />
+<q:template name='RootTemplate'>
+	<my-counter value='2' />
 </q:template>
 
 // ------------------------------------------ Javascript
 
-Qute('counter', {
+const MyCounter = Qute(CounterTemplate, {
 	init() {
 		return { value: 0 }
 	}
 });
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 To transform the counter component into a usable form control we need to use a hidden input to store the counter value and to add some more features, like a step, a range of legal values and to trigger a `change` event when the counter value changes.
@@ -55,7 +55,7 @@ import Qute from '@qutejs/runtime';
 
 // ------------------------------------------ Templates
 
-<q:template name='counter'>
+<q:template name='CounterTemplate'>
 	<div>
 		<input type='hidden' name={name} value={value} q:call='el => this.input=el'>
 		<button @click='decr' ?disabled='!canDecrement'>-</button>
@@ -64,13 +64,13 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-<q:template name='root'>
-	<counter value='2' step='2' min='0' max='8' @change='e=>console.log("counter changed", e.detail)'/>
+<q:template name='RootTemplate'>
+	<my-counter value='2' step='2' min='0' max='8' @change='e=>console.log("counter changed", e.detail)'/>
 </q:template>
 
 // ------------------------------------------ Javascript
 
-Qute('counter', {
+const MyCounter = Qute(CounterTemplate, {
 	init() {
 		return {
 			name: null,
@@ -111,7 +111,7 @@ Qute('counter', {
 	}
 });
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 ## Validation
@@ -131,7 +131,7 @@ Replacing `<input type='hidden' name={name} value={value}>` by `<input type='num
 Another way to wrap an input is to dynamically insert a input element at component creation (instead of defining it in the template). This can be done for example in the `created` life cycle method:
 
 ```javascript
-Qute("counter", {
+Qute(CounterTemplate, {
 	...
 	created(el) {
 		var input = document.createElement('INPUT');
@@ -153,7 +153,7 @@ registerControl("counter");
 Then you can use the `q:model` directive to bind the control value to a reactive property of the container component:
 
 ```xml
-<counter q:model='counterValue' />
+<my-counter q:model='counterValue' />
 ```
 
 ## The Counter Custom Form Control
@@ -167,7 +167,7 @@ import '@qutejs/form';
 
 // ------------------------------------------ Templates
 
-<q:template name='counter'>
+<q:template name='CounterTemplate'>
 	<div style='display:inline-block'>
 		<input type='number' name={name} value={value} min={min} max={max} style='display:none' ?required={required} q:call='el => this.input = el'/>
 		<button @click='decr' ?disabled='!canDecrement'>-</button>
@@ -178,7 +178,7 @@ import '@qutejs/form';
 
 // ------------------------------------------ Javascript
 
-Qute('counter', {
+const MyCounter = Qute(CounterTemplate, {
 	init() {
 		this.input = null;
 		return {
@@ -225,7 +225,7 @@ Qute.Form.registerControl("counter");
 
 // ------------------------------------------ Testing
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<form q:validate @submit='handleSubmit'>
 		<p>
 		The counter was initialized using a value outside the legal range, so the form will not be validated (try submiting).
@@ -233,7 +233,7 @@ Qute.Form.registerControl("counter");
 		Change to a valid value to remove the validation error.
 		</p>
 
-		<counter style='display:inline-block' name='counter' q:model='counter' step='2' min='0' max='8' required />
+		<my-counter style='display:inline-block' name='counter' q:model='counter' step='2' min='0' max='8' required />
 
 		<span q:validation-message='counter' style='color:red' />
 
@@ -243,7 +243,7 @@ Qute.Form.registerControl("counter");
 	</form>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		return {
 			counter: -4

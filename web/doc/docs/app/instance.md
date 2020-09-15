@@ -14,13 +14,13 @@ To bind an application instance to a component tree you need to pass the instanc
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='my-root'>
+<q:template name='MyRootTemplate'>
 	<div>Hello World!</div>
 </q:template>
 
 var app = new Qute.App();
 // create the root component constructor using 'my-root' as a template
-var MyRoot = Qute('my-root');
+var MyRoot = Qute(MyRootTemplate);
 // mount the root component in the element which ID is 'app'
 new MyRoot(app).mount('app');
 ```
@@ -30,12 +30,12 @@ This example will simply render *Hello World!* in the page. No need for that to 
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='my-root'>
+<q:template name='MyRootTemplate'>
 	<div>Hello World!</div>
 </q:template>
 
 // create the root component constructor using 'my-root' as a template
-var MyRoot = Qute('my-root');
+var MyRoot = Qute(MyRootTemplate);
 // mount the root component in the element which ID is 'app'
 new MyRoot().mount('app');
 ```
@@ -183,7 +183,7 @@ var app = new Qute.App();
 // init app here
 // ...
 // define root component
-var Root = Qute('root');
+var Root = Qute(RootTemplate);
 // mount root component using the app instance
 app.view(Root).mount('app');
 ```
@@ -195,7 +195,7 @@ var app = new Qute.App();
 // init app here
 // ...
 // define root component
-var Root = Qute('root');
+var Root = Qute(RootTemplate);
 // mount root component using the app instance
 new Root(app).mount('app');
 ```

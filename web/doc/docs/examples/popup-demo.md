@@ -2,9 +2,9 @@
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import '@qutejs/popup';
+import qPopup from '@qutejs/popup';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
   <div>
     <b>Animation:</b> <select @change='changeAnimation'>
         <option value=''>None</option>
@@ -49,14 +49,14 @@ import '@qutejs/popup';
     <br/>
     <button class='popup-btn' @click='openPopup'>Open popup</button>
 
-    <popup position={position} animation={animation} q:channel='my-popup'>
+    <q:popup position={position} animation={animation} q:channel='my-popup'>
         <div class='my-popup'>
           <h3>Popup header</h3>
           <div>
             The popup content
           </div>
         </div>
-    </popup>
+    </q:popup>
   </div>
 </q:template>
 
@@ -80,7 +80,7 @@ import '@qutejs/popup';
 }
 </q:style>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
     init() {
 		return {
           position: 'bottom start',

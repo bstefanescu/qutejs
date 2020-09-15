@@ -2,11 +2,11 @@
 
 The spinner component provides a customizable spinner component that can be repalced by specific  loaders or progress indicators. The default implementation provides a circualr progress indicator similar to the one defined by the [material design](https://material.io/components/progress-indicators/#circular-progress-indicators) design guidance. The spinner is implemented using pure CSS, so it is working on all browsers including IE10.
 
-Usage: `<spinner [attributes] />`
+Usage: `<q:spinner [attributes] />`
 
 Spinners can be redefined using spinner plugins. You can register any typer of spinner: gif, font icon, css or svg based spinners. Then use it by specifying the spinner type.
 
-Example: `<spinner type='ellipsis'>`
+Example: `<q:spinner type='ellipsis'>`
 
 Each type of spinner can provide its own attributes. There are the attributes shared by all spinner implementations:
 
@@ -26,30 +26,30 @@ The default spinner implementation is also accepting the following attributes:
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import '@qutejs/spinner';
+import qSpinner from '@qutejs/spinner';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
     <div style='margin-top: 20px'>
-	    <spinner/> Loading ...
+	    <q:spinner/> Loading ...
 	</div>
 </q:template>
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 **Using a custom color and size:**
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import '@qutejs/spinner';
+import qSpinner from '@qutejs/spinner';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
     <div style='margin-top: 20px'>
-	    <spinner color='green' size='32px' width='4pxp'/>
+	    <q:spinner color='green' size='32px' width='4pxp'/>
 	</div>
 </q:template>
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 ## Ellipsis spinner
@@ -64,15 +64,15 @@ The ellipsis spinner is accepting the following attributes:
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import '@qutejs/spinner-ellipsis';
+import qSpinner from '@qutejs/spinner';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
     <div style='margin-top: 20px'>
-	    <spinner type='ellipsis' size='32px' center/>
+	    <q:spinner type='ellipsis' size='32px' center/>
 	</div>
 </q:template>
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 
@@ -89,15 +89,15 @@ The 2dots spinner is accepting the following attributes:
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import '@qutejs/spinner-2dots';
+import qSpinner from '@qutejs/spinner';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
     <div style='margin-top: 20px'>
-	    <spinner type='2dots' size='32px' center/>
+	    <q:spinner type='2dots' size='32px' center/>
 	</div>
 </q:template>
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 

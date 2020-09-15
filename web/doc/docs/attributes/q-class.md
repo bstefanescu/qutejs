@@ -78,20 +78,18 @@ Example:
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='test-class'>
+<q:template name='TestClass'>
 	<div><slot/></div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<test-class q:class='{active: selected}'>Hello!</test-class>
 </q:template>
 
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
     selected: true
 });
-
-Qute('test-class'); // remove this line to use test-class as a functional component
 ```
 
 ## Example: Conditionaly adding or removing a class
@@ -103,7 +101,7 @@ Here is a simple example on how to use the `q:class` object notation to conditio
 
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <ul class="nav nav-pills" @click='e => page = e.target.getAttribute("data-key")'>
   <li class="nav-item">
     <a class="nav-link" q:class='{active: page=="home"}' href="#" data-key='home'>Home</a>
@@ -117,7 +115,7 @@ import Qute from '@qutejs/runtime';
 </ul>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		return { page: 'home' }
 	}

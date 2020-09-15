@@ -23,13 +23,13 @@ When using `q:call` on a `ViewModel` or functional component tag the `q:call` fu
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<div>
 	<input type='text' name='name' q:call='el => this.inputEl = el'><button @click='onClick'>Click me!</button>
 	</div>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	onClick() {
 		window.alert('Input value is '+this.inputEl.value);
 	}
@@ -48,14 +48,14 @@ Let's do more, we can initialize the input if empty:
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<div>
 	<input type='text' name='name' q:call='onInputCreate' />
 	<button @click='onClick'>Click me!</button>
 	</div>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	onInputCreate(el) {
 		this.inputEl = el;
 		if (!el.value) el.value = 'Hello!';
@@ -78,7 +78,7 @@ import Qute from '@qutejs/runtime';
     <div q:call='handleFuncLoad'>I am a functional component</div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
     <functional />
 </q:template>
 
@@ -98,7 +98,7 @@ function handleFuncLoad(el) {
   this.$r.$push(ConnectionHandler);
 }
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 In this example, we are registering the connect / disconnect handlers using the current rendering context `$push` method.

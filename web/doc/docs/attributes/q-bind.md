@@ -8,7 +8,7 @@ See the **[Templates](#/templates)** section for more details.
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
   <ul>
   	<li style={'color:'+color}>Using jsx like notation</li>
   	<li :style="'color:'+color">Using ':' prefix</li>
@@ -16,7 +16,7 @@ import Qute from '@qutejs/runtime';
   </ul>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		this.color = 'green';
 	}

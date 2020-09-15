@@ -2,9 +2,9 @@
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import '@qutejs/modal';
+import qModal from '@qutejs/modal';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
   <div>
     <b>Animation:</b> <select @change='changeAnimation'>
         <option value=''>None</option>
@@ -19,18 +19,18 @@ import '@qutejs/modal';
     <br/>
     <button @click='openModal' style='padding:10px;margin:10px;'>Open modal</button>
 
-    <modal animation={animation} q:channel='my-modal'>
+    <q:modal animation={animation} q:channel='my-modal'>
         <div class='my-modal' sttyle='border: 1px solid gray'>
           <h3 style='padding: 10px;margin-top:0; border-bottom: 1px solid gray'>Modal header</h3>
           <div style='padding:10px'>
             The modal content
           </div>
         </div>
-    </modal>
+    </q:modal>
   </div>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
     init() {
     return {
           animation: null
