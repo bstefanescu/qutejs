@@ -12,7 +12,7 @@ To define **reactive properties** you need to implement the `ViewModel.init()` m
 **Example**
 
 ```javascript
-Qute('my-component', {
+Qute(MyComponentTemplate, {
 	init() {
 		return {
 			firstName: 'Foo',
@@ -43,7 +43,7 @@ Regular `ViewModel` properties will not trigger any DOM update when changed. Jus
 **Example**
 
 ```javascript
-Qute('my-component', {
+Qute(MyComponentTemplate, {
 	init() {
 		this.someProperty = 'Some regular property';
 	}
@@ -68,7 +68,7 @@ If an attribute [camel case](https://en.wikipedia.org/wiki/Camel_case) name matc
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='my-component'>
+<q:template name='MyComponentTemplate'>
 	<div>
 	<div>reactiveProp value: {{reactiveProp}}</div>
 	<for value='key in $attrs'>
@@ -77,7 +77,7 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<my-component reactive-prop='reactive prop value'
 		title='the title'
 		some-attribute='some value'
@@ -85,7 +85,7 @@ import Qute from '@qutejs/runtime';
 		name='the name' />
 </q:template>
 
-Qute('my-component', {
+const MyComponent = Qute(MyComponentTemplate, {
 	init() {
 		this.name = 'the name';
 		return {
@@ -95,7 +95,7 @@ Qute('my-component', {
 	}
 });
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 You can see how the kebab case attribute named `reactive-prop` was used to initialize the `reactiveProp` reactive property. You can also use `reactiveProp` as the name of the attribute, it works too, but you recommend using kebab case notation instead since HTML attributes are not case-sensitive, but property names are case-sensitive.

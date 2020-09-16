@@ -14,14 +14,14 @@ The watcher function is called in the context of the component instance (i.e. `t
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <div>
 	<button @click='counter1++'>Unlimited Counter: {{counter1}}</button>
 	<button @click='counter2++'>Limited Counter: {{counter2}}</button>
 </div>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		return {
 			counter1: 0,

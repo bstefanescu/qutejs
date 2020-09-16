@@ -1,11 +1,19 @@
 # Actions Group
 
-The actions group plugin is providing a custom attribute directive to easily transform `UL` items into a group of actions. A single item can be selected at one time.
+The actions group plugin is providing custom attribute directives to easily transform `UL` items into a group of actions. A single item can be selected at one time.
 
 The directives can be used to implement button groups in a toolbar or a tabs bar.
 
-These directive are not part of the qute runtime package. The directives are provided by the `@qutejs/group` plugin.
+These directives are not part of the default qute runtime package. The group directives are provided by the `@qutejs/group` plugin.
 
+Before using the group directives you need to install the plugin using `Qute.install()`. Example:
+
+```javascript
+import Qute from '@qutejs/runtime';
+import groupPlugin from '@qutejs/group';
+
+Qute.install(groupPlugin);
+```
 
 ## The `model` attribute
 
@@ -24,7 +32,7 @@ In order to notify the component about group value changes you need to register 
 When using **reactive property names**, the relation is **bidirectional**: the group value is updated when the component property changes and the component is updated when the group value changes because of an user action.
 
 ## Selecting a `LI` element.
-When clicking on a `LI` (or on a child button or link) which is not the currentl;y selected item (or a child button or link) is clicked it will
+
 When a `LI` element is selected it will get the `active` class and the group will trigger a custom `change` event having the selected value stored in the event `detail` property.
 
 ## The item `value` attribute
@@ -37,7 +45,7 @@ Let's implement a tabs bar using the **actions group** custom attributes.
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import '@qutejs/group';
+import groupPlugin from '@qutejs/group';
 
 <q:style>
 ul.group {
@@ -57,31 +65,56 @@ ul.group a, ul.group a:hover, ul.group a:active {
 }
 </q:style>
 
-<q:template name='placeholder'><div>Click on a link</div></q:template>
-<q:template name='view1'><div>View 1 content</div></q:template>
-<q:template name='view2'><div>View 2 content</div></q:template>
-<q:template name='view3'><div>View 3 content</div></q:template>
-<q:template name='root'>
+<q:template name='ViewPlaceholder'>
+    <div>Click on a link</div>
+</q:template>
+<q:template name='ViewOne'>
+    <div>View 1 content</div>
+</q:template>
+<q:template name='ViewTwo'>
+    <div>View 2 content</div>
+</q:template>
+<q:template name='ViewThree'>
+    <div>View 3 content</div>
+</q:template>
+<q:template name='RootTemplate'>
 	<div>
-		<ul class='group' q:model='currentView'>
+		<ul class='group' q:model='currentViewName'>
 			<li q:value='view1'><a href='#'>View 1</a></li>
 			<li q:value='view2'><a href='#'>View 2</a></li>
 			<li q:value='view3'><a href='#'>View 3</a></li>
 		</ul>
-		<view is='currentView'></view>
+		<view is={currentView}></view>
 		<hr>
-		<button @click="e => currentView = 'placeholder'">Reset</button>
+		<button @click="removeCurrentView">Reset</button>
 	</div>
 </q:template>
 
-export default Qute('root', {
+// register the group directive
+Qute.install(groupPlugin);
+
+export default Qute(RootTemplate, {
 	init() {
+        this.views = {
+            placeholder: ViewPlaceholder,
+            view1: ViewOne,
+            view2: ViewTwo,
+            view3: ViewThree
+        }
 		return {
-			currentView: 'placeholder'
+			currentViewName: 'placeholder'
 		}
-	}
+	},
+    removeCurrentView() {
+        this.currentViewName = 'placeholder';
+    },
+    get currentView() {
+        return this.views[this.currentViewName];
+    }
 });
 ```
+
+**Note** that we installed the group directive using `Qute.install(groupDirective)`
 
 ## Example: Using an expression as value
 
@@ -89,7 +122,7 @@ We will rewrite the previous example by using an expression binding and an expli
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import '@qutejs/group';
+import groupPlugin from '@qutejs/group';
 
 <q:style>
 ul.group {
@@ -109,34 +142,57 @@ ul.group a, ul.group a:hover, ul.group a:active {
 }
 </q:style>
 
-<q:template name='placeholder'><div>Click on a link</div></q:template>
-<q:template name='view1'><div>View 1 content</div></q:template>
-<q:template name='view2'><div>View 2 content</div></q:template>
-<q:template name='view3'><div>View 3 content</div></q:template>
-<q:template name='root'>
+<q:template name='ViewPlaceholder'>
+    <div>Click on a link</div>
+</q:template>
+<q:template name='ViewOne'>
+    <div>View 1 content</div>
+</q:template>
+<q:template name='ViewTwo'>
+    <div>View 2 content</div>
+</q:template>
+<q:template name='ViewThree'>
+    <div>View 3 content</div>
+</q:template>
+<q:template name='RootTemplate'>
 	<div>
-		<ul class='group' q:model={currentView} @change='e => currentView = e.detail'>
+		<ul class='group' q:model={currentViewName} @change='e => currentViewName = e.detail'>
 			<li q:value='view1'><a href='#'>View 1</a></li>
 			<li q:value='view2'><a href='#'>View 2</a></li>
 			<li q:value='view3'><a href='#'>View 3</a></li>
 		</ul>
 		<view is='currentView'></view>
 		<hr>
-		<button @click="e => currentView = 'placeholder'">Reset</button>
+		<button @click="removeCurrentView">Reset</button>
 	</div>
 </q:template>
 
-export default Qute('root', {
+// register the group directive
+Qute.install(groupPlugin);
+
+export default Qute(RootTemplate, {
 	init() {
+        this.views = {
+            placeholder: ViewPlaceholder,
+            view1: ViewOne,
+            view2: ViewTwo,
+            view3: ViewThree
+        }
 		return {
-			currentView: 'placeholder'
+			currentViewName: 'placeholder'
 		}
-	}
+	},
+    removeCurrentView() {
+        this.currentViewName = 'placeholder';
+    },
+    get currentView() {
+        return this.views[this.currentViewName];
+    }
 });
 ```
 
 **Note:** Only one line was changed to achieve the same thing using an expression binding and an explicit change listener:
 
 ```xml
-<ul class='group' q:model={currentView} @change='e => currentView = e.detail'>
+<ul class='group' q:model={currentViewName} @change='e => currentViewName = e.detail'>
 ```

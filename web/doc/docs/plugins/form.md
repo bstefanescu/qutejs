@@ -2,7 +2,16 @@
 
 To ease working with HTML `forms`, Qute is providing several **[custom attribute directives](#/attributes/q)**.
 
-These directive are not part of the default qute runtime package. The form directives are provided by the `@qutejs/form` plugin.
+These directives are not part of the default qute runtime package. The form directives are provided by the `@qutejs/form` plugin.
+
+Before using the form directives you need to install the plugin using `Qute.install()`. Example:
+
+```javascript
+import Qute from '@qutejs/runtime';
+import formPlugin from '@qutejs/form';
+
+Qute.install(formPlugin);
+```
 
 ## The `model` attribute
 
@@ -34,14 +43,14 @@ and
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import '@qutejs/form';
+import formPlugin from '@qutejs/form';
 
 <q:style>
 div {
 	padding: 10px
 }
 </q:style>
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<form @submit='handleSubmit'>
 		<div>
 		<label>Name:</label> <input type='text' placeholder='Type something' name='name' q:model='name' />
@@ -67,7 +76,10 @@ div {
 	</form>
 </q:template>
 
-export default Qute('root', {
+// register form directives
+Qute.install(formPlugin);
+
+export default Qute(RootTemplate, {
 	init() {
 		return {
 			name: null,
@@ -215,7 +227,7 @@ Here is a complete example on form validation
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import '@qutejs/form';
+import formPlugin from '@qutejs/form';
 
 <q:style>
 .row {
@@ -240,7 +252,7 @@ button {
 	font-weight: 500;
 }
 </q:style>
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<form q:validate={config} @submit='handleSubmit'>
 		<div class='row'>
 		<label>Username:</label> <input type='text' q:model='user' name='username' pattern='[A-Za-z0-9_]+' required/>
@@ -263,7 +275,11 @@ button {
 		</div>
 	</form>
 </q:template>
-export default Qute('root', {
+
+// register form directives
+Qute.install(formPlugin);
+
+export default Qute(RootTemplate, {
 	init() {
 		this.config = {
 			messages: {

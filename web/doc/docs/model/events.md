@@ -26,11 +26,11 @@ You can register a DOM event listener directly in the template by using a specia
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
   <button @click='handleClick'>Click me</button>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	handleClick(event, target) {
 		console.log('Handling event: ', this, event);
 	}
@@ -42,11 +42,11 @@ You can also use simple expressions instead of passing a listener method name:
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
   <button @click='console.log("Handling event: ", this, $1)'>Click me</button>
 </q:template>
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 In that case the event object is accessible as a variable named `$1`.
@@ -56,11 +56,11 @@ An alternate way to write inline expressions is to use an arrow functions:
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
   <button @click='event => console.log("Handling event: ", this, event)'>Click me</button>
 </q:template>
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 
@@ -74,11 +74,11 @@ You can declare a listener when defining the component **ViewModel** by using th
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
   <button>Click me</button>
 </q:template>
 
-export default Qute('root').on('click', function(event) {
+export default Qute(RootTemplate).on('click', function(event) {
 	console.log("Handling event: ", this, event);
 });
 ```
@@ -91,14 +91,14 @@ The `on` method used above can be chained to easily register multiple listeners:
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 <div>
   <input type='text' name='text' value={text} />
   <button>Click me</button>
 </div>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	init() {
 		return { text: "some text" }
 	}
@@ -121,11 +121,11 @@ When using this registration method it is recommended to do the registration whe
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
   <button>Click me</button>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	logClicks: true,
 	connected: function() {
 		if (this.logClicks) this.$on('click', function(event) {
@@ -165,22 +165,22 @@ Emitting an event from a `ViewModel` instance is firing the event at the compone
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
-<q:template name='my-button'>
+<q:template name='MyButtonTemplate'>
 	<button @click='handleClick'><slot/></button>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<my-button @action='performAction'>Click me!</my-button>
 </q:template>
 
-Qute('my-button', {
+const MyButton = Qute(MyButtonTemplate, {
 	handleClick(event) {
 		this.emitAsync('action');
 		return false;
 	}
 });
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	performAction(event) {
 		window.alert('The button was clicked');
 	}
@@ -195,15 +195,15 @@ Functional components are also exposing `emit` and `emitAsync`. In that case the
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
-<q:template name='my-button'>
+<q:template name='MyButton'>
 	<button @click='emitAsync("action")'><slot/></button>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<my-button @action='performAction'>Click me!</my-button>
 </q:template>
 
-export default Qute('root', {
+export default Qute(RootTemplate, {
 	performAction(event) {
 		window.alert('The button was clicked');
 	}
@@ -232,18 +232,18 @@ You can also use the **[q:async-emit](#/templates/q-async-emit)** directive to e
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
-<q:template name='my-action'>
+<q:template name='MyAction'>
 	<a href='#' q:emit-action-onclick='$attrs.id'><slot/></a>
 </q:template>
 
-<q:template name='root'>
+<q:template name='RootTemplate'>
 	<div>
 	<my-action @action='e=>window.alert("Action: "+e.detail)' id='action-id'>Click Me</my-action>
 	</div>
 </q:template>
 
 
-export default Qute('root');
+export default Qute(RootTemplate);
 ```
 
 

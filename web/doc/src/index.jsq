@@ -155,7 +155,7 @@ var TOC = [
 	]},
 	{ title: 'Plugins', expand: true, items: [
 		{ title: 'Routing', href: 'plugins/routing' },
-		{ title: 'Form', href: 'plugins/form' },
+		{ title: 'Forms', href: 'plugins/form' },
 		{ title: 'Actions Group', href: 'plugins/group' },
 		{ title: 'Internationalization', href: 'plugins/i18n' },
 	]},

@@ -5,7 +5,7 @@ You can also use the ES6 class syntax to define components. Let's look at an exa
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='root'>
+<q:template name='MyTemplate'>
 <div>{{message}}</div>
 </q:template>
 
@@ -24,7 +24,7 @@ class MyComponent extends Qute.ViewModel {
 }
 
 // register the components
-export default Qute('root', MyComponent);
+export default Qute(MyTemplate, MyComponent);
 ```
 
 A component class must extends the Qute.ViewModel. Apart this the class is identical to a component definition object - it may define lifecycle listeners, methods, reactive properties etc.
@@ -58,7 +58,7 @@ class MyComponent extends Qute.ViewModel {
 }
 
 // register the component
-export default Qute('root', MyComponent);
+export default Qute(MyComponent);
 ```
 
-**Note** that you still need to call `Qute()` to register the component.
+**Note** that you still need to call `Qute(ClassObject)` even if you define the `render` method. This is because the Qute() call is also setting an internal property on the prototype named `__VM__` that points to the ViewModel constructor.

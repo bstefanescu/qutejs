@@ -25,7 +25,7 @@ var app = new Qute.App();
 app.router = router;
 
 // define the root component
-var Root = Qute('app-root');
+var Root = Qute(RootTemplate);
 // create the a root component and mount it
 new Root(app).mount('app');
 ```
@@ -47,7 +47,7 @@ app.subscribe('route', function(key) {
 });
 
 // mount the app using the Root component
-var Root = Qute('app-root');
+var Root = Qute(RootTemplate);
 new Root(app).mount('app');
 ```
 
@@ -60,24 +60,29 @@ Here is an example that change the content of a view from a **Qute Application**
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='app-root'>
+<q:template name='RootTemplate'>
     <div>
         <div>
             <button @click="this.post('route', 'page1')">Page 1</button>
             <button @click="this.post('route', 'page2')">Page 2</button>
         </div>
         <hr />
-        <view is='currentPage' />
+        <view is={currentPage} />
     </div>
 </q:template>
 
-<q:template name='page1'>
+<q:template name='PageOne'>
     <div>The Page 1 content</div>
 </q:template>
 
-<q:template name='page2'>
+<q:template name='PageTwo'>
     <div>The Page 2 content</div>
 </q:template>
+
+var pages = {
+    page1: PageOne,
+    page2: PageTwo
+}
 
 // create the Qute application
 var app = new Qute.App();
@@ -88,7 +93,7 @@ function Router(app) {
   this.route = function(key) {
     console.log('Route to', key);
     // here -> manage browser history state
-    this.currentPage = key;
+    this.currentPage = pages[key];
   }
 }
 var router = new Router(app);
@@ -98,7 +103,7 @@ app.subscribe('route', function(key) {
   router.route(key);
 });
 
-var Root = Qute('app-root', {
+var Root = Qute(RootTemplate, {
   init(app) {
     return {
       currentPage: app.prop('Pages/current') // bind to app property
@@ -135,7 +140,7 @@ var router = new Router({
 // create the root component
 var app = new Qute.App();
 // initialize the app here
-var Root = Qute('app-root');
+var Root = Qute(RootTemplate);
 router.install(app).start();
 // mount the application
 new Root(app).mount('app');
@@ -145,7 +150,7 @@ If you are not explicitly instantiating a **Qute application** you can also inst
 
 ```javascript
 var router = new Router({ ... });
-var Root = Qute('app-root');
+var Root = Qute(RootTemplate);
 var root = new Root().mount('app');
 router.install(root).start();
 ```
