@@ -1,11 +1,11 @@
 {
-  "name": "@qutejs/i18n",
+  "name": "@qutejs/importer",
   "version": "1.0.0-rc.12",
-  "description": "Qute internationalization plugin based on polyglot",
+  "description": "Qute Importer provides lazy dynamic javascript dependencies import and support for lazy components",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
-  "browser": "lib/qute-i18n.js",
-  "unpkg": "lib/qute-i18n.min.js",
+  "browser": "lib/qute-importer.js",
+  "unpkg": "lib/qute-importer.min.js",
   "files": [
     "lib"
   ],
@@ -15,12 +15,13 @@
   "author": "Bogdan Stefanescu <bogdan@quandora.com>",
   "license": "MIT",
   "keywords": [
-    "i18n",
-    "polyglot",
-    "internationalization",
+    "importer",
+    "dynamic",
+    "import",
+    "lazy",
+    "component",
     "qutejs",
-    "qute",
-    "plugin"
+    "qute"
   ],
   "homepage": "https://qutejs.org",
   "repository": {
@@ -28,16 +29,12 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/window": "1.0.0-rc.12",
-    "node-polyglot": "^2.4.0"
+    "@qutejs/window": "1.0.0-rc.12"
   },
   "devDependencies": {
     "@qutejs/rollup-plugin-qute": "1.0.0-rc.12"
   },
   "build": {
-    "config": "component",
-    "external": [
-      "@qutejs/window"
-    ]
+    "config": "component"
   }
 }

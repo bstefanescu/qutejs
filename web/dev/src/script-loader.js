@@ -1,4 +1,4 @@
-import Qute from '@qutejs/runtime';
+import Importer from '@qutejs/importer';
 
 var IGNORE_PACKAGES = {
     "@qutejs/runtime": true,
@@ -14,7 +14,7 @@ export function loadScripts(urls) {
         return !IGNORE_PACKAGES[url];
     });
     return new Promise(function(resolve, reject) {
-        Qute.importAll(urls, resolve, reject);
+        Importer.importAll(urls, resolve, reject);
     });
 }
 
@@ -27,6 +27,6 @@ export function serialLoadScripts(urls) {
         return !IGNORE_PACKAGES[url];
     });
     return new Promise(function(resolve, reject) {
-        Qute.import(urls, resolve, reject);
+        Importer.serialImport(urls, resolve, reject);
     });
 }

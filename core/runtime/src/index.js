@@ -9,7 +9,6 @@ import ViewModel from './vm.js';
 import App from './app.js';
 import { registerDirective } from './q-attr.js';
 import {StringProp,NumberProp,BooleanProp} from './prop-types';
-import { serialImport, importAll, setImporterOptions } from './importer.js';
 
 
 /**
@@ -113,11 +112,7 @@ Qute.defineMethod = function(name, fn) {
     Rendering.FunComp.prototype[name] = fn;
 }
 
-// deprectaed method -> t=TODO remove the register method. Use registerTemplate
 Qute.registerDirective = registerDirective;
-Qute.importAll = importAll;
-Qute.import = serialImport;
-Qute.setImporterOptions = setImporterOptions;
 
 Qute.install = function(plugin) { return plugin.install(Qute); }
 

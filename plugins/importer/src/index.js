@@ -1,5 +1,4 @@
 import window, { document } from '@qutejs/window';
-import ERR from './error.js';
 
 /**
  * Imports remote scripts.
@@ -26,7 +25,7 @@ function resolveScript(nameOrUrl) {
     }
 }
 
-export function insertScript(url, exportName, onload, onerror) {
+function insertScript(url, exportName, onload, onerror) {
     if (url in insertedUrls) {
         onload && onload(insertedUrls[url]);
     } else {
@@ -49,7 +48,7 @@ export function insertScript(url, exportName, onload, onerror) {
     }
 }
 
-export function importScript(script, exportName, onload, onerror) {
+function importScript(script, exportName, onload, onerror) {
     var url = resolveScript(script);
     if (url) {
         insertScript(url, exportName, onload, onerror);
@@ -106,7 +105,7 @@ function _importAll(imports, onload, onerror) {
     }
 }
 
-export function serialImport(imports, onload, onerror) {
+function serialImport(imports, onload, onerror) {
     if (Array.isArray(imports)) {
         _importNext(imports, 0, {}, onload, onerror);
     } else {
@@ -114,7 +113,7 @@ export function serialImport(imports, onload, onerror) {
     }
 }
 
-export function importAll(imports, onload, onerror) {
+function importAll(imports, onload, onerror) {
     if (Array.isArray(imports)) {
         _importAll(imports, onload, onerror);
     } else {
@@ -122,7 +121,7 @@ export function importAll(imports, onload, onerror) {
     }
 }
 
-export function setImporterOptions(opts) {
+function setImporterOptions(opts) {
     customResolve = opts.resolve || null;
     renderError = opts.renderError || null;
     renderPending = opts.renderPending || null;
@@ -140,7 +139,7 @@ function _deleteNodes(from, to) {
     }
 }
 
-export function LazyComponent(location, exportName) {
+function LazyComponent(location, exportName) {
     // return a render function that will inject the component when loaded
     return function renderLazyComponent(r, xattrs, slots) {
         var frag = document.createDocumentFragment();
@@ -159,7 +158,7 @@ export function LazyComponent(location, exportName) {
         importScript(location,
             exportName,
             function(result) {
-                if(!result) ERR("Could not resolve lazy component at '%s'", location);
+                if(!result) throw new Error("Could not resolve lazy component at '"+ location +"'");
                 var node = r._c(result, xattrs, slots);
                 _deleteNodes(start, end);
                 end.parentNode.insertBefore(node, end);
@@ -176,3 +175,11 @@ export function LazyComponent(location, exportName) {
         return frag;
     }
 }
+
+const Importer = {
+    insertScript, importScript,
+    serialImport, importAll,
+    setImporterOptions,
+    LazyComponent
+}
+export default Importer;

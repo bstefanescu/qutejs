@@ -34,7 +34,6 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/runtime": "1.0.0-rc.12",
     "@qutejs/window": "1.0.0-rc.12"
   },
   "build": {

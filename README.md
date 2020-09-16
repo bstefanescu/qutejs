@@ -83,7 +83,11 @@ npm start
 	* [@qutejs/runtime](core/runtime)
 	* [@qutejs/dev](core/dev)
 2. Plugins
+    * [@qutejs/importer](plugins/importer)
 	* [@qutejs/router](plugins/router)
+    * [@qutejs/i18n](plugins/i18n)
+    * [@qutejs/form](plugins/form)
+    * [@qutejs/group](plugins/group)
 2. Tools
 	* [@qutejs/create](tools/create)
 	* [@qutejs/register](tools/register)
