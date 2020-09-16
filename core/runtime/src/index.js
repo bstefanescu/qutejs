@@ -119,6 +119,8 @@ Qute.importAll = importAll;
 Qute.import = serialImport;
 Qute.setImporterOptions = setImporterOptions;
 
+Qute.install = function(plugin) { return plugin.install(Qute); }
+
 Qute.runAfter = function(cb) { UpdateQueue.runAfter(cb); }
 Qute.closest = closestVM;
 Qute.closestListItem = closestListItem;
