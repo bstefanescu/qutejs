@@ -1,19 +1,20 @@
-import Qute from '@qutejs/runtime';
 import Router from './router.js';
 
-function QuteRouter(quteApp, bindings) {
+function QuteRouter(bindings) {
 	Router.call(this, bindings);
-	if (quteApp.$app) quteApp = quteApp.$app; // accept Qute components too.
-	this.app = quteApp;
+}
+
+var QuteRouterProto = Object.create(Router.prototype);
+QuteRouterProto.install = function(quteApp) {
+    if (quteApp.$app) quteApp = quteApp.$app; // accept Qute components too.
+    this.app = quteApp;
 	quteApp.router = this;
 	quteApp.subscribe('route', function(msg, data) {
 		// data can be 'true' to replace the current entry in history
 		quteApp.router.navigate(msg, data);
 	});
-
+    return this;
 }
-
-var QuteRouterProto = Object.create(Router.prototype);
 QuteRouterProto.handlerFromString = function(path, to) {
 	var i = path.indexOf(':');
 	if (i < 0) return null;
@@ -42,7 +43,5 @@ QuteRouterProto.handlerFromString = function(path, to) {
 };
 
 QuteRouter.prototype = QuteRouterProto;
-
-Qute.Router = QuteRouter;
 
 export default QuteRouter;

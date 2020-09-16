@@ -1,6 +1,6 @@
 import window from '@qutejs/window';
-import QuteForms from './index.js';
+import QuteForm from './index.js';
 
-window.QuteForms = QuteForms;
-window.__QUTE_IMPORT__ = QuteForms; // support playground imports
+window.QuteForm = QuteForm;
+window.__QUTE_IMPORT__ = QuteForm; // support playground imports
 

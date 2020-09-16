@@ -236,12 +236,12 @@ var App = new Qute(AppTemplate, {
 		var self = this;
 		this.docPages = {};
 		this.toc = TOC;
-		this.router = new Router(app, {
+		this.router = new Router({
 			'*': function(path) {
 				self.updateDocPage(path);
 			},
 			'/': 'introduction'
-		}).start();
+		}).install(app).start();
 
 		this.router.onChange(function(path) {
 			self.postAsync('toc', 'select', path);

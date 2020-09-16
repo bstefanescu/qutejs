@@ -1,4 +1,3 @@
-import Qute from '@qutejs/runtime';
 import Polyglot from 'node-polyglot';
 
 function fetchJSON(url, done) {
@@ -45,13 +44,15 @@ function QuteIntl(config) {
     this.polyglot = new Polyglot(config);
     var translate = this.polyglot.t.bind(this.polyglot);
     this.t = translate;
-
-    // install translation methods on ViewModel and functional component prototypes
-    Qute.defineMethod('t', translate);
-    Qute.i18n = this;
 }
 
 QuteIntl.prototype = {
+    install(Qute) {
+        // install translation methods on ViewModel and functional component prototypes
+        Qute.defineMethod('t', this.t);
+        Qute.i18n = this;
+        return this;
+    },
     load(lang) {
         if (!lang) lang = 'guess';
         if (this.lang !== lang) {
@@ -87,8 +88,6 @@ QuteIntl.prototype = {
         }
     }
 }
-
-Qute.Intl = QuteIntl;
 
 export default QuteIntl;
 

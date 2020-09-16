@@ -137,13 +137,14 @@ var router = new Router({
   "some/<view>": "post:main-content/${view}"
 });
 
-// create the root component
-var app = new Qute.App();
 // initialize the app here
+var app = new Qute.App();
+// create the root component
 var Root = Qute(RootTemplate);
-router.install(app).start();
 // mount the application
 new Root(app).mount('app');
+
+router.install(app).start();
 ```
 
 If you are not explicitly instantiating a **Qute application** you can also install the router directly on the root component (this will install the router on the implicit application instance created by the root component):
@@ -269,13 +270,15 @@ Matching 'some/search' will trigger the following operation:
 
 ## Router Methods
 
-### `Qute.Router(componentOrApp, mapping)`
+### `Qute.Router(mapping)`
 
-The router constructor.
+The router constructor. The mapping argument is optional and contains route definitions.
+
+### `install(coponentOrApp)`
 
 Install the router in the given `Qute Application`. You can pass as argument either a [Qute Application instance](#/app/instance), either a component (in which case the application bound to the component will be used).
 
-The mapping argument is optional and contains route definitions.
+Returns back the router instance.
 
 ### `map(bindings)`
 
@@ -299,6 +302,8 @@ The default is to use the location `hash`. To use `pushState` use these options:
 ```
 
 and specify the right root for you application.
+
+Returns back the router instance.
 
 ### `stop()`
 
