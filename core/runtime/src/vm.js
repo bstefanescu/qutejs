@@ -1,6 +1,7 @@
 import window, {document} from '@qutejs/window';
+import {kebabToCamel} from '@qutejs/commons';
 import ERR from './error.js';
-import { stopEvent, chainFnAfter, kebabToCamel, filterKeys } from './utils.js';
+import { stopEvent, chainFnAfter, filterKeys } from './utils.js';
 
 import Rendering from './rendering.js';
 import UpdateQueue from './update.js';

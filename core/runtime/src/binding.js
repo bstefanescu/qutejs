@@ -1,5 +1,6 @@
 import window from '@qutejs/window';
-import {stopEvent, filterKeys, closestComp} from './utils.js';
+import { closestComp } from '@qutejs/commons';
+import { stopEvent } from './utils.js';
 
 function addClassMap(cl, value) {
 	var keys = Object.keys(value);

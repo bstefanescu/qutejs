@@ -1,7 +1,6 @@
 import window from '@qutejs/window';
-
+import { chainFnAfter} from './utils.js';
 import ERR from './error.js';
-import { chainFnAfter, closestVM, closestListItem } from './utils.js';
 
 import UpdateQueue from './update.js';
 import Rendering from './rendering.js';
@@ -95,10 +94,6 @@ function Qute(renderFn, def) {
 }
 
 Qute.ViewModel = ViewModel;
-Qute.isVM = function(obj) {
-	return obj instanceof ViewModel;
-}
-
 Qute.App = App;
 Qute.UpdateQueue = UpdateQueue;
 Qute.Rendering = Rendering;
@@ -117,14 +112,12 @@ Qute.registerDirective = registerDirective;
 Qute.install = function(plugin) { return plugin.install(Qute); }
 
 Qute.runAfter = function(cb) { UpdateQueue.runAfter(cb); }
-Qute.closest = closestVM;
-Qute.closestListItem = closestListItem;
-Qute.ERR = ERR;
 
 // prop types
 Qute.string = function(value) { return new StringProp(value) }
 Qute.number = function(value) { return new NumberProp(value) }
 Qute.boolean = function(value) { return new BooleanProp(value) }
+
 
 // store Qute instance in window - this is important so that imported components use the same Qute instance
 window.Qute = Qute;

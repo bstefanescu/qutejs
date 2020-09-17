@@ -1,6 +1,4 @@
 
-import { kebabToCamel } from '@qutejs/commons';
-
 function stopEvent(e) {
 	e.preventDefault();
 	e.stopPropagation();
@@ -13,27 +11,6 @@ function chainFnAfter(fn, prevFn) {
 	} : fn;
 }
 
-function closestVM(el) {
-	while (el && !(el.__qute__ && el.__qute__.__VM__)) {
-		el = el.parentNode;
-	}
-	return el && el.__qute__;
-}
-
-function closestComp(el) {
-	while (el && !el.__qute__) {
-		el = el.parentNode;
-	}
-	return el && el.__qute__;
-}
-
-// find the closest list item rendering context
-function closestListItem(el) {
-	while (el && !el.__qute_ctx__) {
-		el = el.parentNode;
-	}
-	return el && el.__qute_ctx__;
-}
 
 // filter is a an array whoes first item is true or false. See compiler q:attrs encoding
 function filterKeys(obj, filter) {
@@ -48,4 +25,4 @@ function filterKeys(obj, filter) {
 	}
 }
 
-export { stopEvent, chainFnAfter, closestVM, closestComp, closestListItem, filterKeys, kebabToCamel };
+export { stopEvent, chainFnAfter, filterKeys };

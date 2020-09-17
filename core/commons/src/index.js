@@ -48,5 +48,27 @@ function kebabToCompName(name) {
     }
 }
 
-export { capitalizeFirst, kebabToCamel, camelToKebab, kebabToCompName };
+function closestVM(el) {
+	while (el && !(el.__qute__ && el.__qute__.__VM__)) {
+		el = el.parentNode;
+	}
+	return el && el.__qute__;
+}
+
+function closestComp(el) {
+	while (el && !el.__qute__) {
+		el = el.parentNode;
+	}
+	return el && el.__qute__;
+}
+
+// find the closest list item rendering context
+function closestListItem(el) {
+	while (el && !el.__qute_ctx__) {
+		el = el.parentNode;
+	}
+	return el && el.__qute_ctx__;
+}
+
+export { capitalizeFirst, kebabToCamel, camelToKebab, kebabToCompName, closestVM, closestComp, closestListItem };
 
