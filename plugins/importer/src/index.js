@@ -176,10 +176,9 @@ function LazyComponent(location, exportName) {
     }
 }
 
-const Importer = {
+export {
     insertScript, importScript,
     serialImport, importAll,
     setImporterOptions,
     LazyComponent
 }
-export default Importer;

@@ -11,7 +11,7 @@ import loadES6Transpiler from './buble-loader.js';
 
 // ----------- Qute runtime
 
-import window, {document} from '@qutejs/window';
+import {document} from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import injectStyle from '@qutejs/runtime/lib/inject-style.js';
 import Compiler from '@qutejs/compiler';

@@ -1,4 +1,4 @@
-import Qute from '@qutejs/runtime';
+import { ViewModel } from '@qutejs/runtime';
 
 // impl a q:model that can be used by components implementing custom form controls
 // the requirement for the component using this directive is to provide
@@ -7,7 +7,7 @@ import Qute from '@qutejs/runtime';
 export default function controlModelDirective(xattrs, valueExpr, compOrEl) {
     var rendering = this, value, boundProp = (typeof valueExpr === 'string') ? valueExpr : null;
 
-    if ( !(Qute.isVM(compOrEl) && ("value" in compOrEl)) ) {
+    if ( !(compOrEl instanceof ViewModel && ("value" in compOrEl)) ) {
         throw new Error('Only ViewModel components with a "value" property can use q:model');
     }
 

@@ -1,4 +1,4 @@
-import Importer from '@qutejs/importer';
+import {importAll, serialImport} from '@qutejs/importer';
 
 var IGNORE_PACKAGES = {
     "@qutejs/runtime": true,
@@ -14,7 +14,7 @@ export function loadScripts(urls) {
         return !IGNORE_PACKAGES[url];
     });
     return new Promise(function(resolve, reject) {
-        Importer.importAll(urls, resolve, reject);
+        importAll(urls, resolve, reject);
     });
 }
 
@@ -27,6 +27,6 @@ export function serialLoadScripts(urls) {
         return !IGNORE_PACKAGES[url];
     });
     return new Promise(function(resolve, reject) {
-        Importer.serialImport(urls, resolve, reject);
+        serialImport(urls, resolve, reject);
     });
 }

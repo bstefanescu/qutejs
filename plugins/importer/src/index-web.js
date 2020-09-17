@@ -1,5 +1,5 @@
 import window from '@qutejs/window';
-import Importer from './index.js';
+import * as Importer from './index.js';
 
 window.QuteImporter = Importer;
 
