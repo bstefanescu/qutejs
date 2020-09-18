@@ -4,6 +4,7 @@ var IGNORE_PACKAGES = {
     "@qutejs/runtime": true,
     "@qutejs/window": true,
     "@qutejs/dev": true,
+    "@qutejs/importer": true,
 }
 
 export function loadScripts(urls) {

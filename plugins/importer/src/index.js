@@ -10,6 +10,25 @@ var customResolve = null;
 var renderError = null;
 var renderPending = null;
 
+function resolvePath(base, path) {
+    base = base.substring(1); // remove the leading /
+    const pathParts = path.split('/');
+    const baseParts = base ? base.split('/') : [];
+    baseParts.pop(); // remove the last segment
+    for (var i=0,l=pathParts.length; i<l; i++) {
+        var part = pathParts[i];
+        if (!part || part === '.') {
+            continue;
+        } else if (part === '..') {
+            if (baseParts.length === 0) throw new Error('Could not resolve path: "'+ path+'" against "'+ base+'"');
+            baseParts.pop();
+        } else {
+            baseParts.push(part);
+        }
+    }
+    return '/'+baseParts.join('/');
+}
+
 // default resolver
 function resolveScript(nameOrUrl) {
     if (customResolve) {
@@ -18,10 +37,18 @@ function resolveScript(nameOrUrl) {
             return r;
         }
     }
+    if (nameOrUrl.indexOf('://') > -1) return nameOrUrl;
+
     if (nameOrUrl.charAt(0) === '@' || nameOrUrl.indexOf('/') === -1) {
         return 'https://unpkg.com/'+nameOrUrl;
     } else {
-        return nameOrUrl;
+        const location = window.location;
+        // resolve relative to the current window location if any
+        if (nameOrUrl.charAt(0) === '/') {
+            return location.protocol+'//'+location.host+nameOrUrl
+        } else {
+            return resolvePath(location.pathname || '/', nameOrUrl)
+        }
     }
 }
 
@@ -73,17 +100,18 @@ function _importNext(imports, index, result, onload, onerror) {
 }
 
 function _importAll(imports, onload, onerror) {
-    var cnt = imports.length, errors = [];
+    var cnt = imports.length, errors = [], result = {};
     for (var i=0,l=imports.length; i<l; i++) {
         var url = resolveScript(imports[i]);
         if (url) {
             insertScript(url,
                 null,
-                function() {
+                function(exportVar) {
+                    result[script] = exportVar;
                     cnt--;
                     if (!cnt) {
                         cnt--;
-                        onload && onload(null, imports);
+                        onload && onload(result);
                     }
                 },
                 function(url) {
@@ -170,6 +198,7 @@ function LazyComponent(location, exportName) {
                     var el = renderError(r, error);
                     el && end.parentNode.insertBefore(el, end);
                 }
+                throw new Error('Failed to load lazy component from "'+location+'"');
             }
         );
         return frag;
@@ -180,5 +209,7 @@ export {
     insertScript, importScript,
     serialImport, importAll,
     setImporterOptions,
-    LazyComponent
+    LazyComponent, Bla
 }
+
+

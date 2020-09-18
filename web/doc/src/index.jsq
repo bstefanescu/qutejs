@@ -134,6 +134,7 @@ var TOC = [
 		{ title: 'nested', href: 'directives/nested' },
 		{ title: 'tag', href: 'directives/tag' },
 		{ title: 'view', href: 'directives/view' },
+        { title: 'self', href: 'directives/self ' },
 
 		{ title: 'q:class', href: 'attributes/q-class' },
 		{ title: 'q:style', href: 'attributes/q-style' },
@@ -154,6 +155,7 @@ var TOC = [
 		{ title: 'Custom Attributes', href: 'attributes/q' }
 	]},
 	{ title: 'Plugins', expand: true, items: [
+        { title: 'Importer', href: 'plugins/importer' },
 		{ title: 'Routing', href: 'plugins/routing' },
 		{ title: 'Forms', href: 'plugins/form' },
 		{ title: 'Actions Group', href: 'plugins/group' },

@@ -4,7 +4,7 @@ import Compiler from '@qutejs/compiler';
 import {capitalizeFirst, kebabToCamel} from '@qutejs/commons';
 import { serialLoadScripts } from './script-loader.js';
 
-var IMPORT_RX = /^\s*import\s+(?:(\S+)\s+from\s+)?(?:(\"[^"]+\")|(\'[^']+\')|([^"'][^;\s]*));?$/mg;
+var IMPORT_RX = /^\s*import\s+(?:(\S+|\{[^}]+\})\s+from\s+)?(?:(\"[^"]+\")|(\'[^']+\')|([^"'][^;\s]*));?$/mg;
 var EXPORT_RX = /^\s*export\s+default\s+/m;
 
 function identityTransform(code) {
@@ -47,19 +47,26 @@ function JSQLoader(transpileES6) {
 		var dirs = parseDirectives(code);
 		code = dirs.code;
 		code = code.replace(IMPORT_RX, function(m, p1, p2, p3, p4) {
-			var path = p2 || p3 || p4;
+			var path = p2 || p3 || p4, extraCode;
 			if (path) {
 				if (path.startsWith('\'') || path.startsWith("\"")) {
 					path = path.substring(1, path.length-1);
 				}
-				if (p1) { // a named import
-					imports[path] = p1;
+                if (p1) { // a named import
+                    if (path === '@qutejs/importer') {
+                        if (p1.startsWith('{')) {
+                            extraCode = "\nconst "+p1+" = Qute.Importer;\n";
+                        }
+                    } else {
+                        imports[path] = p1;
+                    }
 				} else { // an import
 					imports[path] = "";
 				}
 			}
 
-			return m.replace('import ', '//import ');
+            var result = m.replace('import ', '//import ');
+			return extraCode ? result+extraCode : result;
 		});
 
 		var hasExport = false;
