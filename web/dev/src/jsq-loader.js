@@ -57,6 +57,10 @@ function JSQLoader(transpileES6) {
                         if (p1.startsWith('{')) {
                             extraCode = "\nconst "+p1+" = Qute.Importer;\n";
                         }
+                    } else if (path === '@qutejs/types') {
+                        if (p1.startsWith('{')) {
+                            extraCode = "\nconst "+p1+" = Qute.PropTypes;\n";
+                        }
                     } else {
                         imports[path] = p1;
                     }

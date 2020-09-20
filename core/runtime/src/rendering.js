@@ -1,6 +1,5 @@
 import {document} from '@qutejs/window';
-import ERR from './error.js';
-
+import {ERR} from '@qutejs/commons';
 
 import {applyListeners, applyEmiters, SetClass, SetStyle,
 			SetDisplay, SetToggle, SetText, SetInnerHTML, SetAttr} from './binding.js';

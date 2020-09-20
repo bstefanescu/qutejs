@@ -1,0 +1,45 @@
+{
+  "name": "@qutejs/types",
+  "version": "1.0.0-rc.12",
+  "description": "Qute property types and helpers",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "browser": "lib/qute-importer.js",
+  "unpkg": "lib/qute-importer.min.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bogdan Stefanescu <bogdan@quandora.com>",
+  "license": "MIT",
+  "keywords": [
+    "property",
+    "types",
+    "reactive",
+    "view",
+    "model",
+    "component",
+    "qutejs",
+    "qute"
+  ],
+  "homepage": "https://qutejs.org",
+  "repository": {
+    "url": "https://github.com/bstefanescu/qutejs",
+    "type": "git"
+  },
+  "devDependencies": {
+    "@qutejs/rollup-plugin-qute": "1.0.0-rc.12"
+  },
+  "dependencies": {
+    "@qutejs/window": "1.0.0-rc.12",
+    "@qutejs/commons": "1.0.0-rc.12"
+  },
+  "build": {
+    "config": "component",
+    "external": [
+      "@qutejs/window"
+    ]
+  }
+}

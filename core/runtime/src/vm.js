@@ -1,6 +1,5 @@
 import window, {document} from '@qutejs/window';
-import {kebabToCamel} from '@qutejs/commons';
-import ERR from './error.js';
+import {kebabToCamel, ERR} from '@qutejs/commons';
 import { stopEvent, chainFnAfter, filterKeys } from './utils.js';
 
 import Rendering from './rendering.js';
@@ -9,7 +8,6 @@ import App from './app.js';
 import {applyListeners, SetProp, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
 import Emitter from './emit.js';
 import {applyUserDirectives} from './q-attr.js';
-import {createProp} from './prop-types';
 import ListHelper from './list.js';
 
 // set $attrs on VMs
@@ -24,6 +22,14 @@ function SetVMAttrs(vm, parentVM, filter) {
 			}
 		}
 	}
+}
+
+function createProp(vm, key, val) {
+    if (val && val.__qute_prop) {
+        return val.__qute_prop(vm, key);
+    }
+    vm.$data[key] = val;
+	return vm.$createProp(key);
 }
 
 function ViewModel(app, attrs) {
@@ -50,15 +56,16 @@ function ViewModel(app, attrs) {
 	prop.value = 0;
 	Object.defineProperty(this, '$st', prop); // state: 0 - default, bit 1 - connected, bit 2 - update queued
 
-	var data = this.init(app) || {};
-	prop.value = data;
+    var props = this.$props || {};
+    var data = this.init(app);
+    if (data) {
+        props = Object.assign(props, data);
+    }
+	prop.value = {};
 	Object.defineProperty(this, '$data', prop);
-	if (data) {
-		for (var key in data) {
-			var val = data[key];
-			Object.defineProperty(this, key, createProp(this, key, val));
-		}
-	}
+    for (var key in props) {
+        Object.defineProperty(this, key, createProp(this, key, props[key]));
+    }
 
 	if (!this.render) ERR("No render function defined for the ViewModel!");
 
@@ -317,7 +324,26 @@ ViewModel.prototype = {
 			self.$el.removeEventListener(type, wrapper);
 		});
 		//this.$clean.push(type, wrapper);
-	},
+    },
+    $createProp: function(key, setter) {
+        return {
+            get: function() {
+                return this.$data[key];
+            },
+            set: function(value) {
+                if (setter) value = setter(value);
+                var old = this.$data[key];
+                if (old !== value) {
+                    this.$data[key] = value;
+                    var watcher = this.$el && this.$watch && this.$watch[key]; // if not connected whatchers are not enabled
+                    // avoid updating if watcher return false
+                    if (watcher && watcher.call(this, value, old) === false) return;
+                    this.update();
+                }
+            },
+            enumerable: key.charCodeAt(0) !== 95 // keys starting with _ are not enumerable
+        }
+    },
 	emit: Emitter.emit,
 	emitAsync: Emitter.emitAsync,
 	// -------- app event bus -------------

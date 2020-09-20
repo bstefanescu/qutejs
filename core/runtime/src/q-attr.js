@@ -1,4 +1,4 @@
-import ERR from './error.js';
+import {ERR} from '@qutejs/commons';
 
 var ATTRS = {};
 

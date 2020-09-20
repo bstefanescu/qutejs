@@ -209,7 +209,7 @@ export {
     insertScript, importScript,
     serialImport, importAll,
     setImporterOptions,
-    LazyComponent, Bla
+    LazyComponent
 }
 
 

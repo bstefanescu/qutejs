@@ -1,6 +1,5 @@
 import window from '@qutejs/window';
-import ERR from './error.js';
-
+import {ERR} from '@qutejs/commons';
 
 var UpdateQueue = {
 	maxNestedLoops: 50,

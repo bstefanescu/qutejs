@@ -4,7 +4,6 @@ import window, {document} from '@qutejs/window';
 import Qute from '..';
 import { createMountPoint } from './utils.js';
 
-
 <q:template name='myComponent'>
 	<div id='my-component'>My Component</div>
 </q:template>

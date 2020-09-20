@@ -1,14 +1,12 @@
 import window from '@qutejs/window';
 import { chainFnAfter} from './utils.js';
-import ERR from './error.js';
+import {ERR} from '@qutejs/commons';
 
 import UpdateQueue from './update.js';
 import Rendering from './rendering.js';
 import ViewModel from './vm.js';
 import App from './app.js';
 import { registerDirective } from './q-attr.js';
-import {StringProp,NumberProp,BooleanProp} from './prop-types';
-
 
 /**
  * We cannot use Object.assign since getter are lost. So we copy the prop def itself
@@ -89,7 +87,10 @@ function Qute(renderFn, def) {
         }
         return VMType;
     }
-
+    VMType.properties = function(data) {
+        VMProto.$props = typeof data === 'function' ? data() : data;
+        return VMType;
+    }
 	return VMType;
 }
 
@@ -112,11 +113,6 @@ Qute.registerDirective = registerDirective;
 Qute.install = function(plugin) { return plugin.install(Qute); }
 
 Qute.runAfter = function(cb) { UpdateQueue.runAfter(cb); }
-
-// prop types
-Qute.string = function(value) { return new StringProp(value) }
-Qute.number = function(value) { return new NumberProp(value) }
-Qute.boolean = function(value) { return new BooleanProp(value) }
 
 
 // store Qute instance in window - this is important so that imported components use the same Qute instance

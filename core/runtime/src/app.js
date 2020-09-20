@@ -1,5 +1,5 @@
 import window from '@qutejs/window';
-import ERR from './error.js';
+import {ERR} from '@qutejs/commons';
 
 function createProp(prop) {
 	return {

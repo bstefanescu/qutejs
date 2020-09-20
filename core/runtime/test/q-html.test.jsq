@@ -50,10 +50,11 @@ describe('q:html attribute', function() {
 		assert.equal(theB.innerHTML, 'HTML');
 	});
 
-	it('should render nothing on falsy', function() {
+	it('should render nothing on falsy', function(done) {
 		test.firstChild.__qute__.content = null;
 		runAfter(function() {
-			assert.ok(!test.firstChild.firstChild);
+			assert.ok(!test.firstChild.textContent);
+            done();
 		});
 	});
 

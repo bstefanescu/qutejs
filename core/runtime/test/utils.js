@@ -1,8 +1,13 @@
 import window from '@qutejs/window';
 import Qute from '..';
 
+var ID_GEN = 0;
 var document = window.document;
 var MouseEvent = window.MouseEvent;
+
+function nextId() {
+    return 'mount-point-'+(ID_GEN++);
+}
 
 export function createMountPoint(id) {
 	var div = document.createElement('DIV');
@@ -12,7 +17,7 @@ export function createMountPoint(id) {
 }
 
 export function mountTest(TestVM) {
-	var mountPoint = createMountPoint(TestVM.prototype.$tag);
+    var mountPoint = createMountPoint(nextId());
 	var vm = new TestVM().mount(mountPoint);
 	mountPoint.$vm = vm;
 	return mountPoint;

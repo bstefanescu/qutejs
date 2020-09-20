@@ -70,5 +70,17 @@ function closestListItem(el) {
 	return el && el.__qute_ctx__;
 }
 
-export { capitalizeFirst, kebabToCamel, camelToKebab, kebabToCompName, closestVM, closestComp, closestListItem };
+const PRINT_RX = /%s/g;
+function print(text) {
+	var i = 1, args = arguments;
+	return text.replace(PRINT_RX, function(match, p1) {
+		return args[i++];
+	});
+}
+
+function ERR() {
+	throw new Error(print.apply(null, Array.prototype.slice.call(arguments)))
+}
+
+export { capitalizeFirst, kebabToCamel, camelToKebab, kebabToCompName, closestVM, closestComp, closestListItem, print, ERR };
 

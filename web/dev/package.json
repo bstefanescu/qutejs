@@ -33,6 +33,7 @@
     "@qutejs/polyfill": "1.0.0-rc.12",
     "@qutejs/runtime": "1.0.0-rc.12",
     "@qutejs/importer": "1.0.0-rc.12",
+    "@qutejs/types": "1.0.0-rc.12",
     "@qutejs/window": "1.0.0-rc.12"
   },
   "build": {
