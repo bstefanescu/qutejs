@@ -57,6 +57,8 @@ function ViewModel(app, attrs) {
 	Object.defineProperty(this, '$st', prop); // state: 0 - default, bit 1 - connected, bit 2 - update queued
 
     var props = this.$props || {};
+    if (typeof props === 'function') props = props(app);
+
     var data = this.init(app);
     if (data) {
         props = Object.assign(props, data);
@@ -205,7 +207,15 @@ ViewModel.prototype = {
 					this.$set(key, val);
 				}
 			}
-		}
+        }
+        if (this.$require) {
+            var req = this.$require;
+            for (var i=0,l=req.length; i<l; i++) {
+                if (this.$data[req[i]] === null) {
+                    ERR('Required property is not defined: "'+req[i]+'" in '+this.toString());
+                }
+            }
+        }
 		return bindings;
 	},
 	$create: function(parentRendering, xattrs, slots) {
@@ -228,7 +238,6 @@ ViewModel.prototype = {
         this.created && this.created(el);
 
 		if (bindings) for (var i=0,l=bindings.length; i<l; i+=2) {
-			var binding = bindings[i];
 			var up = bindings[i](el, model, bindings[i+1]);
 			parentRendering.up(up)();
 		}

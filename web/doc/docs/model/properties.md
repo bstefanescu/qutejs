@@ -103,4 +103,32 @@ You can see how the kebab case attribute named `reactive-prop` was used to initi
 Also, you can see that all other attributes than `reactive-prop` and `title` (which were declared as reactive properties) are added to the **"catch all"** `$attrs` object. This is also the case of the `name` attribute. Even if we defined a regular `name` property on the component - it will still go in the `$attrs` object since the `name` property is not reactive, and thus, it is not mappable from attributes.
 
 
+## Required properties
 
+You can specify a list of properties that should be always defined and set to a non null value through the template. We will refer to such poroperties as **required properties**.
+
+To specify the list of required properties use the `Qute.require(prop1, prop2, ...)` function.
+
+The following example will throw an error, since the `name` attribute is not set. To fix it just specify a name attribute on the `my-element` component:
+
+```xml
+<my-element name="somme value"'>
+```
+
+```jsq
+import Qute from '@qutejs/runtime';
+
+<q:template name='MyElementTemplate'>
+    <div>Required prop: {{name}}</div>
+</q:template>
+
+<q:template name='RootTemplate'>
+    <my-element />
+</q:template>
+
+const MyElement = Qute(MyElementTemplate).properties({
+    name: null
+}).require('name');
+
+export default Qute(RootTemplate);
+```

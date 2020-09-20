@@ -122,6 +122,7 @@ var TOC = [
 	]},
 	{ title: 'Component Model', expand: true, items: [
 		{ title: 'Properties', href: 'model/properties'},
+        { title: 'Property Types', href: 'model/proptypes'},
 		{ title: 'Watchers', href: 'model/watchers'},
 		{ title: 'Events', href: 'model/events'},
 		{ title: 'Life Cycle', href: 'model/lifecycle'},

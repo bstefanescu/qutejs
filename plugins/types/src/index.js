@@ -1,17 +1,19 @@
 import {ERR} from '@qutejs/commons';
 
+function initFromFactory(vm, key) {
+    vm.$data[key] = this.value();
+}
+
 function BaseProp(value) {
     this.value = value;
-    this._required = false;
 }
 BaseProp.prototype = {
     __qute_prop(vm, key) {
-        vm.$data[key] = this.value;
+        this.init(vm, key);
         return vm.$createProp(key, this._setter);
     },
-    required() {
-        this._required = true;
-        return this;
+    init(vm, key) {
+        vm.$data[key] = this.value;
     },
     setter(fn) {
         this._setter = fn;
@@ -25,14 +27,20 @@ function createPropType(setter) {
     }
     Prop.prototype = Object.create(BaseProp.prototype);
     if (setter) Prop.prototype._setter = setter;
-    Prop.factory = function(fn) {
-        return new Prop(fn());
-    }
-    Prop.value = function(value) {
+    function PropType(value) {
         return new Prop(value);
     }
-    return Prop;
+    PropType.factory = function(fn) {
+        var prop = new Prop(fn);
+        prop.init = initFromFactory;
+        return prop;
+    }
+    PropType.value = function(value) {
+        return new Prop(value);
+    }
+    return PropType;
 }
+
 
 const HasSymbol = typeof Symbol === 'function';
 const isIterable = HasSymbol ? function(obj) {
@@ -42,10 +50,17 @@ const isIterable = HasSymbol ? function(obj) {
 }
 
 const _String = createPropType(function(val) { return val == null ? val : String(val)});
-const _Number = createPropType(function(val) { return val == null ? val : Number(val)});
+const _Number = createPropType(function(val) {
+    if (val != null) {
+        var n = Number(val);
+        if (isNaN(n)) ERR('Expecting a number. Got: '+(typeof val)+': '+val);
+        return n;
+    }
+    return val;
+});
 const _Boolean = createPropType(function(val) { return val == null ? val : Boolean(val)});
 const _Date = createPropType(function(val) {
-    if (val) {
+    if (val != null) {
         if (val instanceof Date) {
             return val;
         } else {
@@ -59,15 +74,15 @@ const _Date = createPropType(function(val) {
     return val;
 });
 const _Array = createPropType(function(val) {
-    if (val && !Array.isArray(val)) ERR('Expected an array but got '+val);
+    if (val != null && !Array.isArray(val)) ERR('Expected an array but got '+val);
     return val;
 });
 const _Iterable = createPropType(function(val) {
-    if (val && !isIterable(val)) ERR('Expected an iterable object but got '+val);
+    if (val != null && !isIterable(val)) ERR('Expected an iterable object but got '+val);
     return val;
 });
 const _Function = createPropType(function(val) {
-    if (val && typeof val !== 'function') ERR('Expected a function but got '+val);
+    if (val != null && typeof val !== 'function') ERR('Expected a function but got '+val);
     return val;
 });
 const _Object = createPropType();

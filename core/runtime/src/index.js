@@ -88,7 +88,13 @@ function Qute(renderFn, def) {
         return VMType;
     }
     VMType.properties = function(data) {
-        VMProto.$props = typeof data === 'function' ? data() : data;
+        VMProto.$props = data;
+        return VMType;
+    },
+    VMType.require = function() {
+        if (arguments.length > 0) {
+            VMProto.$require = Array.prototype.slice.call(arguments);
+        }
         return VMType;
     }
 	return VMType;
