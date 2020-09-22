@@ -1,5 +1,5 @@
 import window, {document} from '@qutejs/window';
-import {kebabToCamel, ERR} from '@qutejs/commons';
+import {kebabToCamel, ERR, toBoolean, toString, toNumber} from '@qutejs/commons';
 import { stopEvent, chainFnAfter, filterKeys } from './utils.js';
 
 import Rendering from './rendering.js';
@@ -29,7 +29,18 @@ function createProp(vm, key, val) {
         return val.__qute_prop(vm, key);
     }
     vm.$data[key] = val;
-	return vm.$createProp(key);
+    var setter;
+    if (val != null) {
+        var type = typeof val;
+        if (type === 'string') {
+            setter = toString;
+        } else if (type === 'number') {
+            setter = toNumber;
+        } else if (type === 'boolean') {
+            setter = toBoolean;
+        }
+    }
+    return vm.$createProp(key, setter);
 }
 
 function ViewModel(app, attrs) {
@@ -116,7 +127,7 @@ ViewModel.prototype = {
 	},
 	// subscribe to the given channel name - for use on root VMs
 	listen: function(channelName) {
-		if (!this.$channel) ERR("q:channel used on a VM not defining channels: %s", this.$tag);
+		if (!this.$channel) ERR("q:channel used on a VM not defining channels: %s", this.toString());
 		// add an init function
 		this.$init = chainFnAfter(function(thisObj) {
 			thisObj.subscribe(channelName, thisObj.$channel);
@@ -223,7 +234,7 @@ ViewModel.prototype = {
 			model = parentRendering && parentRendering.model,
 			listeners = xattrs && xattrs.$on;
 		if (xattrs && xattrs.$use) {
-			$use = applyUserDirectives(parentRendering, this.$tag, xattrs, this);
+			$use = applyUserDirectives(parentRendering, this.__VM__, xattrs, this);
 		}
 
 		// load definition
@@ -232,7 +243,7 @@ ViewModel.prototype = {
 		rendering.vm = this;
 		this.$r = rendering;
 		// must never return null - for non rendering components like popups we return a comment
-		var el = this.render(rendering) || document.createComment('<'+this.$tag+'/>');
+		var el = this.render(rendering) || document.createComment('<'+this.toString()+'/>');
 		el.__qute__ = this;
 		this.$el = el;
         this.created && this.created(el);

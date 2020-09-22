@@ -6,7 +6,7 @@ In frameworks like **react** or **vue** this is achieved using state management 
 
 Qute is providing a built-in solution to achieve this through the **application data model**.
 
-Anyway, you can still integrate a state management system like **redux** with Qute. See the `$bindVM` function at the bottom of this page.
+Anyway, you can still integrate a state management system like **redux** with Qute. See the `__qute_prop` function at the bottom of this page.
 
 
 ## Application Data Properties
@@ -183,12 +183,12 @@ Link the property to an object property.
 The property created on the target object will be synchronized with the source application property.
 The linked property will act as a proxy to the application property.
 
-## `$bindVM(vm, key)`
+## `__qute_prop(vm, key)`
 
 This is a private method used to bind the application property to a component reactive property.
 It should never be used directly.
 
 You can use it as an example if you need to integrate a state manager like **redux** into Qute.
-In that case, to map a state property to a reactive component property you need to create an object that provide a `$bindVM` function that is responsible to create the reactive property.  \
-Then to create the binding you need to assign the object providing `$bindVM` as the initial value of a reactive property.
+In that case, to map a state property to a reactive component property you need to create an object that provide a `__qute_prop` function that is responsible to create the reactive property.  \
+Then to create the binding you need to assign the object providing `__qute_prop` as the initial value of a reactive property.
 

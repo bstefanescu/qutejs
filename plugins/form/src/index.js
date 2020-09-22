@@ -8,8 +8,8 @@ const QuteForms = {
 	// Enable the q:model directive on a custom form control
 	// The control must be implemented as a ViewModel component and must provide a 'value' reactive property.
 	// For bidirectional updates it must also trigger a change event when the control value is changed.
-	registerControl: function(tag) {
-		Qute.registerDirective(tag, 'model', controlModelDirective);
+	registerControl: function(VMType) {
+		Qute.registerDirective(VMType, 'model', controlModelDirective);
     },
     install: function(Qute) {
         Qute.registerDirective('form', 'validate', formValidateDirective);

@@ -163,7 +163,7 @@ Here is the final code for the counter component:
 ```jsq
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
-import '@qutejs/form';
+import FormPlugin from '@qutejs/form';
 
 // ------------------------------------------ Templates
 
@@ -177,6 +177,8 @@ import '@qutejs/form';
 </q:template>
 
 // ------------------------------------------ Javascript
+
+Qute.install(FormPlugin);
 
 const MyCounter = Qute(CounterTemplate, {
 	init() {
@@ -221,7 +223,7 @@ const MyCounter = Qute(CounterTemplate, {
 	}
 });
 
-Qute.Form.registerControl("counter");
+FormPlugin.registerControl(MyCounter);
 
 // ------------------------------------------ Testing
 

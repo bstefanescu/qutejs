@@ -31,7 +31,7 @@ function Qute(renderFn, def) {
             renderFn = null;
         } // else Qute(renderingFn)
     } else if (typeof renderFn !== 'function') {
-        ERR("Usage: Qute(renderFunction[, VM_Definition])");
+        ERR("Usage: Qute(RenderFunction[, Model])");
     }
 
 	function ViewModelImpl(app, attrs) {

@@ -12,7 +12,17 @@ export function findDirective(tag, name) {
 
 export function registerDirective(/*[tag, ]name, dirFn*/) {
 	if (arguments.length === 3) {
-		ATTRS[arguments[0]+':'+arguments[1]] = arguments[2];
+        var tagOrFn = arguments[0]; // the constructor for VM comps or the rendering fucntion for template comps
+        var name = arguments[1];
+        var dirFn = arguments[2];
+        if (typeof tagOrFn === 'function') {
+            if (!tagOrFn.$atdirs) {
+                tagOrFn.$atdirs = {};
+            }
+            tagOrFn.$atdirs[name] = dirFn;
+        } else {
+            ATTRS[tagOrFn+':'+name] = dirFn;
+        }
 	} else {
 		ATTRS[arguments[0]] = arguments[1];
 	}
@@ -26,9 +36,17 @@ export function applyUserDirectives(rendering, tag, xattrs, compOrEl) {
 		if (key === '@') { // an q:call
 			xcall = val;
 		} else {
-			var userDir = findDirective(tag, key);
+            var userDir;
+            if (typeof tag === 'function') {
+                userDir = tag.$atdirs && tag.$atdirs[key];
+            } else {
+                userDir = findDirective(tag, key);
+            }
 			if (!userDir) {
-				ERR("Unknown user attribute directive: '%s'", key);
+                userDir = ATTRS[key];
+                if (!userDir) {
+                    ERR("Unknown custom attribute directive: '%s'", key);
+                }
 			}
 			var fn = userDir.call(rendering, xattrs, val===true?undefined:val, compOrEl);
 			if (fn) fns.push(fn)

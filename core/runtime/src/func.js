@@ -70,7 +70,7 @@ FunComp.prototype = {
 		if (xattrs) {
 			$ref = xattrs.$ref;
 			if (xattrs.$use) {
-				$use = applyUserDirectives(rendering, XTag.$tag, xattrs, this);
+				$use = applyUserDirectives(rendering, XTag, xattrs, this);
 			}
 
 			for (var key in xattrs) { // class, style and show, $attrs, $listeners are ignored

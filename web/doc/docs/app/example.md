@@ -62,7 +62,7 @@ import qSpinner from '@qutejs/spinner';
 			</div>
 		</div>
 		<div class='main'>
-			<view is='currentPage' />
+			<view is={currentPage} />
 		</div>
 	</div>
 </q:template>

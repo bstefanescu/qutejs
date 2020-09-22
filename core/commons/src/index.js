@@ -82,5 +82,27 @@ function ERR() {
 	throw new Error(print.apply(null, Array.prototype.slice.call(arguments)))
 }
 
-export { capitalizeFirst, kebabToCamel, camelToKebab, kebabToCompName, closestVM, closestComp, closestListItem, print, ERR };
+function toString(val) {
+    return val == null ? val : String(val);
+}
+
+function toNumber(val) {
+    if (val != null) {
+        var n = Number(val);
+        if (isNaN(n)) ERR('Expecting a number. Got: '+(typeof val)+': '+val);
+        return n;
+    }
+    return val;
+}
+
+function toBoolean(val) {
+    return val == null ? val : Boolean(val);
+}
+
+export {
+    capitalizeFirst, kebabToCamel, camelToKebab, kebabToCompName,
+    closestVM, closestComp, closestListItem,
+    print, ERR,
+    toString, toNumber, toBoolean
+ };
 

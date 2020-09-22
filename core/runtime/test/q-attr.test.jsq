@@ -13,14 +13,15 @@ import { mountTest, click, runAfter } from './utils.js';
 	<div q:color-spans='{color:"red"}'>Hello <span>world</span>!</div>
 </q:template>
 
-Qute.registerDirective('color-spans', function(xattrs, valueFn) {
+function colorSpansDir(xattrs, valueFn) {
 	return function(el) {
 		var value = this.eval(valueFn);
 		var color = (value && value.color) || 'green';
 		var spans = el.getElementsByTagName('span');
 		for (var i=0,l=spans.length; i<l; i++) spans[i].style.color = color;
 	}
-});
+}
+Qute.registerDirective('color-spans', colorSpansDir);
 
 var TestColorSpans1 = Qute(ColorSpans1Template);
 var TestColorSpans2 = Qute(ColorSpans2Template);
