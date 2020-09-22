@@ -227,9 +227,6 @@ var RenderingProto = {
 	},
 	// dynamic lists - which is updating only items that changed
 	l: function(listFn, iterationFn, key) {
-		if (!key) {
-			console.warn("Reactive list used without a 'q:key' attribute: Performance will suffer!");
-		}
 		return new ListFragment(this, listFn, iterationFn, key).$create();
 	},
 	// static array variant of lists - this cannot be updated it is rendered once at creation

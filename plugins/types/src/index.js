@@ -1,4 +1,5 @@
 import { ERR, toString, toBoolean, toNumber } from '@qutejs/commons';
+import List from './list.js';
 
 function initFromFactory(vm, key) {
     vm.$data[key] = this.value();
@@ -85,6 +86,27 @@ const _Link = function(appPropKey) {
     return vm.$app.prop(appPropKey);
 }
 
+function ListProp(key, val) {
+    if (arguments.length === 1 && Array.isArray(key)) {
+        val = key; key = null;
+    }
+    this.key = key;
+    this.val = val;
+}
+ListProp.prototype = {
+    __qute_prop(vm, key) {
+        var listKey = this.key;
+        // the List is always making a copy of the input value
+        vm.$data[key] = new List(vm, listKey, this.val);
+        return vm.$createProp(key, function(val) {
+            return new List(vm, listKey, val)
+        });
+    }
+}
+function _List(key, val) {
+    return new ListProp(key, val);
+}
+
 export {
-    createPropType, _String, _Number, _Boolean, _Object, _Function, _Array, _Iterable, _Date, _Any, _Link
+    createPropType, _String, _Number, _Boolean, _Object, _Function, _Array, _Iterable, _Date, _Any, _Link, _List
 }

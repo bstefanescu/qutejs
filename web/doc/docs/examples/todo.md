@@ -5,7 +5,7 @@ We implemented the Todo List in 3 different ways.
 The following examples demonstrates the usage of:
 
 1. the **[q:for](#/attributes/q-for)** directive.
-2. the `ViewModel.getList()` helper to easily manipulate reactive list properties.
+2. the `_List()` property type from `@qutejs/types` to easily manipulate reactive list properties.
 
 
 ## Example 1: Using a component for the todo item
@@ -14,13 +14,17 @@ We will create 2 ViewModel components: `todo-list` and `todo-item`.
 
 The `todo-list` component is responsible for managing the list structure, while the `todo-item` is rendering a single item and is responsible for updating the item status.
 
-We are using the `ViewModel.getList()` method to get a list helper which is providing methods to ease list manipulation and DOM update.
+We are using the `_List(key[, value])` proprtye type to initialize the reactive list property. The `key` argument must point to a item id property or a function trhat resolve the item id given the item. Because of that, you don't need to specify the  `key` attribute when using `q:for` directive since the key is given by the list property.
+
+See [Property Types](#/model/proptypes) for more information on `_List`.
+
 
 ```jsq
 //@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
 
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
+import { _List } from '@qutejs/types';
 
 // ------------------------------------------ Styles
 
@@ -45,7 +49,7 @@ import Qute from '@qutejs/runtime';
 <q:template name='TodoListTemplate'>
 	<div>
 		<ul class="list-group">
-			<todo-item q:for='item in todos' q:key='id' todo={item} @remove='removeItem' />
+			<todo-item q:for='item in todos' todo={item} @remove='removeItem' />
 		</ul>
 		<form class='d-flex'>
 			<input q:call='el => input = el' type='text' class='form-control' style='display:inline-block'/>
@@ -69,7 +73,7 @@ const TodoItem = Qute(TodoItemTemplate, {
 	},
 	toggleDone() {
 		this.todo.done = !this.todo.done;
-		// update the DOM: this is needed since todo instance didn't changeds
+		// update the DOM: this is needed since todo instance didn't changed
 		this.update();
 		// notify parent about the change
 		this.emit('change', this.todo);
@@ -82,17 +86,14 @@ const TodoList = Qute(TodoListTemplate, {
 	init() {
 		this.input = null;
 		return {
-			todos: null
+			todos: _List('id')
 		}
 	},
 	connected() {
 		this.input.focus();
 	},
-	todoList() {
-		return this.getList('todos', 'id');
-	},
 	removeItem(e) {
-		this.todoList().removeItem(e.detail);
+		this.todos.removeItem(e.detail);
 		return false;
 	},
 	addItem() {
@@ -101,7 +102,6 @@ const TodoList = Qute(TodoListTemplate, {
 			var randomId = 'todo-'+Date.now()+'-'+(CNT++);
 			this.todos.push({id: randomId, text: text, done: false});
 			this.input.value = '';
-			this.update();
 		}
 		return false;
 	},
@@ -134,6 +134,7 @@ This approach is better in term of memory usage since it doesn't instantiate a c
 
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
+import { _List } from '@qutejs/types';
 
 // ------------------------------------------ Styles
 
@@ -148,7 +149,7 @@ import Qute from '@qutejs/runtime';
 <q:template name='TodoListTemplate'>
 	<div>
 		<ul class="list-group">
-			<li q:for='item in todos' q:key='id' class="list-group-item d-flex justify-content-between align-items-center">
+			<li q:for='item in todos' class="list-group-item d-flex justify-content-between align-items-center">
 	            <span>
 		            <a href='#' @click='e=>checkItem(item.id)'>&#x2714;</a>
 		            <span q:class='{done:item.done}'>{{item.text}}</span>
@@ -176,20 +177,17 @@ var CNT = 0;
 const TodoList = Qute(TodoListTemplate, {
 	init() {
 		this.input = null;
-		return { todos: null };
-	},
-	todoList() {
-		return this.getList('todos', 'id');
+		return { todos: _List('id') };
 	},
 	connected() {
 		this.input.focus();
 	},
 	removeItem(key) {
-		this.todoList().removeItem(key);
+		this.todos.removeItem(key);
 		return false;
 	},
 	checkItem(key) {
-		this.todoList().updateItem(key, item => {
+		this.todos.updateItem(key, item => {
 			item.done = !item.done;
 		});
 		return false;
@@ -221,7 +219,7 @@ export default Qute(RootTemplate, {
 });
 ```
 
-## Example 3: Same as before but not using the Qute list helper.
+## Example 3: Same as before but not using the `_List` property type.
 
 Here is the same example as before, but without using the Qute list helper. The code is therefore a little more verbose.
 
@@ -335,5 +333,6 @@ export default Qute(RootTemplate, {
 	}
 });
 ```
+
 
 

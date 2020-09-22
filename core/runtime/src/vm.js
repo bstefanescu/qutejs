@@ -8,7 +8,6 @@ import App from './app.js';
 import {applyListeners, SetProp, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
 import Emitter from './emit.js';
 import {applyUserDirectives} from './q-attr.js';
-import ListHelper from './list.js';
 
 // set $attrs on VMs
 function SetVMAttrs(vm, parentVM, filter) {
@@ -121,9 +120,6 @@ ViewModel.prototype = {
 				this.update();
 			}
 		}
-	},
-	getList: function(listName, keyField) {
-		return new ListHelper(this, listName, keyField);
 	},
 	// subscribe to the given channel name - for use on root VMs
 	listen: function(channelName) {
@@ -351,8 +347,8 @@ ViewModel.prototype = {
                 return this.$data[key];
             },
             set: function(value) {
-                if (setter) value = setter(value);
                 var old = this.$data[key];
+                if (setter) value = setter(value, old);
                 if (old !== value) {
                     this.$data[key] = value;
                     var watcher = this.$el && this.$watch && this.$watch[key]; // if not connected whatchers are not enabled
