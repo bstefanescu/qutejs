@@ -40,7 +40,7 @@ var PropProto = {
 		return this;
 	},
 
-	__qute_prop(vm, key) {
+	bindVM(vm, key) {
 		var self = this;
 		vm.$data[key] = this.value; // set the initial value
 		vm.setup(function() {
