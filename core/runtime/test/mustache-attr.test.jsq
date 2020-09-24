@@ -8,17 +8,13 @@ import Qute from '..';
         <for value={item in items}>{{item}},</for>
     </div>
 </q:template>
-const Root = Qute(RootTemplate, {
-    init() {
-        return {
-            enabled: true,
-            active: false,
-            id: 'test-mustache-attr-root',
-            testValue: true,
-            items: [1,2,3]
-        }
-    }
-});
+const Root = Qute(RootTemplate).properties(() => ({
+    enabled: true,
+    active: false,
+    id: 'test-mustache-attr-root',
+    testValue: true,
+    items: [1,2,3]
+}));
 
 describe("Mustache attribute value", () => {
     it("works on all attributes", () => {

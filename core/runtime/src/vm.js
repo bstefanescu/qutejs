@@ -69,15 +69,13 @@ function ViewModel(app, attrs) {
     var props = this.$props || {};
     if (typeof props === 'function') props = props(app);
 
-    var data = this.init(app);
-    if (data) {
-        props = Object.assign(props, data);
-    }
 	prop.value = {};
 	Object.defineProperty(this, '$data', prop);
     for (var key in props) {
         Object.defineProperty(this, key, createProp(this, key, props[key]));
     }
+    // call init hook
+    this.init(app);
 
 	if (!this.render) ERR("No render function defined for the ViewModel!");
 

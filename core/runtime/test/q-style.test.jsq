@@ -29,24 +29,16 @@ import { mountTest, runAfter } from './utils.js';
 	<div q:style='[{maxWidth: "100px", maxHeight: "100px"}, {flex: 1}, {maxHeight:"300px"}]'>Is Visible</div>
 </q:template>
 
-var Test0 = Qute(Test0Template, {
-	init() {
-		return {
-			theFlex: 1
-		}
-	}
-})
+var Test0 = Qute(Test0Template).properties({
+    theFlex: 1
+});
 
-var Test1 = Qute(Test1Template, {
-	init() {
-		return {
-			theStyle: {
-				maxWidth: '300px',
-				flex: 1,
-				border: '1px solid red'
-			}
-		}
-	}
+var Test1 = Qute(Test1Template).properties({
+    theStyle: {
+        maxWidth: '300px',
+        flex: 1,
+        border: '1px solid red'
+    }
 });
 
 var Test2 = Qute(Test2Template, {
@@ -74,14 +66,9 @@ var Test5 = Qute(Test5Template);
 
 
 const TestStyleVm = Qute(TestStyleVmTemplate);
-var TestStyleVmRoot = Qute(TestStyleVmRootTemplate, {
-	init() {
-    	return {align: 'center'};
-	}
+var TestStyleVmRoot = Qute(TestStyleVmRootTemplate).properties({
+    align: 'center'
 });
-
-
-
 
 describe('q:style attribute', function() {
 
@@ -99,7 +86,6 @@ describe('q:style attribute', function() {
 		});
 
 	});
-
 
 	it('style set from property is reactive', function(done) {
 		var test1 = mountTest(Test1);

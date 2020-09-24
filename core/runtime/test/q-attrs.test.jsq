@@ -40,35 +40,20 @@ import { mountTest, runAfter } from './utils.js';
 
 
 
-var TestFnRoot = Qute(TestFnRootTemplate, {
-	init() {
-		return {
-			theClass: 'the_class'
-		};
-	}
+var TestFnRoot = Qute(TestFnRootTemplate).properties({
+    theClass: 'the_class'
 });
 
-var TestFuncComp = Qute(TestFuncCompTemplate, {
-	init() {
-		return {
-			theClass: 'the_class'
-		};
-	}
+var TestFuncComp = Qute(TestFuncCompTemplate).properties({
+    theClass: 'the_class'
 });
 
-var TestVMComp = Qute(TestVmCompTemplate, {
-	init() {
-		return {
-			theClass: 'the_class'
-		};
-	}
+var TestVMComp = Qute(TestVmCompTemplate).properties({
+    theClass: 'the_class'
 });
-var VmComp = Qute(VmCompTemplate, {
-	init() {
-		return {
-			someProp: 'the_value'
-		};
-	}
+
+var VmComp = Qute(VmCompTemplate).properties({
+    someProp: 'the_value'
 });
 
 describe('q:attrs attribute', function() {

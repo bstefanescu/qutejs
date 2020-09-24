@@ -49,17 +49,14 @@ import { createMountPoint, runAfter } from './utils.js';
 </q:template>
 
 
-var ForTest = Qute(ForTestTemplate, {
-	init: function() {
-		return { items: [
-				{ href:'item1', title: 'Item 1' },
-				{ href:'item2', title: 'Item 2' },
-				{ href:'item3', title: 'Item 3' }
-			],
-			map: { key1: 'val1', key2: 'val2', key3: 'val3' }
-		};
-	}
-});
+var ForTest = Qute(ForTestTemplate).properties(() => ({
+    items: [
+        { href:'item1', title: 'Item 1' },
+        { href:'item2', title: 'Item 2' },
+        { href:'item3', title: 'Item 3' }
+	],
+	map: { key1: 'val1', key2: 'val2', key3: 'val3' }
+}));
 
 
 <q:template name='ForTestReactivityTemplate'>
@@ -69,13 +66,10 @@ var ForTest = Qute(ForTestTemplate, {
 var ForTestReactivity = Qute(ForTestReactivityTemplate, {
 	changeList() {
 		this.list = this.list === this.list1 ? this.list2 : this.list1;
-	},
-	init() {
-		return {
-			list: ["a", "b", "c", "d"]
-		}
 	}
-});
+}).properties(() => ({
+    list: ["a", "b", "c", "d"]
+}));
 
 describe('For Directive', function() {
 	var root = new ForTest();

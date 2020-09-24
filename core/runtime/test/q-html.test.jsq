@@ -28,12 +28,8 @@ import { mountTest, runAfter } from './utils.js';
 	</div>
 </q:template>
 
-var TestHtml = Qute(TestHtmlTemplate, {
-	init() {
-		return {
-			content: "<div id='theDiv'>Some <b>HTML</b> content</div>"
-		}
-	}
+var TestHtml = Qute(TestHtmlTemplate).properties({
+    content: "<div id='theDiv'>Some <b>HTML</b> content</div>"
 });
 var TestStaticHtml = Qute(TestStaticHtmlTemplate);
 var TestStaticMarkdown = Qute(TestStaticMarkdownTemplate);

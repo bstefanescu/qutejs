@@ -27,10 +27,9 @@ var Entities = Qute(EntitiesTemplate, {
 var Symbols = Qute(SymbolsTemplate, {
 	init: function() {
 		this.firstName = 'John';
-		return {
-			lastName: 'Doe'
-		};
 	}
+}).properties({
+    lastName: 'Doe'
 });
 
 
@@ -54,10 +53,9 @@ var Root = Qute(RootTemplate, {
 	},
 	init: function() {
 		this.firstName = 'John';
-		return {
-			lastName: 'Doe'
-		};
 	}
+}).properties({
+    lastName: 'Doe'
 });
 
 

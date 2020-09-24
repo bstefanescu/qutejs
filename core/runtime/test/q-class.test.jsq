@@ -28,61 +28,36 @@ import { mountTest, runAfter } from './utils.js';
 	<span q:class='[ isActive && "active", "link" ]'></span>
 </q:template>
 
-var Test0 = Qute(TestClass0, {
-	init() {
-		return {
-			isActive: true
-		}
-	}
+var Test0 = Qute(TestClass0).properties({
+    isActive: true
 });
 
 var Test1 = Qute(TestClass1);
 
-
-var Test2 = Qute(TestClass2, {
-	init() {
-		return {
-			isActive: true
-		}
-	}
+var Test2 = Qute(TestClass2).properties({
+    isActive: true
 });
 
-var Test3 = Qute(TestClass3, {
-	init() {
-		return {
-			theClass: { active: true, link: true }
-		}
-	}
-});
+var Test3 = Qute(TestClass3).properties(() => ({
+    theClass: { active: true, link: true }
+}));
 
 // we need to use computed properties to compute dynamic class bindings
 // Note that the array notation [this.isActive && 'active', 'link'] is not reactive (it will work only for the first rendering)
 var Test4 = Qute(TestClass3, {
 	get theClass() {
 		return [ {active: this.isActive}, "link" ];
-	},
-	init() {
-		return {
-			isActive: true
-		}
 	}
+}).properties({
+    isActive: true
+});
+var Test5 = Qute(TestClass5).properties({
+    isActive: true
+});
+var Test6 = Qute(TestClass6).properties({
+    isActive: true
 });
 
-var Test5 = Qute(TestClass5, {
-	init() {
-		return {
-			isActive: true
-		}
-	}
-});
-
-var Test6 = Qute(TestClass6, {
-	init() {
-		return {
-			isActive: true
-		}
-	}
-});
 
 // q:class on components
 
@@ -95,12 +70,8 @@ var Test6 = Qute(TestClass6, {
 </q:template>
 
 
-var TestQClassOnVM = Qute(TestQClassOnVmRoot, {
-    init() {
-    	return {
-    		selected: true
-    	}
-    }
+var TestQClassOnVM = Qute(TestQClassOnVmRoot).properties({
+    selected: true
 });
 
 

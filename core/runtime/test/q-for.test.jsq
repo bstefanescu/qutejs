@@ -89,12 +89,9 @@ const VmComp2 = Qute(VmComp2Template, {
 	},
 	disconnected: function() {
 		vmComp2Cnt--;
-	},
-	init() {
-		return {
-			id: null, text: null
-		}
 	}
+}).properties({
+    id: null, text: null
 });
 
 function removeItem(list, value) {

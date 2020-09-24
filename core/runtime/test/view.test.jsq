@@ -46,23 +46,19 @@ var NOCACHE_VIEW_SWITCH_CNT = 0;
 var ViewTest = Qute(ViewTestTemplate, {
 	viewChanged: function() {
 		VIEW_SWITCH_CNT++;
-	},
-	init: function() {
-		return { activeView: null, user: 'John' };
 	}
+}).properties({
+    activeView: null, user: 'John'
 });
 var NoCacheViewTest = Qute(NoCacheViewTestTemplate, {
 	viewChanged: function() {
 		NOCACHE_VIEW_SWITCH_CNT++;
-	},
-	init: function() {
-		return { activeView: null, user: 'John' };
 	}
+}).properties({
+    activeView: null, user: 'John'
 });
-var ByeUser = Qute(ByeUserTemplate, {
-	init: function() {
-		return { user: null };
-	}
+var ByeUser = Qute(ByeUserTemplate).properties({
+    user: null
 });
 
 

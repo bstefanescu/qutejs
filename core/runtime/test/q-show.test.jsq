@@ -12,22 +12,13 @@ import { mountTest, runAfter } from './utils.js';
 	<div q:show='isVisible' style='display:inline-block'>Is Visible</div>
 </q:template>
 
-var TestShow = Qute(TestShowTemplate, {
-	init() {
-		return {
-			isVisible: false
-		}
-	}
+var TestShow = Qute(TestShowTemplate).properties({
+    isVisible: false
 });
 
-var TestShow2 = Qute(TestShow2Template, {
-	init() {
-		return {
-			isVisible: true
-		}
-	}
+var TestShow2 = Qute(TestShow2Template).properties({
+    isVisible: true
 });
-
 
 <q:template name='TestShowVmTemplate'>
     <div><slot/></div>
@@ -38,12 +29,8 @@ var TestShow2 = Qute(TestShow2Template, {
 </q:template>
 
 
-var TestShowVmRoot = Qute(TestShowVmRootTemplate, {
-	init() {
-		return {
-			showIt: false
-		}
-	}
+var TestShowVmRoot = Qute(TestShowVmRootTemplate).properties({
+    showIt: false
 });
 
 const TestShowVm = Qute(TestShowVmTemplate);
