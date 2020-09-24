@@ -52,7 +52,11 @@ var PropProto = {
 			});
 		});
 		return createProp(this);
-	}
+    },
+    // can be directly set to a reactive prop
+    __qute_prop(vm, key) {
+        return this.bindVM(vm, key);
+    }
 }
 
 var AsyncPropProto = Object.assign({_set: PropProto.set}, PropProto);

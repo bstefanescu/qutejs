@@ -53,7 +53,7 @@ var HTML_ENT_RX = /&(?:([a-zA-Z]+)|(#[0-9]+)|(#x[abcdefABCDEF0-9]+));/g;
 
 var ARR_FN_SIMPLE_BODY_RX = /(?:\breturn\b)|[{;]/; // test if no { or ; in the arrow fn body (a simple body)
 
-var COMP_TAG_RX = /[A-Z0-9_:-]/; // uppercase | digit | _ | : | -
+var COMP_TAG_RX = /[A-Z_:-]/; // uppercase | digit | _ | : | -
 
 function _html_ent(text) {
 	if (!text) return text;
