@@ -6,6 +6,7 @@
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import qSpinner from '@qutejs/spinner';
+import { _Link } from '@qutejs/types';
 
 <q:style>
 .tbar {
@@ -76,10 +77,10 @@ var pages = {
 var Root = Qute(RootTemplate, {
 	init(app) {
 		return {
-			user: app.prop('Session/user'),
-			loginPending: app.prop('Session/user/pending'),
-			loginError: app.prop('Session/user/error'),
-			currentPage: app.prop('Pages/current')
+			user: _Link('Session/user'),
+			loginPending: _Link('Session/user/pending'),
+			loginError: _Link('Session/user/error'),
+			currentPage: _Link('Pages/current')
 		};
 	},
 	login() {

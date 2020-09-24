@@ -46,13 +46,14 @@ var ARROW_FN_RX = /^(\(?)\s*((?:[a-zA-Z_$][a-zA-Z_$0-9]*)(?:\s*,\s*[a-zA-Z_$][a-
 // nested is a special tag we added for convenience in the regular html tags - it is used as a more meaningful replacement of template or div
 // svg need special treatments to avoid listing possible svg related tags.
 // any tag enclosed inside svg tags will be treated as svg tags (not component tags)
-var HTML_TAGS = makeSymbols("nested svg html head meta link title base body style nav header footer main aside article section h1 h2 h3 h4 h5 h6 div p pre blockquote hr ul ol li dl dt dd span a em strong b i u s del ins mark small sup sub dfn code var samp kbd q cite ruby rt rp br wbr bdo bdi table caption tr td th thead tfoot tbody colgroup col img figure figcaption map area video audio source track script noscript object param embed iframe canvas abbr address meter progress time form button input textarea select option optgroup label fieldset legend datalist menu output details summary command keygen acronym applet bgsound basefont big center dir font frame frameset noframes strike tt xmp template".split(" "));
+// no more used
+//var HTML_TAGS = makeSymbols("nested svg html head meta link title base body style nav header footer main aside article section h1 h2 h3 h4 h5 h6 div p pre blockquote hr ul ol li dl dt dd span a em strong b i u s del ins mark small sup sub dfn code var samp kbd q cite ruby rt rp br wbr bdo bdi table caption tr td th thead tfoot tbody colgroup col img figure figcaption map area video audio source track script noscript object param embed iframe canvas abbr address meter progress time form button input textarea select option optgroup label fieldset legend datalist menu output details summary command keygen acronym applet bgsound basefont big center dir font frame frameset noframes strike tt xmp template".split(" "));
 
 var HTML_ENT_RX = /&(?:([a-zA-Z]+)|(#[0-9]+)|(#x[abcdefABCDEF0-9]+));/g;
 
 var ARR_FN_SIMPLE_BODY_RX = /(?:\breturn\b)|[{;]/; // test if no { or ; in the arrow fn body (a simple body)
 
-
+var COMP_TAG_RX = /[A-Z0-9_:-]/; // uppercase | digit | _ | : | -
 
 function _html_ent(text) {
 	if (!text) return text;
@@ -441,7 +442,7 @@ function parseXAttrs(val) {
 function DomNode(name, caseSensitiveName, attrs) {
     this.name = name;
     this.csName = caseSensitiveName;
-    this.isHtmlTag = !!HTML_TAGS[name];
+    this.isCompTag = COMP_TAG_RX.test(caseSensitiveName);
 	this.attrs = null;
 	this.bindings = null;
 	this.xattrs = null; // directives like q:show
@@ -573,22 +574,27 @@ function DomNode(name, caseSensitiveName, attrs) {
 			name = 'div';
 		}
 		var fname, tag;
-		//if (ctx.isXTag(name))
-		if (this.isHtmlTag || this.svg) { // a dom element
+        //if (ctx.isXTag(name)
+        if (this.svg) { // render as HTML
 			fname = 'h'; // h from html
             tag = _s(name);
         } else if (this.name === 'self' || this.name === 'q:self') {
             tag = "null"; // recursion - see rendering.js
             fname = 'c'; // c from component
-        } else { // a component
+        } else if (this.isCompTag) { // a component
             tag = kebabToCompName(this.csName);
             fname = 'c'; // c from component
-		}
+        } else { // we render as an HTML tag
+			fname = 'h'; // h from html
+            tag = _s(name);
+        }
+
 		if (name==='pre') {
 			ctx = ctx.push();
 			ctx.pre = true;
 		}
-		return _fn(fname, tag,
+
+        return _fn(fname, tag,
 			//_attrs(this.attrs),
 			_xattrs(this.attrs, this.bindings, this.xattrs, this.directives, this.events, ctx),
 			_nodes(this.children, ctx), this.svg?1:0);

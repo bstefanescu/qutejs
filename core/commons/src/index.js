@@ -26,11 +26,10 @@ function kebabToCamel(value) {
 }
 
 /**
- * ns:my-component <=> nsMyComponent
- * ns:component <=> nsComponent
- * my-component <=> MyComponent
- * component <=> component
- * Component <=> Component
+ * MyComponent <=> c:my-component <=> my-compnent
+ * Component <=> c:component
+ * myComponent <=> my:component
+ * mySecondComponent <=> my:second-component
  * @param {string} name
  */
 function kebabToCompName(name) {
@@ -44,7 +43,8 @@ function kebabToCompName(name) {
         return name;
     } else {
         localName = capitalizeFirst(localName);
-        return ns ? ns+localName : localName;
+        // 'c:' ns is removed since it is the defualt for components
+        return ns && ns !== 'c' ? ns+localName : localName;
     }
 }
 
