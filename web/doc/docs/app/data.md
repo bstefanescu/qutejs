@@ -86,6 +86,26 @@ This is considerably helping to implement asynchronous actions in UI components,
 To bind a reactive component property to an application property you should use the application property as the initial value of the reactive property.  \
 Application properties which are bound to component properties will trigger a component update each time the property changes.
 
+**Example**
+
+```javascript
+Qute(ComponentTemplate).properties(app => ({
+    myReactiveProperty: app.prop('MyApplicationProperty')
+}));
+```
+
+Qute is also providing a `_Link` property type which is doing the same as the previous code snippet but in a more expressive way:
+
+```javascript
+import { _Link } from '@qutejs/types';
+
+Qute(ComponentTemplate).properties({
+    myReactiveProperty: _Link('MyApplicationProperty')
+});
+```
+
+See the **[Property Types](#/model/proptypes)** page for more information on the `_Link` property type.
+
 
 ### Example - Binding an async property to a ViewModel Component
 
@@ -107,12 +127,11 @@ import qSpinner from '@qutejs/spinner';
 var Root = Qute(RootTemplate, {
 	init(app) {
 		this.session = app.session;
-		return {
-			user: app.prop('Session/user'), // bind the async user property
-			loginPending: app.prop('Session/user/pending') // bind the user/pending property
-		}
 	}
-});
+}).properties(app => ({
+    user: app.prop('Session/user'), // bind the async user property
+    loginPending: app.prop('Session/user/pending') // bind the user/pending property
+}));
 
 function SessionManager(app) {
 	// this will create an application property named 'Session/user'
@@ -185,10 +204,17 @@ The linked property will act as a proxy to the application property.
 
 ## `__qute_prop(vm, key)`
 
-This is a private method used to bind the application property to a component reactive property.
-It should never be used directly.
+This is a private method used to bind the application property to a component reactive property. It binds the application property itself as a data source for the reactive property identified by `key` in the given `vm` component instance.
+The function returns a property definition that can be used with `Object.defineProperty()`.
+
+To bind the application property to a component reactive property you just assign it as the default value:
+
+```javascript
+Qute(ComponentTemplate).properties(app => ({
+    myReactiveProp: app.prop('MyApplicationProp')
+}))
+```
 
 You can use it as an example if you need to integrate a state manager like **redux** into Qute.
-In that case, to map a state property to a reactive component property you need to create an object that provide a `__qute_prop` function that is responsible to create the reactive property.  \
-Then to create the binding you need to assign the object providing `__qute_prop` as the initial value of a reactive property.
+In that case, to map a state property to a reactive component property you need to create an object that provide a `__qute_prop` function that is responsible to create the reactive property.
 

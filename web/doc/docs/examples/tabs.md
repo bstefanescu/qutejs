@@ -56,9 +56,6 @@ import Qute from '@qutejs/runtime';
 // --------------------------------------------------- Tab Bar component
 
 const TabBar = Qute(TabBarTemplate, {
-	init() {
-		return { tabs: null }
-	},
 	get activeView() { return this.activeTab && this.activeTab.view },
 	get activeTab() {
 		var tab = null;
@@ -75,6 +72,8 @@ const TabBar = Qute(TabBarTemplate, {
 			this.update();
 		}
 	}
+}).properties({
+    tabs: null
 });
 
 // --------------------------------------------------- Usage
@@ -90,16 +89,12 @@ const TabBar = Qute(TabBarTemplate, {
 	<tab-bar tabs={tabs} />
 </q:template>
 
-export default Qute(RootTemplate, {
-	init() {
-		return {
-			tabs: [
-				{name: 'home', label: 'Home', view: HomePage, active: true},
-				{name: 'settings', label: 'Settings', view: SettingsPage}
-			]
-		}
-	}
-});
+export default Qute(RootTemplate).properties(() => ({
+    tabs: [
+        {name: 'home', label: 'Home', view: HomePage, active: true},
+        {name: 'settings', label: 'Settings', view: SettingsPage}
+    ]
+}));
 ```
 
 ## Advanced Tab Bar Implemenetation
@@ -189,9 +184,6 @@ import Qute from '@qutejs/runtime';
 // --------------------------------------------------- Tab Bar component
 
 const TabBar = Qute(TabBarTemplate, {
-	init() {
-		return { tabs: null }
-	},
 	get activeView() { return this.activeTab && this.activeTab.view },
 	get activeTab() {
 		var tab = null;
@@ -208,6 +200,8 @@ const TabBar = Qute(TabBarTemplate, {
 			this.update();
 		}
 	}
+}).properties({
+    tabs: null
 });
 
 // --------------------------------------------------- Usage
@@ -232,19 +226,16 @@ const TabBar = Qute(TabBarTemplate, {
 </q:template>
 
 export default Qute(RootTemplate, {
-	init() {
-		return {
-			tabs: [
-				{name: 'home', label: 'Home', view: HomePage, active: true},
-				{name: 'settings', label: 'Settings', view: SettingsPage, component: CustomTab},
-			]
-		}
-	},
 	onTabRemove() {
 		window.alert('Handle tab remove ...');
 	},
 	onTabAdd() {
 		window.alert('Handle tab add ...');
 	}
-});
+}).properties(() => ({
+    tabs: [
+        {name: 'home', label: 'Home', view: HomePage, active: true},
+        {name: 'settings', label: 'Settings', view: SettingsPage, component: CustomTab},
+    ]
+}));
 ```

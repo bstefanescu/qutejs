@@ -74,12 +74,12 @@ Anyway, we can use the `q:call` directive to register a handler for connect and 
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='functional' import='handleFuncLoad'>
+<q:template name='Functional' import='handleFuncLoad'>
     <div q:call='handleFuncLoad'>I am a functional component</div>
 </q:template>
 
 <q:template name='RootTemplate'>
-    <functional />
+    <Functional />
 </q:template>
 
 // an object providing two event handlers to be notified

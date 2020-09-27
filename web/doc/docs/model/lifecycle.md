@@ -18,9 +18,7 @@ A Qute Component provides 5 life cycle events that can be used events that can b
 
 ### `init(app)`
 
-Called just after the component is instantiated. Should be used to initialize the component and to declare reactive properties.
-
-Reactive properties are declared by returning an object that maps property keys to default values. Any other component property which is not declared in the returned object will not be reactive.
+Called just after the component is instantiated and the reactive properties created. Can be used to do any initialization stuff.
 
 The current [application instance](#/app/instance) is passed as an argument to the `init` callback.
 

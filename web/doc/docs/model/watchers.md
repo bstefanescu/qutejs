@@ -21,13 +21,9 @@ import Qute from '@qutejs/runtime';
 </div>
 </q:template>
 
-export default Qute(RootTemplate, {
-	init() {
-		return {
-			counter1: 0,
-			counter2: 0
-		}
-	}
+export default Qute(RootTemplate).properties({
+    counter1: 0,
+    counter2: 0
 }).watch('counter1', function(newValue, oldValue) {
 	// just log the update
 	console.log('Updating counter1', oldValue, ' -> ', newValue);

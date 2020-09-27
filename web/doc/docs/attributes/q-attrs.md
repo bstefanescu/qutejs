@@ -91,12 +91,8 @@ import Qute from '@qutejs/runtime';
     <my-button title='Click me' link-text='My Button' />
 </q:template>
 
-const MyLink = Qute(MyLinkTemplate, {
-  init() {
-    return {
-      linkText: "Placeholder"
-    }
-  }
+const MyLink = Qute(MyLinkTemplate).properties({
+    linkText: "Placeholder"
 });
 
 export default Qute(RootTemplate);

@@ -115,9 +115,7 @@ import Qute from '@qutejs/runtime';
 </ul>
 </q:template>
 
-export default Qute(RootTemplate, {
-	init() {
-		return { page: 'home' }
-	}
+export default Qute(RootTemplate).properties({
+    page: 'home'
 })
 ```

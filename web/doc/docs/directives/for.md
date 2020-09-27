@@ -129,15 +129,19 @@ import Qute from '@qutejs/runtime';
 
 export default Qute(RootTemplate, {
 	changeList() {
-		this.list = this.list === this.list1 ? this.list2 : this.list1;
+		this.listIndex = (this.listIndex + 1) % 2;
 	},
 	init() {
-		this.list1 = ["a", "b", "c", "d"];
-		this.list2 = [1,2,3];
-		return {
-			list: this.list1
-		}
-	}
-});
+        this.lists = [
+            ["a", "b", "c", "d"],
+            [1, 2, 3]
+        ]
+	},
+    get list() {
+        return this.lists[this.listIndex];
+    }
+}).properties(() => ({
+    listIndex: 0
+}));
 ```
 

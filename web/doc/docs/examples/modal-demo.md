@@ -31,17 +31,14 @@ import qModal from '@qutejs/modal';
 </q:template>
 
 export default Qute(RootTemplate, {
-    init() {
-    return {
-          animation: null
-        }
-    },
     openModal(e) {
       this.postAsync("my-modal", "open");
     },
     changeAnimation(e) {
       this.animation = e.target.value;
     }
+}).properties({
+    animation: null
 });
 ```
 

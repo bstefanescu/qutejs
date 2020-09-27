@@ -24,12 +24,8 @@ import Qute from '@qutejs/runtime';
 </q:template>
 
 
-export default Qute(RootTemplate, {
-	init() {
-		return {
-			message: "Hello!"
-		}
-	}
+export default Qute(RootTemplate).properties({
+    message: "Hello!"
 });
 ```
 
@@ -60,12 +56,9 @@ import Qute from '@qutejs/runtime';
 export default Qute(RootTemplate, {
 	removeButton() {
 		this.hasButton = false;
-	},
-	init() {
-		return {
-			hasButton: true
-		}
 	}
+}).properties({
+    hasButton: true
 });
 ```
 
@@ -212,27 +205,25 @@ import Qute from '@qutejs/runtime';
 </q:template>
 
 const ChildOne = Qute(ChildOneTemplate, {
-	init() {
-		return {seconds: ''};
-	},
 	askSeconds() {
 		var self = this;
 		this.postAsync('time-channel', 'seconds', function(seconds) {
 			self.seconds = seconds;
 		});
 	}
+}).properties({
+    seconds: ''
 });
 
 const ChildTwo = Qute(ChildTwoTemplate, {
-	init() {
-		return {minutes: ''};
-	},
 	askMinutes() {
 		var self = this;
 		this.postAsync('time-channel', 'minutes', function(minutes) {
 			self.minutes = minutes;
 		});
 	}
+}).properties({
+    minutes: ''
 });
 
 var app = new Qute.App();

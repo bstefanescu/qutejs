@@ -30,12 +30,8 @@ const MyLazyComponent = LazyComponent('/doc/files/lazy-component.js');
     </div>
 </q:template>
 
-export default Qute(MyTemplate, {
-    init() {
-        return {
-            showLazyComponent: false
-        }
-    }
+export default Qute(MyTemplate).properties({
+    showLazyComponent: false
 })
 ```
 

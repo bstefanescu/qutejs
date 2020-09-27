@@ -32,12 +32,8 @@ import Qute from '@qutejs/runtime';
 </if>
 </q:template>
 
-export default Qute(RootTemplate, {
-	init() {
-		return {
-			hasSection2: true
-		}
-	}
+export default Qute(RootTemplate).properties({
+    hasSection2: true
 });
 ```
 
@@ -73,12 +69,9 @@ export default Qute(RootTemplate, {
 	},
 	onUserChanged(hasUser) {
 		console.log('user changed', hasUser);
-	},
-	init() {
-		return {
-			user: null
-		}
 	}
+}).properties({
+    user: null
 });
 ```
 
@@ -125,14 +118,11 @@ import Qute from '@qutejs/runtime';
 </q:template>
 
 export default Qute(RootTemplate, {
-	init() {
-		return {
-			status: 'active'
-		}
-	},
 	updateStatus(e) {
 		this.status = e.target.value;
 	}
+}).properties({
+    status: 'active'
 });
 ```
 

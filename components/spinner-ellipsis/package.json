@@ -38,8 +38,11 @@
   },
   "build": {
     "globals": {
-      "@qutejs/spinner": "Qute.Spinner"
+        "@qutejs/spinner": "QuteSpinner"
     },
+    "external": [
+        "@qutejs/window", "@qutejs/spinner"
+    ],
     "config": "component"
   }
 }

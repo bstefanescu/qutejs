@@ -65,6 +65,7 @@ The ellipsis spinner is accepting the following attributes:
 ```jsq
 import Qute from '@qutejs/runtime';
 import qSpinner from '@qutejs/spinner';
+import '@qutejs/spinner-ellipsis';
 
 <q:template name='RootTemplate'>
     <div style='margin-top: 20px'>
@@ -90,6 +91,7 @@ The 2dots spinner is accepting the following attributes:
 ```jsq
 import Qute from '@qutejs/runtime';
 import qSpinner from '@qutejs/spinner';
+import '@qutejs/spinner-2dots';
 
 <q:template name='RootTemplate'>
     <div style='margin-top: 20px'>
@@ -108,7 +110,8 @@ export default Qute(RootTemplate);
 
 
 ```javascript
-import Spinner from '@qutejs/spinner-ellipsis';
+import Spinner from '@qutejs/spinner';
+import '@qutejs/spinner-ellipsis';
 
 Spinner.setDefault('ellipsis');
 
@@ -120,7 +123,8 @@ Spinner.setDefault('ellipsis');
 You can register a custom element name to point to a spinner type with a predefined configuration.
 
 ```javascript
-import Spinner from '@qutejs/spinner-ellipsis';
+import Spinner from '@qutejs/spinner';
+import '@qutejs/spinner-ellipsis';
 
 Spinner.register('loading-page', {
 	type: 'ellipsis',

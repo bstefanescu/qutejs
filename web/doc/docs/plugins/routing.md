@@ -103,13 +103,9 @@ app.subscribe('route', function(key) {
   router.route(key);
 });
 
-var Root = Qute(RootTemplate, {
-  init(app) {
-    return {
-      currentPage: app.prop('Pages/current') // bind to app property
-    }
-  }
-});
+var Root = Qute(RootTemplate).properties(app => ({
+    currentPage: app.prop('Pages/current') // bind to app property
+}));
 new Root(app).mount('app');
 ```
 

@@ -56,6 +56,4 @@ Spinner.register = function(name, opts) {
 	});
 }
 
-Qute.Spinner = Spinner;
-
 export default Spinner;

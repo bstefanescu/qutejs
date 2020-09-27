@@ -75,7 +75,7 @@ function ViewModel(app, attrs) {
         Object.defineProperty(this, key, createProp(this, key, props[key]));
     }
     // call init hook
-    this.init(app);
+    this.init && this.init(app);
 
 	if (!this.render) ERR("No render function defined for the ViewModel!");
 
@@ -386,9 +386,8 @@ ViewModel.prototype = {
 	},
 	toHTML: function() {
 		return this.$el && this.$el.outerHTML;
-	},
+	}
 	// ---------------------------------------------
-	init: function() {} // do nothing
 }
 
 export default ViewModel;

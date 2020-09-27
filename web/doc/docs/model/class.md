@@ -10,13 +10,6 @@ import Qute from '@qutejs/runtime';
 </q:template>
 
 class MyComponent extends Qute.ViewModel {
-	init() {
-		// let's define a reactive property
-		return {
-			message: 'I am a class!'
-		}
-	}
-
 	connected() {
 		// log when component is connected to the DOM
 		console.log('Connected to', this.$el);
@@ -24,7 +17,9 @@ class MyComponent extends Qute.ViewModel {
 }
 
 // register the components
-export default Qute(MyTemplate, MyComponent);
+export default Qute(MyTemplate, MyComponent).properties({
+    message: 'I am a class!'
+});
 ```
 
 A component class must extends the Qute.ViewModel. Apart this the class is identical to a component definition object - it may define lifecycle listeners, methods, reactive properties etc.
@@ -38,12 +33,6 @@ import {document} from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
 class MyComponent extends Qute.ViewModel {
-	init() {
-		// let's define a reactive property
-		return {
-			message: 'I am a class!'
-		}
-	}
 
 	render(rendering) {
 		var div = document.createElement('DIV');
@@ -58,7 +47,9 @@ class MyComponent extends Qute.ViewModel {
 }
 
 // register the component
-export default Qute(MyComponent);
+export default Qute(MyComponent).properties({
+    message: 'I am a class!'
+});
 ```
 
 **Note** that you still need to call `Qute(ClassObject)` even if you define the `render` method. This is because the Qute() call is also setting an internal property on the prototype named `__VM__` that points to the ViewModel constructor.

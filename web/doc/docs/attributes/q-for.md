@@ -26,11 +26,9 @@ Let say `myList` is a reactive property on the following component:
   <div q:for='item in myList'>...</div>
 </q:template>
 
-Qute(MyList, {
-  init() {
-    return {myList: ["item 1", "item 2", "item 3"]}
-  }
-});
+Qute(MyList).properties(() => ({
+    myList: ["item 1", "item 2", "item 3"]
+}));
 ```
 
 Modifying the component list property like this:
@@ -121,13 +119,10 @@ export default Qute(RootTemplate, {
   add() {
     this.list.push('Item '+(this.counter++));
     this.update(); // schedule a DOM update
-  },
-  init() {
-    return {
-      list: ['Item X', 'Item Y']
-    };
   }
-});
+}).properties(() => ({
+    list: ['Item X', 'Item Y']
+}));
 ```
 
 ### Removing items
@@ -168,13 +163,10 @@ export default Qute(RootTemplate, {
   add() {
     this.list.push('Item '+(this.counter++));
     this.update(); // schedule a DOM update
-  },
-  init() {
-    return {
-      list: ['Item X', 'Item Y']
-    };
   }
-});
+}).properties(() => ({
+    list: ['Item X', 'Item Y']
+}));
 ```
 
 You can notice how the `item` component (which is a functional component - since it hasn't a model) is emitting	a `remove` event when the remove button is pressed so that the parent component which is controling the list do the remove.
@@ -241,10 +233,9 @@ const MyItem = Qute(MyItemTemplate, {
         if (r != null) {
             this.text = r;
         }
-    },
-    init() {
-      return { id: null, text: null};
     }
+}).properties({
+    id: null, text: null
 });
 
 export default Qute(RootTemplate, {
@@ -262,16 +253,13 @@ export default Qute(RootTemplate, {
     var id = counter++;
     this.list.push({id: id, text:'Item '+id});
     this.update();
-  },
-  init() {
-    return {
-      list: [
+  }
+}).properties(() => ({
+    list: [
         {id: 'x', text: 'Item X'},
         {id: 'y', text: 'Item Y'}
-      ]
-    };
-  }
-});
+    ]
+}));
 ```
 
 

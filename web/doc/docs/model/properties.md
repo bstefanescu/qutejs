@@ -7,24 +7,32 @@ Reactive properties must be defined explicitly.
 
 ## Reactive Properties
 
-To define **reactive properties** you need to implement the `ViewModel.init()` method and to return an object mapping reactive property names to default values.
+To define **reactive properties** you need to use the `Qute.properties()` to pass an object with property key / default value pairs or a factory function which is returning the properties object
 
 **Example**
 
 ```javascript
-Qute(MyComponentTemplate, {
-	init() {
-		return {
-			firstName: 'Foo',
-			lastName: 'Bar',
-			age: 80,
-			title: null
-		}
-	}
+Qute(MyComponentTemplate).properties({
+    firstName: 'Foo',
+    lastName: 'Bar',
+    age: 80,
+    title: null
 });
 ```
 
 This will define 4 **reactive properties**, initialized with the declared default values.
+
+When using objects or arrays as default values you must either use a **[property type](#/model/proptypes)** to define the property either to use pass a facotry function to the `properties()` method.
+
+**Example:**
+
+```javascript
+Qute(MyComponentTemplate).properties(() => ({
+    name: 'Foo',
+    items: [1, 2, 3]
+}));
+```
+If you don't use a factory function the array default value (e.g. [1,2,3] in our example) will be shared between all component instances, and modifying it in an instance will have impact on all instances.
 
 ### How reactive properties are implemented?
 
@@ -39,6 +47,8 @@ Check the **[Property Watchers](#/model/watchers)** section for more details.
 ## Regular Properties
 
 Regular `ViewModel` properties will not trigger any DOM update when changed. Just use regular object properties when you don't need **reactivity**. Also, note that regular properties **are not mappable from template attributes**!
+
+To define a regular property you can use the `init()` method whoch is called just after components instance was created an the reactive property were initialized.
 
 **Example**
 
@@ -88,11 +98,10 @@ import Qute from '@qutejs/runtime';
 const MyComponent = Qute(MyComponentTemplate, {
 	init() {
 		this.name = 'the name';
-		return {
-			reactiveProp: null,
-			title: null
-		}
 	}
+}).properties({
+    reactiveProp: null,
+    title: null
 });
 
 export default Qute(RootTemplate);

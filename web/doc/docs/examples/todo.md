@@ -24,7 +24,7 @@ See [Property Types](#/model/proptypes) for more information on `_List`.
 
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
-import { _List } from '@qutejs/types';
+import { _List, _Array } from '@qutejs/types';
 
 // ------------------------------------------ Styles
 
@@ -68,9 +68,6 @@ import { _List } from '@qutejs/types';
 // ------------------------------------------ Javascript
 
 const TodoItem = Qute(TodoItemTemplate, {
-	init() {
-		return { todo: null };
-	},
 	toggleDone() {
 		this.todo.done = !this.todo.done;
 		// update the DOM: this is needed since todo instance didn't changed
@@ -79,15 +76,14 @@ const TodoItem = Qute(TodoItemTemplate, {
 		this.emit('change', this.todo);
 		return false;
 	}
+}).properties({
+    todo: null
 });
 
 var CNT = 0;
 const TodoList = Qute(TodoListTemplate, {
 	init() {
 		this.input = null;
-		return {
-			todos: _List('id')
-		}
 	},
 	connected() {
 		this.input.focus();
@@ -108,17 +104,15 @@ const TodoList = Qute(TodoListTemplate, {
 	exportJson() {
 		window.alert(JSON.stringify(this.todos));
 	}
+}).properties({
+	todos: _List('id')
 });
 
-export default Qute(RootTemplate, {
-	init() {
-		return {
-			todos: [
-				{ id: "todo1", text: "Write some code", done: false },
-				{ id: "todo2", text: "Drink a beer", done: true }
-			]
-		}
-	}
+export default Qute(RootTemplate).properties({
+    todos: _Array([
+        { id: "todo1", text: "Write some code", done: false },
+        { id: "todo2", text: "Drink a beer", done: true }
+    ])
 });
 ```
 
@@ -134,7 +128,7 @@ This approach is better in term of memory usage since it doesn't instantiate a c
 
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
-import { _List } from '@qutejs/types';
+import { _List, _Array } from '@qutejs/types';
 
 // ------------------------------------------ Styles
 
@@ -177,7 +171,6 @@ var CNT = 0;
 const TodoList = Qute(TodoListTemplate, {
 	init() {
 		this.input = null;
-		return { todos: _List('id') };
 	},
 	connected() {
 		this.input.focus();
@@ -205,17 +198,15 @@ const TodoList = Qute(TodoListTemplate, {
 	exportJson() {
 		window.alert(JSON.stringify(this.todos));
 	}
+}).properties({
+    todos: _List('id')
 });
 
-export default Qute(RootTemplate, {
-	init() {
-		return {
-			todos: [
-				{ id: "todo1", text: "Write some code", done: false },
-				{ id: "todo2", text: "Drink a beer", done: true }
-			]
-		}
-	}
+export default Qute(RootTemplate).properties({
+    todos: _Array([
+        { id: "todo1", text: "Write some code", done: false },
+        { id: "todo2", text: "Drink a beer", done: true }
+    ])
 });
 ```
 
@@ -272,9 +263,6 @@ var CNT = 0;
 const TodoList = Qute(TodoListTemplate, {
 	init() {
 		this.input = null;
-		return {
-			todos: null
-		}
 	},
 	connected() {
 		this.input.focus();
@@ -320,18 +308,16 @@ const TodoList = Qute(TodoListTemplate, {
 	exportJson() {
 		window.alert(JSON.stringify(this.todos));
 	}
+}).properties({
+    todos: null
 });
 
-export default Qute(RootTemplate, {
-	init() {
-		return {
-			todos: [
-				{ id: "todo1", text: "Write some code", done: false },
-				{ id: "todo2", text: "Drink a beer", done: true }
-			]
-		}
-	}
-});
+export default Qute(RootTemplate).properties(() => ({
+    todos: [
+        { id: "todo1", text: "Write some code", done: false },
+        { id: "todo2", text: "Drink a beer", done: true }
+    ]
+}));
 ```
 
 

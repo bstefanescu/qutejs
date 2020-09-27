@@ -98,10 +98,8 @@ import Qute from '@qutejs/runtime';
 </div>
 </q:template>
 
-export default Qute(RootTemplate, {
-	init() {
-		return { text: "some text" }
-	}
+export default Qute(RootTemplate).properties({
+    text: "some text"
 }).on('click', 'button', function(event) {
 	console.log("Handling click event: ", this, event);
 }).on('change', 'input', function(event) {

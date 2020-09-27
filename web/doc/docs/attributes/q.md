@@ -229,12 +229,8 @@ Qute.registerDirective('color-spans', function(xattrs, colorExpr) {
     };
 });
 
-export default Qute(RootTemplate, {
-    init() {
-        return {
-            color: null
-        }
-    }
+export default Qute(RootTemplate).properties({
+    color: null
 });
 ```
 

@@ -27,13 +27,9 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-export default Qute(RootTemplate, {
-	init() {
-		return {
-			disableButton1: false,
-			disableButton2: false
-		};
-	}
+export default Qute(RootTemplate).properties({
+    disableButton1: false,
+    disableButton2: false
 });
 ```
 
@@ -63,12 +59,8 @@ import Qute from '@qutejs/runtime';
 
 const FirstButton = Qute(FirstButtonTemplate);
 
-export default Qute(RootTemplate, {
-	init() {
-		return {
-			disableButton1: false,
-			disableButton2: false
-		};
-	}
+export default Qute(RootTemplate).properties({
+    disableButton1: false,
+    disableButton2: false
 });
 ```

@@ -21,13 +21,9 @@ import Qute from '@qutejs/runtime';
     <div q:html='content' />
 </q:template>
 
-export default Qute(RootTemplate, {
-	init() {
-		return {
-			content: "<p>This is some <b>HTML</b> content</p><p>Expressions are not interpreted: {{someProperty}}</p>",
-			someProperty: 'hello!'
-		}
-	}
+export default Qute(RootTemplate).properties({
+    content: "<p>This is some <b>HTML</b> content</p><p>Expressions are not interpreted: {{someProperty}}</p>",
+    someProperty: 'hello!'
 });
 ```
 changing the `content` property value will be reflected in the DOM:
@@ -44,17 +40,14 @@ import Qute from '@qutejs/runtime';
 </q:template>
 
 export default Qute(RootTemplate, {
-	init() {
-		return {
-			content: "<p>This is some <b>HTML</b> content</p><p>Expressions are not interpreted: {{someProperty}}</p>",
-			someProperty: 'hello!',
-			changed: false
-		}
-	},
 	changeContent() {
 		this.content = "<p>The content <b>changed</b>!</p>";
 		this.changed = true;
 	}
+}).properties({
+    content: "<p>This is some <b>HTML</b> content</p><p>Expressions are not interpreted: {{someProperty}}</p>",
+    someProperty: 'hello!',
+    changed: false
 });
 ```
 

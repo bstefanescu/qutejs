@@ -75,14 +75,6 @@ var pages = {
 }
 
 var Root = Qute(RootTemplate, {
-	init(app) {
-		return {
-			user: _Link('Session/user'),
-			loginPending: _Link('Session/user/pending'),
-			loginError: _Link('Session/user/error'),
-			currentPage: _Link('Pages/current')
-		};
-	},
 	login() {
 		this.$app.session.login('Foo');
 	},
@@ -97,6 +89,11 @@ var Root = Qute(RootTemplate, {
 			this.currentPage = page;
 		}
 	}
+}).properties({
+    user: _Link('Session/user'),
+    loginPending: _Link('Session/user/pending'),
+    loginError: _Link('Session/user/error'),
+    currentPage: _Link('Pages/current')
 });
 
 function SessionManager(app) {

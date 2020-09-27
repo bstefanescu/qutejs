@@ -44,8 +44,12 @@ In both cases the root component, and any component rendered as part of the comp
 
 Thus, the application instance will be shared between all the components in the tree. Components will usually use the application instance to bind properties to application data properties or to use services provided by the application.
 
-The application instance is also passed for convenience to the `init(app)` method of a `ViewModel` component.  \
-The `init` method is used to declare the reactive properties of a component. You may want to bind here some component property to an application data property. You can see a complete example demonstrating application data binding in **[Application Data Model](#/app/data)** section.
+The application instance is passed as an argument to the `init(app)` method of a `ViewModel` component.
+Also, it is passed as argument to the properties factory function if any (see **[ViewModel Properties](#/model/properties)**) and to the factory functions used to specify a default property value (see **[Property Types](#/model/proptypes)**).
+
+The factory functions are used to create defualt values for reactive properties. You may want to bind there a component property to an application data property. To do this you need to access the `app.prop(propName)`. This is why the `app` instance is provided to factory functions. There is also a easiest way to bind component reactive properties to application properties: by using the `_Link` property type.
+
+You can see a complete example demonstrating application data binding in **[Application Data Model](#/app/data)** section.
 
 Most of the UI components will never have to explicitly use the application instance.
 

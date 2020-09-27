@@ -101,9 +101,6 @@ export default Qute(RootTemplate, {
             view2: ViewTwo,
             view3: ViewThree
         }
-		return {
-			currentViewName: 'placeholder'
-		}
 	},
     removeCurrentView() {
         this.currentViewName = 'placeholder';
@@ -111,6 +108,8 @@ export default Qute(RootTemplate, {
     get currentView() {
         return this.views[this.currentViewName];
     }
+}).properties({
+	currentViewName: 'placeholder'
 });
 ```
 
@@ -178,9 +177,6 @@ export default Qute(RootTemplate, {
             view2: ViewTwo,
             view3: ViewThree
         }
-		return {
-			currentViewName: 'placeholder'
-		}
 	},
     removeCurrentView() {
         this.currentViewName = 'placeholder';
@@ -188,6 +184,8 @@ export default Qute(RootTemplate, {
     get currentView() {
         return this.views[this.currentViewName];
     }
+}).properties({
+    currentViewName: 'placeholder'
 });
 ```
 

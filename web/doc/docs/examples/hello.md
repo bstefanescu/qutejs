@@ -80,13 +80,8 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-export default Qute(HelloTemplate, {
-	init() {
-		// define a reactive property
-		return {
-			name: "Foo"
-		}
-	}
+export default Qute(HelloTemplate).properties({
+    name: "Foo"
 });
 ```
 
@@ -131,13 +126,8 @@ import '@qutejs/form';
 	</div>
 </q:template>
 
-export default Qute(HelloTemplate, {
-	init() {
-		// define a reactive property
-		return {
-			name: "Foo"
-		}
-	}
+export default Qute(HelloTemplate).properties({
+    name: "Foo"
 });
 ```
 

@@ -58,15 +58,12 @@ import Qute from '@qutejs/runtime';
 </q:template>
 
 export default Qute(MyTabs, {
-	init: function() {
-		return {
-			user: 'Foo',
-			activeTab: null // no tab selected by default
-		}
-	},
 	viewChanged() {
 		console.log('View changed: ', this.activeTab ? this.activeTab.name : null);
 	}
+}).properties({
+    user: 'Foo',
+    activeTab: null // no tab selected by default
 });
 ```
 

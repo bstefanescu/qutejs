@@ -80,19 +80,16 @@ div {
 Qute.install(formPlugin);
 
 export default Qute(RootTemplate, {
-	init() {
-		return {
-			name: null,
-			agree: false,
-			city: 'Paris',
-			gender: null
-		}
-	},
 	handleSubmit() {
 		var json = JSON.stringify(this);
 		alert(json);
 		return false;
 	}
+}).properties({
+    name: null,
+    agree: false,
+    city: 'Paris',
+    gender: null
 });
 ```
 
@@ -298,17 +295,15 @@ export default Qute(RootTemplate, {
 		this.checkPassword = function(el) {
 			return this.pass !== el.value ? 'Passwords does not match!' : '';
 		}.bind(this);
-
-		return {
-			user: null,
-			email: null,
-			pass: null,
-		}
 	},
 	handleSubmit() {
 		alert('Username: '+this.user+'\nE-mail: '+this.email+'\nPassword: '+this.pass);
 		return false;
 	}
+}).properties({
+    user: null,
+    email: null,
+    pass: null,
 });
 ```
 

@@ -36,12 +36,10 @@ var PageHeader = Qute(PageHeaderTemplate).on('click', 'a[data-message-type]', fu
 	this.postAsync('messages', msgType, msg);
 	return false;
 });
-var PageContent = Qute(PageContentTemplate, {
-	init() {
-		return { message: '' }
-	}
-}).channel(function(event, data) {
+var PageContent = Qute(PageContentTemplate).channel(function(event, data) {
 	this.message = 'Received '+event+': '+data;
+}).properties({
+    message: ''
 });
 export default Qute(RootTemplate);
 ```

@@ -81,12 +81,6 @@ import qPopup from '@qutejs/popup';
 </q:style>
 
 export default Qute(RootTemplate, {
-    init() {
-		return {
-          position: 'bottom start',
-          animation: null
-        }
-    },
     openPopup(event) {
       this.postAsync("my-popup", "open", event.target);
 	},
@@ -96,6 +90,9 @@ export default Qute(RootTemplate, {
     changePosition(e) {
       this.position = e.target.value;
     }
+}).properties({
+    position: 'bottom start',
+    animation: null
 });
 ```
 

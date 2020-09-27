@@ -29,10 +29,8 @@ import Qute from '@qutejs/runtime';
 
 // ------------------------------------------ Javascript
 
-const MyCounter = Qute(CounterTemplate, {
-	init() {
-		return { value: 0 }
-	}
+const MyCounter = Qute(CounterTemplate).properties({
+    value: 0
 });
 
 export default Qute(RootTemplate);
@@ -71,15 +69,6 @@ import Qute from '@qutejs/runtime';
 // ------------------------------------------ Javascript
 
 const MyCounter = Qute(CounterTemplate, {
-	init() {
-		return {
-			name: null,
-			value: 0,
-	        step: 1,
-	        min: Number.MIN_VALUE,
-	        max: Number.MAX_VALUE
-        }
-	},
 	get canIncrement() {
 		return this.value < this.max;
 	},
@@ -109,6 +98,12 @@ const MyCounter = Qute(CounterTemplate, {
 			input.dispatchEvent(new window.CustomEvent('change', {bubbles:true, detail: value}));
 		});
 	}
+}).properties({
+    name: null,
+    value: 0,
+    step: 1,
+    min: Number.MIN_VALUE,
+    max: Number.MAX_VALUE
 });
 
 export default Qute(RootTemplate);
@@ -183,14 +178,6 @@ Qute.install(FormPlugin);
 const MyCounter = Qute(CounterTemplate, {
 	init() {
 		this.input = null;
-		return {
-			name: null,
-			required: false,
-			value: 0,
-	        step: 1,
-	        min: Number.MIN_VALUE,
-	        max: Number.MAX_VALUE
-        }
 	},
 	get canIncrement() {
 		return this.value < this.max;
@@ -221,6 +208,13 @@ const MyCounter = Qute(CounterTemplate, {
 			input.dispatchEvent(new window.CustomEvent('change', {bubbles:true, detail:value}));
 		});
 	}
+}).properties({
+    name: null,
+    required: false,
+    value: 0,
+    step: 1,
+    min: Number.MIN_VALUE,
+    max: Number.MAX_VALUE
 });
 
 FormPlugin.registerControl(MyCounter);
@@ -246,15 +240,12 @@ FormPlugin.registerControl(MyCounter);
 </q:template>
 
 export default Qute(RootTemplate, {
-	init() {
-		return {
-			counter: -4
-		}
-	},
 	handleSubmit(e) {
 		alert('Counter is ' + this.counter);
 		return false;
 	}
+}).properties({
+    counter: -4
 });
 ```
 

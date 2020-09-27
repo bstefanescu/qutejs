@@ -26,13 +26,6 @@ API:
 
 
 const QutePopup = Qute({
-	init: function() {
-		return {
-			position: 'bottom start',
-			animation: null,
-			autoClose: true
-		}
-	},
 	render: function() {
 		return document.createComment('[popup]');
 	},
@@ -74,6 +67,10 @@ const QutePopup = Qute({
 	get isOpen() {
 		return this.popup.isOpen();
 	}
+}).properties({
+    position: 'bottom start',
+    animation: null,
+    autoClose: true
 }).channel(function(msg, data) {
 	if (msg === 'open') {
 		this.popup.open(data);
@@ -92,7 +89,5 @@ const QutePopup = Qute({
 	this.popup.closeOnClick(!!value);
 	return false;
 });
-
-Qute.Popup = Popup;
 
 export default QutePopup;

@@ -39,9 +39,8 @@ import Qute from '@qutejs/runtime';
 </q:template>
 
 
-export default Qute(RootTemplate, {
-    init() {
-      return {showIt: true}
-    }
+export default Qute(RootTemplate).properties({
+    showIt: true
 });
 ```
+
