@@ -36,7 +36,16 @@ function compileTemplate(compiler, attrs, text) {
     var imports = attrs.import || null;
 
     var compiledFn = compiler.compile(text, splitList(imports));
-    return "var "+name+" = "+compiledFn+';\n'+name+'.$compiled = true;\n';
+
+    var exportLine = '';
+    if (attrs.export) {
+        if (attrs.default) {
+            exportLine = 'export default '+name+';\n';
+        } else {
+            exportLine = 'export '+name+';\n';
+        }
+    }
+    return "var "+name+" = "+compiledFn+';\n'+name+'.$compiled = true;\n'+exportLine;
 }
 
 function defaultCompileStyle(compiler, attrs, text) {

@@ -79,6 +79,7 @@ if (devMode) { // dev mode
 		output: {
 	        file: './lib/index.cjs.js',
 	        format: 'cjs',
+            exports: "auto",
 	        globals: {'@qutejs/window': 'window'},
 	        sourcemap: true
 		},

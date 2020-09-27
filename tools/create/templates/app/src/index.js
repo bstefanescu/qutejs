@@ -1,4 +1,4 @@
-import App from './app.jsq';
+import App from './app.js';
 
 new App().mount('app');
 

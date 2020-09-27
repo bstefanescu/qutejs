@@ -177,5 +177,5 @@ i18n.load('en').then(function() {
     // language loaded -> ready to use i18n
     // you can mount your application now
 	new Hello().mount('app');
-})
+});
 ```
