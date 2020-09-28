@@ -404,8 +404,19 @@ var QATTRS = {
 		}
 	},
 	markdown(attr) {
-		return new StaticNode(this, 'markdown');
-	},
+		if (attr.value === true) {
+			return new StaticNode(this, 'markdown');
+		} else {
+			this.xattr('$html', "$.cvt("+attr.value+", 'markdown')");
+		}
+    },
+    content(attr, ctype) {
+		if (attr.value === true) {
+			return new StaticNode(this, ctype !== 'html' ? ctype : null);
+		} else {
+			this.xattr('$html', ctype !== 'html' ? "$.cvt("+attr.value+", "+_s(ctype)+")":attr.value);
+		}
+    },
 	call(attr) {
 		this.directive('@', attr);
 	},
@@ -625,8 +636,7 @@ function DomNode(name, caseSensitiveName, attrs) {
 		} else if (name.startsWith('async-emit-')) {
 			this.emit(name.substring(11), attr.value, true);
 		} else if (name.startsWith('content-')) {
-	        var ctype = name.substring(8);
-	        r = new StaticNode(this, ctype !== 'html' ? ctype : null);
+            return QATTRS.content(attr.value, name.substring(8));
 		} else {
 			this.directive(name, attr);
 		}

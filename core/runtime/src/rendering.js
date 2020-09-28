@@ -85,6 +85,13 @@ function extractSlots(children) {
 
 
 var RenderingProto = {
+    cvt: function(content, type) { // used by $html top convert markdown to html
+        var converter = converters[type];
+        if (!converter) {
+            ERR("Unknown converter: %s", type);
+        }
+        return converter(content, this);
+    },
 	x: function(expr) { // expression {{ ... }}
 		var text = expr(this.model);
 		var el = document.createTextNode(text);

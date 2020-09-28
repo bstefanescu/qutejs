@@ -35,9 +35,26 @@ Some content
 export default Qute(RootTemplate);
 ```
 
+You can also pass the markdown content through an attribute:
+
+```jsq
+import Qute from '@qutejs/runtime';
+
+<q:template name='RootTemplate'>
+<div q:markdown={content} />
+</q:template>
+
+export default Qute(RootTemplate).properties({ content: `
+# My Header
+
+Some content
+`});
+```
+
+
 # The q:content-* attribute
 
-In the same way, you can use any type of static content to be converted into HTML and inserted in an element.
+In the same way, you can use any type of content to be converted into HTML and inserted in an element.
 Just use the attribute `q:content-typeName` where **typeName** is the name of the type to convert and register the converter using the same type name:
 
 ```javascript
