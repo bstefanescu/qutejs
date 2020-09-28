@@ -25,27 +25,12 @@ function compileStyle(compiler, attrs, text) {
 }
 
 function JSQLoader(transpileES6) {
-	// parse playground directives like @script @style etc.s
-	// return {code, script, style}
-	function parseDirectives(source) {
-	    var r = {};
-	    r.code = source.replace(/^\/\/@([a-z]+)\s+(\S+)$/gm, function(m, p1, p2) {
-	        var list = r[p1];
-	        if (!list) {
-	            r[p1] = list = [];
-	        }
-	        list.push(p2);
-	        return '';
-	    }).trim();
-	    return r;
-	}
 
 	this.create = function(code, name) {
 		if (!name) name = 'QuteLambda';
-		var imports = {};
+        var imports = {};
+        var styles = [];
 
-		var dirs = parseDirectives(code);
-		code = dirs.code;
 		code = code.replace(IMPORT_RX, function(m, p1, p2, p3, p4) {
 			var path = p2 || p3 || p4, extraCode;
 			if (path) {
@@ -64,8 +49,12 @@ function JSQLoader(transpileES6) {
                     } else {
                         imports[path] = p1;
                     }
-				} else { // an import
-					imports[path] = "";
+                } else { // an import
+                    if (path.slice(-4) === '.css') {
+                        styles.push(path);
+                    } else {
+                        imports[path] = "";
+                    }
 				}
 			}
 
@@ -76,7 +65,7 @@ function JSQLoader(transpileES6) {
 		var hasExport = false;
 		code = code.replace(EXPORT_RX, function(m) {
 			hasExport = true;
-			return "var __DEFAULT_EXPORT__ = ";
+			return "var __QUTE_DEV_DEFAULT_EXPORT__ = ";
 		});
         code = new Compiler().transpile(code, {
             sourceMap: false,
@@ -87,14 +76,13 @@ function JSQLoader(transpileES6) {
 		}
 
 
-		if (hasExport) code += '\nreturn __DEFAULT_EXPORT__;\n';
+		if (hasExport) code += '\nreturn __QUTE_DEV_DEFAULT_EXPORT__;\n';
 
 		var script = new Script();
 		script.code = code;
 		script.imports = imports;
 		script.name = name;
-		script.scripts = dirs.script;
-		script.styles = dirs.style;
+		script.styles = styles;
 
 		return script;
 	}
@@ -122,7 +110,6 @@ function Script() {
 	this.code = null;
 	this.comp = null;
 	this.imports = null;
-	this.scripts = null;
 	this.styles = null;
 
 	this.run = function() {
@@ -133,23 +120,14 @@ function Script() {
 	}
 
 	this.hasDependencies = function() {
-		return (this.scripts && this.scripts.length > 0)
-			|| (this.imports && Object.keys(this.imports).length > 0);
+		return (this.imports && Object.keys(this.imports).length > 0);
 	}
 
 	// dependencies are returned in the same order they was declared
-	// scripts comes first then comes the imports
 	this.getDependencies = function() {
 		var set = {}, result = [];
-		var scripts = this.scripts;
 		var imports = this.imports;
 
-		scripts && scripts.forEach(function(script) {
-			if (!set[script]) {
-				set[script] = true;
-				result.push(script);
-			}
-		});
 		imports && Object.keys(imports).forEach(function(key) {
 			if (!set[key]) {
 				set[key] = true;

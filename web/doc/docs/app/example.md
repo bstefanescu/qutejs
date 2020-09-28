@@ -1,7 +1,7 @@
 # Application Data and Services Example
 
 ```jsq
-//@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
+import "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css";
 
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
@@ -55,10 +55,10 @@ import { _Link } from '@qutejs/types';
 			<div style='float:right'>
 				<if value='user'>
 				Hello {{user}}!
-				<button @click='logout'>Logout</button>
+				<button class='btn btn-primary' @click='logout'>Logout</button>
 				<else />
 				<q:spinner size='8px' inline q:show='loginPending'/>
-				<button @click='login' q:toggle-disabled={loginPending}>Login</button>
+				<button class='btn btn-primary' @click='login' q:toggle-disabled={loginPending}>Login</button>
 				</if>
 			</div>
 		</div>

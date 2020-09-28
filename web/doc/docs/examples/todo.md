@@ -20,7 +20,7 @@ See [Property Types](#/model/proptypes) for more information on `_List`.
 
 
 ```jsq
-//@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
+import "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css";
 
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
@@ -124,7 +124,7 @@ In this example the todo item template will be inlined in the todo list template
 This approach is better in term of memory usage since it doesn't instantiate a component for each item.
 
 ```jsq
-//@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
+import "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css";
 
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
@@ -217,7 +217,7 @@ Here is the same example as before, but without using the Qute list helper. The 
 **Note** that we use a special property `__dirty__` on the list instance to inform the udpater that a list item content changed. We can also clone the modified item and then replace the original item to force an item update.
 
 ```jsq
-//@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
+import "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css";
 
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';

@@ -97,8 +97,7 @@ export default Qute(RootTemplate, {
 Here is a simple example on how to use the `q:class` object notation to conditionally add or remove a class.
 
 ```jsq
-//@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
-
+import "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css";
 import Qute from '@qutejs/runtime';
 
 <q:template name='RootTemplate'>

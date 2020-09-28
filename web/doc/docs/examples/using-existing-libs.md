@@ -5,8 +5,7 @@ As Qute is working directly on the DOM you can easily use any plain javascript c
 ### Example 1: Wrapping [Bootstrap](https://getbootstrap.com/) Elements
 
 ```jsq
-//playground directives
-//@style https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
+import "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css";
 
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
@@ -25,8 +24,7 @@ export default Qute(MyComponent)
 ### Example 2: Using [jQuery](https://jquery.com/) with [selectivity](https://arendjr.github.io/selectivity/)
 
 ```jsq
-//playground directives
-//@style ../doc/files/selectivity-jquery.min.css
+import "../doc/files/selectivity-jquery.min.css";
 
 import Qute from '@qutejs/runtime';
 import "https://code.jquery.com/jquery-3.4.1.slim.min.js";
