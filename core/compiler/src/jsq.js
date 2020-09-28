@@ -1,17 +1,10 @@
 
 import MagicString from 'magic-string';
 import { ERR, splitList } from './utils.js';
-import { kebabToCompName } from '@qutejs/commons';
 
 const TAG_RX = /^\s*<(?:(q\:template)|(q\:style))(\s+[^>]*)?>/gm;
 const TAG_END_RX = /\s*<\/(?:(q\:template)|(q\:style))\s*>/g;
 const ATTR_RX = /([-A-Za-z0-9_]+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g;
-
-function getTagName(match) {
-    if (match[1]) return 'q:template';
-    if (match[2]) return 'q:style';
-    ERR("Bug?");
-}
 
 
 function parseAttrs(attrsDecl) {
@@ -27,25 +20,24 @@ function parseAttrs(attrsDecl) {
 }
 
 function compileTemplate(compiler, attrs, text) {
-	if (!attrs || !attrs.name) ERR("q:template attribute 'name' is required");
-	text = text.trim();
-	if (!text) return '';
+    if (!attrs || (!attrs.name && !attrs.export)) ERR("q:template: either the attribute 'name' or 'export' must be specified");
 
-    var name = kebabToCompName(attrs.name);
-    //var fname = kebabToCamel(name);
     var imports = attrs.import || null;
-
     var compiledFn = compiler.compile(text, splitList(imports));
 
+    var name = attrs.name;
+    var exportAttr = attrs.export;
     var exportLine = '';
-    if (attrs.export) {
-        if (attrs.default) {
-            exportLine = 'export default '+name+';\n';
-        } else {
-            exportLine = 'export '+name+';\n';
-        }
+
+    if (exportAttr === true) { // default export
+        name = "__QUTE_DEFAULT_EXPORT__";
+        exportLine = 'export default '+name+';\n';
+    } else if (exportAttr) {
+        name = exportAtrr;
+        exportLine = 'export '+name+';\n';
     }
-    return "var "+name+" = "+compiledFn+';\n'+name+'.$compiled = true;\n'+exportLine;
+
+    return "const "+name+" = "+compiledFn+';\n'+name+'.$compiled = true;\n'+exportLine;
 }
 
 function defaultCompileStyle(compiler, attrs, text) {

@@ -1075,7 +1075,7 @@ function Compiler() {
     this.compile = function(text, imports, pre) { // r is the Renderer
     	var ctx = new Context(Object.assign(imports || {}, SYMBOLS), imports || {}, pre);
     	var r = this.parse(text).compile(ctx);
-    	//console.log("COMPILED:",r);
+        //console.log("COMPILED:",r);
         return 'function($){return '+r+';}';
     }
 
