@@ -22,7 +22,7 @@ It's time to adopt the **green programming**!
 Some quick facts:
 
 * Small and fast **MVVM** framework for building modern javascript applications or UI components.  \
-About **8K** gzipped.
+Under **8K** gzipped.
 * Resource friendly: No Virtual DOM. It's **green software**!
 * **Quickly design components** using the playground or browser inlined components.
 * Provides a **project generator** tool for a modern development experience.

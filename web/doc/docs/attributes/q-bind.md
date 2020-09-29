@@ -11,7 +11,6 @@ import Qute from '@qutejs/runtime';
 <q:template name='RootTemplate'>
   <ul>
   	<li style={'color:'+color}>Using jsx like notation</li>
-  	<li :style="'color:'+color">Using ':' prefix</li>
   	<li q:bind-style="'color:'+color">Using 'q:bind' atribute</li>
   </ul>
 </q:template>

@@ -4,179 +4,58 @@ The main entry point when using Qute is the `Qute` global object. The object its
 
 ## The `Qute()` Function
 
-The `Qute(name, definition)` function is used to define components. It takes 2 arguments:
+The `Qute(renderingFn, model)` function is used to define `ViewModel` components. It takes 2 arguments:
 
-1. the **component name**
-   This is a required argument. The component name must be specified using the **[kebab-case](https://en.wiktionary.org/wiki/kebab_case)**.  \
-   The name can be then used as an element name in templates to render the component.  \
-   If a template using the component name was registered then the component will use this template as its **rendering function**.
-2. the **component definition**
-   This is an optional argument. Can be either a **plain object**, a **class** or a **rendering function**.  \
+1. the **rendering function**.
+   The rendering function can be either a compiled template, either a custom rendering function. If this argument is not provided then it is expected that the model will provide a `render` function, otherwise an exception will be thrown.
+2. the **component model**
+   This is an optional argument. Can be either a **plain object** or a **class**.  \
    See the **[Components](#/components)** section for more details.
 
-The `Qute()` function **returns** a **Component Constructor**.
+The `Qute()` function **returns** a **ViewModel Constructor**.
 
-## The `Qute` Facade
+## The `ViewModel` constructor (i.e. the Component Type)
 
-Also, the `Qute` object acts as a namespace for several global properties and methods.
+This object is returned by the `Qute()` function explained above. We also name this object the **component type**.
+The component type provides a set of chainable functions to further customize the **component**. Each chainable function is returning backl the component type.
 
-### `Qute.closest(element)`
-
-Find the closest Qute ViewModel Component containing the given DOM element.
-
-### `Qute.runAfter(callback)`
-
-Register a callback to be invoked after all the tasks in the update queue are run. If the queue is empty then the callback is immediately run.
-
-Because the updates are run asynchronously you cannot know when the update job related to a reactive property change is done. Using this function you can be notified after the current update is done.
-
-This is usefull when writing tests, to make assertions after the DOM changed in response to model change.
-
-### `Qute.registerTemplate(tag, templateFn, isCompiled)`
-
-Register a template function given its (tag) name.
-
-The `isCompiled` argument must be `true` if the template function was compiled from a Qute template.
-
-You can use this function to register hand written rendering functions. (in that case omit the `isCompiled` arguemnt and use a value of `false`).
-
-### `Qute.registerDirective([tag, ]name, fn)`
-
-Register a custom attribute directive. The `tag` argument is optional, and should be used when the directive should only be enabled for the given tag.
-
-See **[Custom Attributes](#/attributes/q)** for more details.
-
-### `Qute.template(tag)`
-
-Get a registered template function given a tag name.
-
-### `Qute.vm(tag)`
-
-Get a registered `ViewModel` constructor given a tag name.
-
-### `Qute.vmOrTemplate(tag)`
-
-Get a registered template function or `ViewModel` constructor given a tag name.
-
-### `Qute.snapshotRegistry()`
-
-Create a snapshot of the template and ViewModel registry. Return the snapshot.
-
-### `Qute.restoreRegistry(snapshot)`
-
-Restore the registry to the given snapshot (generated using `snapshotRegistry`).
-
-Using `snapshotRegistry` / `restoreRegistry` can be usefull to restore an initial clean state after deploying somme additional templates.
-
-This is used by the **Qute playground**.
-
-### `Qute.render(xtagName, model)`
-
-Manualy render a template function given its (tag) name nad a `model` object.
-
-The model can any object. You can thus use Qute templates to render anyhting, not only `ViewModel` objects.
-
-### `Qute.defineMethod(name, fn)`
-
-Define a method on `ViewModel` and functional component prototype. Can be used to extend the component API. See **[Internationalization Support](#/app/i18n)** for an example.
-
-### `Qute.import(urlOrName, onLoad, onError)`
-
-Import a javascript library in the current page. The library is located using the specified `urlOrName` which is either the URL (or a path) to the javascript resource, either the npm package name (in this case https://unpkg.com will be used to fetch the resource).
-
-The `onLoad` callback will be invoked after the javascript code is loaded.  \
-The `onError` callback will be invoked if any error occurs.
-
-The `urlOrName` parameter **can be also an array of locations**. In that case each location is converted to an URL if it is not already an URL, then each library will be loaded after the previous one was completely loaded.
-
-For example if you want to load a library located at 'libs/x.js' that depends on 'libs/y.js' you should use:
-
-```javascript
-Qute.import(['libs/y.js', 'libs/x.js'], function() { ... }, function() { ... });
-```
-
-The `onLoad` function will be called after the complete chain of library was loaded.
-
-### `Qute.importAll(urlOrNames, onLoad, onError)`
-
-The same as `Qute.import` but can load multiple javascript libraries in parallel.
-
-### `Qute.addImports(importMap)`
-
-Configure the package locations to be used for lazy component loading.
-
-The `importMap` should map a component name to a remote javascript resource. Example:
-
-```javascript
-Qute.addImports({
-	'popup': '@qute/popup',
-	'my-component': ['libs/my-component-dependency.js', 'libs/my-component.js']
-})
-```
-
-The location of a lazy loaded component can be either a string on an array of string locations. If an array then all the locations are loaded one after the other (as done by `Qute.import`).
-A resource location is either an URL or path to the javascript resource, either the npm package name containing the component (in this case the resource is loaded through https://unpkg.com).
-
-### `Qute.setImporterOptions(opts)`
-
-Configure some aspects of the lazy component loading. The `opts` argument can specify the following properties:
-
-* `resolve(location)` - an optional function to resolve a string location to an URL. If `null` is returned the resource will be ignored. If `false` is returned then the default resolver is used.
-* `renderError(rendering, error)` - an optional function to return a DOM element to be displayed in case of an error. The error object contains an url field which points to the javascript resource that failed loading
-* `renderPending(rendering)` - an optional function to return a DOM element to be displayed while a lazy component is loading.
-
-### `Qute.addAliases(aliasMap)`
-
-Define a component alias. Example:
-
-```javascript
-Qute.addALiases({
-	'app-button': 'my-app-button'
-})
-```
-
-where `my-app-button` is the real name of the component.
-
-### `Qute.App`
-
-The **Qute Application** type.
-
-### `Qute.ViewModel`
-
-The **View Model** type. Should be extended by components declared through **[class syntax](#/model/class)**
-
-### `Qute.Rendering`
-
-The **Qute Rendering** type.
-
-### `Qute.UpdateQueue`
-
-The **Qute** update queue.
-
-### `Qute.converters`
-
-A converter registry. To be used with  __[q:content-\*](#/attributes/q-markdown)__ attributes.
-
-## The Component Constructor API
-
-Components are defined using the `Qute()` function. `Qute()` returns a **Component Constructor**.
-The returned constructor can be used to instantiate the component, but it also provides several methods usefull to further configure the component: `watch`, `on`, `channel` and `mixin`.
+The component type can be used as a constructor to create new component instances. Usually, you only instantiate the root component by hand. All the other components will be instantiated when needed by the component templates.
 
 **Example:**
 
 ```javascript
-var MyComponent = Qute('my-component', {
-	// component model definition here
-}).on('click', function(e) {
-	// do something on click
+const MyComponent = Qute(MyComponentTemplate, {
+    // define here component methods, getters, lifecycle callbacks etc.
+}).properties({
+    // define here reactive properties
+    title: 'Hello!'
 }).watch('title', function(newValue, oldValue) {
-	// do something when the title property changes.
+    // define a listener on the title reactive property
+	// do something when the title property changes ...
+}).on('click', function(e) {
+    // define event handlers
+	// do something on click ...
 }).channel(function(message, data) {
+    // define a component messaging handler
 	// do something when a message is posted to the component channel.
-}).mixin(Mixin1, Mixin2, ...);
+}).mixin(Mixin1, Mixin2, ...); // apply some mixins to the component model
+
+new MyComponent().mount(); // instantiate and mount the root component
 ```
 
-#### `watch(prop, watcher)`
+Here is the list of the chainable functions provided by the component type:
+
+### `properties(factoryOrProperties)`
+
+Define the reactive properties exposed by the component.
+
+You can either pass a plain object of mapping property names to initial values, either you can pass a factory function, which will be called at component instaqntiation time to get the mapping of property names / initial values.
+
+The factory function is usefull when using complex property values like array or objects, to avoid sharing these intial values between component isntances. By using a factory function, these intiial values will be created each time a component instance is created.
+
+You can also define constraints on the reactive properties or special properties like `_Link` and `_List` properties. You can find more on this on the [Property Types page](#/model/proptypes).
+
+### `watch(prop, watcher)`
 
 Register a **property watcher**.
 
@@ -184,7 +63,7 @@ The `prop` argument is the property name to watch and the `watcher` is a functio
 
 The watcher signature is: `function(newValue, oldValue)`.
 
-#### `on(event[, selector], listener)`
+### `on(event[, selector], listener)`
 
 Register an event handler on the component element. This function has a similar syntax as the `jQuery.on` method.
 
@@ -194,7 +73,7 @@ The `listener` function will be called when the event is fired. It takes one arg
 
 For more details see the **[Events](#/model/events)** section.
 
-#### `channel(handler)`
+### `channel(handler)`
 
 Register a communication channel handler for the component.
 
@@ -204,7 +83,7 @@ The channel is not opened by registering the handler. To open a channel you must
 
 For more details see the **[Message Bus](#/app/bus)** and the **[Components](#/components)** section.
 
-#### `mixin(mixin1, mixin2, ...)`
+### `mixin(mixin1, mixin2, ...)`
 
 Add mixins to a component type.
 
@@ -270,6 +149,10 @@ The data object holding all reactive properties.
 The rendering context linked to this component.
 
 This can be usefull when using **[custom attributes](#/attributes/q)** or **[q:call](#/attributes/q-call)**
+
+#### '__VM__'
+
+An internal property which store the `ViewModel` constructor (i.e. component type) of the current component instance.
 
 ### Component methods
 
@@ -369,11 +252,60 @@ This has the same effect as `ComponentConstructor.on()`. The difference is that 
 
 Render the component given a rendering instance. Returns the rendered DOM element.
 
-#### `getList(listPropertyName, keyField)`
 
-Get a list update helper for the given reactive list property and the given key field. The key field is the field in the list items that are used as keys. If nopt specified or if the special `'.'` value is specified as the key field that String(item) will be used to get the key (this works with primitive types).
 
-The `ListHelper` can be used to facilitate reactive list manipuilation and update.
+## The `Qute` Facade
 
-See the **[List Helper](#/advanced/list)** section for more details.
+We saw `Qute()` is mainly used as a component factory. Bu the `Qute` function object also acts as a namespace for several global properties and methods.
+
+### `Qute.closest(element)`
+
+Find the closest Qute ViewModel Component containing the given DOM element.
+
+### `Qute.runAfter(callback)`
+
+Register a callback to be invoked after all the tasks in the update queue are run. If the queue is empty then the callback is immediately run.
+
+Because the updates are run asynchronously you cannot know when the update job related to a reactive property change is done. Using this function you can be notified after the current update is done.
+
+This is usefull when writing tests, to make assertions after the DOM changed in response to model change.
+
+### `Qute.registerDirective([tagOrComponentType, ]name, fn)`
+
+Register a custom attribute directive. The `tagOrComponentType` argument is optional, and should be used when the directive should only be enabled for the given tag.
+
+See **[Custom Attributes](#/attributes/q)** for more details.
+
+### `Qute.render(renderFn, dataModel)`
+
+Manualy render a template function given its render fucntion and a **model** object.
+
+The model can any object. You can thus use Qute templates to render anyhting, not only `ViewModel` objects.
+
+Return a DOM element (the root of the rendered elements tree).
+
+### `Qute.defineMethod(name, fn)`
+
+Define a method on `ViewModel` and functional component prototype. Can be used to extend the component API. See **[Internationalization Support](#/app/i18n)** for an example.
+
+### `Qute.App`
+
+The **Qute Application** type.
+
+### `Qute.ViewModel`
+
+The **View Model** type. Should be extended by components declared through **[class syntax](#/model/class)**
+
+### `Qute.Rendering`
+
+The **Qute Rendering** type.
+
+### `Qute.UpdateQueue`
+
+The **Qute** update queue.
+
+### `Qute.Rendering.converters`
+
+A converter registry. To be used with  __[q:content-\*](#/attributes/q-markdown)__ attributes.
+
 

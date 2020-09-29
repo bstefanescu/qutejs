@@ -108,7 +108,7 @@ function myDirectiveFactory(xattrs, valueExpr) {
 
 ## Custom attribute scopes
 
-A custom attribute can be restricted to an element tag name. When registering the attribute directive you can use an optional tag name to restrict the directive to that tag:
+A custom attribute can be restricted to an HTML element tag name. When registering the attribute directive you can use an optional tag name to restrict the directive to that tag:
 
 ```javascript
 Qute.registerDirective('select', 'value', selectValueDirective);
@@ -118,7 +118,32 @@ then, use the directive as this: `<select q:value={someExpr}>`
 
 When trying to use this directive on another element like for example an `<input>` the directive will not be found and an error will be thrown.
 
-If you register a global directive (i.e. not restricted to a tag name) named `value` then the directive will be available on all the elements but not on the `select` element which will use its own directive version.
+If you register a global directive (i.e. not restricted to a tag name) named `value` then the directive will be available on all the HTML elements but not on the `select` element which will use its own directive version.
+
+To register a directive on a `ViewModel` or a `template` tag you need to pass the `ViewModel` type (or the template function for templates) as the first argument.
+
+**Example:**
+
+```jsq-norun
+// 1. On a ViewMOdel
+const MyComponent = Qute(MyComponentTemplate);
+Qute.registerDirective(MyComponent, 'value', selectValueDirective);
+
+// 2. ON a template
+<q:template name='MyTemplate'>
+    <div>some content ... </div>
+</q:template>
+Qute.registerDirective(MyTemplate, 'value', selectValueDirective);
+```
+
+Then you can use the `q:value` directive on ViewModel or template instances:
+
+```jsq-norun
+<div>
+    <MyComponent q:value='Hello' />
+    <MyTemplate q:value='Hello' />
+</div>
+```
 
 ## Examples
 

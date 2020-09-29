@@ -2,7 +2,7 @@
 
 This attribute can be used to render **reactive array like objects**. Any object having a `length` property is assumed to be an array like object.
 
-This directive is **optimized** to work over lists which **are frequently changing**: when the list instance is changed, the new list is compared to the previous one, and only the affected items are rendered again.
+This directive is **optimized** to work over arrays which **are frequently changing**: when the array instance is changed, the new list is compared to the previous one, and only the affected items are rendered again.
 
 The syntax is similar to one used by the **[for](#/directives/for)** directive:
 
@@ -19,14 +19,16 @@ If you need to render immutable lists you should use the `for` directive to avoi
 
 **Example**
 
-Let say `myList` is a reactive property on the following component:
+Let's say `myList` is a reactive property on the following component:
 
-```javascript
+```jsq
 <q:template name='MyList'>
-  <div q:for='item in myList'>...</div>
+    <ul>
+        <li q:for='item in myList'>{{item}}</li>
+    </ul>
 </q:template>
 
-Qute(MyList).properties(() => ({
+export default Qute(MyList).properties(() => ({
     myList: ["item 1", "item 2", "item 3"]
 }));
 ```
@@ -58,7 +60,7 @@ this.myList = this.myList.slice(0);
 
 The `q:for` directive can optimize the DOM updates **only** if an unique identifier string is given for each iterated item. This unique string can be specified using the `q:key` directive.
 
-The `q:key` value should point to a property of the item that is to be used as an ID. When iterating over primitive items like strings or numbers you can use the special value '.' which indicates that the item itself should be used as an id. You can also specify the ID as an arrow function taking the iterated item as argument and returning the id.
+The `q:key` value should point to a property of the item that is to be used as an ID. When iterating over primitive items like strings or numbers you can use the special value `'.'` which indicates that the item itself should be used as an id. You can also specify the ID as an arrow function taking the iterated item as argument and returning the id.
 
 If you are using `q:for` without a related `q:key` attribute then the DOM updates will be done using **brute force** in the same way as for the `for` directive.
 
@@ -74,27 +76,158 @@ If you are using `q:for` without a related `q:key` attribute then the DOM update
 
 The correct way to write the example above is:
 
-```javascript
+```jsq
+import Qute from '@qutejs/runtime';
+
 <q:template name='MyList'>
-  <div q:for='item in myList' q:key='.'>...</div>
+    <ul>
+        <li q:for='item in myList' q:key='.'>{{item}}</li>
+    </ul>
 </q:template>
 
-Qute(MyList, {
-  init() {
-    this.myList = ["item 1", "item 2", "item 3"];
-  }
+export default Qute(MyList).properties(() => ({
+    myList: ["item 1", "item 2", "item 3"]
+}));
+```
+
+## The `_List` property type
+
+The `q:for` directives can also be used to iterate over `List` objects created by the **[_List](#/model/proptypes)** property type. The `List` object wrap an array and provide an API specially designed to ease reactive lists manipulation.
+To create a `List` object you must use the `_List` property type.
+
+When iterating over `List` objects using the `q:for` directives you don't need to use the `q:key` directive since the list `key` is specified when creating the list property. Here is the same as the example above but using `_List`
+
+```jsq
+import Qute from '@qutejs/runtime';
+import { _List } from '@qutejs/types';
+
+<q:template name='MyList'>
+    <ul>
+        <li q:for='item in myList'>{{item}}</li>
+    </ul>
+</q:template>
+
+export default Qute(MyList).properties({
+    myList: _List(["item 1", "item 2", "item 3"])
 });
 ```
 
-## The ViewModel List Helper
+Now you can modify the list and update the DOM using one line:
 
-The Qute `ViewModel` provides a helper to deal with reactive list modification and udpates. You can use this helper to minimize the code needed to modify lists, or you can directly modify the list and then call `ViewModel.update()` to trigger an update.
+```jsq
+this.myList.push('new item');
+```
 
-For more information see the **[List Helper Documentation](#/advanced/list)**
+There is **no need** to force an update by calling `this.update()` or by replacing the list with its own copy. The `List` instance will automatically update the DOM.
 
-Also, you can find a complete example of a reactive list (and a comparision between using the List Helper and not using it) in the **[Todo List Example](#/examples/todo)**.
+### List API
+
+#### `_List(key, initialValue)`
+
+Create a new List property object.
+
++ **key** - the name of a list item field that can be used as the item unique identifier. Defaults to `'.'`.
++ **initiaValue** - an optional array to be used to initialize the list. Defaults to an empty array.
+
+The **key** is optional: if not specified an implicit value of `'.'` will be used, which means the item itself is the unique identifier. This is usefull for primitive lists. Examples: `_List(['item 1', 'item 2', 'item 3'])`
+
+**Usage:**
+
+```javascript
+import { _List } from '@qutejs/types';
+
+Qute(ComponentTemplate).properties({
+    myList: _List('id', [{
+        { id: 1, text: 'item 1' },
+        { id: 2, text: 'item 2' }
+    ]);
+})
+```
+
+### `ar` property
+
+The underlying array.
+
+#### `push()`
+
+Same as `Array.prototype.push` but will update the DOM too.
+
+#### `pop()`
+
+Same as `Array.prototype.pop` but will update the DOM too.
+
+#### `shift()`
+
+Same as `Array.prototype.shift` but will update the DOM too.
+
+#### `unshit()`
+
+Same as `Array.prototype.unshift` but will update the DOM too.
+
+### `splice()`
+
+Same as `Array.prototype.splice` but will update the DOM too.
+
+### `peek()`
+
+Get the last item in the list.
+
+### `size()`
+
+GHet the size of the list
+
+### `clear()`
+
+Clear the list content.
+
+### `set(array)`
+
+Replace the list items with the items from the given array
+
+### `prepend(array)`
+
+Prepend the content of the given array to the list and update the DOM.
+
+### `append(array)`
+
+Append the content of the given array to the list and update the DOM.
+
+### `update(updateFn)`
+
+Run the given function to update the list then update the DOM. The fucntion signature is `void function(listArray)` where `listArray` is the `ar` property of the list.
+
+### `getIndex(key)`
+
+Get the index of an item given the item key.
+
+### `getItem(key)`
+
+Get an item given its key.
+
+### `setItem(key, item)`
+
+Set an item givenj its key.
+
+### `removeItem(key)`
+
+Remove an item given its key.
+
+### `updateItem(key, updateFn)`
+
+Given an item key, run an update function on that item, then update the DOM. The function signature is `void function(item)`.
+
+### `insertBefore(item, beforeKey)`
+
+Insert the given item before the item identified by `beforeKey`, then udpate the DOM.
+
+### `moveBefore(key, beforeKey)`
+
+Move the item identified by `key` before the item indetified by `beforeKey`, then update the DOM.
 
 ## Examples
+
+The following examples are not using the **_List** property. You can find a complete example about using `_List` and a comparision between using the `_List` property and using raw arrrays in the **[Todo List Example](#/examples/todo)**.
+
 
 ### Adding Items
 

@@ -170,7 +170,7 @@ function _Any(value) {
 // ------------ List
 function ListProp(key, val) {
     if (arguments.length === 1 && Array.isArray(key)) {
-        val = key; key = null;
+        val = key; key = '.';
     }
     if (val && !Array.isArray(val)) ERR('Expecting an array. Got '+val);
     this.key = key;

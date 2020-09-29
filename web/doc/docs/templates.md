@@ -23,17 +23,10 @@ There are two ways to specify a **bounded attribute**:
 1. Enclose the attribute value inside `{` `}` symbols instead of quotes or double quotes.  \
   **Example:** `<my-component title={theTitle} />`   \
   We will refer to this notation as the `jsx` like notation.
-2. Either use `q:bind-attr-name` as the attribute name or use the short format `:attr-name` (i.e. prefix the attribute name with a `:` character). \
-  **Example:** `<my-component :title='theTitle' />`  or `<my-component q:bind-title='theTitle' />` \
+2. Use the **[q:bind](#/attributes/q-bind)** attribute directive.
+  **Example:** `<my-component q:bind-title='theTitle' />`
 
-Both of these notations are equivalent.  \
-You can use anyone you prefer or mix notations if you want.
-
-**Examples:**
-
-* `some-attr={{lastName: 'John', firstName: 'Doe'}}` vs. `:some-attr="{lastName: 'John', firstName: 'Doe'}"`
-* `some-attr={"some string"}` vs. `:some-attr="'some string'"`
-* `some-attr={"http://"+domain}` vs. `:some-attr="'http://'+domain"`
+Both of these notations are equivalent. You can use anyone you prefer or mix notations if you want.
 
 In the rest of the documentation we will use the `jsx` like notation.
 
@@ -118,14 +111,6 @@ Here is the list of all the **built-in global variables** exposed in a template:
 ```
 
 or
-
-```xml
-<div :class="myClass">
-	My Name is {{name}}.
-</div>
-```
-
-or even
 
 ```xml
 <div class={this.myClass}>

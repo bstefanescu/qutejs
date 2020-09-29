@@ -636,7 +636,7 @@ function DomNode(name, caseSensitiveName, attrs) {
 		} else if (name.startsWith('async-emit-')) {
 			this.emit(name.substring(11), attr.value, true);
 		} else if (name.startsWith('content-')) {
-            return QATTRS.content(attr.value, name.substring(8));
+            return QATTRS.content.call(this, attr.value, name.substring(8));
 		} else {
 			this.directive(name, attr);
 		}
@@ -650,9 +650,7 @@ function DomNode(name, caseSensitiveName, attrs) {
 	    	var attr = attrs[i];
 	    	var name = attr.name;
 	        var c = name[0];
-	        if (c === ':') {
-	        	this.bind(name.substring(1), attr.value);
-	        } else if (c === '@') {
+            if (c === '@') {
 	        	this.on(name.substring(1), attr.value);
 	        } else if (c === '?') { // q:toggle alias
 	        	this.toggle(name.substring(1), attr.value);

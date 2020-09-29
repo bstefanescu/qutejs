@@ -32,9 +32,9 @@ import Router from '@qutejs/router';
 <ul class='toc'>
 	<for value='item in $attrs.items'>
 		<if value='item.items'>
-			<toc-section :title='item.title' :items='item.items' :expand='item.expand' />
+			<toc-section title={item.title} items={item.items} expand={item.expand} />
 		<else/>
-			<toc-item :href='item.href' :title='item.title' />
+			<toc-item href={item.href} title={item.title} />
 		</if>
 	</for>
 </ul>
@@ -111,7 +111,6 @@ var TOC = [
 		{ title: 'Getting Started', href: 'getting-started'},
 		{ title: 'Templates', href: 'templates'},
 		{ title: 'Components', href: 'components'},
-		{ title: 'Building Large Applications', href: 'modularity'},
 	]},
 	{ title: 'Application Model', expand: true, items: [
 		{ title: 'Application Instance', href: 'app/instance'},
@@ -169,7 +168,6 @@ var TOC = [
 	]},
 	{ title: 'Advanced', expand: true, items: [
 		{ title: 'Qute API', href: 'advanced/api'},
-		{ title: 'List Helper', href: 'advanced/list'},
 		{ title: 'JSQ File Format', href: 'advanced/jsq'},
 		{ title: 'Writing Plugins', href: 'advanced/plugins' }
 	]},
