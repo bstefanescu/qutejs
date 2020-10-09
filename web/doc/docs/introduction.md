@@ -36,5 +36,5 @@ Though, you can still integrate **redux** like state managers with Qute if neede
 * **ES6** compliant.
 * **MIT** License.
 
-Want more? Go to **[Getting Started](#/getting-started)** section!
+Want more? Go to **[Getting Started](#/start/hello)** section!
 

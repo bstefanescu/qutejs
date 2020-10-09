@@ -63,20 +63,29 @@ function JSQLoader(transpileES6) {
 		});
 
 		var hasExport = false;
-		code = code.replace(EXPORT_RX, function(m) {
-			hasExport = true;
-			return "var __QUTE_DEV_DEFAULT_EXPORT__ = ";
-		});
         code = new Compiler().transpile(code, {
             sourceMap: false,
             compileStyle: compileStyle
         }).code;
-		if (transpileES6) {
+		code = code.replace(EXPORT_RX, function(m) {
+			hasExport = true;
+			return "var __QUTE_DEV_DEFAULT_EXPORT__ = ";
+        });
+        //  check if a template was exported (in that case there is a line:
+        // var __QUTE_DEV_DEFAULT_EXPORT__ = __QUTE_DEFAULT_EXPORT__;
+        var isTemplateExport = code.indexOf('var __QUTE_DEV_DEFAULT_EXPORT__ = __QUTE_DEFAULT_EXPORT__;') > -1;
+        if (transpileES6) {
 			code = transpileES6(code);
 		}
 
 
-		if (hasExport) code += '\nreturn __QUTE_DEV_DEFAULT_EXPORT__;\n';
+		if (hasExport) {
+            if (isTemplateExport) {
+                code += '\nreturn Qute(__QUTE_DEV_DEFAULT_EXPORT__);\n';
+            } else {
+                code += '\nreturn __QUTE_DEV_DEFAULT_EXPORT__;\n';
+            }
+        }
 
 		var script = new Script();
 		script.code = code;

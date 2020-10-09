@@ -10,7 +10,7 @@ The `Qute(renderingFn, model)` function is used to define `ViewModel` components
    The rendering function can be either a compiled template, either a custom rendering function. If this argument is not provided then it is expected that the model will provide a `render` function, otherwise an exception will be thrown.
 2. the **component model**
    This is an optional argument. Can be either a **plain object** or a **class**.  \
-   See the **[Components](#/components)** section for more details.
+   See the **[Components](#/model/components)** section for more details.
 
 The `Qute()` function **returns** a **ViewModel Constructor**.
 
@@ -81,7 +81,7 @@ The `handler` has the signature: `function(message, data)`
 
 The channel is not opened by registering the handler. To open a channel you must use a `q:channel` attribute on the component element toi give the channel a name, or, for root components use the `listen(channelName)` method.
 
-For more details see the **[Message Bus](#/app/bus)** and the **[Components](#/components)** section.
+For more details see the **[Message Bus](#/app/bus)** and the **[Components](#/model/components)** section.
 
 ### `mixin(mixin1, mixin2, ...)`
 

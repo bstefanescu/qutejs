@@ -209,7 +209,7 @@ export default Qute(RootTemplate, {
 ```
 ## Forwarding events.
 
-You can forward (and optionally rewrite) existing events using the **[q:emit](#/templates/q-emit)** attribute directive. This is especially usefull to forward events from a component context to the parent context. The event is fired from the root element of the current component.
+You can forward (and optionally rewrite) existing events using the **[q:emit](#/attributes/q-emit)** attribute directive. This is especially usefull to forward events from a component context to the parent context. The event is fired from the root element of the current component.
 
 The `q:emit` directive can be specified as a regular XML attribute: `q:emit-{newEvent}-on{sourceEvent}` or using its short notation: `#{newEvent}@{sourceEvent}`
 
@@ -222,7 +222,7 @@ The `q:emit` directive can be specified as a regular XML attribute: `q:emit-{new
 
 **Note** that emitted events are fired in the context of the root element of the current component.
 
-You can also use the **[q:async-emit](#/templates/q-async-emit)** directive to emit events asynchronously.
+You can also use the **[q:async-emit](#/attributes/q-async-emit)** directive to emit events asynchronously.
 
 ## Example
 

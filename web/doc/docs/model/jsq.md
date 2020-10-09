@@ -90,7 +90,7 @@ In the components section you define Qute components - using standard javascript
 A component will usually use a template as its rendering function. To link a component with a template you just have to use the same name for the component. (as the name you used for the template).  \
 The template linking acts as an **enhancement** of the template (i.e. the functional component) to a `ViewModel` component.
 
-Check the **[Components Section](#/components)** for more details on defining components.
+Check the **[Components Section](#/model/components)** for more details on defining components.
 
 Here is an example of defining a component for the `my-menu` template above.
 

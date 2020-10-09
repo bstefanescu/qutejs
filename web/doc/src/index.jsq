@@ -34,7 +34,7 @@ import Router from '@qutejs/router';
 		<if value='item.items'>
 			<toc-section title={item.title} items={item.items} expand={item.expand} />
 		<else/>
-			<toc-item href={item.href} title={item.title} />
+			<toc-item q:class={{"toc-toplevel": item.toplevel}} href={item.href} title={item.title} />
 		</if>
 	</for>
 </ul>
@@ -106,26 +106,25 @@ function fetchPage(url, cb) {
 Qute.Rendering.converters.markdown = marked;
 
 var TOC = [
-	{ title: 'Overview', expand: true, items: [
-		{ title: 'Introduction', href: 'introduction'},
-		{ title: 'Getting Started', href: 'getting-started'},
-		{ title: 'Templates', href: 'templates'},
-		{ title: 'Components', href: 'components'},
-	]},
-	{ title: 'Application Model', expand: true, items: [
-		{ title: 'Application Instance', href: 'app/instance'},
-		{ title: 'Message Bus', href: 'app/bus'},
-		{ title: 'Data Model', href: 'app/data'},
-		{ title: 'Internationalization', href: 'app/i18n'},
-		{ title: 'Example', href: 'app/example'},
-	]},
+    { title: 'Introduction', href: 'introduction', toplevel:true},
+    { title: 'Overview', href: 'overview', toplevel:true},
+    { title: 'Getting Started', expand: true, items: [
+        { title: 'Hello World', href: 'start/hello'},
+        { title: 'Browsers Support', href: 'start/polyfills'},
+        { title: 'The Playground', href: 'start/playground'},
+        { title: 'Creating a Project', href: 'start/project'},
+        { title: 'Project Structure', href: 'start/project'},
+    ]},
 	{ title: 'Component Model', expand: true, items: [
+        { title: 'Templates', href: 'model/templates'},
+        { title: 'Components', href: 'model/components'},
 		{ title: 'Properties', href: 'model/properties'},
         { title: 'Property Types', href: 'model/proptypes'},
 		{ title: 'Watchers', href: 'model/watchers'},
 		{ title: 'Events', href: 'model/events'},
 		{ title: 'Life Cycle', href: 'model/lifecycle'},
 		{ title: 'Class Syntax', href: 'model/class'},
+        { title: 'JSQ File Format', href: 'model/jsq'},
 	]},
 	{ title: 'Directives', expand: true, items: [
 		{ title: 'if', href: 'directives/if' },
@@ -154,6 +153,15 @@ var TOC = [
 		{ title: 'q:on', href: 'attributes/q-on' },
 		{ title: 'Custom Attributes', href: 'attributes/q' }
 	]},
+	{ title: 'Application Model', expand: true, items: [
+		{ title: 'Templates', href: 'templates'},
+		{ title: 'Components', href: 'components'},
+		{ title: 'Application Instance', href: 'app/instance'},
+		{ title: 'Message Bus', href: 'app/bus'},
+		{ title: 'Data Model', href: 'app/data'},
+		{ title: 'Internationalization', href: 'app/i18n'},
+		{ title: 'Example', href: 'app/example'},
+	]},
 	{ title: 'Plugins', expand: true, items: [
         { title: 'Importer', href: 'plugins/importer' },
 		{ title: 'Routing', href: 'plugins/routing' },
@@ -168,7 +176,6 @@ var TOC = [
 	]},
 	{ title: 'Advanced', expand: true, items: [
 		{ title: 'Qute API', href: 'advanced/api'},
-		{ title: 'JSQ File Format', href: 'advanced/jsq'},
 		{ title: 'Writing Plugins', href: 'advanced/plugins' }
 	]},
 	{ title: 'Examples', expand: true, items: [

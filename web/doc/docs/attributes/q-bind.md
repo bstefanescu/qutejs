@@ -1,7 +1,7 @@
 # The `q:bind` attribute
 
 This attribute is an alternative notation for **bounded attributes**.  \
-See the **[Templates](#/templates)** section for more details.
+See the **[Templates](#/model/templates)** section for more details.
 
 ## Example
 

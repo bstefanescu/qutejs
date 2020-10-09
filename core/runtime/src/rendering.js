@@ -192,7 +192,7 @@ var RenderingProto = {
 			return vm.$create(this, xattrs, slots);
 		} else if (XTag.$compiled) { // a compiled template
 			return new FunComp().render(this, XTag, xattrs, slots);
-		} else { // a hand written function or a lazy component
+        } else { // a hand written function or a lazy component
 			return XTag(this, xattrs, slots);
         }
 	},

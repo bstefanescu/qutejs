@@ -1,6 +1,6 @@
-# Component Properties
+# `ViewModel` Component Properties
 
-All the properties defined on the component `ViewModel` instance and on its prototype chain are making up the component properties, which are exposed to the component template.  \
+All the properties defined on the `ViewModel` component instance and on its prototype chain are making up the component properties, which are exposed to the component template.  \
 However, there is a special kind of properties which are tracked, so that, when such a property value changes the DOM sub-tree attached to the component is updated to reflect these changes. We will refer to this kind of properties as **reactive properties**.
 
 Reactive properties must be defined explicitly.
@@ -22,7 +22,7 @@ Qute(MyComponentTemplate).properties({
 
 This will define 4 **reactive properties**, initialized with the declared default values.
 
-When using objects or arrays as default values you must either use a **[property type](#/model/proptypes)** to define the property either to use pass a facotry function to the `properties()` method.
+When using objects or arrays as default values you must either use a **[property type](#/model/proptypes)** to define the property either to use pass a factory function to the `properties()` method.
 
 **Example:**
 
@@ -68,7 +68,7 @@ When a component is instantiated, due to a component tag being used in a templat
 
 Remember that only **reactive properties** can be initialized through attributes. Any attribute that doesn't match a **reactive property** is injected into the **"catch all"** `ViewModel.$attrs` property.
 
-The `$attrs` name is used for consistency with the functional component attributes object.
+The `$attrs` name is used for consistency with the **template components** `$attrs` property.
 
 If an attribute [camel case](https://en.wikipedia.org/wiki/Camel_case) name matches a reactive property name then it is used to initialize the reactive property otherwise it will be added to the **"catch all"** `$attrs` property.
 
@@ -118,11 +118,8 @@ You can specify a list of properties that should be always defined and set to a 
 
 To specify the list of required properties use the `Qute.require(prop1, prop2, ...)` function.
 
-The following example will throw an error, since the `name` attribute is not set. To fix it just specify a name attribute on the `my-element` component:
+The following example will throw an error, since the `name` attribute is not set:
 
-```xml
-<my-element name="somme value"'>
-```
 
 ```jsq
 import Qute from '@qutejs/runtime';
@@ -140,4 +137,10 @@ const MyElement = Qute(MyElementTemplate).properties({
 }).require('name');
 
 export default Qute(RootTemplate);
+```
+
+To fix it just specify a name attribute on the `my-element` component:
+
+```xml
+<my-element name="somme value"'>
 ```
