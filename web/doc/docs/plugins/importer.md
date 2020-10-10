@@ -37,6 +37,12 @@ export default Qute(MyTemplate).properties({
 
 Here is the the [lazy component code](/doc/files/lazy-component.js) used int the example above.
 
+To be able to import components without specifying an export name, yout must expose your component instance in the `window.__QUTE_IMPORT__` property. Otherwise you must specify the export name as the second argument:
+
+```javascript
+const MyLazyComponent = LazyComponent('/doc/files/lazy-component.js', 'LazyComponent');
+```
+
 ## Importer API
 
 The importer package exports the following functions:

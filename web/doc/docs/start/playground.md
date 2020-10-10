@@ -47,6 +47,23 @@ In that case be sure to include an `unpkg` or `browser` entry in the package.jso
 
 You can import both javascript iife bundles and css files.
 
+When importing user modules (i.e. not `@qutejs/*` modules) the playground only supports module imports like `import 'library';` or default imports like `import MyComponent from 'my-component-location';`.
+
+Mofule imports are usefull to import third party libraries like [jquery](https://jquery.com/), while default imports are usefull to import Qute components.
+
+**Note** To enable your Qute component to be imported by the playground you must export the component in the `window.__QUTE_IMPORT__` variable. Just write something like this in your main web bundle file:
+
+```javascript
+import window from '@qutejs/window';
+import MyComponent from './my-components.js';
+
+window.__QUTE_IMPORT__ = MyComponent;
+
+export default MyComponent;
+```
+
+If you develop components using the [Qute project generator](#/start/project) this will be automatically generated for you.
+
 ## CDN
 
 All Qute libraries and components are available from **unpkg.com**.

@@ -112,8 +112,7 @@ var TOC = [
         { title: 'Hello World', href: 'start/hello'},
         { title: 'Browsers Support', href: 'start/polyfills'},
         { title: 'The Playground', href: 'start/playground'},
-        { title: 'Creating a Project', href: 'start/project'},
-        { title: 'Project Structure', href: 'start/project'},
+        { title: 'Creating a Project', href: 'start/project'}
     ]},
 	{ title: 'Component Model', expand: true, items: [
         { title: 'Templates', href: 'model/templates'},
@@ -174,9 +173,8 @@ var TOC = [
 		{ title: 'popup', href: 'components/popup' },
 		{ title: 'spinner', href: 'components/spinner' },
 	]},
-	{ title: 'Advanced', expand: true, items: [
-		{ title: 'Qute API', href: 'advanced/api'},
-		{ title: 'Writing Plugins', href: 'advanced/plugins' }
+	{ title: 'API Reference', expand: true, items: [
+		{ title: 'Qute API', href: 'advanced/api'}
 	]},
 	{ title: 'Examples', expand: true, items: [
 		{ title: 'Hello World', href: 'examples/hello'},

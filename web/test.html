@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <script type="text/javascript" src='./dev/lib/qute-dev.js'></script>
+  </head>
+  <body>
+    <script type='text/jsq'>
+        import Qute from '@qutejs/runtime';
+        import window from '@qutejs/window';
+
+        <q:style>
+        .username { color: green; }
+        </q:style>
+
+        // the component template
+        <q:template name='MyComponentTemplate'>
+        <div q:class='{authenticated:user}'>
+            <if value={!user}>
+                <p>Enter a username and click on the login button:</p>
+                <div><input type='text' q:ref='input'>
+                <button @click='handleLogin'>Login</button>
+                </div>
+            <else />
+            Hello <span class='username'>{{user}}</span>.
+            <button @click='handleLogout'>Logout</button>
+            </if>
+        </div>
+        </q:template>
+
+        // create a ViewModel component
+        window.MyComponent = Qute(MyComponentTemplate, {
+            init() {
+                this.input = null;
+            },
+            handleLogin() {
+                const value = this.input.value.trim();
+                if (value) {
+                    this.user = value;
+                } else {
+                    window.alert('Enter a user name!');
+                }
+            },
+            handleLogout() {
+                this.user = null;
+            }
+        }).properties({
+            user: null
+        });
+    </script>
+    <script>
+      // load inlined components
+      Qute.load().then(function() {
+        // create a new instance of MyComponent and mount it in the document body.
+        new window.MyComponent().mount();
+      });
+    </script>
+  </body>
+</html>
