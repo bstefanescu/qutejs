@@ -50,7 +50,6 @@ QuteIntl.prototype = {
     install(Qute) {
         // install translation methods on ViewModel and functional component prototypes
         Qute.defineMethod('t', this.t);
-        Qute.i18n = this;
         return this;
     },
     load(lang) {
