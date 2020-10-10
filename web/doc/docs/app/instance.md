@@ -3,7 +3,7 @@
 When designing an application using the MVVM pattern you separate your code in two parts:
 a business logic and a presentation logic.
 
-In **Qute** the presentation layer is made from the UI components you define using Qute ViewModel or functional components.
+In **Qute** the presentation layer is made from the UI components you define using Qute ViewModel or template components.
 
 The application model entry point is the `Qute.App` object that you need to create and share between all UI components of the application. Here you can define the business logic and the data model of the application. The application data you define can then be easily bound to any UI component.
 

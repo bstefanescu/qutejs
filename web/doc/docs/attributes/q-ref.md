@@ -3,7 +3,7 @@
 The `q:ref` attribute can be used to retrieve the actual DOM element or component reference from a ViewModel template.  \
 The attribute take as value the property name in the current component model to be used to store the reference. This property doesn't need to be a reactive property. In fact, it is not recommended to use reactive properties to store a reference.
 
-When the `q:ref` attribute is used on a DOM element then a reference to the element instance will be stored. If the `q:ref` attribute is used on a `ViewModel` component or on a functional component then a referemnce to the component itself will be stored (you can always use the `$el` property of the component to get the root element of the component).
+When the `q:ref` attribute is used on a DOM element then a reference to the element instance will be stored. If the `q:ref` attribute is used on a `ViewModel` component or on a template component then a reference to the component itself will be stored (you can always use the `$el` property of the component to get the root element of the component).
 
 ## Example: Get a DOM element reference
 
@@ -82,7 +82,7 @@ export default Qute(RootTemplate, {
 ```
 
 
-**Note** that you can also use `q:ref` on functional components to get a reference to the functional component instance.
+**Note** that you can also use `q:ref` on template components to get a reference to the template component instance.
 
 
 For more examples on using the `q:ref` attribute on components look at the [popup](#/components/popup) and [modal](#/components/modal) components.

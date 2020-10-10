@@ -48,7 +48,7 @@ As with **[q:class](#/attributes/q-class)**, when using both `q:style` and `styl
 
 ## Using `q:style` on components
 
-When using `q:style` attribute on components it will modify the style on the component root element. This works for both **functional** and **ViewModel** components.
+When using `q:style` attribute on components it will modify the style on the component root element. This works for both **template** and **ViewModel** components.
 
 **Note** that the `q:style` attribute will be evaluated in the outside context of the target component.
 

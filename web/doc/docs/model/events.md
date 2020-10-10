@@ -185,9 +185,9 @@ export default Qute(RootTemplate, {
 });
 ```
 
-### Firing events from functional components.
+### Firing events from template components.
 
-Functional components are also exposing `emit` and `emitAsync`. In that case the event will be dispatched at the functional component root element.
+Template components are also exposing `emit` and `emitAsync`. In that case the event will be dispatched at the template component root element.
 
 ```jsq
 import window from '@qutejs/window';

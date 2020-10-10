@@ -86,7 +86,7 @@ Template components are very usefull to create macros like components which wrap
 + cannot participate to life cycle events.
 + cannot define own event handlers or methods.
 
-**Note:** As mentioned template components don't take part to the life cycle but there is way to get **life cycle notifications from within a functional component**.  \
+**Note:** As mentioned template components don't take part to the life cycle but there is way to get **life cycle notifications from within a template component**.  \
 See the **[Life Cycle](#/model/lifecycle)** section for more details.
 
 ## `ViewModel` Components

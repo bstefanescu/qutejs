@@ -302,7 +302,7 @@ export default Qute(RootTemplate, {
 }));
 ```
 
-You can notice how the `item` component (which is a functional component - since it hasn't a model) is emitting	a `remove` event when the remove button is pressed so that the parent component which is controling the list do the remove.
+You can notice how the `item` component (which is a template component - since it hasn't a model) is emitting	a `remove` event when the remove button is pressed so that the parent component which is controling the list do the remove.
 
 This is the **recommended** way to **interact with parent components** - by emitting events.
 

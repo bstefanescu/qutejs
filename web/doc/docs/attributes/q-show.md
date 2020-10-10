@@ -18,7 +18,7 @@ If user is not define then the display property will be set to false. When the `
 
 ## Using `q:show` on components
 
-When using `q:show` attribute on components it will modify the display style property on the component root element. This works for both **functional** and **ViewModel** components.
+When using `q:show` attribute on components it will modify the display style property on the component root element. This works for both **template** and **ViewModel** components.
 
 **Note** that the `q:show` attribute will be evaluated in the outside context of the target component.
 

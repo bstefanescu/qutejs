@@ -43,7 +43,7 @@ Otherwise (if the value is enclosed in quotes or double quotes) the value will b
 
 The function signature is: **`function(xattrs, value)`** where `xattrs` is an object providing the attributes and the event listeners to be injected on the element, and the `value` is the value passed to the directive or `undefined` if no value was passed.
 
-The function is called before the target DOM is created, in the context of the current **Rendering Context** instance. The **Rendering Context** object is internal to Qute and its job is to render components and update the DOM when needed. You can use the **Rendering Context object** to register your own update listeners, to retrieve the current **model** (i.e. a `ViewModel` instance or a functional component object) etc.
+The function is called before the target DOM is created, in the context of the current **Rendering Context** instance. The **Rendering Context** object is internal to Qute and its job is to render components and update the DOM when needed. You can use the **Rendering Context object** to register your own update listeners, to retrieve the current **model** (i.e. a `ViewModel` instance or a template component object) etc.
 
 The directive function should return another function to be called after the element is fully created. Thus the directive function acts as a factory of the function to be run after the element is created. If the factory fucntion returns nothing or a falsy object then nothing will be done after the element is created.
 
@@ -62,7 +62,7 @@ Here are some usefull methods and properties of the **Rendering** object
 ### `vm`
 
 A reference to the component being rendered in the context of this rendering instance.
-This can be either a `ViewModel` component instance, either a functional component insance.
+This can be either a `ViewModel` component instance, either a template component insance.
 
 ### `eval(xattr)`
 
@@ -87,7 +87,7 @@ The update listener take as argument the current model and returns back the regi
 
 ### `closestVM()`
 
-Get the closest `ViewModel` instance from this rendering context. If the component rendered by the rendering context is a functional component it will return the closest `ViewModel` component containing the current component.
+Get the closest `ViewModel` instance from this rendering context. If the component rendered by the rendering context is a template component it will return the closest `ViewModel` component containing the current component.
 
 
 ## Reactivity in custom directives

@@ -9,11 +9,11 @@ The q:call attribute value must resolve to a function: you can either use a **me
 2. As a **ViewModel method**: `<input q:call="onCreateControl">`
 
 The `q:call` function value will be called in the context of the component containing the target DOM element (i.e. `this` will point to the closest component instance) and will take as argument the element instance.  \
-When the closest component is a functional copmponent `this` will point to the functional component object (which is not a `ViewModel`).
+When the closest component is a template copmponent `this` will point to the template component object (which is not a `ViewModel`).
 
 ## Using `q:call` on component tags
 
-When using `q:call` on a `ViewModel` or functional component tag the `q:call` function will be executed on the root element of the component.
+When using `q:call` on a `ViewModel` or template component tag the `q:call` function will be executed on the root element of the component.
 
 ## Examples
 
@@ -66,20 +66,20 @@ export default Qute(RootTemplate, {
 });
 ```
 
-### Functional Components and the Life Cycle
+### Template Components and the Life Cycle
 
-A functional component doesn't take part on the component life cycle.  \
+A template component doesn't take part on the component life cycle.  \
 Anyway, we can use the `q:call` directive to register a handler for connect and disconnect life cycle events on the current rendering context.
 
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='Functional' import='handleFuncLoad'>
-    <div q:call='handleFuncLoad'>I am a functional component</div>
+<q:template name='TemplateComp' import='handleFuncLoad'>
+    <div q:call='handleFuncLoad'>I am a template component</div>
 </q:template>
 
 <q:template name='RootTemplate'>
-    <Functional />
+    <TemplateComp />
 </q:template>
 
 // an object providing two event handlers to be notified
@@ -105,7 +105,7 @@ In this example, we are registering the connect / disconnect handlers using the 
 
 The `import` attribute of `q:template` is required to access variables declared in the current file within the template.
 
-This technique can be used **on any DOM element**, not only on functional component elements.
+This technique can be used **on any DOM element**, not only on template component elements.
 
 
 

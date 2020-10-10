@@ -51,9 +51,9 @@ Called just after the component is disconnected from the DOM. It may be called s
 
 This handler can be used to clean-up resources setup by the `connected` handler.
 
-## Functional Components and the Life Cycle
+## Template Components and the Life Cycle
 
-Functional components doesn't take part to the component life cycle, these components are just rendering functions.  \
-However, there is a way to be notified at the functional component level when the parent ViewModel component is connected to the DOM.
+Template components doesn't take part to the component life cycle, these components are just rendering functions.  \
+However, there is a way to be notified at the template component level when the parent ViewModel component is connected to the DOM.
 
 See the **[q:call](#/attributes/q-call)** page for an example.

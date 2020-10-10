@@ -35,7 +35,7 @@ export default Qute(RootTemplate).properties({
 
 ## Using q:toggle on components
 
-When using `q:toggle` attribute on components it will modify the attributes on the component root element. This works for both **functional** and **ViewModel** components.
+When using `q:toggle` attribute on components it will modify the attributes on the component root element. This works for both **template** and **ViewModel** components.
 
 ```jsq
 import Qute from '@qutejs/runtime';

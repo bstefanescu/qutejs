@@ -72,7 +72,7 @@ The `root` component will render as:
 
 ## Using q:attrs on nested components
 
-You can also use `q:attrs` on any nested component (on both VM or functional components).
+You can also use `q:attrs` on any nested component (on both VM or template components).
 
 Example:
 
