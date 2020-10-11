@@ -58,9 +58,11 @@ this.myList = this.myList.slice(0);
 
 ## The `q:key` directive
 
-The `q:for` directive can optimize the DOM updates **only** if an unique identifier string is given for each iterated item. This unique string can be specified using the `q:key` directive.
+The `q:for` directive can optimize the DOM updates **only** if an unique identifier is given for each iterated item. This unique string can be specified using the `q:key` directive. If the unique identifier value is not a string it will be converted to a string.
 
 The `q:key` value should point to a property of the item that is to be used as an ID. When iterating over primitive items like strings or numbers you can use the special value `'.'` which indicates that the item itself should be used as an id. You can also specify the ID as an arrow function taking the iterated item as argument and returning the id.
+
+**Be aware** when using `'.'` as the list key: the key value must be unique in the list, this means the `'.'` will only works for lists with unique values!
 
 If you are using `q:for` without a related `q:key` attribute then the DOM updates will be done using **brute force** in the same way as for the `for` directive.
 
@@ -70,7 +72,7 @@ If you are using `q:for` without a related `q:key` attribute then the DOM update
 2. `<div q:for='item in myList' q:key='id'>...</div>`
 3. `<div q:for='item in myList' q:key='item => item.id'>...</div>`
 
-**Using `q:for` without a `q:key` is useless**. It is better to use `for` in that case.
+**Using `q:for` without a `q:key` is not recommended**. It is better to use `for` in that case.
 
 **Note** that for your convenience you can also use a `key` attribute instead of `q:key` to specify the identifier. The difference is that the `key` attribute will be preserved as is on the DOM element.
 
@@ -108,13 +110,13 @@ import { _List } from '@qutejs/types';
 </q:template>
 
 export default Qute(MyList).properties({
-    myList: _List(["item 1", "item 2", "item 3"])
+    myList: _List('.', ["item 1", "item 2", "item 3"])
 });
 ```
 
 Now you can modify the list and update the DOM using one line:
 
-```jsq
+```javascript
 this.myList.push('new item');
 ```
 
@@ -126,10 +128,10 @@ There is **no need** to force an update by calling `this.update()` or by replaci
 
 Create a new List property object.
 
-+ **key** - the name of a list item field that can be used as the item unique identifier. Defaults to `'.'`.
++ **key** - A required list key: either the name of an item field to be used as the key, either the special key `'.'` which means the item itself should be used as a key or either a function which takes the item and should return a unique value that identify the item.
 + **initiaValue** - an optional array to be used to initialize the list. Defaults to an empty array.
 
-The **key** is optional: if not specified an implicit value of `'.'` will be used, which means the item itself is the unique identifier. This is usefull for primitive lists. Examples: `_List(['item 1', 'item 2', 'item 3'])`
+**Be aware**, when using the special key `'.'` the list must only contains unique values!
 
 **Usage:**
 

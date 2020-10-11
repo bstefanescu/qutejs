@@ -4,10 +4,9 @@ import { ERR } from '@qutejs/commons';
 A helper for reactive lists udpates
 */
 export default function List(vm, key, ar) {
-    if (ar != null && !Array.isArray(ar)) ERR('_List properties expects an array value as input. Got: '+val);
     this.ar = ar ? ar.slice() : []; // always make a copy
     this.vm = vm;
-    if (key === '.' || key == null) {
+    if (key === '.') {
 		this.keyOf = function(item) { return String(item); };
 	} else if (typeof key === 'string') {
 		this.keyOf = function(item) { return item[key]; }

@@ -299,14 +299,14 @@ A property type providing a custom array like structure that helps working with 
 
 When you are using the **[q:for](#/attributes/q-for)** directive to render reactive lists we recommend to use a `_List` property to hold the reactive array instead of an array property. This is because the _List property is providing an straightforward way to modify lists and updating the rendering.
 
-When using `_List` properties you must specify the field name of an list item that will uniquely identify the item in the list. We are naming this field the list **key**.  \
+When using `_List` properties you must specify the field name of an list item that will uniquely identify the item in the list. We are naming this field the list **key**. \
 Because of this you don't need to specify the `key` attribute along with the `q:for` attribute since the key is already known when the `q:for` iterates over a `_List` property.
 
 **Example**
 
 ```javascript
 Qute(ComponentTemplate).properties({
-    itemsWithDefaultValue: _List('id', [1,2,3]), // <--- the list key is 'id' and the default value [1,2,3]
+    itemsWithDefaultValue: _List('id', [{id: 1, text: 'item1'}, {id: 2, text: 'item1'}]), // <--- the list key is 'id' and the default value the given array
     items: _List('id') // <--- the list key is 'id' and the default value is an empty array.
 });
 ```
