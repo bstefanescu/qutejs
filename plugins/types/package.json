@@ -30,13 +30,9 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/window": "2.0.0-beta.1",
     "@qutejs/commons": "2.0.0-beta.1"
   },
   "build": {
-    "config": "component",
-    "external": [
-      "@qutejs/window"
-    ]
+    "config": "weblib"
   }
 }
