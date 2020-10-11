@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/dev",
-  "version": "1.0.0-rc.12",
+  "version": "2.0.0-beta",
   "description": "Qute Development runtime",
   "browser": "lib/qute-dev.js",
   "unpkg": "lib/qute-dev.js",
@@ -28,13 +28,13 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/commons": "1.0.0-rc.12",
-    "@qutejs/compiler": "1.0.0-rc.12",
-    "@qutejs/polyfill": "1.0.0-rc.12",
-    "@qutejs/runtime": "1.0.0-rc.12",
-    "@qutejs/importer": "1.0.0-rc.12",
-    "@qutejs/types": "1.0.0-rc.12",
-    "@qutejs/window": "1.0.0-rc.12"
+    "@qutejs/commons": "2.0.0-beta",
+    "@qutejs/compiler": "2.0.0-beta",
+    "@qutejs/polyfill": "2.0.0-beta",
+    "@qutejs/runtime": "2.0.0-beta",
+    "@qutejs/importer": "2.0.0-beta",
+    "@qutejs/types": "2.0.0-beta",
+    "@qutejs/window": "2.0.0-beta"
   },
   "build": {
     "config": "dev"

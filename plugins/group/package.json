@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/group",
-  "version": "1.0.0-rc.12",
+  "version": "2.0.0-beta",
   "description": "Qute Items Group directive",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
@@ -35,10 +35,10 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/window": "1.0.0-rc.12"
+    "@qutejs/window": "2.0.0-beta"
   },
   "devDependencies": {
-    "@qutejs/rollup-plugin-qute": "1.0.0-rc.12"
+    "@qutejs/rollup-plugin-qute": "2.0.0-beta"
   },
   "build": {
     "config": "component"
