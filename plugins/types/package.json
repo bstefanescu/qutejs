@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/types",
-  "version": "2.0.0-beta",
+  "version": "2.0.0-beta.1",
   "description": "Qute property types and helpers",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
@@ -30,11 +30,11 @@
     "type": "git"
   },
   "devDependencies": {
-    "@qutejs/rollup-plugin-qute": "2.0.0-beta"
+    "@qutejs/rollup-plugin-qute": "2.0.0-beta.1"
   },
   "dependencies": {
-    "@qutejs/window": "2.0.0-beta",
-    "@qutejs/commons": "2.0.0-beta"
+    "@qutejs/window": "2.0.0-beta.1",
+    "@qutejs/commons": "2.0.0-beta.1"
   },
   "build": {
     "config": "component",
