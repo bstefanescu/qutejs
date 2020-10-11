@@ -29,9 +29,6 @@
     "url": "https://github.com/bstefanescu/qutejs",
     "type": "git"
   },
-  "devDependencies": {
-    "@qutejs/rollup-plugin-qute": "2.0.0-beta.1"
-  },
   "dependencies": {
     "@qutejs/window": "2.0.0-beta.1",
     "@qutejs/commons": "2.0.0-beta.1"

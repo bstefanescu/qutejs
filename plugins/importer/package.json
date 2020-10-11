@@ -31,10 +31,7 @@
   "dependencies": {
     "@qutejs/window": "2.0.0-beta.1"
   },
-  "devDependencies": {
-    "@qutejs/rollup-plugin-qute": "2.0.0-beta.1"
-  },
   "build": {
-    "config": "component"
+    "config": "weblib"
   }
 }

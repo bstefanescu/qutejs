@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const commonjs = require('rollup-plugin-commonjs');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const buble = require('@rollup/plugin-buble');
@@ -16,8 +18,13 @@ module.exports = function(project, args) {
     ];
 
     function webConfig(prod) {
+        // try web-index.js first
+        let input = project.file('src/index-web.js');
+        if (!fs.existsSync(input)) {
+            input = project.file('src/index.js');
+        }
         return {
-            input: project.file('src/index.js'),
+            input: input,
             external: [ '@qutejs/window', ... external ],
             plugins: [
                 ...basePlugins,
@@ -27,7 +34,7 @@ module.exports = function(project, args) {
                 format: 'iife',
                 file: project.file(`lib/${webFileName}.${prod?'min.js':'js'}`),
                 sourcemap: true,
-                name: project.pascalCaseName,
+                name: project.pascalCaseName.replace('Qutejs', 'Qute'),
                 globals: {
                     '@qutejs/window': 'window',
                     ... globals
