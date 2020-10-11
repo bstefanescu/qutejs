@@ -110,7 +110,7 @@ var TOC = [
     { title: 'Overview', href: 'overview', toplevel:true},
     { title: 'Getting Started', expand: true, items: [
         { title: 'Hello World', href: 'start/hello'},
-        { title: 'Browsers Support', href: 'start/polyfills'},
+        { title: 'Browser Support', href: 'start/polyfills'},
         { title: 'The Playground', href: 'start/playground'},
         { title: 'Creating a Project', href: 'start/project'}
     ]},
