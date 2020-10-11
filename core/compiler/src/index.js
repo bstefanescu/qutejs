@@ -636,7 +636,7 @@ function DomNode(name, caseSensitiveName, attrs) {
 		} else if (name.startsWith('async-emit-')) {
 			this.emit(name.substring(11), attr.value, true);
 		} else if (name.startsWith('content-')) {
-            return QATTRS.content.call(this, attr.value, name.substring(8));
+            return QATTRS.content.call(this, attr, name.substring(8));
 		} else {
 			this.directive(name, attr);
 		}
