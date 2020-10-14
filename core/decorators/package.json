@@ -1,0 +1,35 @@
+{
+  "name": "@qutejs/decorators",
+  "version": "2.0.0-beta.1",
+  "description": "Provides class decorators for Qute ViewModel components",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "browser": "lib/qute-importer.js",
+  "unpkg": "lib/qute-importer.min.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bogdan Stefanescu <bogdan@quandora.com>",
+  "license": "MIT",
+  "keywords": [
+    "class",
+    "decorators",
+    "reactive",
+    "view",
+    "model",
+    "component",
+    "qutejs",
+    "qute"
+  ],
+  "homepage": "https://qutejs.org",
+  "repository": {
+    "url": "https://github.com/bstefanescu/qutejs",
+    "type": "git"
+  },
+  "build": {
+    "config": "weblib"
+  }
+}

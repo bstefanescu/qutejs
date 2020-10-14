@@ -171,7 +171,7 @@ App.prototype = {
 
 	view(VM) {
 		return new VM(this);
-	}
+    }
 }
 
 App.Prop = Prop;

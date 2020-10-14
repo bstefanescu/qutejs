@@ -8,6 +8,8 @@ import ViewModel from './vm.js';
 import App from './app.js';
 import { registerDirective } from './q-attr.js';
 
+import { _mixin, _watch, _on, _channel, _properties, _require } from '@qutejs/decorators';
+
 /**
  * We cannot use Object.assign since getter are lost. So we copy the prop def itself
  */
@@ -67,34 +69,27 @@ function Qute(renderFn, def) {
     if (!VMProto.render) ERR('Unsupported ViewModel definition: No rendering function was defined');
 
 	VMType.watch = function(prop, fn) {
-		if (!VMProto.$watch) Object.defineProperty(VMProto, '$watch', {value:{}});
-		VMProto.$watch[prop] = fn;
+        _watch(VMProto, prop, fn);
 		return VMType;
 	}
 	VMType.on = function(key, selector, cb) {
-		VMProto.$init = chainFnAfter(function(thisObj) {
-			thisObj.$on(key, selector, cb);
-		}, VMProto.$init);
+        _on(VMProto, key, selector, cb);
 		return VMType;
 	}
 	VMType.channel = function(listenFn) {
-		VMProto.$channel = listenFn;
+        _channel(VMProto, listenFn);
 		return VMType;
 	}
     VMType.mixin = function() {
-        for (var i=0,l=arguments.length; i<l; i++) {
-            Object.assign(VMProto, arguments[i]);
-        }
+        _mixin(VMProto, Array.prototype.slice.call(arguments));
         return VMType;
     }
-    VMType.properties = function(data) {
-        VMProto.$props = data;
+    VMType.properties = function(properties) {
+        _properties(VMProto, properties);
         return VMType;
     },
     VMType.require = function() {
-        if (arguments.length > 0) {
-            VMProto.$require = Array.prototype.slice.call(arguments);
-        }
+        _require(VMProto, Array.prototype.slice.call(arguments));
         return VMType;
     }
 	return VMType;

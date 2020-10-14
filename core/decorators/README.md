@@ -1,6 +1,6 @@
-# Qute Importer  (@qutejs/types)
+# Qute Decorators  (@qutejs/decorators)
 
-Provide reactive property types for Qute `ViewModel` components.
+Provides class decorators for Qute `ViewModel` components.
 
 **[Qute](https://qutejs.org)** is a **reactive component model** designed for **plain old javascript** lovers.
 
@@ -12,18 +12,25 @@ Use the Qute project generator to create a new Qute application or component pro
 npm init @qutejs
 ```
 
-Go here for the **[Qute Property Types documentation](https://qutejs.org#/model/proptypes)**.
+Go here for the **[Qute Decorators documentation](https://qutejs.org#/model/class)**.
 
 # Installing
 
 ```
-npm install @qutejs/types
+npm install @qutejs/decorators
 ```
 
 # Usage
 
-```
-import Importer from '@qutejs/types';
+```javascript
+import Qute from '@qutejs/runtime';
+import { Template } from '@qutejs/importer';
+import MyTemplate from './my-template.jsq';
+
+@Template(MyTemplate)
+class MyViewModel extends Qute.ViewModel {
+    ...
+}
 ```
 
 # Building
