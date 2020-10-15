@@ -150,9 +150,9 @@ The rendering context linked to this component.
 
 This can be usefull when using **[custom attributes](#/attributes/q)** or **[q:call](#/attributes/q-call)**
 
-#### '__VM__'
+#### '__QUTE_VM__'
 
-An internal property which store the `ViewModel` constructor (i.e. component type) of the current component instance.
+An internal property, used to mark a ViewModel object.
 
 ### Component methods
 

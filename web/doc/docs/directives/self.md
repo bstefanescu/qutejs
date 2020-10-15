@@ -26,20 +26,14 @@ This gives you the ability to create recursive calls.
     <my-tree items={tree} />
 </q:template>
 
-const MyTree = Qute(RecursiveTemplate, {
-    init() {
-        return {items: null}
-    }
-});
+const MyTree = Qute(RecursiveTemplate).properties(() => ({
+    items: null
+}));
 
-export default Qute(RootTemplate, {
-    init() {
-        return {
-            tree: [
-                {name: "Item 1", children: [{name: "Item 1.1"}, {name: "Item 1.2"}]},
-                {name: "Item 2"}
-            ]
-        }
-    }
-})
+export default Qute(RootTemplate).properties(() => ({
+    tree: [
+        {name: "Item 1", children: [{name: "Item 1.1"}, {name: "Item 1.2"}]},
+        {name: "Item 2"}
+    ]
+}));
 ```

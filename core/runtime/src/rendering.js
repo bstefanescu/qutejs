@@ -25,18 +25,8 @@ function SetDOMAttrs(el, model, filter) {
 	}
 }
 
-function isVM(obj) {
-	return obj && obj.prototype && obj.prototype.__VM__;
-}
-
 function appendChildren(parent, children) {
 	for (var i=0, l=children.length; i<l; i++) parent.appendChild(children[i]);
-}
-function removeRange(from, to) {
-	var parent = from.parentNode;
-	while (from.nextSibling && from.nextSibling !== to) {
-		parent.removeChild(from.nextSibling);
-	}
 }
 
 function extractSlots(children) {
@@ -178,7 +168,7 @@ var RenderingProto = {
         if (!renderFn) { // recursivity -> use the current render fn
             var vm = this.closestVM(); //TODO impl a closestComp? to support fucnctional templates too?
             if (!vm) ERR('Calling "self" is only allowed inside a Viewodel context');
-            renderFn = vm.__VM__;
+            renderFn = vm.constructor;
         }
         return this._c(renderFn, xattrs, extractSlots(children));
     },
@@ -187,7 +177,7 @@ var RenderingProto = {
         if (typeof XTag !== 'function') {
             ERR('component tag is not a function: %s', XTag);
         }
-		if (isVM(XTag)) {
+		if (XTag.prototype && XTag.prototype.__QUTE_VM__) { // a ViewModel
 			var vm = new XTag(this.model.$app);
 			return vm.$create(this, xattrs, slots);
 		} else if (XTag.$compiled) { // a compiled template

@@ -101,6 +101,7 @@ function ViewModel(app, attrs) {
 }
 
 ViewModel.prototype = {
+    __QUTE_VM__: true, // ViewModel marker
 	toString: function() {
 		return 'ViewModel <'+this.render.name+'/>';
 	},
@@ -228,7 +229,7 @@ ViewModel.prototype = {
 			model = parentRendering && parentRendering.model,
 			listeners = xattrs && xattrs.$on;
 		if (xattrs && xattrs.$use) {
-			$use = applyUserDirectives(parentRendering, this.__VM__, xattrs, this);
+			$use = applyUserDirectives(parentRendering, this.constructor, xattrs, this);
 		}
 
 		// load definition

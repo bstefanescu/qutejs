@@ -60,8 +60,6 @@ function Qute(renderFn, def) {
 
 		VMType = ViewModelImpl;
     }
-    // we store the VMType on the prototype
-    VMProto.__VM__ = VMType;
     // add the rendering method of the tag if no one was provided
     if (renderFn) VMProto.render = renderFn;
 

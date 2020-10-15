@@ -51,5 +51,3 @@ export default Qute(MyComponent).properties({
     message: 'I am a class!'
 });
 ```
-
-**Note** that you still need to call `Qute(ClassObject)` even if you define the `render` method. This is because the Qute() call is also setting an internal property on the prototype named `__VM__` that points to the ViewModel constructor.

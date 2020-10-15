@@ -49,7 +49,7 @@ function kebabToCompName(name) {
 }
 
 function closestVM(el) {
-	while (el && !(el.__qute__ && el.__qute__.__VM__)) {
+	while (el && !(el.__qute__ && el.__qute__.__QUTE_VM__)) {
 		el = el.parentNode;
 	}
 	return el && el.__qute__;
