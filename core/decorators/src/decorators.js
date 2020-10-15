@@ -6,10 +6,24 @@
  * returened after passing the arguments.
  * Ex: `__decorate(MyComponent, Watch("myProp"), "watchMyProp")`
  */
-export function __qute_decorate(theClass, decorator, name) {
+export function __qute_decorate_member__(theClass, name, decorator) {
     const proto = theClass.prototype;
-    const r = decorator(proto, name, Object.getOwnPropertyDescriptor(proto, name));
-    if (r) Object.defineProperty(proto, name, r);
+    let r = null;
+    if (arguments.length > 3) {
+        let doDefine = false;
+        r = Object.getOwnPropertyDescriptor(proto, name);
+        for (var i=2,l=arguments.length; i<l; i++) {
+            let newR = arguments[i](proto, name, r);
+            if (newR) {
+                r = newR;
+                doDefine = true;
+            }
+        }
+        if (doDefine) Object.defineProperty(proto, name, r);
+    } else {
+        r = decorator(proto, name, Object.getOwnPropertyDescriptor(proto, name));
+        if (r) Object.defineProperty(proto, name, r);
+    }
 }
 
 /**

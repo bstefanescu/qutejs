@@ -1,16 +1,13 @@
 //TODO relpath to view name and viewname to relpath
 
 import Compiler from '@qutejs/compiler';
+import quteDecorators from './decorators.js';
+import {matchExtensions} from './utils.js';
 
 const EXT = ['.qute', '.jsq'];
 
 function isQuteFile(file) {
-    var i = file.lastIndexOf('.');
-    if (i > -1) {
-        var ext = file.substring(i);
-        return EXT.indexOf(ext) > -1;
-    }
-    return false;
+    return matchExtensions(file, EXT);
 }
 
 
@@ -83,5 +80,7 @@ qute.injectStyle = function(styleVar, id) {
         return code + `injectStyle(${styleVar});\n`;
     }
 }
+
+qute.decorators = quteDecorators;
 
 export default qute;

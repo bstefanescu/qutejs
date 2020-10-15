@@ -5,6 +5,9 @@ import JSQ from './jsq.js';
 import HTML_ENT_MAP from './html-entities.js';
 
 import { kebabToCompName } from '@qutejs/commons';
+
+import DecoratorTranspiler from './decorators';
+
 /*
 attrs: {key: value, $, @}
 
@@ -1105,5 +1108,6 @@ function Compiler() {
 }
 
 Compiler.parseHTML = parseHTML;
+Compiler.DecoratorTranspiler = DecoratorTranspiler;
 
 export default Compiler;
