@@ -99,10 +99,18 @@ function toBoolean(val) {
     return val == null ? val : Boolean(val);
 }
 
+function chainFnAfter(fn, prevFn) {
+	return prevFn ? function(arg) {
+		prevFn(arg);
+		return fn(arg);
+	} : fn;
+}
+
 export {
     capitalizeFirst, kebabToCamel, camelToKebab, kebabToCompName,
     closestVM, closestComp, closestListItem,
     print, ERR,
-    toString, toNumber, toBoolean
+    toString, toNumber, toBoolean,
+    chainFnAfter
  };
 

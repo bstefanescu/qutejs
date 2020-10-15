@@ -1,5 +1,4 @@
 import window from '@qutejs/window';
-import { chainFnAfter} from './utils.js';
 import {ERR} from '@qutejs/commons';
 
 import UpdateQueue from './update.js';

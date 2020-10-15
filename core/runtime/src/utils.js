@@ -4,14 +4,6 @@ function stopEvent(e) {
 	e.stopPropagation();
 }
 
-function chainFnAfter(fn, prevFn) {
-	return prevFn ? function(arg) {
-		prevFn(arg);
-		return fn(arg);
-	} : fn;
-}
-
-
 // filter is a an array whoes first item is true or false. See compiler q:attrs encoding
 function filterKeys(obj, filter) {
 	var keys = Object.keys(obj);
@@ -25,4 +17,4 @@ function filterKeys(obj, filter) {
 	}
 }
 
-export { stopEvent, chainFnAfter, filterKeys };
+export { stopEvent, filterKeys };

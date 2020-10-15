@@ -6,9 +6,9 @@ const QUTE_DECORATE_HELPER = '__qute_decorate_member__';
 export default function DecoratedUnit(quteImport, imports, rimports, classes) {
     this.comment = false;
     this.quteImport = quteImport;
-    this.imports = imports; // local alias to remote name
+    this.imports = imports || []; // local alias to remote name (for qute decorartor imports)
     this.classes = classes;
-    this.helperInstalled = QUTE_DECORATE_HELPER in rimports ? QUTE_DECORATE_HELPER : null;
+    this.helperInstalled = rimports && (QUTE_DECORATE_HELPER in rimports) ? QUTE_DECORATE_HELPER : null;
 }
 DecoratedUnit.prototype = {
     transpile(ms) {

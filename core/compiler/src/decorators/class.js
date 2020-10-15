@@ -1,4 +1,4 @@
-import { isVmProp, getDecoratorName, getDecoratorInfo} from './utils.js';
+import { isVmProp, getDecoratorName } from './utils.js';
 
 export default function DecoratedClass(classNode) {
     this.node = classNode;

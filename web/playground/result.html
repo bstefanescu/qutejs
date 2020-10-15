@@ -223,11 +223,15 @@ ul.playground-navbar > li {
 						runJSQScript(script, appEl);
 						document.getElementById('loader').style.display = 'none';
 					}, function(e) {
-						console.error(e);
+                        console.error(e);
 						document.getElementById('loader').style.display = 'none';
 						alert('Failed to load script dependencies');
 					});
-			});
+			}).catch(e => {
+                console.error(e);
+                document.getElementById('loader').style.display = 'none';
+                alert('Failed to transpile script:\n'+ e.message);
+            });
 		}
 
   		window.addEventListener('message', function(event) {

@@ -1,3 +1,5 @@
+import { chainFnAfter} from '@qutejs/commons';
+
 /* To be shared by both class decorators in './index.js' and Qute facade */
 
 /**

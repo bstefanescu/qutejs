@@ -24,49 +24,71 @@ function compileStyle(compiler, attrs, text) {
     return text ? 'Qute.css('+JSON.stringify(text)+');' : '';
 }
 
+/**
+ * Collect imports (styles too) and comment imports in source code.
+ * Returns the modifie source code.
+ */
+function processImports(code, imports, styles) {
+    return code.replace(IMPORT_RX, function(m, p1, p2, p3, p4) {
+        var path = p2 || p3 || p4, extraCode;
+        if (path) {
+            if (path.startsWith('\'') || path.startsWith("\"")) {
+                path = path.substring(1, path.length-1);
+            }
+            if (p1) { // a named import
+                if (path === '@qutejs/importer') {
+                    if (p1.startsWith('{')) {
+                        extraCode = "\nconst "+p1+" = Qute.Importer;\n";
+                    }
+                } else if (path === '@qutejs/types') {
+                    if (p1.startsWith('{')) {
+                        extraCode = "\nconst "+p1+" = Qute.PropTypes;\n";
+                    }
+                } else if (path === '@qutejs/decorators') {
+                    if (p1.startsWith('{')) {
+                        extraCode = "\nconst "+p1+" = Qute.Decorators;\n";
+                    }
+                } else {
+                    imports[path] = p1;
+                }
+            } else { // an import
+                if (path.slice(-4) === '.css') {
+                    styles.push(path);
+                } else {
+                    imports[path] = "";
+                }
+            }
+        }
+
+        var result = m.replace('import ', '//import ');
+        return extraCode ? result+extraCode : result;
+    });
+}
+
 function JSQLoader(transpileES6) {
 
 	this.create = function(code, name) {
 		if (!name) name = 'QuteLambda';
-        var imports = {};
-        var styles = [];
 
-		code = code.replace(IMPORT_RX, function(m, p1, p2, p3, p4) {
-			var path = p2 || p3 || p4, extraCode;
-			if (path) {
-				if (path.startsWith('\'') || path.startsWith("\"")) {
-					path = path.substring(1, path.length-1);
-				}
-                if (p1) { // a named import
-                    if (path === '@qutejs/importer') {
-                        if (p1.startsWith('{')) {
-                            extraCode = "\nconst "+p1+" = Qute.Importer;\n";
-                        }
-                    } else if (path === '@qutejs/types') {
-                        if (p1.startsWith('{')) {
-                            extraCode = "\nconst "+p1+" = Qute.PropTypes;\n";
-                        }
-                    } else {
-                        imports[path] = p1;
-                    }
-                } else { // an import
-                    if (path.slice(-4) === '.css') {
-                        styles.push(path);
-                    } else {
-                        imports[path] = "";
-                    }
-				}
-			}
-
-            var result = m.replace('import ', '//import ');
-			return extraCode ? result+extraCode : result;
-		});
-
-		var hasExport = false;
+        // 1. we transpile jsq templates first
         code = new Compiler().transpile(code, {
             sourceMap: false,
             compileStyle: compileStyle
         }).code;
+
+        // 2. then we transpile decorators if any
+        let transpileResult = new Compiler.DecoratorTranspiler().transpile(code);
+        if (transpileResult) {
+            code = transpileResult.code;
+        }
+
+        // 3. now process imports and remove import statements from code
+        var imports = {};
+        var styles = [];
+        code = processImports(code, imports, styles);
+
+        // 4. now process the default export if any and remove the statement from the code
+        var hasExport = false;
 		code = code.replace(EXPORT_RX, function(m) {
 			hasExport = true;
 			return "var __QUTE_DEV_DEFAULT_EXPORT__ = ";
@@ -74,11 +96,6 @@ function JSQLoader(transpileES6) {
         //  check if a template was exported (in that case there is a line:
         // var __QUTE_DEV_DEFAULT_EXPORT__ = __QUTE_DEFAULT_EXPORT__;
         var isTemplateExport = code.indexOf('var __QUTE_DEV_DEFAULT_EXPORT__ = __QUTE_DEFAULT_EXPORT__;') > -1;
-        if (transpileES6) {
-			code = transpileES6(code);
-		}
-
-
 		if (hasExport) {
             if (isTemplateExport) {
                 code += '\nreturn Qute(__QUTE_DEV_DEFAULT_EXPORT__);\n';
@@ -86,6 +103,11 @@ function JSQLoader(transpileES6) {
                 code += '\nreturn __QUTE_DEV_DEFAULT_EXPORT__;\n';
             }
         }
+
+        // 5. transpile ES6 if needed
+        if (transpileES6) {
+			code = transpileES6(code);
+		}
 
 		var script = new Script();
 		script.code = code;

@@ -1,5 +1,8 @@
 import MagicString from 'magic-string';
+// --- works with node modules:
 //import  Meriyah from 'meriyah';
+//const parse = Meriyah.parseScript;
+// ---- this one works with rollup:
 import  {parseScript as parse} from 'meriyah';
 
 import DecoratedUnit from './unit.js';
@@ -18,8 +21,8 @@ Transpiler.prototype = {
         });
 
         var unit = DecoratedUnit.load(ast);
-        unit.comment = this.comment;
         if (unit) {
+            unit.comment = this.comment;
             var ms = new MagicString(code);
             unit.transpile(ms);
             return {
@@ -28,6 +31,7 @@ Transpiler.prototype = {
                 ast: ast
             }
         }
+        return null; // no decorators found
     }
 }
 
