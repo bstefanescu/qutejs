@@ -1,7 +1,5 @@
 import window, {document} from '@qutejs/window';
-import Qute from '@qutejs/runtime';
 import Compiler from '@qutejs/compiler';
-import {capitalizeFirst, kebabToCamel} from '@qutejs/commons';
 import { serialLoadScripts } from './script-loader.js';
 
 var IMPORT_RX = /^\s*import\s+(?:(\S+|\{[^}]+\})\s+from\s+)?(?:(\"[^"]+\")|(\'[^']+\')|([^"'][^;\s]*));?$/mg;
@@ -42,11 +40,7 @@ function processImports(code, imports, styles) {
                     }
                 } else if (path === '@qutejs/types') {
                     if (p1.startsWith('{')) {
-                        extraCode = "\nconst "+p1+" = Qute.PropTypes;\n";
-                    }
-                } else if (path === '@qutejs/decorators') {
-                    if (p1.startsWith('{')) {
-                        extraCode = "\nconst "+p1+" = Qute.Decorators;\n";
+                        extraCode = "\nconst "+p1+" = Qute.Types;\n";
                     }
                 } else {
                     imports[path] = p1;

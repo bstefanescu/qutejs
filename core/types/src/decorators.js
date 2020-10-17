@@ -1,5 +1,4 @@
-
-import {__qute_decorate_member__, _template, _mixin, _watch, _on, _channel, _properties, _require } from './decorators.js';
+import {__qute_decorate_member__, _template, _mixin, _watch, _on, _channel, _properties, _require } from './decorator-helpers.js';
 
 
 function Template(renderFn) {
@@ -58,21 +57,8 @@ function AsyncDataModel(id) {
 }
 
 export {
-    // private helper shared with the class decoration compiler
-    __qute_decorate_member__,
-
-    // private helpers shared with Qute facade
-    _template,
-    _mixin,
-    _on,
-    _channel,
-    _watch,
-    _properties,
-    _require,
-
     // public API
     Template,
-    Template as Render,
     Mixin,
     On,
     Watch,

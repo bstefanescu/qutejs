@@ -8,7 +8,7 @@ import App from './app.js';
 import Service from './service.js';
 import { registerDirective } from './q-attr.js';
 
-import { _mixin, _watch, _on, _channel, _properties, _require } from '@qutejs/decorators';
+import { _mixin, _watch, _on, _channel, _properties, _require } from '@qutejs/types';
 
 /**
  * We cannot use Object.assign since getter are lost. So we copy the prop def itself

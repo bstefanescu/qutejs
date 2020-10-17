@@ -55,7 +55,7 @@ DecoratedUnit.prototype = {
         if (!this.helperInstalled) {
             // generate a name?
             //const helperName = QUTE_DECORATE_HELPER+Date.now();
-            ms.prepend(`import { ${QUTE_DECORATE_HELPER} } from '@qutejs/decorators';\n`);
+            ms.prepend(`import { ${QUTE_DECORATE_HELPER} } from '@qutejs/types';\n`);
             this.helperInstalled = QUTE_DECORATE_HELPER;
         }
         return this.helperInstalled;
@@ -82,7 +82,7 @@ DecoratedUnit.load = function(ast) {
                         quteImport = sp.local.name;
                     }
                 })
-            } else if (source === '@qutejs/decorators') {
+            } else if (source === '@qutejs/types') {
                 if (!imports) {
                     imports = {};
                     rimports = {};
