@@ -180,7 +180,7 @@ ListProp.prototype = {
         // the List is always making a copy of the input value
         vm.$data[key] = new List(vm, listKey, this.val);
         return vm.$createProp(key, function(val) {
-            return new List(vm, listKey, val)
+            return new List(vm, listKey, val);
         });
     }
 }

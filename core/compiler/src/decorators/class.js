@@ -1,4 +1,4 @@
-import { isVmProp, getDecoratorName } from './utils.js';
+import { getPropMeta, getDecoratorName } from './utils.js';
 
 export default function DecoratedClass(classNode) {
     this.node = classNode;
@@ -9,6 +9,7 @@ export default function DecoratedClass(classNode) {
     this.methods = null; // decorated methods
 
     this.toAppend = '';
+    this.ctorStmts = []; // statements to inject in the constructor
 }
 // TODO we must inspect thje imports to seee if ViewModel was renamed
 DecoratedClass.prototype = {
@@ -37,20 +38,30 @@ DecoratedClass.prototype = {
             this.decorators.forEach(deco => this.transpileDecorator(ms, deco, unit));
         }
         if (this.fields) {
-            var props = [];
+            var vmprops = [];
+            var svcprops = [];
             var fields = [];
             this.fields.forEach(field => {
-                if (isVmProp(field, unit.imports)) {
-                    props.push(field);
+                const meta = getPropMeta(field, unit.imports);
+                if (meta) {
+                    if (meta.vmProp) {
+                        vmprops.push(field);
+                    } else if (meta.svcProp) {
+                        svcprops.push(field);
+                    }
                 } else {
                     fields.push(field);
                 }
             })
-            if (props.length) this.transpileProps(ms, props, unit);
+            if (vmprops.length) this.transpileVMProps(ms, vmprops, unit);
+            if (svcprops.length) this.transpileSvcProps(ms, svcprops, unit);
             if (fields.length) this.transpileFields(ms, fields, unit);
         }
         if (this.methods) {
             this.transpileMethods(ms, this.methods, unit);
+        }
+        if (this.ctorStmts.length > 0) {
+            this.injectCtorStmts(ms, this.ctorStmts);
         }
         if (this.toAppend) {
             ms.appendLeft(this.node.end, this.toAppend);
@@ -95,6 +106,39 @@ DecoratedClass.prototype = {
         });
     },
 
+    injectCtorStmts(ms, stmts) {
+        const text = ms.original;
+        if (this.ctor) {
+            // look for the `super()` call
+            let offset = -1;
+            let body = this.ctor.value.body;
+            if (body.body.length > 0) {
+                let firstStmt = body.body[0];
+                if (firstStmt.type === 'ExpressionStatement') {
+                    let firstExpr = firstStmt.expression;
+                    if (firstExpr.callee && firstExpr.callee.type === 'Super') {
+                        // insert after super
+                        offset = firstExpr.end;
+                        if (text[offset] === ';') offset++;
+                    }
+                }
+            }
+            if (offset === -1) {
+                offset = body.start+1; // skip {
+            }
+            let tab = '    ';
+            ms.appendLeft(offset, '\n'+tab+tab+stmts.join(tab+tab).trim()+'\n');
+        } else {
+            let tab = '    ';
+            // create the ctor
+            let classBody = this.node.body;
+            let offset = classBody.start+1; // skip \\ {
+            //console.log('!!!!!!!!!!!!!!!', text)
+            ms.appendLeft(offset, `\n${tab}constructor(...args) {\n${tab}${tab}${stmts.join(tab+tab)}${tab}}` )
+            //console.log('BODY=============', );
+        }
+    },
+
     /*
     fields are moved in constructor. If not construcor exists a new one is generated as follow:
       constructor(...args) {
@@ -105,7 +149,7 @@ DecoratedClass.prototype = {
     */
     transpileFields(ms, fields, unit) {
         const text = ms.original;
-        let initFields = [];
+        const initFields = this.ctorStmts;
         fields.forEach(field => {
             const helperArgs = [];
             const key = field.key.name;
@@ -129,43 +173,13 @@ DecoratedClass.prototype = {
                 this.appendCode(`${helperName}(${this.name}, ${JSON.stringify(key)}, ${helperArgs.join(', ')});`);
             }
         });
-        if (this.ctor) {
-            // look for the `super()` call
-            let offset = -1;
-            let body = this.ctor.value.body;
-            if (body.body.length > 0) {
-                let firstStmt = body.body[0];
-                if (firstStmt.type === 'ExpressionStatement') {
-                    let firstExpr = firstStmt.expression;
-                    if (firstExpr.callee && firstExpr.callee.type === 'Super') {
-                        // insert after super
-                        offset = firstExpr.end;
-                        if (text[offset] === ';') offset++;
-                    }
-                }
-            }
-            if (offset === -1) {
-                offset = body.start+1; // skip {
-            }
-            let tab = '    ';
-            ms.appendLeft(offset, '\n'+tab+tab+initFields.join(tab+tab).trim()+'\n');
-        } else {
-            let tab = '    ';
-            // create the ctor
-            let classBody = this.node.body;
-            let offset = classBody.start+1; // skip \\ {
-            //console.log('!!!!!!!!!!!!!!!', text)
-            ms.appendLeft(offset, `\n${tab}constructor(...args) {\n${tab}${tab}${initFields.join(tab+tab)}${tab}}` )
-            //console.log('BODY=============', );
-        }
     },
-    transpileProps(ms, fields, unit) {
+    transpileVMProps(ms, fields, unit) {
         const text = ms.original;
         let props = [], req = [];
         fields.forEach(field => {
-            if (field.__qute_prop) {
-                unit.checkSuperClass(this, field.__qute_prop);
-            }
+            unit.checkSuperClass(this, field.__qute_meta.name);
+
             var key = field.key.name;
             var value = null;
             if (field.value) {
@@ -190,5 +204,38 @@ DecoratedClass.prototype = {
         if (req.length > 0) {
             this.appendCode(this.name+'.prototype.$require = '+JSON.stringify(req)+';');
         }
+    },
+    transpileSvcProps(ms, fields, unit) {
+        const text = ms.original;
+        const initFields = this.ctorStmts;
+        fields.forEach(field => {
+            const meta = field.__qute_meta;
+            unit.checkSuperClass(this, meta.name);
+
+            var key = field.key.name;
+            var value = null;
+            if (field.value) {
+                value = text.substring(field.value.start, field.value.end);
+            } else {
+                value = 'void(0)';
+            }
+            const definePropFn = meta.async ? 'defineAsyncProp' : 'defineProp';
+
+            const decoArgs = field.__qute_deco.expression.arguments;
+            if (!decoArgs || !decoArgs.length) {
+                throw new Error('Invalid ${meta.name} decorator: must specify the data model ID as an argument');
+            }
+            const propId = text.substring(decoArgs[0].start, decoArgs[0].end);
+
+            const args = field.value ? propId+', '+text.substring(field.value.start, field.value.end) : propId;
+
+            initFields.push(`this.app.${definePropFn}(${args}).link(this, ${key});\n`);
+
+            field.decorators.forEach(decorator => {
+                unit.removeDecorator(ms, decorator);
+            });
+            unit.removeField(ms, field);
+        });
     }
+
 };

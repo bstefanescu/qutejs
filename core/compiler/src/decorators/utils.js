@@ -7,25 +7,57 @@ const D_On = 'On';
 const D_Channel = 'Channel';
 const D_Prop = 'Prop';
 const D_Required = 'Required';
-const D_DataModel = 'Required';
-const D_AsyncDataModel = 'Required';
+const D_DataModel = 'DataModel';
+const D_AsyncDataModel = 'AsyncDataModel';
 
 const QUTE_DECORATORS = {};
 
-function registerQuteDecorator(name, superClass, isPropMarker) {
-    QUTE_DECORATORS[name] = { superClass: superClass, prop: isPropMarker }
+function registerQuteDecorator(meta) {
+    QUTE_DECORATORS[meta.name] = meta;
 }
 
-registerQuteDecorator(D_Template, 'Qute.ViewModel');
-registerQuteDecorator(D_Render, 'Qute.ViewModel');
-registerQuteDecorator(D_Mixin);
-registerQuteDecorator(D_Watch, 'Qute.ViewModel');
-registerQuteDecorator(D_On, 'Qute.ViewModel');
-registerQuteDecorator(D_Channel, 'Qute.ViewModel');
-registerQuteDecorator(D_Prop, 'Qute.ViewModel', true);
-registerQuteDecorator(D_Required);
-registerQuteDecorator(D_DataModel, 'Qute.Service');
-registerQuteDecorator(D_AsyncDataModel, 'Qute.Service');
+registerQuteDecorator({
+    name: D_Template,
+    superClass: 'Qute.ViewModel'
+});
+registerQuteDecorator({
+    name: D_Render,
+    superClass: 'Qute.ViewModel'
+});
+registerQuteDecorator({
+    name: D_Mixin
+});
+registerQuteDecorator({
+    name: D_Watch,
+    superClass: 'Qute.ViewModel'
+});
+registerQuteDecorator({
+    name: D_On,
+    superClass: 'Qute.ViewModel'
+});
+registerQuteDecorator({
+    name: D_Channel,
+    superClass: 'Qute.ViewModel'
+});
+registerQuteDecorator({
+    name: D_Prop,
+    superClass: 'Qute.ViewModel',
+    vmProp: true
+});
+registerQuteDecorator({
+    name: D_Required
+});
+registerQuteDecorator({
+    name: D_DataModel,
+    superClass: 'Qute.Service',
+    svcProp: true
+});
+registerQuteDecorator({
+    name: D_AsyncDataModel,
+    superClass: 'Qute.Service',
+    svcProp: true,
+    async: true
+});
 
 
 
@@ -40,10 +72,10 @@ const VM_PROPS_DECORATORS = {
     'Any': true,
 }
 
-function isVmProp(property, imports) {
+function getPropMeta(property, imports) {
+    let meta = null;
     if (property.decorators.length > 0) {
         var decos = property.decorators;
-        var required = false, prop = false;
         for (var i=0,l=decos.length; i<l; i++) {
             var deco = decos[i];
             var name;
@@ -53,21 +85,32 @@ function isVmProp(property, imports) {
             } else {
                 name = deco.expression.name;
             }
+
             const quteName = imports[name]; // get the import name
+
             if (quteName) {
                 var decoratorInfo = QUTE_DECORATORS[quteName];
                 if (decoratorInfo) {
-                    if (quteName === D_Required) { // @Required
+                    if (quteName === D_Required) {
                         property.__qute_required = true;
-                    } else if (decoratorInfo.prop) {
-                        property.__qute_prop = quteName;
-                        prop = true;
+                    } else if (decoratorInfo.vmProp) {
+                        if (meta) throw new Error(`Decorators "${meta.name}" and "${decoratorInfo.name}" cannot be both used on the same field`);
+                        meta = decoratorInfo;
+                        property.__qute_deco = deco;
+                        property.__qute_meta = meta;
+                    } else if (decoratorInfo.svcProp) {
+                        if (meta) throw new Error(`Decorators "${meta.name}" and "${decoratorInfo.name}" cannot be both used on the same field`);
+                        meta = decoratorInfo;
+                        property.__qute_deco = deco;
+                        property.__qute_meta = meta;
+
+                        console.log('======>', meta);
                     }
                 }
             }
         }
     }
-    return prop;
+    return meta;
 }
 
 function getDecoratorInfo(name) {
@@ -122,7 +165,7 @@ function getDecoratorName(decorator) {
 
 export {
     getDecoratorInfo,
-    isVmProp,
+    getPropMeta,
     removeDecorator,
     removeField,
     commentDecorator,

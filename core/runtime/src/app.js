@@ -35,7 +35,6 @@ var PropProto = {
 	},
 
 	link(target, name) {
-		var self = this;
 		Object.defineProperty(target, name, createProp(this));
 		return this;
 	},
@@ -152,11 +151,10 @@ App.prototype = {
 			ERR("No model property named '%s' was found!", key);
 		}
 		return prop;
-	},
-
-	defineProp(key, value) {
+    },
+    defineProp(key, value) {
 		return new Prop(this, key, value);
-	},
+    },
 
 	defineAsyncProp(key, value) {
 		return new AsyncProp(this, key, value);

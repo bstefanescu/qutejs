@@ -45,22 +45,19 @@ function Required() {
     }
 }
 
-//TODO: not yet implemented
-
-function DataModel() {
-    return function(VMProto, name, descriptor) {
-        //TODO
+function DataModel(id) {
+    return function(ServiceProto, name, descriptor) {
+        // do nothing --> properties are handled by the compiler for optimizations
     }
 }
 
-function AsyncDataModel() {
-    return function(VMProto, name, descriptor) {
-        //TODO
+function AsyncDataModel(id) {
+    return function(ServiceProto, name, descriptor) {
+        // do nothing --> properties are handled by the compiler for optimizations
     }
 }
 
 export {
-
     // private helper shared with the class decoration compiler
     __qute_decorate_member__,
 

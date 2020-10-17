@@ -1,4 +1,4 @@
-import window, {document} from '@qutejs/window';
+import {document} from '@qutejs/window';
 import {kebabToCamel, ERR, toBoolean, toString, toNumber, chainFnAfter} from '@qutejs/commons';
 import { stopEvent, filterKeys } from './utils.js';
 

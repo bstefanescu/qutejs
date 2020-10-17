@@ -5,6 +5,7 @@ import UpdateQueue from './update.js';
 import Rendering from './rendering.js';
 import ViewModel from './vm.js';
 import App from './app.js';
+import Service from './service.js';
 import { registerDirective } from './q-attr.js';
 
 import { _mixin, _watch, _on, _channel, _properties, _require } from '@qutejs/decorators';
@@ -96,6 +97,8 @@ Qute.ViewModel = ViewModel;
 Qute.App = App;
 Qute.UpdateQueue = UpdateQueue;
 Qute.Rendering = Rendering;
+Qute.Service = Service;
+
 // render a functional template given its render function name and a model
 Qute.render = function(renderFn, model) {
 	return renderFn(new Rendering(null, model));
