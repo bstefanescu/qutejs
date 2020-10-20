@@ -1,5 +1,4 @@
-import {__qute_decorate_member__, _template, _mixin, _watch, _on, _channel, _properties, _require } from './decorator-helpers.js';
-
+import {__qute_decorate_member__, _template, _mixin, _watch, _on, _channel, _require } from './helpers.js';
 
 function Template(renderFn) {
     return function(target) {
@@ -32,12 +31,6 @@ function Channel() {
     }
 }
 
-function Prop() {
-    return function(VMProto, name, descriptor) {
-        //do nothing --> properties are handled by the compiler for optimizations
-    }
-}
-
 function Required() {
     return function(VMProto, name, descriptor) {
         //do nothing --> properties are handled by the compiler for optimizations
@@ -63,7 +56,6 @@ export {
     On,
     Watch,
     Channel,
-    Prop,
     Required,
     DataModel,
     AsyncDataModel

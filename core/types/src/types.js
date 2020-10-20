@@ -1,75 +1,42 @@
-import { ERR, toString, toBoolean, toNumber } from '@qutejs/commons';
+import { ERR } from '@qutejs/commons';
 import List from './list.js';
 
-function _default() {
-    return this.value;
-}
-function _defaultFromFactory(vm) {
-    return this.value(vm.$app);
-}
-function __qute_prop(vm, key) {
-    var val = this._default(vm);
-    vm.$data[key] = this._assign ? this._assign(val) : val;
-    return vm.$createProp(key, this._assign);
+const Link = Object.freeze({});
+
+function toString(val) {
+    return val == null ? val : String(val);
 }
 
-// ------------ String
-function StringProp(value) {
-    this.value = toString(value);
-}
-StringProp.prototype = {
-    __qute_prop: __qute_prop,
-    _default: _default,
-    _assign: toString
-}
-function _String(value) {
-    return new StringProp(value);
+function toNumber(val) {
+    if (val != null) {
+        var n = Number(val);
+        if (isNaN(n)) ERR('Expecting a number. Got: '+(typeof val)+': '+val);
+        return n;
+    }
+    return val;
 }
 
-// ------------ Number
-function NumberProp(value) {
-    this.value = toNumber(value);
-}
-NumberProp.prototype = {
-    __qute_prop: __qute_prop,
-    _default: _default,
-    _assign: toNumber
-}
-function _Number(value) {
-    return new NumberProp(value);
+function toBoolean(val) {
+    return val == null ? val : Boolean(val);
 }
 
-// ------------ Boolean
-function BooleanProp(value) {
-    this.value = toBoolean(value);
+function toArray(val) {
+    if (val != null && !Array.isArray(val)) ERR('Expected an array but got '+val);
+    return val;
 }
-BooleanProp.prototype = {
-    __qute_prop: __qute_prop,
-    _default: _default,
-    _assign: toBoolean
+/*
+function isPlainObject(val) {
+    return typeof val === 'object' && val.constructor === Object;
 }
-function _Boolean(value) {
-    return new BooleanProp(value);
+*/
+function toObject(val) {
+    if (val != null && typeof val !== 'object') ERR('Expected an object but got '+val);
+    return val;
 }
-
-// ------------ Function
-function checkFunction(val) {
+function toFunction(val) {
     if (val != null && typeof val !== 'function') ERR('Expected a function but got '+val);
     return val;
 }
-function FunctionProp(value) {
-    this.value = checkFunction(value);
-}
-FunctionProp.prototype = {
-    __qute_prop: __qute_prop,
-    _default: _default,
-    _assign: checkFunction
-}
-function _Function(value) {
-    return new FunctionProp(value);
-}
-
-// ------------ Date
 function toDate(val) {
     if (val != null) {
         if (val instanceof Date) {
@@ -84,119 +51,172 @@ function toDate(val) {
     }
     return val;
 }
-function DateProp(value) {
-    this.value = toDate(value);
-}
-DateProp.prototype = {
-    __qute_prop: __qute_prop,
-    _default: _default,
-    _assign: toDate
-}
-function _Date(value) {
-    return new DateProp(value);
-}
 
-// ------------ Array
-function toArray(val) {
-    if (val != null && !Array.isArray(val)) ERR('Expected an array but got '+val);
-    return val;
-}
-function ArrayProp(value) {
-    this.value = toArray(value);
-}
-ArrayProp.prototype = {
-    __qute_prop: __qute_prop,
-    _default: function() {
-        var v = toArray(this.value);
-        return v ? v.slice() : v; // make a copy
+const BaseType = {
+    createProp(vm, key, value, arg) {
+        this.checkArgs && this.checkArgs(key, value, arg);
+        const setter = this.setter;
+        this.init.call(vm, key, value, arg, setter);
+        return this.descriptor.call(vm, key, arg, setter);
     },
-    _assign: toArray
-}
-function _Array(value) {
-    return new ArrayProp(value);
-}
-
-// ------------ Object
-function isPlainObject(val) {
-    return typeof val === 'object' && val.constructor === Object;
-}
-function checkObject(val) {
-    if (val != null && typeof val !== 'object') ERR('Expected an object but got '+val);
-    return val;
-}
-
-function ObjectProp(value) {
-    this.value = checkPlainObject(value);
-}
-ObjectProp.prototype = {
-    __qute_prop: __qute_prop,
-    _default: _default,
-    _assign: checkObject,
-    assign(fn) {
-        this._assign = fn;
-        return this;
-    }
-}
-function _Object(value) {
-    var prop = new ObjectProp(value);
-    if (typeof value === 'function') {
-        prop._default = _defaultFromFactory;
-    } else if (isPlainObject(value)) {
-        prop._default = function() { return Object.assign({}, this.value); }
-    }
-    return prop;
-}
-
-// ------------ Any
-function AnyProp(value) {
-    this.value = value;
-}
-AnyProp.prototype = {
-    __qute_prop: __qute_prop,
-    _default: _default,
-    assign(fn) {
-        this._assign = fn;
-        return this;
-    }
-}
-function _Any(value) {
-    var prop = new AnyProp(value);
-    if (typeof value === 'function') {
-        prop._default = _defaultFromFactory;
-    }
-    return prop;
-}
-
-// ------------ List
-function ListProp(key, val) {
-    if (!key) ERR('The key argument is required');
-    if (val && !Array.isArray(val)) ERR('Expecting an array. Got '+val);
-    this.key = key;
-    this.val = val;
-}
-ListProp.prototype = {
-    __qute_prop(vm, key) {
-        var listKey = this.key;
-        // the List is always making a copy of the input value
-        vm.$data[key] = new List(vm, listKey, this.val);
-        return vm.$createProp(key, function(val) {
-            return new List(vm, listKey, val);
-        });
-    }
-}
-function _List(key, val) {
-    return new ListProp(key, val);
-}
-
-// ------------ Link
-function _Link(appPropKey) {
-    return {
-        __qute_prop: function(vm, key) {
-            return vm.$app.prop(appPropKey).bindVM(vm, key);
+    /**
+     * Initialize default value
+     * @param {*} _value
+     * @param {*} _factory
+     * @param {*} setter
+     */
+    init(key, value, arg, setter) {
+        // initialize prop value
+        this.$data[key] = setter ? setter.call(this, value, arg) : value;
+    },
+    /**
+     * Get the property descriptor to be used with Object.defineProperty
+     * @param {*} key
+     * @param {*} arg
+     * * @param {*} setter
+     */
+    descriptor(key, arg, setter) {
+        return {
+            get: function() {
+                return this.$data[key];
+            },
+            set: function(value) {
+                var old = this[key];
+                if (setter) value = setter.call(this, value, arg);
+                if (old !== value) {
+                    this.$data[key] = value;
+                    var watcher = this.$el && this.$watch && this.$watch[key]; // if not connected whatchers are not enabled
+                    // avoid updating if watcher return false
+                    if (watcher && watcher.call(this, value, old) === false) return;
+                    this.update();
+                }
+            },
+            enumerable: key.charCodeAt(0) !== 95 // keys starting with _ are not enumerable
         }
     }
 }
 
+function _detectType(val) {
+    if (val != null) {
+        const _type = typeof val;
+        if (_type === 'string') {
+            return TYPES.String;
+        } else if (_type === 'number') {
+            return TYPES.Number;
+        } else if (_type === 'boolean') {
+            return TYPES.Boolean;
+        }
+    }
+    return null;
+}
+
+const AnyType = Object.create(BaseType);
+AnyType.createProp = function(vm, key, value, arg) {
+    const Type = _detectType(value);
+    if (Type) return Type.createProp(vm, key, value, arg);
+    // else setter is null
+    const setter = null;
+    this.init.call(vm, key, value, arg, setter);
+    return this.descriptor.call(vm, key, arg, setter);
+}
+
+const TYPES = {};
+
+function registerType(Type, def) {
+    var typeObj = Object.assign(Object.create(BaseType), def || {});
+    TYPES[Type.name] = typeObj;
+    return typeObj;
+}
+
+registerType(String, {
+    setter: toString
+});
+registerType(Boolean, {
+    setter: toBoolean
+});
+registerType(Number, {
+    setter: toNumber
+});
+registerType(Date, {
+    setter: toDate
+});
+registerType(Array, {
+    setter: toArray
+});
+registerType(Object, {
+    setter: toObject
+});
+registerType(Function, {
+    setter: toFunction
+});
+registerType(List, {
+    setter(val, key) {
+        if (val && !Array.isArray(val)) {
+            ERR('Usupported value for list property: '+val);
+        }
+        return new List(this, key, val);
+    },
+    checkArgs(key, value, arg) {
+        if(!arg) ERR('Reactive List properties must sepcify the list key as an argument!');
+    }
+});
+registerType(Link, {
+    init(key, value, arg, setter) {
+        if (!arg) ERR('Link properties must specify the application data model key as an argument!');
+    },
+    descriptor(key, arg, setter) {
+        let dataModelId, reactive = true;
+        if (typeof arg === 'string') {
+            dataModelId = arg;
+        } else {
+            dataModelId = arg.key;
+            reactive = arg.reactive;
+        }
+        return {
+            get: function() {
+                return this.$app.prop(dataModelId).value;
+            },
+            set: function(value) {
+                var prop = this.$app.prop(dataModelId);
+                if (prop.value !== value) {
+                    var watcher = this.$el && this.$watch && this.$watch[key]; // if not connected whatchers are not enabled
+                    // avoid updating if watcher return false
+                    if (watcher && watcher.call(this, value, old) === false) return;
+                    prop.set(value);
+                    //TODO do not call update --> it will be called by the listener?
+                    //reactive && this.update();
+                }
+            },
+            enumerable: key.charCodeAt(0) !== 95 // keys starting with _ are not enumerable
+         }
+    }
+});
+
+
+function Prop(Type, arg) {
+    return function(vm, key, value, isFactory) {
+        isFactory ? vm.defineProp(Type, key, value, arg) : vm.definePropWithFactory(Type, key, value, arg);
+    }
+}
+Prop.register = registerType;
+Prop.getType = function(Type) {
+    if (Type) {
+        const typeObj = TYPES[typeof Type === 'string' ? Type : Type.name];
+        if (!typeObj) ERR('No such property type was found: '+Type);
+        return typeObj;
+    }
+    return AnyType;
+}
+Prop.Factory = Factory;
+
+//TODO remove factory?
+// To be used with Qute facade when declaring non primitive properties
+// it is also used by decorators to define default value factory functions
+function Factory(fn) {
+    fn.__qute_factory = true;
+    return fn;
+}
+
 export {
-    _String, _Number, _Boolean, _Object, _Function, _Array, _Date, _Link, _List, _Any
+    Prop, Factory, Link, List
 }

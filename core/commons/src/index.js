@@ -82,35 +82,9 @@ function ERR() {
 	throw new Error(print.apply(null, Array.prototype.slice.call(arguments)))
 }
 
-function toString(val) {
-    return val == null ? val : String(val);
-}
-
-function toNumber(val) {
-    if (val != null) {
-        var n = Number(val);
-        if (isNaN(n)) ERR('Expecting a number. Got: '+(typeof val)+': '+val);
-        return n;
-    }
-    return val;
-}
-
-function toBoolean(val) {
-    return val == null ? val : Boolean(val);
-}
-
-function chainFnAfter(fn, prevFn) {
-	return prevFn ? function(arg) {
-		prevFn(arg);
-		return fn(arg);
-	} : fn;
-}
-
 export {
     capitalizeFirst, kebabToCamel, camelToKebab, kebabToCompName,
     closestVM, closestComp, closestListItem,
-    print, ERR,
-    toString, toNumber, toBoolean,
-    chainFnAfter
+    print, ERR
  };
 

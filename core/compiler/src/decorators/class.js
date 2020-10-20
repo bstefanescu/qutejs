@@ -1,5 +1,53 @@
 import { getPropMeta, getDecoratorName } from './utils.js';
 
+function getDefinePropCall(text, field, decorator) {
+    // args: Type, key, value, arg
+    var type, key, value, arg, methodName = 'defineProp';
+    // get the type from decorator
+    let decoArgs = decorator.expression.arguments;
+    if (decoArgs && decoArgs.length > 0) {
+        let decoArg0 = decoArgs[0];
+        type = text.substring(decoArg0.start, decoArg0.end);
+        if (decoArgs.length > 1) {
+            let decoArg1 = decoArgs[1];
+            arg = text.substring(decoArg1.start, decoArg1.end);
+        }
+    }
+    // the key
+    key = JSON.stringify(field.key.name);
+    // if the value is defined and not a literal or an identifier then we wrap it in a factory function
+    if (field.value) {
+        value = text.substring(field.value.start, field.value.end);
+        const fieldValue = field.value;
+        const fieldValueType =fieldValue.type;
+        if (fieldValueType === 'ObjectExpression'
+            || fieldValueType === 'ArrayExpression'
+            || fieldValueType === 'NewExpression') {
+                // wrap the value in a factory function
+                value = `()=>(${value})`;
+                methodName = 'definePropWithFactory';
+        }
+        if (!type) {
+            if (fieldValueType === 'Literal') {
+                const valueType = typeof fieldValue.value;
+                if (valueType === 'string') {
+                    type = 'String';
+                } else if (valueType === 'number') {
+                    type = 'Number';
+                } else if (valueType === 'boolean') {
+                    type = 'Boolean';
+                }
+            }
+        }
+    } else {
+        value = 'void(0)';
+    }
+
+    var methodCall = `this.${methodName}(${type||'null'}, ${key}, ${value}`;
+    if (arg) methodCall += `, ${arg}`;
+    return methodCall+');\n';
+}
+
 export default function DecoratedClass(classNode) {
     this.node = classNode;
     this.superClass = classNode.superClass;
@@ -24,14 +72,12 @@ DecoratedClass.prototype = {
             this.fields = [];
         }
         this.fields.push(field);
-        //field.decorators.forEach(d => console.log('>>>>>>>>DECO', d))
     },
     addDecoratedMethod(method) {
         if (!this.methods) {
             this.methods = [];
         }
         this.methods.push(method);
-        //method.decorators.forEach(d => console.log('>>>>>>>>DECO', d))
     },
     transpile(ms, unit) {
         if (this.decorators) {
@@ -133,9 +179,7 @@ DecoratedClass.prototype = {
             // create the ctor
             let classBody = this.node.body;
             let offset = classBody.start+1; // skip \\ {
-            //console.log('!!!!!!!!!!!!!!!', text)
             ms.appendLeft(offset, `\n${tab}constructor(...args) {\n${tab}${tab}${stmts.join(tab+tab)}${tab}}` )
-            //console.log('BODY=============', );
         }
     },
 
@@ -176,22 +220,15 @@ DecoratedClass.prototype = {
     },
     transpileVMProps(ms, fields, unit) {
         const text = ms.original;
+        const initFields = this.ctorStmts;
         let props = [], req = [];
         fields.forEach(field => {
             unit.checkSuperClass(this, field.__qute_meta.name);
 
-            var key = field.key.name;
-            var value = null;
-            if (field.value) {
-                value = text.substring(field.value.start, field.value.end);
-            }
-            if (value) {
-                props.push(key+': '+value);
-            } else {
-                props.push(key+': void(0)');
-            }
+            initFields.push(getDefinePropCall(text, field, field.__qute_deco));
+
             if (field.__qute_required) {
-                req.push(key);
+                req.push(field.key.name);
             }
             field.decorators.forEach(decorator => {
                 unit.removeDecorator(ms, decorator);
@@ -199,8 +236,8 @@ DecoratedClass.prototype = {
             unit.removeField(ms, field);
         });
 
-        var tab = '    ';
-        this.appendCode(this.name+'.prototype.$props = () => ({\n'+tab+props.join(',\n'+tab)+'\n});');
+        // var tab = '    ';
+        // this.appendCode(this.name+'.prototype.$props = () => ({\n'+tab+props.join(',\n'+tab)+'\n});');
         if (req.length > 0) {
             this.appendCode(this.name+'.prototype.$require = '+JSON.stringify(req)+';');
         }

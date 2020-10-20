@@ -3,7 +3,7 @@ import Transpiler from './index.js';
 
 const code = `
 import Qute from '@qutejs/runtime';
-import { Render, Prop, Watch, Mixin, Required} from '@qutejs/decorators';
+import { Render, Prop, Watch, Mixin, Required, DataModel, AsyncDataModel} from '@qutejs/types';
 
 @Abc
 @Mixin(One,Two)
@@ -11,15 +11,31 @@ import { Render, Prop, Watch, Mixin, Required} from '@qutejs/decorators';
 class MyViewModel extends Qute.ViewModel {
 
     constructor(x) {
+        super(x);
         console.log('dd');
     }
-    @Required @Prop() myString1    ;
+/*
+    @Prop(List, 'id') items;
+    @Prop(Link, 'UserSession/user') user;
+    @Required @Prop() myString1;
     @Required @Prop myString2 = null;
-    @Prop('string') myString3 = 'bla';
+    @Prop(String) myString3 = 'bla';
+
+    @AsyncDataModel("bla") user = me();
 
     // text input element
     @log
     input;
+*/
+
+    @Prop name =  'abcs';
+    @Prop age =  123;
+    @Prop enabled = true;
+    @Prop() arr = [1,2,3];
+    @Prop(Object) obj = {a:1};
+    @Required @Prop() map = new Map();
+    @Prop(List, 'id') items = [];
+    @Prop(Link, 'UserSession/user') user;
 
     @Watch('myString') @log
     watchProp() {

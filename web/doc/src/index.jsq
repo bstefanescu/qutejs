@@ -153,8 +153,6 @@ var TOC = [
 		{ title: 'Custom Attributes', href: 'attributes/q' }
 	]},
 	{ title: 'Application Model', expand: true, items: [
-		{ title: 'Templates', href: 'templates'},
-		{ title: 'Components', href: 'components'},
 		{ title: 'Application Instance', href: 'app/instance'},
 		{ title: 'Message Bus', href: 'app/bus'},
 		{ title: 'Data Model', href: 'app/data'},

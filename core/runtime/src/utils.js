@@ -17,4 +17,12 @@ function filterKeys(obj, filter) {
 	}
 }
 
-export { stopEvent, filterKeys };
+function chainFnAfter(fn, prevFn) {
+	return prevFn ? function(arg) {
+		prevFn(arg);
+		return fn(arg);
+	} : fn;
+}
+
+
+export { stopEvent, filterKeys, chainFnAfter };

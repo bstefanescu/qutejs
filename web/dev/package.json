@@ -34,7 +34,6 @@
     "@qutejs/runtime": "2.0.0-beta.1",
     "@qutejs/importer": "2.0.0-beta.1",
     "@qutejs/types": "2.0.0-beta.1",
-    "@qutejs/decorators": "2.0.0-beta.1",
     "@qutejs/window": "2.0.0-beta.1"
   },
   "build": {

@@ -1,6 +1,6 @@
 import {document} from '@qutejs/window';
-import {kebabToCamel, ERR, toBoolean, toString, toNumber, chainFnAfter} from '@qutejs/commons';
-import { stopEvent, filterKeys } from './utils.js';
+import {kebabToCamel, ERR } from '@qutejs/commons';
+import { stopEvent, filterKeys, chainFnAfter } from './utils.js';
 
 import Rendering from './rendering.js';
 import UpdateQueue from './update.js';
@@ -8,6 +8,7 @@ import App from './app.js';
 import {applyListeners, SetProp, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
 import Emitter from './emit.js';
 import {applyUserDirectives} from './q-attr.js';
+import { Prop } from '@qutejs/types';
 
 // set $attrs on VMs
 function SetVMAttrs(vm, parentVM, filter) {
@@ -21,25 +22,6 @@ function SetVMAttrs(vm, parentVM, filter) {
 			}
 		}
 	}
-}
-
-function createProp(vm, key, val) {
-    if (val && val.__qute_prop) {
-        return val.__qute_prop(vm, key);
-    }
-    vm.$data[key] = val;
-    var setter;
-    if (val != null) {
-        var type = typeof val;
-        if (type === 'string') {
-            setter = toString;
-        } else if (type === 'number') {
-            setter = toNumber;
-        } else if (type === 'boolean') {
-            setter = toBoolean;
-        }
-    }
-    return vm.$createProp(key, setter);
 }
 
 function ViewModel(app, attrs) {
@@ -66,20 +48,18 @@ function ViewModel(app, attrs) {
 	prop.value = 0;
 	Object.defineProperty(this, '$st', prop); // state: 0 - default, bit 1 - connected, bit 2 - update queued
 
+	prop.value = {};
+    Object.defineProperty(this, '$data', prop);
+    /*
     var props = this.$props || {};
     if (typeof props === 'function') props = props(app);
-
-	prop.value = {};
-	Object.defineProperty(this, '$data', prop);
     for (var key in props) {
         Object.defineProperty(this, key, createProp(this, key, props[key]));
     }
-    // call init hook
-    this.init && this.init(app);
+    */
+    this.$defineProps && this.$defineProps();
 
-	if (!this.render) ERR("No render function defined for the ViewModel!");
-
-	// initialize data model from attributes if any - this will not trigger an update
+    // initialize data model from attributes if any - this will not trigger an update
 	if (attrs) {
 		var $data = this.$data;
 		var $attrs = this.$attrs;
@@ -97,7 +77,11 @@ function ViewModel(app, attrs) {
 				}
 			}
 		});
-	}
+    }
+
+    // call init hook
+    this.init && this.init(app);
+	if (!this.render) ERR("No render function defined for the ViewModel!");
 }
 
 ViewModel.prototype = {
@@ -124,14 +108,14 @@ ViewModel.prototype = {
 	listen: function(channelName) {
 		if (!this.$channel) ERR("q:channel used on a VM not defining channels: %s", this.toString());
 		// add an init function
-		this.$init = chainFnAfter(function(thisObj) {
+		this.setup(function(thisObj) {
 			thisObj.subscribe(channelName, thisObj.$channel);
-		}, this.$init);
+		});
 		return this;
 	},
 	//TODO use setup in listen and $on
 	setup: function(setupFn) {
-		this.$init = chainFnAfter(setupFn, this.$init);
+		this.$setup = chainFnAfter(setupFn, this.$setup);
 		return this;
 	},
 	cleanup: function(fn) { // register a cleanup function when component is disconnected
@@ -159,10 +143,10 @@ ViewModel.prototype = {
 		// TODO the connected flag is no mor euseful since we can use $r.isc
 		if (this.$st & 1) return; // ignore
 		this.$st |= 1; // set connected flag
-		// $init may be defined by the prototype to do automatic setup when connected
+		// $setup may be defined by the prototype to do automatic setup when connected
 		// (e.g. automatic installed listeners defined though VM definitioan 'on' property)
-		if (this.$init) {
-			this.$init(this);
+		if (this.$setup) {
+			this.$setup(this);
 		}
 
 		// TODO update DOM if previously disconnected
@@ -340,26 +324,14 @@ ViewModel.prototype = {
 		});
 		//this.$clean.push(type, wrapper);
     },
-    $createProp: function(key, setter) {
-        return {
-            get: function() {
-                return this.$data[key];
-            },
-            set: function(value) {
-                var old = this.$data[key];
-                if (setter) value = setter(value, old);
-                if (old !== value) {
-                    this.$data[key] = value;
-                    var watcher = this.$el && this.$watch && this.$watch[key]; // if not connected whatchers are not enabled
-                    // avoid updating if watcher return false
-                    if (watcher && watcher.call(this, value, old) === false) return;
-                    this.update();
-                }
-            },
-            enumerable: key.charCodeAt(0) !== 95 // keys starting with _ are not enumerable
-        }
+    defineProp: function(Type, key, value, arg) {
+        if (value && value.__qute_factory) value = value();
+        Object.defineProperty(this, key, Prop.getType(Type).createProp(this, key, value, arg));
     },
-	emit: Emitter.emit,
+    definePropWithFactory: function(Type, key, value, arg) {
+        Object.defineProperty(this, key, Prop.getType(Type).createPropWithFactory(this, key, value(), arg));
+    },
+    emit: Emitter.emit,
 	emitAsync: Emitter.emitAsync,
 	// -------- app event bus -------------
 	post: function(topic, msg, data) {

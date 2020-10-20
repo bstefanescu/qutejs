@@ -1,6 +1,7 @@
 import { document } from '@qutejs/window';
 import assert from 'assert';
 import Qute from '..';
+import { Factory } from '@qutejs/types';
 
 <q:template name='RootTemplate'>
     <div id={id} title={"Hello"+(1+3)} class={"bla"} q:style={{left:"10px"}} q:class={{enabled: enabled, active: active}}>
@@ -8,13 +9,13 @@ import Qute from '..';
         <for value={item in items}>{{item}},</for>
     </div>
 </q:template>
-const Root = Qute(RootTemplate).properties(() => ({
+const Root = Qute(RootTemplate).properties({
     enabled: true,
     active: false,
     id: 'test-mustache-attr-root',
     testValue: true,
-    items: [1,2,3]
-}));
+    items: Factory(()=>[1,2,3])
+});
 
 describe("Mustache attribute value", () => {
     it("works on all attributes", () => {

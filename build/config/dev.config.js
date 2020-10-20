@@ -10,7 +10,14 @@ module.exports = function(project, args) {
     const basePlugins = [
         nodeResolve( {preferBuiltins: true} ),
         commonjs(),
-        buble({exclude: ["node_modules/**", "**/node_modules/**"]})
+        buble({
+            // meriyah must be transpiled
+            include: [
+                "src/**",
+                "../../core/compiler/node_modules/meriyah/**",
+                "web/dev/src/**",
+                "core/compiler/node_modules/meriyah/**"]
+        })
     ];
 
     function webConfig(prod) {

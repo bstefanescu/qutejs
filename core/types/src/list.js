@@ -1,5 +1,3 @@
-import { ERR } from '@qutejs/commons';
-
 /*
 A helper for reactive lists udpates
 */

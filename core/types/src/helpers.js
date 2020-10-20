@@ -1,5 +1,3 @@
-import { chainFnAfter} from '@qutejs/commons';
-
 /* To be shared by both class decorators in './index.js' and Qute facade */
 
 /**
@@ -66,9 +64,9 @@ export function _watch(VMProto, prop, fn) {
  * @param {*} cb
  */
 export function _on(VMProto, key, selector, cb) {
-    VMProto.$init = chainFnAfter(function(thisObj) {
+    VMProto.setup(function(thisObj) {
         thisObj.$on(key, selector, cb);
-    }, VMProto.$init);
+    });
 }
 
 /**
@@ -81,13 +79,40 @@ export function _channel(VMProto, listenFn) {
 }
 
 /**
+ * Backward compat with Qute.properties - can be removed later
  * Define reactive properties on a ViewModel given its prototype
  * The properties are either a plain object, either a factory function returning the properties object when called
  * @param {*} VMProto
  * @param {*} properties
  */
 export function _properties(VMProto, properties) {
-    VMProto.$props = properties;
+    VMProto.$defineProps = function() {
+        let $props;
+        if (typeof properties === 'function') {
+            $props = properties();
+        } else {
+            $props = properties;
+        }
+        for (let key in $props) {
+            let val = $props[key];
+            if (val && val.type) {
+                this.defineProp(val.type, key, val.value, val.arg);
+            } else {
+                let type = null;
+                if (val != null) {
+                    const _type = typeof val;
+                    if (_type === 'string') {
+                        type = String;
+                    } else if (_type === 'number') {
+                        type = Number;
+                    } else if (_type === 'boolean') {
+                        type = Boolean;
+                    }
+                }
+                this.defineProp(type, key, val);
+            }
+        }
+    }
 }
 
 /**

@@ -7,7 +7,7 @@ import { mountTest, runAfter } from './utils.js';
 
 <q:template name='DomTestRootTemplate'>
 	<div>
-		<span q:for='item in list'>{{item}} </span>
+		<span q:for='item in list' q:key='.'>{{item}} </span>
 	</div>
 </q:template>
 
@@ -17,7 +17,7 @@ import { mountTest, runAfter } from './utils.js';
 
 <q:template name='FuncTestRootTemplate'>
 	<div>
-		<fn-comp q:for='item in list'>{{item}} </fn-comp>
+		<fn-comp q:for='item in list' q:key='.'>{{item}} </fn-comp>
 	</div>
 </q:template>
 
@@ -25,7 +25,7 @@ import { mountTest, runAfter } from './utils.js';
 
 <q:template name='VmTestRootTemplate'>
 	<div>
-		<vm-comp q:for='item in list'>{{item}} </vm-comp>
+		<vm-comp q:for='item in list' q:key='.'>{{item}} </vm-comp>
 	</div>
 </q:template>
 
@@ -34,7 +34,7 @@ import { mountTest, runAfter } from './utils.js';
 
 <q:template name='VmTestRoot2Template'>
 	<div>
-		<vm-comp2 q:for='item in list' text={item.text} id={item.id} />
+		<vm-comp2 q:for='item in list'  q:key='id' text={item.text} id={item.id} />
 	</div>
 </q:template>
 

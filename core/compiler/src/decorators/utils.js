@@ -103,8 +103,6 @@ function getPropMeta(property, imports) {
                         meta = decoratorInfo;
                         property.__qute_deco = deco;
                         property.__qute_meta = meta;
-
-                        console.log('======>', meta);
                     }
                 }
             }
