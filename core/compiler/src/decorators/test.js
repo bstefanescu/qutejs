@@ -3,7 +3,15 @@ import Transpiler from './index.js';
 
 const code = `
 import Qute from '@qutejs/runtime';
-import { Render, Prop, Watch, Mixin, Required, DataModel, AsyncDataModel} from '@qutejs/types';
+import { Render, Prop, Watch, Mixin, Required, DataModel, AsyncDataModel, ViewModel} from '@qutejs/types';
+
+@ViewModel(MyViewModel)
+class MyApp extends Qute.App {
+
+    @Service('Router')
+    router = new Router(this, config);
+
+}
 
 @Abc
 @Mixin(One,Two)

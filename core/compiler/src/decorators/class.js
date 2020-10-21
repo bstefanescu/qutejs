@@ -179,7 +179,7 @@ DecoratedClass.prototype = {
             // create the ctor
             let classBody = this.node.body;
             let offset = classBody.start+1; // skip \\ {
-            ms.appendLeft(offset, `\n${tab}constructor(...args) {\n${tab}${tab}${stmts.join(tab+tab)}${tab}}` )
+            ms.appendLeft(offset, `\n${tab}constructor(...args) {\n${tab}${tab}super(...args);\n\n${tab}${tab}${stmts.join(tab+tab)}${tab}}` )
         }
     },
 
@@ -195,27 +195,27 @@ DecoratedClass.prototype = {
         const text = ms.original;
         const initFields = this.ctorStmts;
         fields.forEach(field => {
-            const helperArgs = [];
             const key = field.key.name;
-            let value = null;
+            let value = 'void(0)';
             if (field.value) {
                 value = text.substring(field.value.start, field.value.end);
             }
-            if (value) {
-                initFields.push('this.'+key+' = '+value+';\n');
+            if (!field.decorators.length) {
+                // we define the field if no decorators are present
+                // kif the field is starting with _ we set enumerable to false
+                if (key[0] === '_') {
+                    initFields.push(`Object.defineProperty(this, "${key}", ${value};\n`);
+                } else {
+                    initFields.push(`this.${key} = ${value};\n`);
+                }
             } else {
-                initFields.push('this.'+key+' = void(0);\n');
+                field.decorators.forEach(decorator => {
+                    let decoratorCall = text.substring(decorator.start+1, decorator.end); // we removed the leading @
+                    initFields.push(decoratorCall+`(this, "${key}", ${value});\n`);
+                    unit.removeDecorator(ms, decorator);
+                });
             }
-            field.decorators.forEach(decorator => {
-                let decoratorCall = text.substring(decorator.start+1, decorator.end); // we removed the leading @
-                helperArgs.push(decoratorCall);
-                unit.removeDecorator(ms, decorator);
-            });
             unit.removeField(ms, field);
-            if (helperArgs.length > 0) {
-                const helperName = unit.installDecorateHelper(ms);
-                this.appendCode(`${helperName}(${this.name}, ${JSON.stringify(key)}, ${helperArgs.join(', ')});`);
-            }
         });
     },
     transpileVMProps(ms, fields, unit) {
@@ -249,8 +249,8 @@ DecoratedClass.prototype = {
             const meta = field.__qute_meta;
             unit.checkSuperClass(this, meta.name);
 
-            var key = field.key.name;
-            var value = null;
+            let key = JSON.stringify(field.key.name);
+            let value;
             if (field.value) {
                 value = text.substring(field.value.start, field.value.end);
             } else {

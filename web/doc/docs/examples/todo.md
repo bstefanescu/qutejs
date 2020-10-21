@@ -5,7 +5,7 @@ We implemented the Todo List in 3 different ways.
 The following examples demonstrates the usage of:
 
 1. the **[q:for](#/attributes/q-for)** directive.
-2. the `_List()` property type from `@qutejs/types` to easily manipulate reactive list properties.
+2. the `List` property type from `@qutejs/types` to easily manipulate reactive list properties.
 
 
 ## Example 1: Using a component for the todo item
@@ -14,9 +14,9 @@ We will create 2 ViewModel components: `todo-list` and `todo-item`.
 
 The `todo-list` component is responsible for managing the list structure, while the `todo-item` is rendering a single item and is responsible for updating the item status.
 
-We are using the `_List(key[, value])` proprtye type to initialize the reactive list property. The `key` argument must point to a item id property or a function trhat resolve the item id given the item. Because of that, you don't need to specify the  `key` attribute when using `q:for` directive since the key is given by the list property.
+We are using the `List(key[, value])` proprtye type to initialize the reactive list property. The `key` argument must point to a item id property or a function trhat resolve the item id given the item. Because of that, you don't need to specify the  `key` attribute when using `q:for` directive since the key is given by the list property.
 
-See [Property Types](#/model/proptypes) for more information on `_List`.
+See [Property Types](#/model/proptypes) for more information on `List`.
 
 
 ```jsq
@@ -24,7 +24,7 @@ import "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
 
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
-import { _List, _Array } from '@qutejs/types';
+import { Template, List, Prop, Required } from '@qutejs/types';
 
 // ------------------------------------------ Styles
 
@@ -52,7 +52,7 @@ import { _List, _Array } from '@qutejs/types';
 			<todo-item q:for='item in todos' todo={item} @remove='removeItem' />
 		</ul>
 		<form class='d-flex'>
-			<input q:call='el => input = el' type='text' class='form-control' style='display:inline-block'/>
+			<input q:call='el => _input = el' type='text' class='form-control' style='display:inline-block'/>
 			<button class='btn btn-primary' @click='addItem'>Add</button>
 		</form>
 		<div style='text-align:center; margin-top: 10px'>
@@ -67,7 +67,10 @@ import { _List, _Array } from '@qutejs/types';
 
 // ------------------------------------------ Javascript
 
-const TodoItem = Qute(TodoItemTemplate, {
+@Template(TodoItemTemplate)
+class TodoItem extends Qute.ViewModel {
+    @Required @Prop todo;
+
 	toggleDone() {
 		this.todo.done = !this.todo.done;
 		// update the DOM: this is needed since todo instance didn't changed
@@ -76,44 +79,50 @@ const TodoItem = Qute(TodoItemTemplate, {
 		this.emit('change', this.todo);
 		return false;
 	}
-}).properties({
-    todo: null
-});
+}
 
 var CNT = 0;
-const TodoList = Qute(TodoListTemplate, {
-	init() {
-		this.input = null;
-	},
+
+@Template(TodoListTemplate)
+class TodoList extends Qute.ViewModel {
+
+    @Prop(List, 'id') todos;
+
+    _input = null;
+
 	connected() {
-		this.input.focus();
-	},
+		this._input.focus();
+	}
+
 	removeItem(e) {
 		this.todos.removeItem(e.detail);
 		return false;
-	},
+	}
+
 	addItem() {
-		var text = this.input.value;
+		var text = this._input.value;
 		if (text) {
 			var randomId = 'todo-'+Date.now()+'-'+(CNT++);
 			this.todos.push({id: randomId, text: text, done: false});
-			this.input.value = '';
+			this._input.value = '';
 		}
 		return false;
-	},
+	}
+
 	exportJson() {
 		window.alert(JSON.stringify(this.todos));
 	}
-}).properties({
-	todos: _List('id')
-});
+}
 
-export default Qute(RootTemplate).properties({
-    todos: _Array([
+@Template(RootTemplate)
+class RootView extends Qute.ViewModel {
+    @Prop(Array) todos = [
         { id: "todo1", text: "Write some code", done: false },
         { id: "todo2", text: "Drink a beer", done: true }
-    ])
-});
+    ]
+}
+
+export default RootView;
 ```
 
 

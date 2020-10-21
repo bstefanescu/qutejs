@@ -1,7 +1,6 @@
 import { ERR } from '@qutejs/commons';
 import List from './list.js';
-
-const Link = Object.freeze({});
+import Link from './link.js';
 
 function toString(val) {
     return val == null ? val : String(val);
@@ -161,34 +160,9 @@ registerType(List, {
     }
 });
 registerType(Link, {
-    init(key, value, arg, setter) {
+    createProp(vm, key, value, arg) {
         if (!arg) ERR('Link properties must specify the application data model key as an argument!');
-    },
-    descriptor(key, arg, setter) {
-        let dataModelId, reactive = true;
-        if (typeof arg === 'string') {
-            dataModelId = arg;
-        } else {
-            dataModelId = arg.key;
-            reactive = arg.reactive;
-        }
-        return {
-            get: function() {
-                return this.$app.prop(dataModelId).value;
-            },
-            set: function(value) {
-                var prop = this.$app.prop(dataModelId);
-                if (prop.value !== value) {
-                    var watcher = this.$el && this.$watch && this.$watch[key]; // if not connected whatchers are not enabled
-                    // avoid updating if watcher return false
-                    if (watcher && watcher.call(this, value, old) === false) return;
-                    prop.set(value);
-                    //TODO do not call update --> it will be called by the listener?
-                    //reactive && this.update();
-                }
-            },
-            enumerable: key.charCodeAt(0) !== 95 // keys starting with _ are not enumerable
-         }
+        return vm.$app.prop(arg).bindVM(vm, key);
     }
 });
 
@@ -207,7 +181,6 @@ Prop.getType = function(Type) {
     }
     return AnyType;
 }
-Prop.Factory = Factory;
 
 //TODO remove factory?
 // To be used with Qute facade when declaring non primitive properties

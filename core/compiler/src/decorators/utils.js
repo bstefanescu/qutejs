@@ -1,4 +1,5 @@
 
+const D_ViewModel = 'ViewModel';
 const D_Template = 'Template';
 const D_Render = 'Render';
 const D_Mixin = 'Mixin';
@@ -16,6 +17,10 @@ function registerQuteDecorator(meta) {
     QUTE_DECORATORS[meta.name] = meta;
 }
 
+registerQuteDecorator({
+    name: D_ViewModel,
+    superClass: 'Qute.App'
+});
 registerQuteDecorator({
     name: D_Template,
     superClass: 'Qute.ViewModel'
@@ -59,18 +64,6 @@ registerQuteDecorator({
     async: true
 });
 
-
-
-const VM_PROPS_DECORATORS = {
-    'Prop': true,
-    'String': true,
-    'Boolean': true,
-    'Link': true,
-    'Object': true,
-    'Array': true,
-    'List': true,
-    'Any': true,
-}
 
 function getPropMeta(property, imports) {
     let meta = null;

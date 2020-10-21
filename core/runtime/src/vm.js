@@ -201,7 +201,7 @@ ViewModel.prototype = {
         if (this.$require) {
             var req = this.$require;
             for (var i=0,l=req.length; i<l; i++) {
-                if (this.$data[req[i]] === null) {
+                if (this.$data[req[i]] == null) {
                     ERR('Required property is not defined: "'+req[i]+'" in '+this.toString());
                 }
             }
@@ -329,7 +329,7 @@ ViewModel.prototype = {
         Object.defineProperty(this, key, Prop.getType(Type).createProp(this, key, value, arg));
     },
     definePropWithFactory: function(Type, key, value, arg) {
-        Object.defineProperty(this, key, Prop.getType(Type).createPropWithFactory(this, key, value(), arg));
+        Object.defineProperty(this, key, Prop.getType(Type).createProp(this, key, value(), arg));
     },
     emit: Emitter.emit,
 	emitAsync: Emitter.emitAsync,

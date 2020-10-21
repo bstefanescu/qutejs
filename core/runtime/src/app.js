@@ -51,10 +51,6 @@ var PropProto = {
 			});
 		});
 		return createProp(this);
-    },
-    // can be directly set to a reactive prop
-    __qute_prop(vm, key) {
-        return this.bindVM(vm, key);
     }
 }
 
@@ -104,6 +100,26 @@ export default function App(data) {
 }
 
 App.prototype = {
+    __QUTE_APP__: true,
+    // API for custom apps
+    mount(elOrId, insertBefore) {
+        if (!this.VM) {
+            ERR('Cannot install application: only custom applications linked to a root ViewModel can be installed');
+        }
+        this.root = new (this.VM)(this);
+        this.beforeMount && this.beforeMount();
+        this.root.mount(elOrId, insertBefore);
+        this.ready && this.ready();
+        return this.root;
+    },
+    unmount() {
+        if (!this.root) ERR('Cannot uninstall application: not installed');
+        this.beforeUmount && this.beforeMount();
+        this.root.umount();
+        this.root = null;
+        this.unmounted && this.unmounted();
+    },
+
 	post(topic, msg, data) {
 		var listeners = this.topics[topic];
 		if (listeners) for (var i=0,l=listeners.length;i<l;i++) {

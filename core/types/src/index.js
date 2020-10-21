@@ -1,8 +1,11 @@
 import { __qute_decorate_member__, _template, _mixin, _watch, _on, _channel, _properties, _require } from './helpers.js';
 
-import { Prop, Factory, Link, List } from './types.js';
+import { Prop, Factory, List, Link } from './types.js';
 
-import { Template,
+import {
+    ViewModel,
+    Service,
+    Template,
     Mixin,
     On,
     Watch,
@@ -16,6 +19,8 @@ export {
     __qute_decorate_member__, _template, _mixin, _watch, _on, _channel, _properties, _require,
 
     // decorators API
+    ViewModel,
+    Service,
     Template,
     Template as Render,
     Mixin,
