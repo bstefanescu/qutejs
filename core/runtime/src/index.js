@@ -38,7 +38,8 @@ function Qute(renderFn, def) {
     }
 
 	function ViewModelImpl(app, attrs) {
-		ViewModel.call(this, app, attrs);
+        ViewModel.call(this, app, attrs);
+        this.init && this.init(app);
 	}
 
 	var VMType, VMProto;

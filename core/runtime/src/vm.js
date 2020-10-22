@@ -79,8 +79,6 @@ function ViewModel(app, attrs) {
 		});
     }
 
-    // call init hook
-    this.init && this.init(app);
 	if (!this.render) ERR("No render function defined for the ViewModel!");
 }
 
