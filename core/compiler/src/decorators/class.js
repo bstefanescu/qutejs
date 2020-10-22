@@ -1,5 +1,3 @@
-import { getPropMeta, getDecoratorName } from './utils.js';
-
 function getDefinePropCall(text, field, decorator) {
     // args: Type, key, value, arg
     var type, key, value, arg, methodName = 'defineProp';
@@ -85,22 +83,17 @@ DecoratedClass.prototype = {
         }
         if (this.fields) {
             var vmprops = [];
-            var svcprops = [];
             var fields = [];
             this.fields.forEach(field => {
-                const meta = getPropMeta(field, unit.imports);
-                if (meta) {
-                    if (meta.vmProp) {
-                        vmprops.push(field);
-                    } else if (meta.svcProp) {
-                        svcprops.push(field);
-                    }
+                const meta = unit.getPropMeta(field);
+                if (meta) meta.checkSuperClass(this);
+                if (meta && meta.vmProp) {
+                    vmprops.push(field);
                 } else {
                     fields.push(field);
                 }
             })
             if (vmprops.length) this.transpileVMProps(ms, vmprops, unit);
-            if (svcprops.length) this.transpileSvcProps(ms, svcprops, unit);
             if (fields.length) this.transpileFields(ms, fields, unit);
         }
         if (this.methods) {
@@ -121,10 +114,10 @@ DecoratedClass.prototype = {
     transpileDecorator(ms, decorator, unit) {
         var text = ms.original;
         var decoratorCall = text.substring(decorator.start+1, decorator.end)+`(${this.name})`; // we removed the leading @
-        var dname = getDecoratorName(decorator);
-        unit.checkSuperClass(this, dname);
-        if (unit.isQuteDecorator(dname)) {
-            // avoid reassigning - simply write: decorator(TheClass);
+        var info = unit.getDecoratorInfo(decorator);
+        if (info) {
+            info.checkSuperClass(this);
+            // a Qute decorator -> avoid reassigning - simply write: decorator(TheClass);
             this.appendCode(decoratorCall+';');
         } else {
             // use specs: TheClass = decorator(TheClass) || TheClass;
@@ -140,13 +133,16 @@ DecoratedClass.prototype = {
             const methodName = method.key.name;
             const helperArgs = [];
             method.decorators.forEach(decorator => {
-                unit.checkSuperClass(this, getDecoratorName(decorator));
+                const info = unit.getDecoratorInfo(decorator);
+                if (info) { // a Qute decorator
+                    info.checkSuperClass(this);
+                }
                 unit.removeDecorator(ms, decorator);
                 let decoratorCall = text.substring(decorator.start+1, decorator.end); // we removed the leading @
                 helperArgs.push(decoratorCall);
             });
             if (helperArgs.length > 0) {
-                const helperName = unit.installDecorateHelper(ms);
+                const helperName = unit.getDecoratorHelper();
                 this.appendCode(`${helperName}(${this.name}, ${JSON.stringify(methodName)}, ${helperArgs.join(', ')});`);
             }
         });
@@ -204,7 +200,7 @@ DecoratedClass.prototype = {
                 // we define the field if no decorators are present
                 // kif the field is starting with _ we set enumerable to false
                 if (key[0] === '_') {
-                    initFields.push(`Object.defineProperty(this, "${key}", ${value};\n`);
+                    initFields.push(`Object.defineProperty(this, "${key}", {value: ${value}, writable:true});\n`);
                 } else {
                     initFields.push(`this.${key} = ${value};\n`);
                 }
@@ -221,9 +217,9 @@ DecoratedClass.prototype = {
     transpileVMProps(ms, fields, unit) {
         const text = ms.original;
         const initFields = this.ctorStmts;
-        let props = [], req = [];
+        let req = [];
         fields.forEach(field => {
-            unit.checkSuperClass(this, field.__qute_meta.name);
+            field.__qute_meta.checkSuperClass(this);
 
             initFields.push(getDefinePropCall(text, field, field.__qute_deco));
 
@@ -241,38 +237,6 @@ DecoratedClass.prototype = {
         if (req.length > 0) {
             this.appendCode(this.name+'.prototype.$require = '+JSON.stringify(req)+';');
         }
-    },
-    transpileSvcProps(ms, fields, unit) {
-        const text = ms.original;
-        const initFields = this.ctorStmts;
-        fields.forEach(field => {
-            const meta = field.__qute_meta;
-            unit.checkSuperClass(this, meta.name);
-
-            let key = JSON.stringify(field.key.name);
-            let value;
-            if (field.value) {
-                value = text.substring(field.value.start, field.value.end);
-            } else {
-                value = 'void(0)';
-            }
-            const definePropFn = meta.async ? 'defineAsyncProp' : 'defineProp';
-
-            const decoArgs = field.__qute_deco.expression.arguments;
-            if (!decoArgs || !decoArgs.length) {
-                throw new Error('Invalid ${meta.name} decorator: must specify the data model ID as an argument');
-            }
-            const propId = text.substring(decoArgs[0].start, decoArgs[0].end);
-
-            const args = field.value ? propId+', '+text.substring(field.value.start, field.value.end) : propId;
-
-            initFields.push(`this.app.${definePropFn}(${args}).link(this, ${key});\n`);
-
-            field.decorators.forEach(decorator => {
-                unit.removeDecorator(ms, decorator);
-            });
-            unit.removeField(ms, field);
-        });
     }
 
 };

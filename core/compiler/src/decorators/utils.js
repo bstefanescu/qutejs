@@ -1,24 +1,34 @@
-
-const D_ViewModel = 'ViewModel';
+const D_View = 'View';
 const D_Template = 'Template';
 const D_Render = 'Render';
 const D_Mixin = 'Mixin';
 const D_Watch = 'Watch';
 const D_On = 'On';
 const D_Channel = 'Channel';
-const D_Prop = 'Prop';
+const D_Prop = 'Property';
 const D_Required = 'Required';
 const D_DataModel = 'DataModel';
 const D_AsyncDataModel = 'AsyncDataModel';
 
 const QUTE_DECORATORS = {};
 
+const DecoratorProto = {
+    checkSuperClass(dclass) {
+        if (!dclass.superClass && this.superClass) {
+            throw new Error(`Cannot use decorator @${this.name} on class ${dclass.name}. The class must extend ${this.superClass}`);
+        }
+    }
+}
+
 function registerQuteDecorator(meta) {
-    QUTE_DECORATORS[meta.name] = meta;
+    const qdeco = Object.create(DecoratorProto);
+    Object.assign(qdeco, meta);
+    QUTE_DECORATORS[meta.name] = qdeco;
+    QUTE_DECORATORS['Qute.'+meta.name] = qdeco;
 }
 
 registerQuteDecorator({
-    name: D_ViewModel,
+    name: D_View,
     superClass: 'Qute.App'
 });
 registerQuteDecorator({
@@ -50,7 +60,8 @@ registerQuteDecorator({
     vmProp: true
 });
 registerQuteDecorator({
-    name: D_Required
+    name: D_Required,
+    required: true
 });
 registerQuteDecorator({
     name: D_DataModel,
@@ -63,46 +74,6 @@ registerQuteDecorator({
     svcProp: true,
     async: true
 });
-
-
-function getPropMeta(property, imports) {
-    let meta = null;
-    if (property.decorators.length > 0) {
-        var decos = property.decorators;
-        for (var i=0,l=decos.length; i<l; i++) {
-            var deco = decos[i];
-            var name;
-            var callee = deco.expression.callee;
-            if (callee) { // decorators with arguments
-                name = callee.name;
-            } else {
-                name = deco.expression.name;
-            }
-
-            const quteName = imports[name]; // get the import name
-
-            if (quteName) {
-                var decoratorInfo = QUTE_DECORATORS[quteName];
-                if (decoratorInfo) {
-                    if (quteName === D_Required) {
-                        property.__qute_required = true;
-                    } else if (decoratorInfo.vmProp) {
-                        if (meta) throw new Error(`Decorators "${meta.name}" and "${decoratorInfo.name}" cannot be both used on the same field`);
-                        meta = decoratorInfo;
-                        property.__qute_deco = deco;
-                        property.__qute_meta = meta;
-                    } else if (decoratorInfo.svcProp) {
-                        if (meta) throw new Error(`Decorators "${meta.name}" and "${decoratorInfo.name}" cannot be both used on the same field`);
-                        meta = decoratorInfo;
-                        property.__qute_deco = deco;
-                        property.__qute_meta = meta;
-                    }
-                }
-            }
-        }
-    }
-    return meta;
-}
 
 function getDecoratorInfo(name) {
     return QUTE_DECORATORS[name];
@@ -149,14 +120,37 @@ function _removeStmt(ms, start, end, tailRX) {
     ms.remove(start, end);
 }
 
-function getDecoratorName(decorator) {
-    var expr = decorator.expression;
-    return expr.name || (expr.callee && expr.callee.name);
+function resolveMemberPath(node, result) {
+    if (node.type === 'MemberExpression') {
+        resolveMemberPath(node.object, result);
+        result.push(node.property.name);
+    } else {
+        result.push(node.name);
+    }
+    return result;
+}
+
+function getDecoratorName(decorator, mapper) {
+    const expr = decorator.expression;
+    if (expr.name) {
+        return expr.name;
+    } else if (expr.type === 'MemberExpression') {
+        const path = resolveMemberPath(expr, []);
+        return mapper ? mapper(path) : path.join('.');
+    } else if (expr.callee) {
+        const callee = expr.callee; // the name can be composed from multiple segments: @Qute.View
+        if (callee.type === 'MemberExpression') {
+            const path = resolveMemberPath(callee, []);
+            return mapper ? mapper(path) : path.join('.');
+        } else {
+            return callee.name;
+        }
+    }
+    throw new Error('Bug? Cannot find decorator name for '+JSON.stringify(decorator));
 }
 
 export {
     getDecoratorInfo,
-    getPropMeta,
     removeDecorator,
     removeField,
     commentDecorator,

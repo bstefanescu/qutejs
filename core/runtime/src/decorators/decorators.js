@@ -5,19 +5,11 @@ import {__qute_decorate_member__, _template, _mixin, _watch, _on, _channel, _req
  * To be used on Qute.App derived classes
  * @param {*} renderFn
  */
-function ViewModel(VM) {
+function View(VM) {
     return function(target) {
         target.prototype.VM = VM;
     }
 }
-
-function Service(id) {
-    return function(target, key, value) {
-        if (!target.__QUTE_APP__) ERR('@Service decorator is meant to be used on Qute.App classes!');
-        target.defineProp(id, value).link(target, key);
-    }
-}
-
 
 function Template(renderFn) {
     return function(target) {
@@ -57,22 +49,37 @@ function Required() {
 }
 
 function DataModel(id) {
-    return function(ServiceProto, name, descriptor) {
-        // do nothing --> properties are handled by the compiler for optimizations
+    return function(target, key, value) {
+        let app;
+        if (target.__QUTE_APP__) {
+            app = target;
+        } else if (target.app) {
+            app = target.app;
+        } else {
+            ERR('The @DataModel decorator is meant to be used on Qute.App or Qute.Service classes, or on any class providig a `app` field of type Qute.App!');
+        }
+        app.defineProp(id, value).link(target, key);
     }
 }
 
 function AsyncDataModel(id) {
-    return function(ServiceProto, name, descriptor) {
-        // do nothing --> properties are handled by the compiler for optimizations
+    return function(target, key, value) {
+        let app;
+        if (target.__QUTE_APP__) {
+            app = target;
+        } else if (target.app) {
+            app = target.app;
+        } else {
+            ERR('The @DataModel decorator is meant to be used on Qute.App or Qute.Service classes, or on any class providig a `app` field of type Qute.App!');
+        }
+        app.defineAsyncProp(id, value).link(target, key);
     }
 }
 
 
 export {
     // public API
-    ViewModel,
-    Service,
+    View,
     Template,
     Mixin,
     On,

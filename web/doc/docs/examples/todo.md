@@ -5,7 +5,7 @@ We implemented the Todo List in 3 different ways.
 The following examples demonstrates the usage of:
 
 1. the **[q:for](#/attributes/q-for)** directive.
-2. the `List` property type from `@qutejs/types` to easily manipulate reactive list properties.
+2. the `List` property type to easily manipulate reactive list properties.
 
 
 ## Example 1: Using a component for the todo item
@@ -24,7 +24,8 @@ import "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
 
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
-import { Template, List, Prop, Required } from '@qutejs/types';
+
+const { ViewModel, Template, List, Property, Required } = Qute;
 
 // ------------------------------------------ Styles
 
@@ -68,8 +69,8 @@ import { Template, List, Prop, Required } from '@qutejs/types';
 // ------------------------------------------ Javascript
 
 @Template(TodoItemTemplate)
-class TodoItem extends Qute.ViewModel {
-    @Required @Prop todo;
+class TodoItem extends ViewModel {
+    @Required @Property todo;
 
 	toggleDone() {
 		this.todo.done = !this.todo.done;
@@ -84,9 +85,9 @@ class TodoItem extends Qute.ViewModel {
 var CNT = 0;
 
 @Template(TodoListTemplate)
-class TodoList extends Qute.ViewModel {
+class TodoList extends ViewModel {
 
-    @Prop(List, 'id') todos;
+    @Property(List, 'id') todos;
 
     _input = null;
 
@@ -115,8 +116,8 @@ class TodoList extends Qute.ViewModel {
 }
 
 @Template(RootTemplate)
-class RootView extends Qute.ViewModel {
-    @Prop(Array) todos = [
+class RootView extends ViewModel {
+    @Property(Array) todos = [
         { id: "todo1", text: "Write some code", done: false },
         { id: "todo2", text: "Drink a beer", done: true }
     ]
@@ -137,7 +138,8 @@ import "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
 
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
-import { _List, _Array } from '@qutejs/types';
+
+const { ViewModel, Template, List, Property } = Qute;
 
 // ------------------------------------------ Styles
 
@@ -161,7 +163,7 @@ import { _List, _Array } from '@qutejs/types';
 			</li>
 		</ul>
 		<form class='d-flex'>
-			<input q:call='el => input = el' type='text' class='form-control' style='display:inline-block'/>
+			<input q:call='el => _input = el' type='text' class='form-control' style='display:inline-block'/>
 			<button class='btn btn-primary' @click='addItem'>Add</button>
 		</form>
 		<div style='text-align:center; margin-top: 10px'>
@@ -177,46 +179,55 @@ import { _List, _Array } from '@qutejs/types';
 // ------------------------------------------ Javascript
 
 var CNT = 0;
-const TodoList = Qute(TodoListTemplate, {
-	init() {
-		this.input = null;
-	},
+
+@Template(TodoListTemplate)
+class TodoList extends ViewModel {
+
+	_input = null;
+
+    @Property(List, 'id') todos;
+
 	connected() {
-		this.input.focus();
-	},
+		this._input.focus();
+	}
+
 	removeItem(key) {
 		this.todos.removeItem(key);
 		return false;
-	},
+	}
+
 	checkItem(key) {
 		this.todos.updateItem(key, item => {
 			item.done = !item.done;
 		});
 		return false;
-	},
+	}
+
 	addItem() {
-		var text = this.input.value;
+		var text = this._input.value;
 		if (text) {
 			var randomId = 'todo-'+Date.now()+'-'+(CNT++);
 			this.todos.push({id: randomId, text: text, done: false});
-			this.input.value = '';
+			this._input.value = '';
 			this.update();
 		}
 		return false;
-	},
+	}
+
 	exportJson() {
 		window.alert(JSON.stringify(this.todos));
 	}
-}).properties({
-    todos: _List('id')
-});
+}
 
-export default Qute(RootTemplate).properties({
-    todos: _Array([
+@Template(RootTemplate)
+class RootView extends ViewModel {
+    @Property(Array) todos = [
         { id: "todo1", text: "Write some code", done: false },
         { id: "todo2", text: "Drink a beer", done: true }
-    ])
-});
+    ]
+}
+
+export default RootView;
 ```
 
 ## Example 3: Same as before but not using the `_List` property type.
@@ -230,6 +241,8 @@ import "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
 
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
+
+const { ViewModel, Template, List, Property } = Qute;
 
 // ------------------------------------------ Styles
 
@@ -253,7 +266,7 @@ import Qute from '@qutejs/runtime';
 			</li>
 		</ul>
 		<form class='d-flex'>
-			<input q:call='el => input = el' type='text' class='form-control' style='display:inline-block'/>
+			<input q:call='el => _input = el' type='text' class='form-control' style='display:inline-block'/>
 			<button class='btn btn-primary' @click='addItem'>Add</button>
 		</form>
 		<div style='text-align:center; margin-top: 10px'>
@@ -269,13 +282,16 @@ import Qute from '@qutejs/runtime';
 // ------------------------------------------ Javascript
 
 var CNT = 0;
-const TodoList = Qute(TodoListTemplate, {
-	init() {
-		this.input = null;
-	},
+
+@Template(TodoListTemplate)
+class TodoList extends ViewModel {
+    _input = null;
+    @Property(Array) todos = null;
+
 	connected() {
-		this.input.focus();
-	},
+		this._input.focus();
+	}
+
 	findTodoIndex(key) {
 		var list = this.todos;
 		if (list) {
@@ -284,7 +300,8 @@ const TodoList = Qute(TodoListTemplate, {
 			}
 		}
 		return -1;
-	},
+	}
+
 	removeItem(key) {
 		var i = this.findTodoIndex(key);
 		if (i > -1) {
@@ -293,7 +310,8 @@ const TodoList = Qute(TodoListTemplate, {
 			this.update();
 		}
 		return false;
-	},
+	}
+
 	checkItem(key) {
 		var i = this.findTodoIndex(key);
 		if (i > -1) {
@@ -302,31 +320,34 @@ const TodoList = Qute(TodoListTemplate, {
 			this.update();
 		}
 		return false;
-	},
+	}
+
 	addItem(e) {
-		var text = this.input.value;
+		var text = this._input.value;
 		if (text) {
 			var todos = this.todos || [];
 			var randomId = 'todo-'+Date.now()+'-'+(CNT++);
 			todos.push({id: randomId, text: text, done: false})
-			this.input.value = '';
+			this._input.value = '';
 			this.update();
 		}
 		return false;
-	},
+	}
+
 	exportJson() {
 		window.alert(JSON.stringify(this.todos));
 	}
-}).properties({
-    todos: null
-});
+}
 
-export default Qute(RootTemplate).properties(() => ({
-    todos: [
+@Template(RootTemplate)
+class RootView extends ViewModel {
+    @Property(Array) todos = [
         { id: "todo1", text: "Write some code", done: false },
         { id: "todo2", text: "Drink a beer", done: true }
     ]
-}));
+}
+
+export default RootView;
 ```
 
 

@@ -1,14 +1,12 @@
-import { removeDecorator, removeField, commentDecorator, commentField, getDecoratorInfo } from './utils.js';
+import { removeDecorator, removeField, commentDecorator, commentField, getDecoratorInfo, getDecoratorName } from './utils.js';
 import DecoratedClass from './class.js';
 
 const QUTE_DECORATE_HELPER = '__qute_decorate_member__';
 
-export default function DecoratedUnit(quteImport, imports, rimports, classes) {
+export default function DecoratedUnit(quteImport, classes) {
     this.comment = false;
     this.quteImport = quteImport;
-    this.imports = imports || []; // local alias to remote name (for qute decorartor imports)
     this.classes = classes;
-    this.helperInstalled = rimports && (QUTE_DECORATE_HELPER in rimports) ? QUTE_DECORATE_HELPER : null;
 }
 DecoratedUnit.prototype = {
     transpile(ms) {
@@ -21,27 +19,12 @@ DecoratedUnit.prototype = {
         });
         return transpiled;
     },
-    getRequiredDecoratorSuperClass(name) {
-        const quteDecoratorName = this.imports[name];
-        if (quteDecoratorName) {
-            var info = getDecoratorInfo(quteDecoratorName);
-            return info ? info.superClass : null;
-        }
-        return null;
-    },
-    checkSuperClass(klass, decoratorName) {
-        if (!klass.superClass) {
-            const superClass = this.getRequiredDecoratorSuperClass(decoratorName);
-            if (superClass) {
-                throw new Error(`Cannot use decorator @${decoratorName} on class ${klass.name}. The class must extend ${superClass}`);
-            }
-        }
-    },
-    isQuteDecorator(name) {
-        return name in this.imports;
-    },
-    getQuteDecorator(name) {
-        return this.imports[name];
+    getDecoratorInfo(deco) {
+        const name = getDecoratorName(deco, path => {
+            if (path[0] === this.quteImport) path[0] = 'Qute';
+            return path.join('.');
+        });
+        return getDecoratorInfo(name);
     },
     removeDecorator(ms, decorator) {
         var fn = this.comment ? commentDecorator : removeDecorator;
@@ -51,22 +34,40 @@ DecoratedUnit.prototype = {
         var fn = this.comment ? commentField : removeField;
         fn(ms, field.start, field.end);
     },
-    installDecorateHelper(ms) {
-        if (!this.helperInstalled) {
-            // generate a name?
-            //const helperName = QUTE_DECORATE_HELPER+Date.now();
-            ms.prepend(`import { ${QUTE_DECORATE_HELPER} } from '@qutejs/types';\n`);
-            this.helperInstalled = QUTE_DECORATE_HELPER;
+    getDecoratorHelper() {
+        return `${this.quteImport}.${QUTE_DECORATE_HELPER}`;
+    },
+    getPropMeta(property) {
+        let meta = null;
+        if (property.decorators.length > 0) {
+            var decos = property.decorators;
+            for (var i=0,l=decos.length; i<l; i++) {
+                var deco = decos[i];
+                var decoratorInfo = this.getDecoratorInfo(deco);
+                if (decoratorInfo) {
+                    if (decoratorInfo.required) {
+                        property.__qute_required = true;
+                    } else if (decoratorInfo.vmProp) {
+                        if (meta) throw new Error(`Decorators "${meta.name}" and "${decoratorInfo.name}" cannot be both used on the same field`);
+                        meta = decoratorInfo;
+                        property.__qute_deco = deco;
+                        property.__qute_meta = meta;
+                    } else if (decoratorInfo.svcProp) {
+                        if (meta) throw new Error(`Decorators "${meta.name}" and "${decoratorInfo.name}" cannot be both used on the same field`);
+                        meta = decoratorInfo;
+                        property.__qute_deco = deco;
+                        property.__qute_meta = meta;
+                    }
+                }
+            }
         }
-        return this.helperInstalled;
+        return meta;
     }
 }
 
 
 DecoratedUnit.load = function(ast) {
     var quteImport;
-    var imports = null;
-    var rimports = null;
     var classes = [];
 
     var nodes = ast.body;
@@ -82,18 +83,6 @@ DecoratedUnit.load = function(ast) {
                         quteImport = sp.local.name;
                     }
                 })
-            } else if (source === '@qutejs/types') {
-                if (!imports) {
-                    imports = {};
-                    rimports = {};
-                }
-                node.specifiers.forEach(sp => {
-                    if (sp.type === 'ImportSpecifier') { // default import
-                        //console.log('+++++++++++++++2', sp);
-                        imports[sp.local.name] = sp.imported.name;
-                        rimports[sp.imported.name] = sp.local.name;
-                    }
-                })
             }
         } else if (type === 'ClassDeclaration') {
             // fix for decorators bug
@@ -106,9 +95,8 @@ DecoratedUnit.load = function(ast) {
             }
        }
     }
-    //console.log('!!!!!!!!!!!!DECO IMPORTS', imports, rimports);
 
-    return classes.length ? new DecoratedUnit(quteImport, imports, rimports, classes) : null;
+    return classes.length ? new DecoratedUnit(quteImport, classes) : null;
 }
 
 function loadClass(node) {

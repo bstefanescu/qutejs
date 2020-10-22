@@ -8,7 +8,7 @@ import App from './app.js';
 import {applyListeners, SetProp, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
 import Emitter from './emit.js';
 import {applyUserDirectives} from './q-attr.js';
-import { Prop } from '@qutejs/types';
+import { Property } from './decorators/index.js';
 
 // set $attrs on VMs
 function SetVMAttrs(vm, parentVM, filter) {
@@ -326,10 +326,10 @@ ViewModel.prototype = {
     },
     defineProp: function(Type, key, value, arg) {
         if (value && value.__qute_factory) value = value();
-        Object.defineProperty(this, key, Prop.getType(Type).createProp(this, key, value, arg));
+        Object.defineProperty(this, key, Property.getType(Type).createProp(this, key, value, arg));
     },
     definePropWithFactory: function(Type, key, value, arg) {
-        Object.defineProperty(this, key, Prop.getType(Type).createProp(this, key, value(), arg));
+        Object.defineProperty(this, key, Property.getType(Type).createProp(this, key, value(), arg));
     },
     emit: Emitter.emit,
 	emitAsync: Emitter.emitAsync,

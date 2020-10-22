@@ -167,13 +167,13 @@ registerType(Link, {
 });
 
 
-function Prop(Type, arg) {
+function Property(Type, arg) {
     return function(vm, key, value, isFactory) {
         isFactory ? vm.defineProp(Type, key, value, arg) : vm.definePropWithFactory(Type, key, value, arg);
     }
 }
-Prop.register = registerType;
-Prop.getType = function(Type) {
+Property.register = registerType;
+Property.getType = function(Type) {
     if (Type) {
         const typeObj = TYPES[typeof Type === 'string' ? Type : Type.name];
         if (!typeObj) ERR('No such property type was found: '+Type);
@@ -191,5 +191,5 @@ function Factory(fn) {
 }
 
 export {
-    Prop, Factory, Link, List
+    Property, Factory, Link, List
 }

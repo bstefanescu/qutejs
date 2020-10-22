@@ -38,10 +38,6 @@ function processImports(code, imports, styles) {
                     if (p1.startsWith('{')) {
                         extraCode = "\nconst "+p1+" = Qute.Importer;\n";
                     }
-                } else if (path === '@qutejs/types') {
-                    if (p1.startsWith('{')) {
-                        extraCode = "\nconst "+p1+" = Qute.Types;\n";
-                    }
                 } else {
                     imports[path] = p1;
                 }

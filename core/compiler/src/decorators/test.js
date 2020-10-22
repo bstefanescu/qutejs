@@ -3,7 +3,7 @@ import Transpiler from './index.js';
 
 const code = `
 import Qute from '@qutejs/runtime';
-import { Render, Prop, Watch, Mixin, Required, DataModel, AsyncDataModel, ViewModel} from '@qutejs/types';
+const { Render, Template, Prop, Watch, Mixin, Required, DataModel, AsyncDataModel, View} = Qute;
 
 @ViewModel(MyViewModel)
 class MyApp extends Qute.App {
@@ -14,8 +14,8 @@ class MyApp extends Qute.App {
 }
 
 @Abc
-@Mixin(One,Two)
-@Render(SomeTemplate)
+@Qute.Test.Mixin(One,Two)
+@Template(SomeTemplate)
 class MyViewModel extends Qute.ViewModel {
 
     constructor(x) {
@@ -23,11 +23,11 @@ class MyViewModel extends Qute.ViewModel {
         console.log('dd');
     }
 /*
-    @Prop(List, 'id') items;
-    @Prop(Link, 'UserSession/user') user;
-    @Required @Prop() myString1;
-    @Required @Prop myString2 = null;
-    @Prop(String) myString3 = 'bla';
+    @Property(List, 'id') items;
+    @Property(Link, 'UserSession/user') user;
+    @Required @Property() myString1;
+    @Required @Property myString2 = null;
+    @Property(String) myString3 = 'bla';
 
     @AsyncDataModel("bla") user = me();
 
@@ -36,14 +36,14 @@ class MyViewModel extends Qute.ViewModel {
     input;
 */
 
-    @Prop name =  'abcs';
-    @Prop age =  123;
-    @Prop enabled = true;
-    @Prop() arr = [1,2,3];
-    @Prop(Object) obj = {a:1};
-    @Required @Prop() map = new Map();
-    @Prop(List, 'id') items = [];
-    @Prop(Link, 'UserSession/user') user;
+    @Qute.Prop name =  'abcs';
+    @Property age =  123;
+    @Property enabled = true;
+    @Property() arr = [1,2,3];
+    @Property(Object) obj = {a:1};
+    @Required @Property() map = new Map();
+    @Property(List, 'id') items = [];
+    @Property(Link, 'UserSession/user') user;
 
     @Watch('myString') @log
     watchProp() {

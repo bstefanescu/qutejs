@@ -1,7 +1,7 @@
 {
-  "name": "@qutejs/types",
+  "name": "@qutejs/utils",
   "version": "2.0.0-beta.1",
-  "description": "Qute property types and helpers",
+  "description": "Qute utilities",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
   "browser": "lib/qute-importer.js",
@@ -28,9 +28,6 @@
   "repository": {
     "url": "https://github.com/bstefanescu/qutejs",
     "type": "git"
-  },
-  "dependencies": {
-    "@qutejs/commons": "2.0.0-beta.1"
   },
   "build": {
     "config": "weblib"

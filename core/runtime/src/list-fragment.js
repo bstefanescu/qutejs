@@ -95,7 +95,7 @@ ListFragment.prototype = {
 	// update the list
 	update() {
         var list = this.listFn(this.r.model);
-        if (list && list.__qute_list) { // support the _List property type - see @qutejs/types
+        if (list && list.__QUTE_LIST__) { // support the _List property type - see @qutejs/types
             if (!this.adiff.keyOf) {
                 // use the keyOf fn declasred on the list property
                 this.adiff.keyOf = list.keyOf;

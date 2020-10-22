@@ -1,38 +1,19 @@
-import { __qute_decorate_member__, _template, _mixin, _watch, _on, _channel, _properties, _require } from './helpers.js';
+import Qute from '@qutejs/runtime';
 
-import { Prop, Factory, List, Link } from './types.js';
+// render a functional template given its render function name and a model
+Qute.render = function(renderFn, model) {
+	return renderFn(new Rendering(null, model));
+}
+Qute.defineMethod = function(name, fn) {
+	//define method on both ViewModel and Functional components prototype
+	ViewModel.prototype[name] = fn;
+    Rendering.FunComp.prototype[name] = fn;
+}
 
-import {
-    ViewModel,
-    Service,
-    Template,
-    Mixin,
-    On,
-    Watch,
-    Channel,
-    Required,
-    DataModel,
-    AsyncDataModel } from './decorators.js';
+Qute.registerDirective = registerDirective;
 
-export {
-    // decorator helpers to be used by Qute facade
-    __qute_decorate_member__, _template, _mixin, _watch, _on, _channel, _properties, _require,
+Qute.install = function(plugin) { return plugin.install(Qute); }
 
-    // decorators API
-    ViewModel,
-    Service,
-    Template,
-    Template as Render,
-    Mixin,
-    On,
-    Watch,
-    Channel,
-    Required,
-    DataModel,
-    AsyncDataModel,
-    // types
-    Prop,
-    Factory,
-    Link,
-    List
+export function runAfter(cb) {
+    return Qute.UpdateQueue.runAfter(cb);
 }

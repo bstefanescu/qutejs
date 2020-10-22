@@ -13,7 +13,7 @@ export default function List(vm, key, ar) {
 	}
 }
 List.prototype = {
-    __qute_list: true, // marker to be used by list-fragment.js
+    __QUTE_LIST__: true, // marker to be used by list-fragment.js
     toJSON(key) { // serializew the object as an array
         if (!key) return this.ar;
     },

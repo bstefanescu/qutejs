@@ -3,7 +3,6 @@ import {snapshot} from '@qutejs/test-utils';
 import window, {document} from '@qutejs/window';
 import Qute from '..';
 import { mountTest, runAfter } from './utils.js';
-import { Factory } from '@qutejs/types';
 
 <q:template name='TestClass0'>
 	<span class = { (isActive ? "active " : "")+"link" }></span>
@@ -40,7 +39,7 @@ var Test2 = Qute(TestClass2).properties({
 });
 
 var Test3 = Qute(TestClass3).properties({
-    theClass: Factory(() => ({ active: true, link: true }))
+    theClass: Qute.Factory(() => ({ active: true, link: true }))
 });
 
 // we need to use computed properties to compute dynamic class bindings

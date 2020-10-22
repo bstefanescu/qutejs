@@ -8,8 +8,8 @@ import App from './app.js';
 import Service from './service.js';
 import { registerDirective } from './q-attr.js';
 
-import { _mixin, _watch, _on, _channel, _properties, _require } from '@qutejs/types';
-
+import { _mixin, _watch, _on, _channel, _properties, _require } from './decorators/helpers.js';
+import { View, Template, Render, Mixin, On, Watch, Channel, Required, DataModel, AsyncDataModel, Property, Factory, Link, List } from './decorators/index.js';
 
 /**
  * We cannot use Object.assign since getter are lost. So we copy the prop def itself
@@ -100,6 +100,23 @@ Qute.UpdateQueue = UpdateQueue;
 Qute.Rendering = Rendering;
 Qute.Service = Service;
 
+// decorators an types
+Qute.View = View;
+Qute.Template = Template;
+Qute.Render = Render;
+Qute.Mixin = Mixin;
+Qute.On = On;
+Qute.Watch = Watch;
+Qute.Channel = Channel;
+Qute.Required = Required;
+Qute.DataModel = DataModel;
+Qute.AsyncDataModel = AsyncDataModel;
+Qute.Property = Property;
+Qute.Factory = Factory;
+Qute.Link = Link;
+Qute.List = List;
+
+
 // render a functional template given its render function name and a model
 Qute.render = function(renderFn, model) {
 	return renderFn(new Rendering(null, model));
@@ -109,13 +126,9 @@ Qute.defineMethod = function(name, fn) {
 	ViewModel.prototype[name] = fn;
     Rendering.FunComp.prototype[name] = fn;
 }
-
 Qute.registerDirective = registerDirective;
-
 Qute.install = function(plugin) { return plugin.install(Qute); }
-
 Qute.runAfter = function(cb) { UpdateQueue.runAfter(cb); }
-
 
 // store Qute instance in window - this is important so that imported components use the same Qute instance
 window.Qute = Qute;

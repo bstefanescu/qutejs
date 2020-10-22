@@ -6,6 +6,8 @@ Here is a simple example which illustrate the main features of the Qute componen
 import Qute from '@qutejs/runtime';
 import window from '@qutejs/window';
 
+const { Template, Property } = Qute;
+
 <q:style>
   .username { color: green; }
 </q:style>
@@ -25,11 +27,14 @@ import window from '@qutejs/window';
   </div>
 </q:template>
 
-// create a ViewModel component
-const MyComponent = Qute(MyComponentTemplate, {
-    init() {
-        this.input = null;
-    },
+// define a ViewModel component
+@Template(MyComponentTemplate)
+class MyComponent extends Qute.ViewModel {
+
+    @Property user = null;
+
+    input = null;
+
     handleLogin() {
         const value = this.input.value.trim();
         if (value) {
@@ -37,13 +42,12 @@ const MyComponent = Qute(MyComponentTemplate, {
         } else {
             window.alert('Enter a user name!');
         }
-    },
+    }
+
     handleLogout() {
         this.user = null;
     }
-}).properties({
-    user: null
-});
+}
 
 new MyComponent().mount('app');
 ```

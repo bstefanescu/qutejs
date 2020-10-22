@@ -6,7 +6,8 @@ import "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import qSpinner from '@qutejs/spinner';
-import { ViewModel, Service, Template, Prop, Link, DataModel, AsyncDataModel } from '@qutejs/types';
+
+const { View, Name, Template, Prop, Link, DataModel, AsyncDataModel } = Qute;
 
 <q:style>
 .tbar {
@@ -129,12 +130,12 @@ class PageManager extends Qute.Service {
     }
 }
 
-@ViewModel(RootView)
+@View(RootView)
 class MyApp extends Qute.App {
-  @Service('Session')
+  @DataModel('Session')
   session = new SessionManager(this);
 
-  @Service('Pages')
+  @DataModel('Pages')
   pages = new PageManager(this);
 }
 

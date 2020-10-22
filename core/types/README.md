@@ -1,6 +1,6 @@
-# Qute Importer  (@qutejs/types)
+# Qute Importer  (@qutejs/utils)
 
-Provide reactive property types for Qute `ViewModel` components.
+Provide various utility functions for the Qute component model.
 
 **[Qute](https://qutejs.org)** is a **reactive component model** designed for **plain old javascript** lovers.
 
@@ -12,18 +12,18 @@ Use the Qute project generator to create a new Qute application or component pro
 npm init @qutejs
 ```
 
-Go here for the **[Qute Property Types documentation](https://qutejs.org#/model/proptypes)**.
+Go here for the **[Qute documentation](https://qutejs.org)**.
 
 # Installing
 
 ```
-npm install @qutejs/types
+npm install @qutejs/utils
 ```
 
 # Usage
 
 ```
-import Importer from '@qutejs/types';
+import { closestVM } from '@qutejs/utils';
 ```
 
 # Building
