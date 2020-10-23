@@ -11,9 +11,10 @@ tests:
 import assert from 'assert';
 import {snapshot} from '@qutejs/test-utils';
 import window, {document} from '@qutejs/window';
-import Qute from '..';
+import Qute from '@qutejs/runtime';
 import { createMountPoint, runAfter } from './utils.js';
 
+const { Template, ViewModel, Property, Watch } = Qute;
 
 <q:template name='IfElseTestTemplate'>
 <div>
@@ -56,48 +57,52 @@ import { createMountPoint, runAfter } from './utils.js';
 
 var NESTED_MSG = null;
 
-var NestedVm = Qute(NestedVmTemplate).properties({
-    user: null, msg: null
-}).watch('msg', function(val) {
-	NESTED_MSG = val;
-});
+@Template(NestedVmTemplate)
+class NestedVm extends ViewModel {
+    @Property(String) user = null;
+    @Property(String) msg = null;
 
-var IfElseTest = Qute(IfElseTestTemplate, {
-	init: function() {
-		this.changes = 0;
-	},
-	// change user value using a channel
-	channel: function(userValue) {
+    @Watch('msg')
+    watchMsg(val) {
+        NESTED_MSG = val;
+    }
+}
+
+@Template(IfElseTestTemplate)
+class IfElseTest extends ViewModel {
+    changes = 0;
+    @Property(String) user = null;
+    @Property(String) msg = null;
+
+    // change user value using a channel
+	channel(userValue) {
 		this.user = userValue;
-	},
-	userChanged: function(value) {
+	}
+
+	userChanged(value) {
 		this.changes++;
 	}
-}).properties({
-    user: null, msg: null
-});
+}
 
-var IfElseIfTest = Qute(IfElseIfTestTemplate, {
-	init: function() {
-		this.lastChange = 0;
-	},
+@Template(IfElseIfTestTemplate)
+class IfElseIfTest extends ViewModel {
+    lastChange = 0;
+    @Property state = 0;
+
 	stateChanged(val) {
 		this.lastChange = val;
 	}
-}).properties({
-    state: 0
-});
+}
 
-var IfElseIfElseTest = Qute(IfElseIfElseTestTemplate, {
-	init: function() {
-		this.lastChange = 0;
-	},
-	stateChanged(val) {
+@Template(IfElseIfElseTestTemplate)
+class IfElseIfElseTest extends ViewModel {
+    lastChange = 0;
+    @Property state = 0;
+
+   	stateChanged(val) {
 		this.lastChange = val;
 	}
-}).properties({
-    state: 0
-});
+}
 
 
 describe('If / Else Directive', function() {

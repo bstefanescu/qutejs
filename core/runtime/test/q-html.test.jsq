@@ -1,8 +1,10 @@
 import assert from 'assert';
 import {snapshot} from '@qutejs/test-utils';
 import window, {document} from '@qutejs/window';
-import Qute from '..';
+import Qute from '@qutejs/runtime';
 import { mountTest, runAfter } from './utils.js';
+
+const { Template, ViewModel, Property } = Qute;
 
 <q:template name='TestHtmlTemplate'>
 	<div q:html='content'/>
@@ -28,9 +30,10 @@ import { mountTest, runAfter } from './utils.js';
 	</div>
 </q:template>
 
-var TestHtml = Qute(TestHtmlTemplate).properties({
-    content: "<div id='theDiv'>Some <b>HTML</b> content</div>"
-});
+@Template(TestHtmlTemplate)
+class TestHtml extends ViewModel {
+    @Property content = "<div id='theDiv'>Some <b>HTML</b> content</div>";
+}
 var TestStaticHtml = Qute(TestStaticHtmlTemplate);
 var TestStaticMarkdown = Qute(TestStaticMarkdownTemplate);
 var TestStaticText = Qute(TestStaticTextTemplate);

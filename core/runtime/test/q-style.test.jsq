@@ -1,8 +1,10 @@
 import assert from 'assert';
 import {snapshot} from '@qutejs/test-utils';
 import window, {document} from '@qutejs/window';
-import Qute from '..';
+import Qute from '@qutejs/runtime';
 import { mountTest, runAfter } from './utils.js';
+
+const { Template, ViewModel, Property } = Qute;
 
 <q:template name='Test0Template'>
 	<span style={"max-width:300px;flex:"+theFlex}></span>
@@ -29,19 +31,22 @@ import { mountTest, runAfter } from './utils.js';
 	<div q:style='[{maxWidth: "100px", maxHeight: "100px"}, {flex: 1}, {maxHeight:"300px"}]'>Is Visible</div>
 </q:template>
 
-var Test0 = Qute(Test0Template).properties({
-    theFlex: 1
-});
+@Template(Test0Template)
+class Test0 extends ViewModel {
+    @Property theFlex = 1;
+}
 
-var Test1 = Qute(Test1Template).properties({
-    theStyle: {
+@Template(Test1Template)
+class Test1 extends ViewModel {
+    @Property theStyle = {
         maxWidth: '300px',
         flex: 1,
         border: '1px solid red'
     }
-});
+}
 
-var Test2 = Qute(Test2Template, {
+@Template(Test2Template)
+class Test2 extends ViewModel {
 	getStyle() {
 		return {
 			maxWidth: '300px',
@@ -49,7 +54,7 @@ var Test2 = Qute(Test2Template, {
 			border: '1px solid red'
 		}
 	}
-});
+}
 
 var Test3 = Qute(Test3Template);
 var Test4 = Qute(Test4Template);
@@ -66,9 +71,11 @@ var Test5 = Qute(Test5Template);
 
 
 const TestStyleVm = Qute(TestStyleVmTemplate);
-var TestStyleVmRoot = Qute(TestStyleVmRootTemplate).properties({
-    align: 'center'
-});
+
+@Template(TestStyleVmRootTemplate)
+class TestStyleVmRoot extends ViewModel {
+    @Property align = 'center';
+}
 
 describe('q:style attribute', function() {
 

@@ -1,12 +1,13 @@
-import { document } from '@qutejs/window';
 import assert from 'assert';
-import Qute from '..';
+
+import { document } from '@qutejs/window';
+import Qute from '@qutejs/runtime';
 
 const TestMixin = Qute(function() {
     var h1 = document.createElement('h1');
     h1.textContent = 'Test Mixins';
     return h1;
-});
+}, {});
 TestMixin.channel(()=>{})
 TestMixin.mixin({
     addMixin1Class() {

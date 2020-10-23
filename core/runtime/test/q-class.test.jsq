@@ -1,8 +1,10 @@
 import assert from 'assert';
 import {snapshot} from '@qutejs/test-utils';
 import window, {document} from '@qutejs/window';
-import Qute from '..';
+import Qute from '@qutejs/runtime';
 import { mountTest, runAfter } from './utils.js';
+
+const { Template, ViewModel, Property } = Qute;
 
 <q:template name='TestClass0'>
 	<span class = { (isActive ? "active " : "")+"link" }></span>
@@ -28,35 +30,42 @@ import { mountTest, runAfter } from './utils.js';
 	<span q:class='[ isActive && "active", "link" ]'></span>
 </q:template>
 
-var Test0 = Qute(TestClass0).properties({
-    isActive: true
-});
+@Template(TestClass0)
+class Test0 extends ViewModel {
+    @Property isActive = true;
+}
 
-var Test1 = Qute(TestClass1);
+const Test1 = Qute(TestClass1);
 
-var Test2 = Qute(TestClass2).properties({
-    isActive: true
-});
+@Template(TestClass2)
+class Test2 extends ViewModel {
+    @Property isActive = true;
+}
 
-var Test3 = Qute(TestClass3).properties({
-    theClass: Qute.Factory(() => ({ active: true, link: true }))
-});
+@Template(TestClass3)
+class Test3 extends ViewModel {
+    @Property theClass = { active: true, link: true };
+}
 
 // we need to use computed properties to compute dynamic class bindings
 // Note that the array notation [this.isActive && 'active', 'link'] is not reactive (it will work only for the first rendering)
-var Test4 = Qute(TestClass3, {
+@Template(TestClass3)
+class Test4 extends ViewModel {
+    @Property isActive = true;
 	get theClass() {
 		return [ {active: this.isActive}, "link" ];
 	}
-}).properties({
-    isActive: true
-});
-var Test5 = Qute(TestClass5).properties({
-    isActive: true
-});
-var Test6 = Qute(TestClass6).properties({
-    isActive: true
-});
+}
+
+@Template(TestClass5)
+class Test5 extends ViewModel {
+    @Property isActive = true;
+}
+
+@Template(TestClass6)
+class Test6 extends ViewModel {
+    @Property isActive = true;
+}
 
 
 // q:class on components
@@ -70,9 +79,10 @@ var Test6 = Qute(TestClass6).properties({
 </q:template>
 
 
-var TestQClassOnVM = Qute(TestQClassOnVmRoot).properties({
-    selected: true
-});
+@Template(TestQClassOnVmRoot)
+class TestQClassOnVM extends ViewModel {
+    @Property selected = true;
+}
 
 
 

@@ -1,8 +1,10 @@
 import assert from 'assert';
 import {snapshot} from '@qutejs/test-utils';
 import window, {document} from '@qutejs/window';
-import Qute from '..';
+import Qute from '@qutejs/runtime';
 import { mountTest, click, runAfter } from './utils.js';
+
+const { Template, ViewModel, Property } = Qute;
 
 
 <q:template name='ColorSpans1Template'>
@@ -34,15 +36,15 @@ var TestColorSpans2 = Qute(ColorSpans2Template);
     </div>
 </q:template>
 
-var TestLambda1 = Qute(TestLambda1Template, {
-	init() {
-		this.clicked = 0;
-	},
+@Template(TestLambda1Template)
+class  TestLambda1 extends ViewModel {
+	clicked = 0;
+
     onClick() {
     	assert.equal(this.inputEl.value, 'Hello World!');
     	this.clicked++;
     }
-});
+}
 
 // -------
 
@@ -55,13 +57,14 @@ var TestLambda1 = Qute(TestLambda1Template, {
 	<my-fn q:call='testOnCreate' q:color-spans='{color:"cyan"}' />
 </q:template>
 
-var TestFn = Qute(TestFnTemplate, {
+@Template(TestFnTemplate)
+class TestFn extends ViewModel {
 	testOnCreate(el) {
         assert.equal(this.render.name, 'TestFnTemplate');
 		assert.equal(el.tagName, 'DIV');
 		assert.equal(el.textContent, 'Hello world!');
 	}
-});
+}
 
 <q:template name='MyVm'>
 	<div>Hello <span>world</span>!</div>
@@ -71,13 +74,14 @@ var TestFn = Qute(TestFnTemplate, {
 	<my-vm q:call='testOnCreate' q:color-spans='{color:"blue"}' />
 </q:template>
 
-var TestVm = Qute(TestVmTemplate, {
+@Template(TestVmTemplate)
+class TestVm extends ViewModel {
 	testOnCreate(el) {
 		assert.equal(this.render.name, 'TestVmTemplate');
 		assert.equal(el.tagName, 'DIV');
 		assert.equal(el.textContent, 'Hello world!');
 	}
-});
+}
 
 
 describe('Custom Attributes', function() {

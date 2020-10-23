@@ -2,9 +2,10 @@
 import assert from 'assert';
 import {snapshot} from '@qutejs/test-utils';
 import window, {document} from '@qutejs/window';
-import Qute from '..';
+import Qute from '@qutejs/runtime';
 import { createMountPoint } from './utils.js';
 
+const { Template, ViewModel, Property } = Qute;
 
 <q:template name='EntitiesTemplate'>
 	<div>{{htmlCode}}</div>
@@ -24,13 +25,11 @@ var Entities = Qute(EntitiesTemplate, {
 </q:template>
 
 
-var Symbols = Qute(SymbolsTemplate, {
-	init: function() {
-		this.firstName = 'John';
-	}
-}).properties({
-    lastName: 'Doe'
-});
+@Template(SymbolsTemplate)
+class Symbols extends ViewModel {
+    firstName = 'John';
+    @Property lastName ='Doe';
+}
 
 
 <q:template name='RootTemplate'>
@@ -44,19 +43,19 @@ var Symbols = Qute(SymbolsTemplate, {
 </q:template>
 
 
-var Root = Qute(RootTemplate, {
+@Template(RootTemplate)
+class Root extends ViewModel {
+    firstName = 'John';
+    @Property lastName = 'Doe';
+
 	get fullName() {
 		return this.firstName + ' ' + this.lastName;
-	},
-	getFullName: function() {
-		return this.firstName + ' ' + this.lastName;
-	},
-	init: function() {
-		this.firstName = 'John';
 	}
-}).properties({
-    lastName: 'Doe'
-});
+
+	getFullName() {
+		return this.firstName + ' ' + this.lastName;
+	}
+}
 
 
 describe('Mustache expressions', function() {

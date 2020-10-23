@@ -8,7 +8,7 @@ import App from './app.js';
 import Service from './service.js';
 import { registerDirective } from './q-attr.js';
 
-import { _mixin, _watch, _on, _channel, _properties, _require } from './decorators/helpers.js';
+import { __qute_decorate_member__, _mixin, _watch, _on, _channel, _properties, _require } from './decorators/helpers.js';
 import { View, Template, Render, Mixin, On, Watch, Channel, Required, DataModel, AsyncDataModel, Property, Factory, Link, List } from './decorators/index.js';
 
 /**
@@ -25,14 +25,12 @@ function assignPropDefs(dst, src) {
 
 function Qute(renderFn, def) {
     if (!def) {
-        // Qute({... def ...}) or Qute(class)
-        if (typeof renderFn !== 'function') { // Qute({...})
+        if (typeof renderFn === 'function') {
+            def = {};
+        } else {
             def = renderFn;
             renderFn = null;
-        } else if (renderFn.prototype instanceof ViewModel) { // Qute(class)
-            def = renderFn;
-            renderFn = null;
-        } // else Qute(renderingFn)
+        }
     } else if (typeof renderFn !== 'function') {
         ERR("Usage: Qute(RenderFunction[, Model])");
     }
@@ -43,30 +41,21 @@ function Qute(renderFn, def) {
 	}
 
 	var VMType, VMProto;
-	if (typeof def === 'function') {
-		if (def.prototype instanceof ViewModel)	{
-			// VM is defined as a class
-			VMType = def;
-			VMProto = VMType.prototype;
-		} else {
-            ERR('Unsupported ViewModel definition: expecting a class extending Qute.ViewModel');
-		}
-    }
-    if (!VMType) { // VM definition object
-		var BaseVm = ViewModel;
-		VMProto = Object.create(BaseVm.prototype, {
-			constructor: { value: ViewModelImpl },
-		});
-		if (def) assignPropDefs(VMProto, def); // this is preserving getters
-		VMProto.$super = BaseVm.prototype; // to be able to override methods and call the super method if needed
-		ViewModelImpl.prototype = VMProto;
+    var BaseVm = ViewModel;
+    VMProto = Object.create(BaseVm.prototype, {
+        constructor: { value: ViewModelImpl },
+    });
+    if (def) assignPropDefs(VMProto, def); // this is preserving getters
+    VMProto.$super = BaseVm.prototype; // to be able to override methods and call the super method if needed
+    ViewModelImpl.prototype = VMProto;
+    VMType = ViewModelImpl;
 
-		VMType = ViewModelImpl;
-    }
     // add the rendering method of the tag if no one was provided
     if (renderFn) VMProto.render = renderFn;
 
-    if (!VMProto.render) ERR('Unsupported ViewModel definition: No rendering function was defined');
+    if (!VMProto.render) {
+        ERR('Unsupported ViewModel definition: No rendering function was defined');
+    }
 
 	VMType.watch = function(prop, fn) {
         _watch(VMProto, prop, fn);
@@ -116,7 +105,7 @@ Qute.Property = Property;
 Qute.Factory = Factory;
 Qute.Link = Link;
 Qute.List = List;
-
+Qute.__qute_decorate_member__ = __qute_decorate_member__;
 
 // render a functional template given its render function name and a model
 Qute.render = function(renderFn, model) {

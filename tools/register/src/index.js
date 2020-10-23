@@ -72,7 +72,9 @@ function mtime(filename) {
 }
 
 function transpile(code) {
-	return new Compiler().transpile(code, {sourceMap: false}).code;
+        code = new Compiler().transpile(code, {sourceMap: false}).code;
+        const r =  new Compiler.DecoratorTranspiler().transpile(code, false);
+        return r ? r.code : code;
 }
 
 function cachedTranspile(code, filename) {
@@ -80,8 +82,8 @@ function cachedTranspile(code, filename) {
 	var cached = cache.get(key);
 	var tm = mtime(filename);
 	if (!cached || cached.mtime !== tm) {
-		cached = { code: transpile(code), mtime: tm };
-		cache.put(cached);
+        cached = { code: transpile(code), mtime: tm };
+        cache.put(cached);
 	}
 	return cached.code;
 }
@@ -89,8 +91,16 @@ function cachedTranspile(code, filename) {
 function transpileHook(code, filename) {
 	if (transpiling) return code;
 	try {
-		transpiling = true;
-		return cache ? cachedTranspile(code, filename) : transpile(code);
+        transpiling = true;
+        try {
+            code = cache ? cachedTranspile(code, filename) : transpile(code);
+            //console.log('============= Code for ',filename,'=============\n', code, '\n=================================');
+        } catch(e) {
+            console.error('Qute transpiler: Failed to process '+filename, e);
+            console.log('============= Code =============\n', code, '\n=================================');
+            throw e;
+        }
+        return code;
 	} finally {
 		transpiling = false;
 	}
@@ -121,9 +131,9 @@ function register(opts) {
 
   var useCache = !opts || opts.cache !== false;
   if (useCache && !cache) {
-  	  cache = new Cache();
+      cache = new Cache();
   } else {
-  	  cache = null;
+      cache = null;
   }
 
   revertHook = addHook(transpileHook, { exts: exts, ignoreNodeModules: ignoreNodeModules });

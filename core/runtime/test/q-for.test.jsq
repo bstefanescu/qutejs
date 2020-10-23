@@ -1,8 +1,10 @@
 import assert from 'assert';
 import {snapshot} from '@qutejs/test-utils';
 import window, {document} from '@qutejs/window';
-import Qute from '..';
+import Qute from '@qutejs/runtime';
 import { mountTest, runAfter } from './utils.js';
+
+const { Template, ViewModel, Property } = Qute;
 
 
 <q:template name='DomTestRootTemplate'>
@@ -38,61 +40,60 @@ import { mountTest, runAfter } from './utils.js';
 	</div>
 </q:template>
 
-var DomTestRoot = Qute(DomTestRootTemplate, {
-	init() {
-		this.list = ['item1', 'item2', 'item3'];
-	}
-});
+@Template(DomTestRootTemplate)
+class DomTestRoot extends ViewModel {
+	list = ['item1', 'item2', 'item3'];
+}
 
-var FuncTestRoot = Qute(FuncTestRootTemplate, {
-	init() {
-		this.list = ['item1', 'item2', 'item3'];
-	}
-});
+@Template(FuncTestRootTemplate)
+class FuncTestRoot extends ViewModel {
+	list = ['item1', 'item2', 'item3'];
+}
 
-var VmTestRoot = Qute(VmTestRootTemplate, {
-	init() {
-		this.list = ['item1', 'item2', 'item3'];
-	}
-});
+@Template(VmTestRootTemplate)
+class VmTestRoot extends ViewModel {
+	list = ['item1', 'item2', 'item3'];
+}
 
 var vmFnCompCnt = 0;
 var vmCompCnt = 0;
 var vmComp2Cnt = 0;
-const FnCompVm = Qute(FnCompVmTemplate, {
-	connected: function() {
+@Template(FnCompVmTemplate)
+class FnCompVm extends ViewModel {
+	connected() {
 		vmFnCompCnt++;
-	},
-	disconnected: function() {
+	}
+	disconnected() {
 		vmFnCompCnt--;
 	}
-});
+}
 
-const VmComp = Qute(VmCompTemplate, {
-	connected: function() {
+@Template(VmCompTemplate)
+class VmComp extends ViewModel {
+	connected() {
 		vmCompCnt++;
-	},
-	disconnected: function() {
+	}
+	disconnected() {
 		vmCompCnt--;
 	}
-});
+}
 
-var VmTestRoot2 = Qute(VmTestRoot2Template, {
-	init() {
-		this.list = [{id:1, text:'item1'}, {id:2, text:'item2'}, {id:3, text:'item3'}];
-	}
-});
+@Template(VmTestRoot2Template)
+class VmTestRoot2 extends ViewModel {
+	list = [{id:1, text:'item1'}, {id:2, text:'item2'}, {id:3, text:'item3'}];
+}
 
-const VmComp2 = Qute(VmComp2Template, {
-	connected: function() {
+@Template(VmComp2Template)
+class VmComp2 extends ViewModel {
+    @Property(String) id = null;
+    @Property(String) text = null;
+	connected() {
 		vmComp2Cnt++;
-	},
-	disconnected: function() {
+	}
+	disconnected() {
 		vmComp2Cnt--;
 	}
-}).properties({
-    id: null, text: null
-});
+}
 
 function removeItem(list, value) {
 	var i = list.indexOf(value);
@@ -101,6 +102,7 @@ function removeItem(list, value) {
 	}
 	return null;
 }
+
 function moveItem(list, from, to) {
 	var fromVal = list[from];
 	var toVal = list[to];

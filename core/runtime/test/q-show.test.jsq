@@ -1,8 +1,10 @@
 import assert from 'assert';
 import {snapshot} from '@qutejs/test-utils';
 import window, {document} from '@qutejs/window';
-import Qute from '..';
+import Qute from '@qutejs/runtime';
 import { mountTest, runAfter } from './utils.js';
+
+const { Template, ViewModel, Property } = Qute;
 
 <q:template name='TestShowTemplate'>
 	<div q:show='isVisible'>Is Visible</div>
@@ -12,13 +14,15 @@ import { mountTest, runAfter } from './utils.js';
 	<div q:show='isVisible' style='display:inline-block'>Is Visible</div>
 </q:template>
 
-var TestShow = Qute(TestShowTemplate).properties({
-    isVisible: false
-});
+@Template(TestShowTemplate)
+class TestShow extends ViewModel {
+    @Property isVisible = false;
+}
 
-var TestShow2 = Qute(TestShow2Template).properties({
-    isVisible: true
-});
+@Template(TestShow2Template)
+class TestShow2 extends ViewModel {
+    @Property isVisible = true
+}
 
 <q:template name='TestShowVmTemplate'>
     <div><slot/></div>
@@ -29,9 +33,10 @@ var TestShow2 = Qute(TestShow2Template).properties({
 </q:template>
 
 
-var TestShowVmRoot = Qute(TestShowVmRootTemplate).properties({
-    showIt: false
-});
+@Template(TestShowVmRootTemplate)
+class TestShowVmRoot extends ViewModel {
+    @Property showIt = false;
+}
 
 const TestShowVm = Qute(TestShowVmTemplate);
 

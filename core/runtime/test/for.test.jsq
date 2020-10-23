@@ -1,9 +1,10 @@
 import assert from 'assert';
 import {snapshot} from '@qutejs/test-utils';
 import window, {document} from '@qutejs/window';
-import Qute from '..';
+import Qute from '@qutejs/runtime';
 import { createMountPoint, runAfter } from './utils.js';
 
+const { Template, ViewModel, Property } = Qute;
 
 <q:template name='ForTestTemplate'>
 <div>
@@ -49,27 +50,30 @@ import { createMountPoint, runAfter } from './utils.js';
 </q:template>
 
 
-var ForTest = Qute(ForTestTemplate).properties(() => ({
-    items: [
+@Template(ForTestTemplate)
+class ForTest extends ViewModel {
+    @Property(Array) items = [
         { href:'item1', title: 'Item 1' },
         { href:'item2', title: 'Item 2' },
         { href:'item3', title: 'Item 3' }
-	],
-	map: { key1: 'val1', key2: 'val2', key3: 'val3' }
-}));
-
+    ];
+    @Property(Object) map = {
+        key1: 'val1', key2: 'val2', key3: 'val3'
+    }
+}
 
 <q:template name='ForTestReactivityTemplate'>
 <div><for value='item in list'>{{item}} </for></div>
 </q:template>
 
-var ForTestReactivity = Qute(ForTestReactivityTemplate, {
+@Template(ForTestReactivityTemplate)
+class ForTestReactivity extends ViewModel {
+    @Property list = ["a", "b", "c", "d"];
+
 	changeList() {
 		this.list = this.list === this.list1 ? this.list2 : this.list1;
 	}
-}).properties(() => ({
-    list: ["a", "b", "c", "d"]
-}));
+}
 
 describe('For Directive', function() {
 	var root = new ForTest();

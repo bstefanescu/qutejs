@@ -27,7 +27,7 @@
 
 import assert from 'assert';
 import {snapshot} from '@qutejs/test-utils';
-import Qute from '..';
+import Qute from '@qutejs/runtime';
 import { RootComponent, FnItem, VmItem, JsItem } from './register/root.jsq';
 
 import { createMountPoint } from './utils.js';

@@ -1,6 +1,9 @@
-import { document } from '@qutejs/window';
 import assert from 'assert';
-import Qute from '..';
+
+import { document } from '@qutejs/window';
+import Qute from '@qutejs/runtime';
+
+const { Template, ViewModel, Property } = Qute;
 
 <q:template name='RootTemplate'>
     <div id={id} title={"Hello"+(1+3)} class={"bla"} q:style={{left:"10px"}} q:class={{enabled: enabled, active: active}}>
@@ -8,13 +11,15 @@ import Qute from '..';
         <for value={item in items}>{{item}},</for>
     </div>
 </q:template>
-const Root = Qute(RootTemplate).properties({
-    enabled: true,
-    active: false,
-    id: 'test-mustache-attr-root',
-    testValue: true,
-    items: Qute.Factory(()=>[1,2,3])
-});
+
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property enabled = true;
+    @Property active = false;
+    @Property id = 'test-mustache-attr-root';
+    @Property testValue = true;
+    @Property items = [1,2,3];
+}
 
 describe("Mustache attribute value", () => {
     it("works on all attributes", () => {

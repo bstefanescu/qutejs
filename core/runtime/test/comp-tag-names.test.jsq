@@ -1,7 +1,7 @@
 
 import assert from 'assert';
 import window, {document} from '@qutejs/window';
-import Qute from '..';
+import Qute from '@qutejs/runtime';
 import { createMountPoint } from './utils.js';
 
 <q:template name='myComponent'>
@@ -33,9 +33,9 @@ import { createMountPoint } from './utils.js';
 	</div>
 </q:template>
 const qXComponent= XComponent;
-const myVmcomp = Qute(myVmcompTemplate);
-const qVmcomp = Qute(qVmcompTemplate);
-var Root = Qute(RootTemplate);
+const myVmcomp = Qute(myVmcompTemplate, {});
+const qVmcomp = Qute(qVmcompTemplate, {});
+var Root = Qute(RootTemplate, {});
 
 
 describe('Components are part of a namespace', function() {

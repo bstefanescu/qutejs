@@ -34,7 +34,11 @@ DecoratedUnit.prototype = {
         var fn = this.comment ? commentField : removeField;
         fn(ms, field.start, field.end);
     },
-    getDecoratorHelper() {
+    getDecoratorHelper(ms) {
+        if (!this.quteImport) {
+            ms.prepend(`import Qute from '@qutejs/runtime';\n`);
+            this.quteImport = 'Qute';
+        }
         return `${this.quteImport}.${QUTE_DECORATE_HELPER}`;
     },
     getPropMeta(property) {
@@ -74,7 +78,7 @@ DecoratedUnit.load = function(ast) {
     for (var i=0,l=nodes.length; i<l; i++) {
         var node = nodes[i];
         var type = node.type;
-        if (type === 'ImportDeclaration') {
+        if (!quteImport && type === 'ImportDeclaration') {
             var source = node.source.value;
             if (source === '@qutejs/runtime') {
                 node.specifiers.forEach(sp => {
@@ -83,6 +87,8 @@ DecoratedUnit.load = function(ast) {
                         quteImport = sp.local.name;
                     }
                 })
+            } else { // iin tests we do not use @qutejs/runtime but '..'
+
             }
         } else if (type === 'ClassDeclaration') {
             // fix for decorators bug
