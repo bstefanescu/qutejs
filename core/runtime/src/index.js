@@ -8,7 +8,7 @@ import App from './app.js';
 import Service from './service.js';
 import { registerDirective } from './q-attr.js';
 
-import { __qute_decorate_member__, _mixin, _watch, _on, _channel, _properties, _require } from './decorators/helpers.js';
+import { __qute_decorate_member__, _mixin, _watch, _on, _channel, _require } from './decorators/helpers.js';
 import { View, Template, Render, Mixin, On, Watch, Channel, Required, DataModel, AsyncDataModel, Property, Factory, Link, List } from './decorators/index.js';
 
 /**
@@ -73,10 +73,6 @@ function Qute(renderFn, def) {
         _mixin(VMProto, Array.prototype.slice.call(arguments));
         return VMType;
     }
-    VMType.properties = function(properties) {
-        _properties(VMProto, properties);
-        return VMType;
-    },
     VMType.require = function() {
         _require(VMProto, Array.prototype.slice.call(arguments));
         return VMType;
