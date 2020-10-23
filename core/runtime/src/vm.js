@@ -323,11 +323,7 @@ ViewModel.prototype = {
 		//this.$clean.push(type, wrapper);
     },
     defineProp: function(Type, key, value, arg) {
-        if (value && value.__qute_factory) value = value();
         Object.defineProperty(this, key, Property.getType(Type).createProp(this, key, value, arg));
-    },
-    definePropWithFactory: function(Type, key, value, arg) {
-        Object.defineProperty(this, key, Property.getType(Type).createProp(this, key, value(), arg));
     },
     emit: Emitter.emit,
 	emitAsync: Emitter.emitAsync,

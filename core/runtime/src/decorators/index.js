@@ -1,6 +1,6 @@
 import { __qute_decorate_member__ } from './helpers.js';
 
-import { Property, Factory, List, Link } from './types.js';
+import { Property, List, Link } from './types.js';
 
 import {
     View,
@@ -30,7 +30,6 @@ export {
     AsyncDataModel,
     // types
     Property,
-    Factory,
     Link,
     List
 }

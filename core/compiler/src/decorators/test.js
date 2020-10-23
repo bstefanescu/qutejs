@@ -22,19 +22,6 @@ class MyViewModel extends Qute.ViewModel {
         super(x);
         console.log('dd');
     }
-/*
-    @Property(List, 'id') items;
-    @Property(Link, 'UserSession/user') user;
-    @Required @Property() myString1;
-    @Required @Property myString2 = null;
-    @Property(String) myString3 = 'bla';
-
-    @AsyncDataModel("bla") user = me();
-
-    // text input element
-    @log
-    input;
-*/
 
     @Qute.Prop name =  'abcs';
     @Property age =  123;

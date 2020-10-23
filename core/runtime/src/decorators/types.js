@@ -168,8 +168,8 @@ registerType(Link, {
 
 
 function Property(Type, arg) {
-    return function(vm, key, value, isFactory) {
-        isFactory ? vm.defineProp(Type, key, value, arg) : vm.definePropWithFactory(Type, key, value, arg);
+    return function(vm, key, value) {
+        vm.defineProp(Type, key, value, arg);
     }
 }
 Property.register = registerType;
@@ -182,14 +182,6 @@ Property.getType = function(Type) {
     return AnyType;
 }
 
-//TODO remove factory?
-// To be used with Qute facade when declaring non primitive properties
-// it is also used by decorators to define default value factory functions
-function Factory(fn) {
-    fn.__qute_factory = true;
-    return fn;
-}
-
 export {
-    Property, Factory, Link, List
+    Property, Link, List
 }

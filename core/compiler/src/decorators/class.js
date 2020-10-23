@@ -1,6 +1,6 @@
 function getDefinePropCall(text, field, decorator) {
     // args: Type, key, value, arg
-    var type, key, value, arg, methodName = 'defineProp';
+    var type, key, value, arg;
     // get the type from decorator
     let decoArgs = decorator.expression.arguments;
     if (decoArgs && decoArgs.length > 0) {
@@ -18,13 +18,6 @@ function getDefinePropCall(text, field, decorator) {
         value = text.substring(field.value.start, field.value.end);
         const fieldValue = field.value;
         const fieldValueType =fieldValue.type;
-        if (fieldValueType === 'ObjectExpression'
-            || fieldValueType === 'ArrayExpression'
-            || fieldValueType === 'NewExpression') {
-                // wrap the value in a factory function
-                value = `()=>(${value})`;
-                methodName = 'definePropWithFactory';
-        }
         if (!type) {
             if (fieldValueType === 'Literal') {
                 const valueType = typeof fieldValue.value;
@@ -41,7 +34,7 @@ function getDefinePropCall(text, field, decorator) {
         value = 'void(0)';
     }
 
-    var methodCall = `this.${methodName}(${type||'null'}, ${key}, ${value}`;
+    var methodCall = `this.defineProp(${type||'null'}, ${key}, ${value}`;
     if (arg) methodCall += `, ${arg}`;
     return methodCall+');\n';
 }

@@ -9,7 +9,7 @@ import Service from './service.js';
 import { registerDirective } from './q-attr.js';
 
 import { __qute_decorate_member__, _mixin, _watch, _on, _channel, _require } from './decorators/helpers.js';
-import { View, Template, Render, Mixin, On, Watch, Channel, Required, DataModel, AsyncDataModel, Property, Factory, Link, List } from './decorators/index.js';
+import { View, Template, Render, Mixin, On, Watch, Channel, Required, DataModel, AsyncDataModel, Property, Link, List } from './decorators/index.js';
 
 /**
  * We cannot use Object.assign since getter are lost. So we copy the prop def itself
@@ -98,7 +98,6 @@ Qute.Required = Required;
 Qute.DataModel = DataModel;
 Qute.AsyncDataModel = AsyncDataModel;
 Qute.Property = Property;
-Qute.Factory = Factory;
 Qute.Link = Link;
 Qute.List = List;
 Qute.__qute_decorate_member__ = __qute_decorate_member__;
