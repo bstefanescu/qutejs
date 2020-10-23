@@ -5,6 +5,8 @@ import window, { document, navigator } from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import Router from '@qutejs/router';
 
+const {ViewModel, Template, Property, Channel, On} = Qute;
+
 <q:template name='TocItem'>
 	<li class='toc-item' id={"toc_item:/"+$attrs.href}>
 		<a href={$attrs.href} q:html='$attrs.title'></a>
@@ -62,6 +64,7 @@ import Router from '@qutejs/router';
 	</div>
 	<div id='sidebar'>
 		<div class='sidebar-nav'>
+            +++++++ {{ JSON.stringify(this.__QUTE_VM__) + JSON.stringify(this.toc) }} ++++++++
 			<Toc items={toc} @select='openTocItem' q:channel='toc' />
 		</div>
 	</div>
@@ -201,7 +204,15 @@ function highlightItem(root, target) {
 	active && active.classList.remove('active');
 	target.classList.add('active');
 }
-var Toc = new Qute(TocTemplate).on('click', 'a', function(e) {
+
+@Template(TocTemplate)
+class Toc extends ViewModel {
+
+connected() {
+    console.log('======================CONNNECTED', this.$attrs.items);
+}
+    @On('click', 'a')
+    handleTocItemClick(e) {
 		var parentNode = e.target.parentNode;
 		if (parentNode.matches('li.toc-section')) {
 			var href = e.target.getAttribute('href');
@@ -215,28 +226,33 @@ var Toc = new Qute(TocTemplate).on('click', 'a', function(e) {
 			this.emit('select', e.target.getAttribute('href'));
 		}
 		return false;
-}).channel(function(msg, data) {
-	if (msg === 'select') {
-		var item = document.getElementById('toc_item:'+data);
-		if (item) {
-			var cl = item.classList;
-			if (!cl.contains('active')) {
-				var section = item.closest('.toc-section');
-				section && expandSection(section);
-				highlightItem(this.$el, item);
-				if (!isInViewport(item)) {
-					item.scrollIntoView();
-				}
-			}
-		}
-	}
-});
+    }
 
-var App = new Qute(AppTemplate, {
-	get docPageContent() {
-		return this.docPage ? this.docPages[this.docPage] : '';
-	},
-	init: function(app) {
+    @Channel
+    handleMessage(msg, data) {
+        if (msg === 'select') {
+            var item = document.getElementById('toc_item:'+data);
+            if (item) {
+                var cl = item.classList;
+                if (!cl.contains('active')) {
+                    var section = item.closest('.toc-section');
+                    section && expandSection(section);
+                    highlightItem(this.$el, item);
+                    if (!isInViewport(item)) {
+                        item.scrollIntoView();
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Template(AppTemplate)
+class App extends ViewModel {
+
+	constructor(...args) {
+        super(...args);
+        var app = this.$app;
 		var self = this;
 		this.docPages = {};
 		this.toc = TOC;
@@ -256,8 +272,12 @@ var App = new Qute(AppTemplate, {
 			//this.updateDocPage(page); // no need to use self
 		});
 		//this.updateDocPage('overview')
-	},
-	connected: function() {
+	}
+
+	get docPageContent() {
+		return this.docPage ? this.docPages[this.docPage] : '';
+	}
+	connected() {
 		function runSnippet(btn) {
 			var code = btn.closest('pre').querySelector('code.language-jsq').textContent;
 			localStorage.setItem('qute.playground.snippet', code);
@@ -271,8 +291,8 @@ var App = new Qute(AppTemplate, {
 			runSnippet(e.target.parentNode);
 			return false;
 		});
-	},
-	updateDocPage: function(page) {
+	}
+	updateDocPage(page) {
 		var pageKey = 'docs/'+page+'.md';
 		if (this.docPage === pageKey) return;
 		var self = this;
@@ -293,11 +313,11 @@ var App = new Qute(AppTemplate, {
 				});
 			});
 		}
-	},
-	openTocItem: function(e) {
+	}
+	openTocItem(e) {
 		if (window.SIDEBAR_ON) hideSidebar();
 		this.router.navigate(e.detail);
-	},
+	}
 	toggleSidebar() {
 		var sidebar = document.getElementById('sidebar');
 		if (!sidebar.clientWidth) {
@@ -306,7 +326,7 @@ var App = new Qute(AppTemplate, {
 			hideSidebar();
 		}
 	}
-});
+}
 
 
 function parseJsq(text, textHandler, tagHandler) {

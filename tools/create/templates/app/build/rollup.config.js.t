@@ -33,6 +33,7 @@ let plugins = [
         ]
 	}),
 	qute(),
+    qute.decorators(),
     buble({
         objectAssign: 'Object.assign',
         exclude: ['node_modules/**', '**/*.css'],

@@ -31,6 +31,7 @@ module.exports = function(project, args) {
             plugins: [require('cssnano')()]
         }),
         qute(),
+        qute.decorators(),
         buble({
             exclude: ["node_modules/**", "**/node_modules/**"],
             include: ["**/*.js", "**/*.jsq"]

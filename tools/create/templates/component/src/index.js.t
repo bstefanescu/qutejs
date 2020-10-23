@@ -1,7 +1,11 @@
 import Qute from '@qutejs/runtime';
 import %%componentName%%Template from './index.jsq';
 
-export default Qute(%%componentName%%Template).properties({
-    verb: "coding"
-});
+const {ViewModel, Template, Property} = Qute;
 
+@Template(%%componentName%%Template)
+class %%componentName%% extends ViewModel {
+    @Property verb = "coding";
+}
+
+export default %%componentName%%;

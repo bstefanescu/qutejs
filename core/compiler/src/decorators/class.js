@@ -139,10 +139,11 @@ DecoratedClass.prototype = {
                 }
                 unit.removeDecorator(ms, decorator);
                 let decoratorCall = text.substring(decorator.start+1, decorator.end); // we removed the leading @
+                if (decoratorCall.lastIndexOf(')') === -1) decoratorCall += '()';
                 helperArgs.push(decoratorCall);
             });
             if (helperArgs.length > 0) {
-                const helperName = unit.getDecoratorHelper();
+                const helperName = unit.getDecoratorHelper(ms);
                 this.appendCode(`${helperName}(${this.name}, ${JSON.stringify(methodName)}, ${helperArgs.join(', ')});`);
             }
         });
