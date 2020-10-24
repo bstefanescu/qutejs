@@ -81,12 +81,14 @@ The playground uses the `@qutejs/dev` package to load and transpile JSQ files. Y
 <html>
   <head>
     <meta charset="utf-8"/>
-    <script type="text/javascript" src='https://unpkg.com/@qutejs/dev'></script>
+    <script type="text/javascript" src='./dev/lib/qute-dev.js'></script>
   </head>
   <body>
     <script type='text/jsq'>
         import Qute from '@qutejs/runtime';
         import window from '@qutejs/window';
+
+        const {ViewModel, Template, Property} = Qute;
 
         <q:style>
         .username { color: green; }
@@ -108,10 +110,11 @@ The playground uses the `@qutejs/dev` package to load and transpile JSQ files. Y
         </q:template>
 
         // create a ViewModel component
-        window.MyComponent = Qute(MyComponentTemplate, {
-            init() {
-                this.input = null;
-            },
+        @Template(MyComponentTemplate)
+        class MyComponent extends ViewModel {
+            input = null;
+            @Property(String) user;
+
             handleLogin() {
                 const value = this.input.value.trim();
                 if (value) {
@@ -119,13 +122,14 @@ The playground uses the `@qutejs/dev` package to load and transpile JSQ files. Y
                 } else {
                     window.alert('Enter a user name!');
                 }
-            },
+            }
+
             handleLogout() {
                 this.user = null;
             }
-        }).properties({
-            user: null
-        });
+        }
+        // export the component
+        window.MyComponent = MyComponent;
     </script>
     <script>
       // load inlined components

@@ -25,7 +25,7 @@ function SetVMAttrs(vm, parentVM, filter) {
 }
 
 function ViewModel(app, attrs) {
-	if (!app) app = new App(app);
+	if (!app) app = new Application(app);
 	var prop = {};
 	// the attributes set on vm tag which are not declared as props
 	prop.value = {};

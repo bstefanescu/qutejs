@@ -9,6 +9,8 @@
         import Qute from '@qutejs/runtime';
         import window from '@qutejs/window';
 
+        const {ViewModel, Template, Property} = Qute;
+
         <q:style>
         .username { color: green; }
         </q:style>
@@ -29,10 +31,11 @@
         </q:template>
 
         // create a ViewModel component
-        window.MyComponent = Qute(MyComponentTemplate, {
-            init() {
-                this.input = null;
-            },
+        @Template(MyComponentTemplate)
+        class MyComponent extends ViewModel {
+            input = null;
+            @Property(String) user;
+
             handleLogin() {
                 const value = this.input.value.trim();
                 if (value) {
@@ -40,13 +43,14 @@
                 } else {
                     window.alert('Enter a user name!');
                 }
-            },
+            }
+
             handleLogout() {
                 this.user = null;
             }
-        }).properties({
-            user: null
-        });
+        }
+        // export the component
+        window.MyComponent = MyComponent;
     </script>
     <script>
       // load inlined components

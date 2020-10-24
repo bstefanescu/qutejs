@@ -6,7 +6,7 @@ Here is a simple example which illustrate the main features of the Qute componen
 import Qute from '@qutejs/runtime';
 import window from '@qutejs/window';
 
-const { Template, Property } = Qute;
+const { ViewModel, Template, Property } = Qute;
 
 <q:style>
   .username { color: green; }
@@ -29,7 +29,7 @@ const { Template, Property } = Qute;
 
 // define a ViewModel component
 @Template(MyComponentTemplate)
-class MyComponent extends Qute.ViewModel {
+class MyComponent extends ViewModel {
 
     @Property user = null;
 
@@ -99,10 +99,14 @@ import Qute from '@qutejs/runtime';
 import MyComponentTemplate from './my-component.jsq';
 import './my-component.css';
 
-export default Qute(MyComponentTemplate, {
-    init() {
-        this.input = null;
-    },
+const { ViewModel, Template, Property } = Qute;
+
+@Template(MyComponentTemplate)
+class MyComponent extends ViewModel {
+
+    input = null;
+    @Property(String) user = null;
+
     handleLogin() {
         const value = this.input.value.trim();
         if (value) {
@@ -110,13 +114,14 @@ export default Qute(MyComponentTemplate, {
         } else {
             alert('Enter a user name!');
         }
-    },
+    }
+
     handleLogout() {
         this.user = null;
     }
-}).properties({
-    user: null
-});
+}
+
+export default MyComponent;
 ```
 
 ### `index.js`
@@ -160,7 +165,7 @@ In our example we defined a reactive property: `user` and a regular property: `i
 ### Regular Properties
 
 These are regular properties defined on the component object.
-You can use the `init()` method to define regular properties.
+You can use **[public class fields](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Public_class_fields)** to define regular properties, or you can simply define them in the `constructor` using `this.myField = 'some value';` statements.
 
 ### Reactive Properties
 
@@ -170,21 +175,20 @@ Each time a reactive property value changes, the component DOM is updated to ref
 
 These properties can be initialized using attributes on the component element in templates. The attribute names will be converted from kebab case to camel case to check if any reactive property matches. If a corresponding reactive property is found then it will be intiialized using the attribute value.
 
-To define reactive properties you must use the `properties()` method of the component constructor:
+You can define reactive properties through **[public class fields](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Public_class_fields)** decorated with the `@Property` decorator, or directly in the `constructor` using statements like `this.defineProp(String, 'myStringProp', 'default value')`:
 
 ```javascript
-Qute(...).properties({
-    // define your reactive properties here
-});
+@Template(MyComponentTemplate)
+class MyComponent extends ViewModel{
+    @Property(String) myStringProp = 'default value';
+}
 ```
 
 You can find more informations on properties in the **[Component Properties](#/model/properties)** section.
 
 ## Component Lifecycle Handlers
 
-You notice the usage of a `init()` method in the component model. This is a special method which will get called just after the component was instantiated and any reactive properties initialized.
-
-Qute provides several life cycle handlers like `init`, `created`, `ready`, `connected`, `disconnected`.
+Qute provides several life cycle handlers like `created`, `ready`, `connected`, `disconnected`.
 
 You can find more information on this in **[Component Life Cycle ](#/model/lifecycle)** section.
 
@@ -194,17 +198,9 @@ In the above example we registerd two click event handlers: `handleLogin` and `h
 
 For more about DOM events and DOM event handlers go to the **[Working with DOM Events](#/model/events)** section.
 
-## The `Qute(Template, Model)` Function
-
-This function is creating a `ViewModel` component constructor, given a template or rendering function and an optional component model.
-
-The returned constructor provides the following chainable methods to further configure the component: `properties()`, `watch()`, `on()`, `channel()` and `mixin()`.
-
-For more information on these methods see the **[Qute API](#/advanced/api)** section.
-
 ## The Component Instance
 
-The component constructor created using `Qute()` can be used as an element in templates - using the case sentsitive JavaScript identifier name or the kebab case component name as discussed in the **[Overview](#/overview)** section - or can be directly instantiated using the `new` JavaScript operator.
+`ViewModel` component instances can be used as an element in templates - using the case sentsitive JavaScript identifier name or the kebab case component name as discussed in the **[Overview](#/overview)** section.
 
 You only need to instantiate **root components**. Any other components will be automatically instantiated by other components when rendered if they are referenced from the template.
 
@@ -213,8 +209,6 @@ Usually in an application the root component is instantiated in the application 
 To mount the component you just call the `mount(targetElement[, insertBefore])` method. If no target element is specified the component element will be appended to the `document.body` element, otherwise it will be either appended as a child of the targetb element if insertBefore is false, either before that element if insertBefore is true.
 
 The targetElement can be passed either as a DOM element, either as an ID of a DOM element.
-
-For more informations on the component instance methods see the **[Qute API](#/advanced/api)** section.
 
 ## Using Browser Globals: The `@qutejs/window` dependency
 
