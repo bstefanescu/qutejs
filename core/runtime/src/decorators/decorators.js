@@ -2,7 +2,7 @@ import { ERR } from '@qutejs/commons/src';
 import {__qute_decorate_member__, _template, _mixin, _watch, _on, _channel, _require } from './helpers.js';
 
 /**
- * To be used on Qute.App derived classes
+ * To be used on Qute.Application derived classes
  * @param {*} renderFn
  */
 function View(VM) {
@@ -56,7 +56,7 @@ function DataModel(id) {
         } else if (target.app) {
             app = target.app;
         } else {
-            ERR('The @DataModel decorator is meant to be used on Qute.App or Qute.Service classes, or on any class providig a `app` field of type Qute.App!');
+            ERR('The @DataModel decorator is meant to be used on Qute.Application or Qute.Service classes, or on any class providig a `app` field of type Qute.Application!');
         }
         app.defineProp(id, value).link(target, key);
     }
@@ -70,7 +70,7 @@ function AsyncDataModel(id) {
         } else if (target.app) {
             app = target.app;
         } else {
-            ERR('The @DataModel decorator is meant to be used on Qute.App or Qute.Service classes, or on any class providig a `app` field of type Qute.App!');
+            ERR('The @DataModel decorator is meant to be used on Qute.Application or Qute.Service classes, or on any class providig a `app` field of type Qute.Application!');
         }
         app.defineAsyncProp(id, value).link(target, key);
     }

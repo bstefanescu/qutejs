@@ -131,7 +131,7 @@ class PageManager extends Qute.Service {
 }
 
 @View(RootView)
-class MyApp extends Qute.App {
+class MyApp extends Qute.Application {
   @DataModel('Session')
   session = new SessionManager(this);
 

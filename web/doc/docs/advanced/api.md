@@ -288,7 +288,7 @@ Return a DOM element (the root of the rendered elements tree).
 
 Define a method on `ViewModel` and template component prototype. Can be used to extend the component API. See **[Internationalization Support](#/app/i18n)** for an example.
 
-### `Qute.App`
+### `Qute.Application`
 
 The **Qute Application** type.
 

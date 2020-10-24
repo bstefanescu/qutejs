@@ -4,7 +4,7 @@ import { stopEvent, filterKeys, chainFnAfter } from './utils.js';
 
 import Rendering from './rendering.js';
 import UpdateQueue from './update.js';
-import App from './app.js';
+import Application from './app.js';
 import {applyListeners, SetProp, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
 import Emitter from './emit.js';
 import {applyUserDirectives} from './q-attr.js';

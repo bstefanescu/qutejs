@@ -163,7 +163,7 @@ const ChildTwo = Qute(ChildTwoTemplate, {
 	}
 });
 
-var app = new Qute.App();
+var app = new Qute.Application();
 app.subscribe('time-channel', function(message) {
 	var date = new Date();
 	if (message === 'seconds') {
@@ -226,7 +226,7 @@ const ChildTwo = Qute(ChildTwoTemplate, {
     minutes: ''
 });
 
-var app = new Qute.App();
+var app = new Qute.Application();
 app.subscribe('time-channel', function(message, cb) {
 	var date = new Date();
 	if (message === 'seconds') {
@@ -299,7 +299,7 @@ div.id = 'app2';
 document.body.appendChild(div);
 
 // create the shared application instance
-var app = new Qute.App();
+var app = new Qute.Application();
 // mount roots
 new Root1(app).mount('app1');
 new Root2(app).mount('app2');

@@ -64,7 +64,6 @@ const {ViewModel, Template, Property, Channel, On} = Qute;
 	</div>
 	<div id='sidebar'>
 		<div class='sidebar-nav'>
-            +++++++ {{ JSON.stringify(this.__QUTE_VM__) + JSON.stringify(this.toc) }} ++++++++
 			<Toc items={toc} @select='openTocItem' q:channel='toc' />
 		</div>
 	</div>

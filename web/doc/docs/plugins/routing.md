@@ -21,7 +21,7 @@ router.add('*', function() {
 })
 
 // create the Qute application and pass the router instance as an app property.
-var app = new Qute.App();
+var app = new Qute.Application();
 app.router = router;
 
 // define the root component
@@ -39,7 +39,7 @@ If you want to hide the router instance from components then you can create a ch
 var router = new Router();
 
 // create the Qute application
-var app = new Qute.App();
+var app = new Qute.Application();
 
 // listen to 'route' requests
 app.subscribe('route', function(key) {
@@ -85,7 +85,7 @@ var pages = {
 }
 
 // create the Qute application
-var app = new Qute.App();
+var app = new Qute.Application();
 
 // create the router
 function Router(app) {
@@ -134,7 +134,7 @@ var router = new Router({
 });
 
 // initialize the app here
-var app = new Qute.App();
+var app = new Qute.Application();
 // create the root component
 var Root = Qute(RootTemplate);
 // mount the application

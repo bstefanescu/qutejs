@@ -26,7 +26,7 @@ You can also register a listener on the property to be notified when the propert
 ```jsq
 import Qute from '@qutejs/runtime';
 
-var app = new Qute.App();
+var app = new Qute.Application();
 var prop = app.defineProp("Session/user", null);
 prop.addChangeListener(function(newValue, oldValue) {
 	alert('user object changed: '+JSON.stringify(newValue));
@@ -53,7 +53,7 @@ function SessionManager(app) {
 		this.user = null;
 	}
 }
-var app = new Qute.App();
+var app = new Qute.Application();
 var sm = new SessionManager(app);
 app.prop('Session/user').addChangeListener(function(newValue, oldValue) {
 	alert('user object changed: '+JSON.stringify(newValue));
@@ -86,26 +86,29 @@ This is considerably helping to implement asynchronous actions in UI components,
 To bind a reactive component property to an application property you should use the application property as the initial value of the reactive property.  \
 Application properties which are bound to component properties will trigger a component update each time the property changes.
 
-**Example**
+You can link an application data model property to a component property either using a property of type `Link`, either using the `Link` decorator:
+
+### Using a `Link` property
 
 ```javascript
-Qute(ComponentTemplate).properties(app => ({
-    myReactiveProperty: app.prop('MyApplicationProperty')
-}));
+import Qute} from '@qutejs/runtime';
+const {ViewModel, Template, Link} = Qute;
+
+class MyComponent extends ViewModel {
+    @Property(Link, 'MyApplicationProperty') myReactiveProperty;
+}
 ```
 
-Qute is also providing a `_Link` property type which is doing the same as the previous code snippet but in a more expressive way:
+### Using the `Link` decorator
 
 ```javascript
-import { _Link } from '@qutejs/types';
+import Qute} from '@qutejs/runtime';
+const {ViewModel, Template, Link} = Qute;
 
-Qute(ComponentTemplate).properties({
-    myReactiveProperty: _Link('MyApplicationProperty')
-});
+class MyComponent extends ViewModel {
+    @Link('MyApplicationProperty') myReactiveProperty;
+}
 ```
-
-See the **[Property Types](#/model/proptypes)** page for more information on the `_Link` property type.
-
 
 ### Example - Binding an async property to a ViewModel Component
 
@@ -113,6 +116,8 @@ See the **[Property Types](#/model/proptypes)** page for more information on the
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import qSpinner from '@qutejs/spinner';
+
+const {ViewModel, Template, Link, Service, AsyncDataModel, DataModel, View, Application} = Qute;
 
 <q:template name='RootTemplate'>
 	<if value='user'>
@@ -124,33 +129,35 @@ import qSpinner from '@qutejs/spinner';
 	</if>
 </q:template>
 
-var Root = Qute(RootTemplate, {
-	init(app) {
-		this.session = app.session;
-	}
-}).properties(app => ({
-    user: app.prop('Session/user'), // bind the async user property
-    loginPending: app.prop('Session/user/pending') // bind the user/pending property
-}));
+@Template(RootTemplate)
+class RootComponent extends ViewModel {
+    @Link('Session/user') user;
+    @Link('Session/user/pending') loginPending;
+    @Link('Session') session;
+}
 
-function SessionManager(app) {
-	// this will create an application property named 'Session/user'
-	// and then will create a local mirror property named 'user'.
-	app.defineAsyncProp("Session/user", null).link(this, 'user');
-	this.login = function(user) {
+class SessionManager extends Service {
+    @AsyncDataModel('Session/user') user; // publish the user as an async application property
+
+	login(user) {
 		// simulate an async login action
 		this.user = new Promise((resolve, reject) => {
 			window.setTimeout(() => { resolve(user) }, 1000);
 		});
 	}
-	this.logout = function() {
+
+	logout() {
 		this.user = null;
 	}
 }
 
-var app = new Qute.App();
-app.session = new SessionManager(app);
-new Root(app).mount('app');
+@View(RootComponent) // bind the application to the root component
+class MyApp extends Application {
+    @DataModel('Session') // publish the session manager inn the application data model as the property 'Session'
+    session = new SessionManager(this);
+}
+
+new MyApp().mount('app');
 ```
 
 ## Application properties vs. Component properties

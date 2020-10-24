@@ -29,7 +29,7 @@ function registerQuteDecorator(meta) {
 
 registerQuteDecorator({
     name: D_View,
-    superClass: 'Qute.App'
+    superClass: 'Qute.Application'
 });
 registerQuteDecorator({
     name: D_Template,

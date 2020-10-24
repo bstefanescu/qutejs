@@ -6,7 +6,7 @@ import Qute from '@qutejs/runtime';
 const { Render, Template, Prop, Watch, Mixin, Required, DataModel, AsyncDataModel, View} = Qute;
 
 @ViewModel(MyViewModel)
-class MyApp extends Qute.App {
+class MyApp extends Qute.Application {
 
     @Service('Router')
     router = new Router(this, config);

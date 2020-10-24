@@ -22,19 +22,45 @@ It's time to adopt the **green programming**!
 Some quick facts:
 
 * Small and fast **MVVM** framework for building modern javascript applications or UI components.  \
-Under **8K** gzipped.
+About **9K** gzipped.
 * Resource friendly: No Virtual DOM. It's **green software**!
-* **Quickly design components** using the playground or browser inlined components.
+* Friendly and concise API: uses JavaScript **classes** and **decorators** to define components.
+* **Quickly design components** using the playground.
 * Provides a **project generator** tool for a modern development experience.
 * Development extension for **Visual Studio Code**: **[vscode-qutejs](https://marketplace.visualstudio.com/items?itemName=quandora.vscode-qutejs)**.
 * You can reuse any plain javascript UI component (e.g. jQuey UI etc.).
-* Provides a concise **Application Data Model** which replace the verbose state management frameworks like **redux**. You write less code and focus on business logic.  \
-Though, you can still integrate **redux** like state managers with Qute if needed.
-* Accepts both xml and jsx like attribute binding notations.
+* Provides a concise **Application Data Model** which replace the verbose state management frameworks like **redux**. You write less code and focus on business logic.
 * Provides a message bus between components: solve edge case problems like communicating between components in different roots.
+* Accepts both xml and jsx like element names an attribute binding notations.
 * DOM updates are optimized. Updates are very fast - no reconciliation is needed. Only nodes listening for changes are updated.
 * **ES6** compliant.
 * **MIT** License.
 
-Want more? Go to **[Getting Started](#/start/hello)** section!
+## Example
+
+```jsq
+import Qute from '@qutejs/runtime';
+
+const {ViewModel, Template, Required, Property} = Qute;
+
+<q:template name='MyButtonTemplate'>
+    <button @click='handleClick'>{{label}}</button>
+</q:template>
+
+@Template(MyButtonTemplate)
+class MyButton extends ViewModel {
+    @Required @Property(String) label;
+
+    handleClick() {
+        alert('Hello World!');
+    }
+}
+
+// the root component
+<q:template export>
+    <MyButton label='Click me!' />
+</q:template>
+```
+
+Want more? Go to **[Overview](#/overview)** section!
 

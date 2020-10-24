@@ -93,13 +93,13 @@ function AsyncProp(app, key, defValue) {
 }
 AsyncProp.prototype = AsyncPropProto;
 
-export default function App(data) {
+export default function Application(data) {
 	this.topics = {};
 	this.data = {};
 	data && this.putAll(data);
 }
 
-App.prototype = {
+Application.prototype = {
     __QUTE_APP__: true,
     // API for custom apps
     mount(elOrId, insertBefore) {
@@ -188,6 +188,6 @@ App.prototype = {
     }
 }
 
-App.Prop = Prop;
-App.AsyncProp = AsyncProp;
+Application.Prop = Prop;
+Application.AsyncProp = AsyncProp;
 

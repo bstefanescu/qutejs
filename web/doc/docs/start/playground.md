@@ -31,7 +31,7 @@ import Qute from '@qutejs/runtime';
 <q:template name='HelloWorldTemplate'>
     <div>Hello world</div>
 </q:template>
-const app = new Qute.App();
+const app = new Qute.Application();
 const HelloComponent = Qute(HelloWorldTemplate);
 new HelloComponent(app).mount('app');
 ```

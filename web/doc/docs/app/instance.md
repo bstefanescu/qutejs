@@ -5,9 +5,9 @@ a business logic and a presentation logic.
 
 In **Qute** the presentation layer is made from the UI components you define using Qute ViewModel or template components.
 
-The application model entry point is the `Qute.App` object that you need to create and share between all UI components of the application. Here you can define the business logic and the data model of the application. The application data you define can then be easily bound to any UI component.
+The application model entry point is the `Qute.Application` object that you need to create and share between all UI components of the application. Here you can define the business logic and the data model of the application. The application data you define can then be easily bound to any UI component.
 
-For generic components like popups, modals etc. you don't need an application model. The component properties are enough to keep the state of a component. In that case you don't even need to create a `Qute.App` object. This kind of components will inherit the current application instance when used in a component tree.
+For generic components like popups, modals etc. you don't need an application model. The component properties are enough to keep the state of a component. In that case you don't even need to create a `Qute.Application` object. This kind of components will inherit the current application instance when used in a component tree.
 
 To bind an application instance to a component tree you need to pass the instance to the root component. If you don't pass an application instance to the root component, an empty instance will be automatically created and used by the root component.
 
@@ -18,7 +18,7 @@ import Qute from '@qutejs/runtime';
 	<div>Hello World!</div>
 </q:template>
 
-var app = new Qute.App();
+var app = new Qute.Application();
 // create the root component constructor using 'my-root' as a template
 var MyRoot = Qute(MyRootTemplate);
 // mount the root component in the element which ID is 'app'
@@ -97,7 +97,7 @@ logic.
 
 ## The Application API
 
-### `Qute.App(optionalData)`
+### `Qute.Application(optionalData)`
 
 The Context constructor. Creates a new context and fill it with properties of the `optionalData` argument if any was specified.
 
@@ -139,8 +139,8 @@ The method return the property object.
 You can also define an application property using the constructor:
 
 ```javascript
-var app = new Qute.App();
-new Qute.App.Prop(app, name, value);
+var app = new Qute.Application();
+new Qute.Application.Prop(app, name, value);
 ```
 
 ### `defineAsyncProp(name, value)`
@@ -154,8 +154,8 @@ promise.
 You can also define an async application property using the constructor:
 
 ```javascript
-var app = new Qute.App();
-new Qute.App.AsyncProp(app, name, value);
+var app = new Qute.Application();
+new Qute.Application.AsyncProp(app, name, value);
 ```
 
 ### `prop(name)`
@@ -183,7 +183,7 @@ This is equivalent to `new VM(app)` where app is the application instance.
 Using this method you can write:
 
 ```javascript
-var app = new Qute.App();
+var app = new Qute.Application();
 // init app here
 // ...
 // define root component
@@ -195,7 +195,7 @@ app.view(Root).mount('app');
 instead of
 
 ```javascript
-var app = new Qute.App();
+var app = new Qute.Application();
 // init app here
 // ...
 // define root component

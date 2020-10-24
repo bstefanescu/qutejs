@@ -4,7 +4,7 @@ import {ERR} from '@qutejs/commons';
 import UpdateQueue from './update.js';
 import Rendering from './rendering.js';
 import ViewModel from './vm.js';
-import App from './app.js';
+import Application from './app.js';
 import Service from './service.js';
 import { registerDirective } from './q-attr.js';
 
@@ -81,7 +81,7 @@ function Qute(renderFn, def) {
 }
 
 Qute.ViewModel = ViewModel;
-Qute.App = App;
+Qute.Application = Application;
 Qute.UpdateQueue = UpdateQueue;
 Qute.Rendering = Rendering;
 Qute.Service = Service;
