@@ -83,10 +83,6 @@ DecoratedUnit.load = function(ast) {
 
             }
         } else if (type === 'ClassDeclaration') {
-            // fix for decorators bug
-            if (Array.isArray(nodes[i-1]) && !node.decorators.length) {
-                node.decorators = nodes[i-1];
-            }
             var dclass = loadClass(node);
             if (dclass.hasDecorators()) {
                 classes.push(dclass);
