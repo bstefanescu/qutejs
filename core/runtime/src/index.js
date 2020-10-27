@@ -8,8 +8,9 @@ import Application from './app.js';
 import Service from './service.js';
 import { registerDirective } from './q-attr.js';
 
-import { __qute_decorate_member__, _mixin, _watch, _on, _channel, _require } from './decorators/helpers.js';
-import { View, Template, Render, Mixin, On, Watch, Channel, Required, DataModel, AsyncDataModel, Property, Link, List } from './decorators/index.js';
+import { _mixin, _watch, _on, _channel, _require } from './decorators/helpers.js';
+import { View, Template, Render, Mixin, On, Watch, Channel, Required, DataModel, AsyncDataModel, Property, Link } from './decorators/index.js';
+import List from './list.js';
 
 /**
  * We cannot use Object.assign since getter are lost. So we copy the prop def itself
@@ -100,7 +101,6 @@ Qute.AsyncDataModel = AsyncDataModel;
 Qute.Property = Property;
 Qute.Link = Link;
 Qute.List = List;
-Qute.__qute_decorate_member__ = __qute_decorate_member__;
 
 // render a functional template given its render function name and a model
 Qute.render = function(renderFn, model) {

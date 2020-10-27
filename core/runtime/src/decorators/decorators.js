@@ -1,5 +1,5 @@
 import { ERR } from '@qutejs/commons/src';
-import {__qute_decorate_member__, _template, _mixin, _watch, _on, _channel, _require } from './helpers.js';
+import { _template, _mixin, _watch, _on, _channel, _require } from './helpers.js';
 
 /**
  * To be used on Qute.Application derived classes

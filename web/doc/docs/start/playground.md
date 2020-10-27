@@ -4,18 +4,24 @@ To play around with components you can use the **[Qute Playground](/playground/i
 
 To write a component in the playground, you should write all the component parts (the javascriopt code, the templates and the styles) in a single file in `JSQ` format.
 
-You don't need to explicitely mount the component in the preview panel. Just use an `export default` on the component constructor you want to mount. The playground will mount it for you:
+You don't need to explicitely mount the component in the preview panel. Just use an `export default` on the component class you want to mount. The playground will mount it for you:
 
 ```jsq
 import Qute from '@qutejs/runtime';
 
+const {ViewModel, Template} = Qute;
+
 <q:template name='HelloWorldTemplate'>
     <div>Hello world</div>
 </q:template>
-export default Qute(HelloWorldTemplate);
+
+@Template(HelloWorldTemplate)
+class HelloWorld extends ViewModel {
+}
+export default HelloWorld;
 ```
 
-You can also mount **template components** not only `ViewModel` components. Just use the export attribute on the template you want to mount:
+You can also mount **template components**. Just use the export attribute on the template you want to mount:
 
 ```jsq
 <q:template export>
@@ -23,17 +29,23 @@ You can also mount **template components** not only `ViewModel` components. Just
 </q:template>
 ```
 
-To test some features like the **Qute application instance** you need to mount yourself the component if needed. Just use `app` as the target element:
+To test some features like the **Qute application instance** you need to mount yourself the component. Just use `app` as the target element:
 
 ```jsq
 import Qute from '@qutejs/runtime';
 
+const {ViewModel, Template} = Qute;
+
 <q:template name='HelloWorldTemplate'>
     <div>Hello world</div>
 </q:template>
+
+@Template(HelloWorldTemplate)
+class HelloWorld extends ViewModel {
+}
+
 const app = new Qute.Application();
-const HelloComponent = Qute(HelloWorldTemplate);
-new HelloComponent(app).mount('app');
+new HelloWorld(app).mount('app');
 ```
 
 **Note** that all the runnable examples in the documentation are also opened in the playground!
@@ -70,7 +82,7 @@ All Qute libraries and components are available from **unpkg.com**.
 
 For example, to download the latest **Qute runtime** you can use: https://unpkg.com/@qutejs/runtime
 
-## Using qute transpiler in browser: the `@qutejs/dev` package
+## Using the Qute compiler in browser: the `@qutejs/dev` package
 
 The playground uses the `@qutejs/dev` package to load and transpile JSQ files. You can use it yourself if you need to transpile JSQ content in the browser, but this should be never used in production.
 

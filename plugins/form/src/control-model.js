@@ -1,4 +1,6 @@
-import { ViewModel } from '@qutejs/runtime';
+import Qute from '@qutejs/runtime';
+
+const {ViewModel} = Qute;
 
 // impl a q:model that can be used by components implementing custom form controls
 // the requirement for the component using this directive is to provide

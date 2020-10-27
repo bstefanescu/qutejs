@@ -1,32 +1,6 @@
 /* To be shared by both class decorators in './index.js' and Qute facade */
 
 /**
- * Helper fucntion to be used by the compiler to decorate a class member: field, method, getter.
- * In case of decorators which take arguments the decorator method should be the method
- * returened after passing the arguments.
- * Ex: `__decorate(MyComponent, Watch("myProp"), "watchMyProp")`
- */
-export function __qute_decorate_member__(theClass, name, decorator) {
-    const proto = theClass.prototype;
-    let r = null;
-    if (arguments.length > 3) {
-        let doDefine = false;
-        r = Object.getOwnPropertyDescriptor(proto, name);
-        for (var i=2,l=arguments.length; i<l; i++) {
-            let newR = arguments[i](proto, name, r);
-            if (newR) {
-                r = newR;
-                doDefine = true;
-            }
-        }
-        if (doDefine) Object.defineProperty(proto, name, r);
-    } else {
-        r = decorator(proto, name, Object.getOwnPropertyDescriptor(proto, name));
-        if (r) Object.defineProperty(proto, name, r);
-    }
-}
-
-/**
  * Assign a rendering function to the given ViewModel prototype
  * @param {*} VMProto
  * @param {*} fn

@@ -34,8 +34,10 @@ class MyViewModel extends Qute.ViewModel {
 
     @Watch('myString') @log
     watchProp() {
-
     }
+
+    @On('click')
+    onClick() {}
 }`;
 
 const r = new Transpiler().transpile(code);

@@ -1,3 +1,20 @@
+
+function decorateMethod(methodName, decoratorCalls) {
+    if (!decoratorCalls.length) return null;
+    const name = JSON.stringify(methodName);
+    let callDefine, out = `  d = Object.getOwnPropertyDescriptor(proto, ${name});\n`;
+    decoratorCalls.forEach(dcall => {
+        if (dcall.void) {
+            out += `  ${dcall.value}(proto, ${name}, d);\n`;
+        } else {
+            callDefine = true;
+            out += `  d = ${dcall.value}(proto, ${name}, d)) || d;\n`;
+        }
+    });
+    if (callDefine) out += `  Object.defineProperty(proto, ${name}, d);\n`;
+    return out;
+}
+
 function getDefinePropCall(text, field, decorator) {
     // args: Type, key, value, arg
     var type, key, value, arg;
@@ -122,9 +139,10 @@ DecoratedClass.prototype = {
 
     transpileMethods(ms, methods, unit) {
         let text = ms.original;
+        let methodsToDecorate = [];
         this.methods.forEach(method => {
             const methodName = method.key.name;
-            const helperArgs = [];
+            const methodDecorators = [];
             method.decorators.forEach(decorator => {
                 const info = unit.getDecoratorInfo(decorator);
                 if (info) { // a Qute decorator
@@ -133,13 +151,22 @@ DecoratedClass.prototype = {
                 unit.removeDecorator(ms, decorator);
                 let decoratorCall = text.substring(decorator.start+1, decorator.end); // we removed the leading @
                 if (decoratorCall.lastIndexOf(')') === -1) decoratorCall += '()';
-                helperArgs.push(decoratorCall);
+                methodDecorators.push({value: decoratorCall, void: info && info.void});
             });
-            if (helperArgs.length > 0) {
-                const helperName = unit.getDecoratorHelper(ms);
-                this.appendCode(`${helperName}(${this.name}, ${JSON.stringify(methodName)}, ${helperArgs.join(', ')});`);
+            if (methodDecorators.length > 0) {
+                methodsToDecorate.push({
+                    name: methodName,
+                    decorators: methodDecorators
+                });
             }
         });
+        if (methodsToDecorate.length > 0) {
+            let snippets = [];
+            methodsToDecorate.forEach(m => {
+                snippets.push(decorateMethod(m.name, m.decorators));
+            })
+            this.appendCode(`(function(proto) {\n  let d;\n${snippets.join('')}})(${this.name}.prototype);`);
+        }
     },
 
     injectCtorStmts(ms, stmts) {

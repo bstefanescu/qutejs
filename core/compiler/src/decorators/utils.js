@@ -29,50 +29,61 @@ function registerQuteDecorator(meta) {
 
 registerQuteDecorator({
     name: D_View,
-    superClass: 'Qute.Application'
+    superClass: 'Qute.Application',
+    void: true
 });
 registerQuteDecorator({
     name: D_Template,
-    superClass: 'Qute.ViewModel'
+    superClass: 'Qute.ViewModel',
+    void: true
 });
 registerQuteDecorator({
     name: D_Render,
-    superClass: 'Qute.ViewModel'
+    superClass: 'Qute.ViewModel',
+    void: true
 });
 registerQuteDecorator({
-    name: D_Mixin
+    name: D_Mixin,
+    void: true
 });
 registerQuteDecorator({
     name: D_Watch,
-    superClass: 'Qute.ViewModel'
+    superClass: 'Qute.ViewModel',
+    void: true
 });
 registerQuteDecorator({
     name: D_On,
-    superClass: 'Qute.ViewModel'
+    superClass: 'Qute.ViewModel',
+    void: true
 });
 registerQuteDecorator({
     name: D_Channel,
-    superClass: 'Qute.ViewModel'
+    superClass: 'Qute.ViewModel',
+    void: true
 });
 registerQuteDecorator({
     name: D_Prop,
     superClass: 'Qute.ViewModel',
-    vmProp: true
+    vmProp: true,
+    void: true
 });
 registerQuteDecorator({
     name: D_Required,
-    required: true
+    required: true,
+    void: true
 });
 registerQuteDecorator({
     name: D_DataModel,
     superClass: 'Qute.Service',
-    svcProp: true
+    svcProp: true,
+    void: true
 });
 registerQuteDecorator({
     name: D_AsyncDataModel,
     superClass: 'Qute.Service',
     svcProp: true,
-    async: true
+    async: true,
+    void: true
 });
 
 function getDecoratorInfo(name) {

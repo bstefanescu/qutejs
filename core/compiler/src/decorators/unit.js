@@ -1,8 +1,6 @@
 import { removeDecorator, removeField, commentDecorator, commentField, getDecoratorInfo, getDecoratorName } from './utils.js';
 import DecoratedClass from './class.js';
 
-const QUTE_DECORATE_HELPER = '__qute_decorate_member__';
-
 export default function DecoratedUnit(quteImport, classes) {
     this.comment = false;
     this.quteImport = quteImport;
@@ -20,6 +18,7 @@ DecoratedUnit.prototype = {
         return transpiled;
     },
     getDecoratorInfo(deco) {
+        if (!this.quteImport) return null; // No Qute import found so we assume this is not a Qute decorator
         const name = getDecoratorName(deco, path => {
             if (path[0] === this.quteImport) path[0] = 'Qute';
             return path.join('.');
@@ -33,13 +32,6 @@ DecoratedUnit.prototype = {
     removeField(ms, field) {
         var fn = this.comment ? commentField : removeField;
         fn(ms, field.start, field.end);
-    },
-    getDecoratorHelper(ms) {
-        if (!this.quteImport) {
-            ms.prepend(`import Qute from '@qutejs/runtime';\n`);
-            this.quteImport = 'Qute';
-        }
-        return `${this.quteImport}.${QUTE_DECORATE_HELPER}`;
     },
     getPropMeta(property) {
         let meta = null;
