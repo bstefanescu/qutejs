@@ -1,7 +1,6 @@
-import Property from './property.js';
-import Link from './link.js';
-
-import {
+export { default as Property } from './property.js';
+export { default as Link } from './link.js';
+export {
     View,
     Template,
     Mixin,
@@ -11,19 +10,3 @@ import {
     Required,
     DataModel,
     AsyncDataModel } from './decorators.js';
-
-export {
-    // decorators API
-    View,
-    Template,
-    Template as Render,
-    Mixin,
-    On,
-    Watch,
-    Channel,
-    Required,
-    DataModel,
-    AsyncDataModel,
-    Property,
-    Link
-}

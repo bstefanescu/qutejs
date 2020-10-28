@@ -9,7 +9,7 @@ import Service from './service.js';
 import { registerDirective } from './q-attr.js';
 
 import { _mixin, _watch, _on, _channel, _require } from './decorators/helpers.js';
-import { View, Template, Render, Mixin, On, Watch, Channel, Required, DataModel, AsyncDataModel, Property, Link } from './decorators/index.js';
+import { View, Template, Mixin, On, Watch, Channel, Required, DataModel, AsyncDataModel, Property, Link } from './decorators/index.js';
 import List from './list.js';
 
 /**
@@ -90,7 +90,7 @@ Qute.Service = Service;
 // decorators an types
 Qute.View = View;
 Qute.Template = Template;
-Qute.Render = Render;
+Qute.Render = Template; // export Template under the name Render too.
 Qute.Mixin = Mixin;
 Qute.On = On;
 Qute.Watch = Watch;
