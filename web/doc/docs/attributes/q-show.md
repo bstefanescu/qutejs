@@ -26,6 +26,7 @@ Example:
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
 <q:template name='TestShow'>
     <div><slot/></div>
@@ -39,8 +40,10 @@ import Qute from '@qutejs/runtime';
 </q:template>
 
 
-export default Qute(RootTemplate).properties({
-    showIt: true
-});
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property showIt = true;
+}
+export default Root;
 ```
 

@@ -29,6 +29,7 @@ Here is a simple tabs panel implementation:
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
 <q:template name='TabOne'>
   <div>
@@ -46,7 +47,7 @@ import Qute from '@qutejs/runtime';
   </div>
 </q:template>
 
-<q:template name='MyTabs' import='TabOne, TabTwo'>
+<q:template name='MyTabsTemplate' import='TabOne, TabTwo'>
   <div>
 	<ul class='tabs'>
 	  <li><a href='#tab1' @click={activeTab=TabOne}>Tab 1</a></li>
@@ -57,14 +58,16 @@ import Qute from '@qutejs/runtime';
   </div>
 </q:template>
 
-export default Qute(MyTabs, {
+@Template(MyTabsTemplate)
+class MyTabs extends ViewModel {
+    @Property user = 'Foo';
+    @Property activeTab =  null // no tab selected by default
+
 	viewChanged() {
 		console.log('View changed: ', this.activeTab ? this.activeTab.name : null);
 	}
-}).properties({
-    user: 'Foo',
-    activeTab: null // no tab selected by default
-});
+}
+export default MyTabs;
 ```
 
 **Note** that we used the `import` attribute on the template to be able to reference the template functions TabOne and TabTwo in the template javascript blocks.

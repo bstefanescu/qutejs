@@ -12,6 +12,7 @@ Let's start with a simple counter:
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
 // ------------------------------------------ Templates
 
@@ -23,17 +24,16 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-<q:template name='RootTemplate'>
+<q:template export>
 	<my-counter value='2' />
 </q:template>
 
 // ------------------------------------------ Javascript
 
-const MyCounter = Qute(CounterTemplate).properties({
-    value: 0
-});
-
-export default Qute(RootTemplate);
+@Template(CounterTemplate)
+class MyCounter extends ViewModel {
+    @Property value = 0;
+}
 ```
 
 To transform the counter component into a usable form control we need to use a hidden input to store the counter value and to add some more features, like a step, a range of legal values and to trigger a `change` event when the counter value changes.
@@ -50,6 +50,7 @@ Let's update the component as follows:
 ```jsq
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
 // ------------------------------------------ Templates
 
@@ -62,19 +63,28 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-<q:template name='RootTemplate'>
+<q:template export>
 	<my-counter value='2' step='2' min='0' max='8' @change='e=>console.log("counter changed", e.detail)'/>
 </q:template>
 
 // ------------------------------------------ Javascript
 
-const MyCounter = Qute(CounterTemplate, {
+@Template(CounterTemplate)
+class MyCounter extends ViewModel {
+    @Property name;
+    @Property value = 0;
+    @Property step = 1;
+    @Property min = Number.MIN_VALUE;
+    @Property max = Number.MAX_VALUE;
+
 	get canIncrement() {
 		return this.value < this.max;
-	},
+	}
+
 	get canDecrement() {
 		return this.value > this.min;
-	},
+	}
+
 	decr() {
 		var value = this.value - this.step;
 		if (value >= this.min) {
@@ -82,7 +92,8 @@ const MyCounter = Qute(CounterTemplate, {
 			this._fireChangeEvent(value);
 		}
 		return false;
-	},
+	}
+
 	incr() {
 		var value = this.value + this.step;
 		if (value <= this.max) {
@@ -90,7 +101,8 @@ const MyCounter = Qute(CounterTemplate, {
 			this._fireChangeEvent(value);
 		}
 		return false;
-	},
+	}
+
 	_fireChangeEvent(value) {
 		var input = this.input;
 		// run after the UI is updated (so that the wrapped input is updated too)
@@ -98,15 +110,7 @@ const MyCounter = Qute(CounterTemplate, {
 			input.dispatchEvent(new window.CustomEvent('change', {bubbles:true, detail: value}));
 		});
 	}
-}).properties({
-    name: null,
-    value: 0,
-    step: 1,
-    min: Number.MIN_VALUE,
-    max: Number.MAX_VALUE
-});
-
-export default Qute(RootTemplate);
+}
 ```
 
 ## Validation
@@ -126,7 +130,8 @@ Replacing `<input type='hidden' name={name} value={value}>` by `<input type='num
 Another way to wrap an input is to dynamically insert a input element at component creation (instead of defining it in the template). This can be done for example in the `created` life cycle method:
 
 ```javascript
-Qute(CounterTemplate, {
+@Template(CounterTemplate)
+class MyCounter extends ViewModel {
 	...
 	created(el) {
 		var input = document.createElement('INPUT');
@@ -159,12 +164,13 @@ Here is the final code for the counter component:
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import FormPlugin from '@qutejs/form';
+const { ViewModel, Template, Property } = Qute;
 
 // ------------------------------------------ Templates
 
 <q:template name='CounterTemplate'>
 	<div style='display:inline-block'>
-		<input type='number' name={name} value={value} min={min} max={max} style='display:none' ?required={required} q:call='el => this.input = el'/>
+		<input type='number' name={name} value={value} min={min} max={max} style='display:none' ?required={required} q:call='el => this._input = el'/>
 		<button @click='decr' ?disabled='!canDecrement'>-</button>
 		{{value}}
 		<button @click='incr' ?disabled='!canIncrement'>+</button>
@@ -175,16 +181,25 @@ import FormPlugin from '@qutejs/form';
 
 Qute.install(FormPlugin);
 
-const MyCounter = Qute(CounterTemplate, {
-	init() {
-		this.input = null;
-	},
+@Template(CounterTemplate)
+class MyCounter extends ViewModel {
+    _input;
+
+    @Property name;
+    @Property required = false;
+    @Property value = 0;
+    @Property step = 1;
+    @Property min = Number.MIN_VALUE;
+    @Property max = Number.MAX_VALUE;
+
 	get canIncrement() {
 		return this.value < this.max;
-	},
+	}
+
 	get canDecrement() {
 		return this.value > this.min;
-	},
+	}
+
 	decr() {
 		var value = this.value - this.step;
 		if (value >= this.min) {
@@ -192,7 +207,8 @@ const MyCounter = Qute(CounterTemplate, {
 			this._fireChangeEvent(value);
 		}
 		return false;
-	},
+	}
+
 	incr() {
 		var value = this.value + this.step;
 		if (value <= this.max) {
@@ -200,23 +216,16 @@ const MyCounter = Qute(CounterTemplate, {
 			this._fireChangeEvent(value);
 		}
 		return false;
-	},
+	}
+
 	_fireChangeEvent(value) {
-		var input = this.input;
+		var input = this._input;
 		// run after the UI is updated (so that the wrapped input is updated too)
 		Qute.runAfter(function() {
 			input.dispatchEvent(new window.CustomEvent('change', {bubbles:true, detail:value}));
 		});
 	}
-}).properties({
-    name: null,
-    required: false,
-    value: 0,
-    step: 1,
-    min: Number.MIN_VALUE,
-    max: Number.MAX_VALUE
-});
-
+}
 FormPlugin.registerControl(MyCounter);
 
 // ------------------------------------------ Testing
@@ -239,14 +248,16 @@ FormPlugin.registerControl(MyCounter);
 	</form>
 </q:template>
 
-export default Qute(RootTemplate, {
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property counter = -4;
+
 	handleSubmit(e) {
 		alert('Counter is ' + this.counter);
 		return false;
 	}
-}).properties({
-    counter: -4
-});
+}
+export default Root;
 ```
 
 

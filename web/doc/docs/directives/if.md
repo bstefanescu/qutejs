@@ -22,6 +22,7 @@ If you want to conditionaly hide or show an element then use the **[q:show](#/at
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
 <q:template name='RootTemplate'>
 <if value='hasSection2'>
@@ -32,9 +33,11 @@ import Qute from '@qutejs/runtime';
 </if>
 </q:template>
 
-export default Qute(RootTemplate).properties({
-    hasSection2: true
-});
+@Template(RootTemplate)
+class RootComponent extends ViewModel {
+    @Property hasSection2 = true;
+}
+export default RootComponent;
 ```
 
 # Else Directive
@@ -51,6 +54,7 @@ The else directive can be used in conjuction with the *if* directive. It can onl
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
 <q:template name='RootTemplate'>
 <if value='user' onchange='onUserChanged'>
@@ -60,19 +64,23 @@ import Qute from '@qutejs/runtime';
 </if>
 </q:template>
 
-export default Qute(RootTemplate, {
+@Template(RootTemplate)
+class RootComponent extends ViewModel {
+    @Property user = null;
+
 	doLogin() {
 		this.user = {name: 'Foo'};
-	},
+	}
+
 	doLogout() {
 		this.user = null;
-	},
+	}
+
 	onUserChanged(hasUser) {
 		console.log('user changed', hasUser);
 	}
-}).properties({
-    user: null
-});
+}
+export default RootComponent;
 ```
 
 # Else-if directive
@@ -97,6 +105,7 @@ The else-if directive allows you to create conditional if / else if / else chain
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
 <q:template name='RootTemplate'>
 	<div>
@@ -117,13 +126,14 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-export default Qute(RootTemplate, {
+@Template(RootTemplate)
+class RootComponent extends ViewModel {
+    @Property status = 'active';
 	updateStatus(e) {
 		this.status = e.target.value;
 	}
-}).properties({
-    status: 'active'
-});
+}
+export default RootComponent;
 ```
 
 

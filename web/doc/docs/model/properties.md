@@ -7,32 +7,40 @@ Reactive properties must be defined explicitly.
 
 ## Reactive Properties
 
-To define **reactive properties** you need to use the `Qute.properties()` to pass an object with property key / default value pairs or a factory function which is returning the properties object
+To define **reactive properties** you can use the `@Property(PropertyType)` decorator on a class field.
 
 **Example**
 
 ```javascript
-Qute(MyComponentTemplate).properties({
-    firstName: 'Foo',
-    lastName: 'Bar',
-    age: 80,
-    title: null
-});
+class MyComponent extends ViewModel {
+    @Property firstName = 'Foo';
+    @Property lastName = 'Bar';
+    @Property age = 50;
+    @Property(String) title = null;
+}
 ```
 
 This will define 4 **reactive properties**, initialized with the declared default values.
 
-When using objects or arrays as default values you must either use a **[property type](#/model/proptypes)** to define the property either to use pass a factory function to the `properties()` method.
+The Qute compiler will inject the property definitions in the constructor before any existing statements.
 
-**Example:**
+In the above example ypu can see the property we defined a type fo the `title` property (i.e. the String type). When initializing properties with primitive values (String, Number or Boolean) the type is automatically inferred from the default value. But when no default value is given, or the property kis initialized using a `null` value then you may specify the type of the property as an argument to `@Property` decorator.
 
-```javascript
-Qute(MyComponentTemplate).properties(() => ({
-    name: 'Foo',
-    items: [1, 2, 3]
-}));
-```
-If you don't use a factory function the array default value (e.g. [1,2,3] in our example) will be shared between all component instances, and modifying it in an instance will have impact on all instances.
+Property types are optional. Here is a list of the built-in property types:
+
++ String
++ Number
++ Boolean
++ Date
++ Array
++ Object
++ Function
++ List
++ Link
+
+You can also register your own property types.
+
+Check the **[Property Types](#/model/proptypes)** section to learn more on property types.
 
 ### How reactive properties are implemented?
 
@@ -41,23 +49,24 @@ The setter is intercepting the property change and triggers an asynchronous DOM 
 
 Changing properties inside `ViewModel.$data` will change the corresponding reactive property value but will not trigger any update.
 
-You can intercept reactive property changes (and cancel the DOM update if needed) through watchers.  \
+You can intercept reactive property updates (and cancel the update if needed) through watchers.  \
 Check the **[Property Watchers](#/model/watchers)** section for more details.
 
 ## Regular Properties
 
-Regular `ViewModel` properties will not trigger any DOM update when changed. Just use regular object properties when you don't need **reactivity**. Also, note that regular properties **are not mappable from template attributes**!
-
-To define a regular property you can use the `init()` method whoch is called just after components instance was created an the reactive property were initialized.
+Regular `ViewModel` properties are regular object properties defined on the component instance wither using class fields, either directly in class `constructor`. Changing regular properties will not trigger DOM updates. You should use regular properties when you don't need **reactivity**. Also, note that regular properties **are not mappable from element attributes**!
 
 **Example**
 
 ```javascript
-Qute(MyComponentTemplate, {
-	init() {
-		this.someProperty = 'Some regular property';
-	}
-});
+class MyComponent extends ViewModel {
+    firstName = 'Foo';
+
+    constructor(app) {
+        super(app);
+        this.lastName = 'Bar';
+    }
+}
 ```
 
 ## Template attributes mapping
@@ -77,17 +86,19 @@ If an attribute [camel case](https://en.wikipedia.org/wiki/Camel_case) name matc
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
 <q:template name='MyComponentTemplate'>
 	<div>
 	<div>reactiveProp value: {{reactiveProp}}</div>
+    <div>title value: {{title}}</div>
 	<for value='key in $attrs'>
 		<div>Undeclared attribute: {{key}} = {{$attrs[key]}}</div>
 	</for>
 	</div>
 </q:template>
 
-<q:template name='RootTemplate'>
+<q:template export>
 	<my-component reactive-prop='reactive prop value'
 		title='the title'
 		some-attribute='some value'
@@ -95,52 +106,72 @@ import Qute from '@qutejs/runtime';
 		name='the name' />
 </q:template>
 
-const MyComponent = Qute(MyComponentTemplate, {
-	init() {
-		this.name = 'the name';
-	}
-}).properties({
-    reactiveProp: null,
-    title: null
-});
-
-export default Qute(RootTemplate);
+@Template(MyComponentTemplate)
+class MyComponent extends ViewModel {
+    @Property reactiveProp;
+    @Property(String) title;
+    name = 'the name';
+}
 ```
 
-You can see how the kebab case attribute named `reactive-prop` was used to initialize the `reactiveProp` reactive property. You can also use `reactiveProp` as the name of the attribute, it works too, but you recommend using kebab case notation instead since HTML attributes are not case-sensitive, but property names are case-sensitive.
+You can see how the kebab case attribute named `reactive-prop` was used to initialize the `reactiveProp` reactive property. You can also use `reactiveProp` as the name of the attribute, it works too, but we recommend to use kebab case notation instead since HTML attributes are not case-sensitive.
 
-Also, you can see that all other attributes than `reactive-prop` and `title` (which were declared as reactive properties) are added to the **"catch all"** `$attrs` object. This is also the case of the `name` attribute. Even if we defined a regular `name` property on the component - it will still go in the `$attrs` object since the `name` property is not reactive, and thus, it is not mappable from attributes.
+Also, you can see that attributes not matching a reactive property are added to the **"catch all"** `$attrs` object. This is also the case of the `name` attribute. Even if we defined a regular `name` property on the component - it will still go in the `$attrs` object since the `name` property is not reactive, and thus, it is not mappable from attributes.
 
 
 ## Required properties
 
-You can specify a list of properties that should be always defined and set to a non null value through the template. We will refer to such poroperties as **required properties**.
+Reactive properties can be defined as **required** by using the `@Required` decorator along with the `@Property` decorator ron the class field.
 
-To specify the list of required properties use the `Qute.require(prop1, prop2, ...)` function.
+A required property must always be set using an element attribute to a non null value otherwise an exception will be thrown.
 
 The following example will throw an error, since the `name` attribute is not set:
 
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property, Required } = Qute;
 
 <q:template name='MyElementTemplate'>
     <div>Required prop: {{name}}</div>
 </q:template>
 
-<q:template name='RootTemplate'>
+<q:template export>
     <my-element />
 </q:template>
 
-const MyElement = Qute(MyElementTemplate).properties({
-    name: null
-}).require('name');
-
-export default Qute(RootTemplate);
+@Template(MyElementTemplate)
+class MyElement extends ViewModel {
+    @Required @Property name;
+}
 ```
 
 To fix it just specify a name attribute on the `my-element` component:
 
 ```xml
 <my-element name="somme value"'>
+```
+
+## Non enumerable properties
+
+Reactive and regular properties which name is starting with a `_` charcater are not enumerable.
+
+```jsq
+import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property, Required } = Qute;
+
+<q:template name='MyElementTemplate'>
+    <div>Enumerable properties: {{JSON.stringify(this)}}</div>
+</q:template>
+
+<q:template export>
+    <my-element name='the name' />
+</q:template>
+
+@Template(MyElementTemplate)
+class MyElement extends ViewModel {
+    @Required @Property name;
+    @Property _type = null;
+    _input = null;
+}
 ```

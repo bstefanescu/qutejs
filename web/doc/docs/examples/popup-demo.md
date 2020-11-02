@@ -3,6 +3,7 @@
 ```jsq
 import Qute from '@qutejs/runtime';
 import qPopup from '@qutejs/popup';
+const { ViewModel, Template, Property } = Qute;
 
 <q:template name='RootTemplate'>
   <div>
@@ -80,19 +81,21 @@ import qPopup from '@qutejs/popup';
 }
 </q:style>
 
-export default Qute(RootTemplate, {
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property animation;
+    @Property position = "bottom start";
+
     openPopup(event) {
       this.postAsync("my-popup", "open", event.target);
-	},
+	}
     changeAnimation(e) {
       this.animation = e.target.value;
-    },
+    }
     changePosition(e) {
       this.position = e.target.value;
     }
-}).properties({
-    position: 'bottom start',
-    animation: null
-});
+}
+export default Root;
 ```
 

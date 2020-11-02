@@ -56,6 +56,7 @@ Example:
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
 <q:template name='TestStyle'>
 	<div><slot/></div>
@@ -66,8 +67,10 @@ import Qute from '@qutejs/runtime';
 </q:template>
 
 
-export default Qute(RootTemplate, {
-    align: 'center'
-});
+@Template(RootTemplate)
+class Root extends ViewModel {
+    align = 'center';
+}
+export default Root;
 ```
 

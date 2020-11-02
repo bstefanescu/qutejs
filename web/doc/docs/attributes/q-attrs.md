@@ -6,8 +6,6 @@ It is very usefull to implement components that acts more as wrappers over an HT
 Let's see an example of an input allows you to specify an additional label that will be rendered on the left of the input using [bootstrap](https://getbootstrap.com/) grid system.
 
 ```jsq
-import Qute from '@qutejs/runtime';
-
 <q:template name='MyInput'>
 <div class='row'>
 	<div class='col-md-4'><label><slot/></label></div>
@@ -15,11 +13,9 @@ import Qute from '@qutejs/runtime';
 </div>
 </q:template>
 
-<q:template name='RootTemplate'>
+<q:template export>
 <my-input name='theName' type='text' class='form-control' placeholder='Type your name'>Your name:</my-input>
 </q:template>
-
-export default Qute(RootTemplate);
 ```
 
 The root component will render as
@@ -42,8 +38,6 @@ In some cases yopu may want to inject certain attributes to certain nested eleme
 Example:
 
 ```jsq
-import Qute from '@qutejs/runtime';
-
 <q:template name='MyInput'>
 <div class='row' q:attrs='class'>
 	<div class='col-md-4'><label><slot/></label></div>
@@ -51,11 +45,9 @@ import Qute from '@qutejs/runtime';
 </div>
 </q:template>
 
-<q:template name='RootTemplate'>
+<q:template export>
 <my-input name='theName' type='text' class='my-row'>Your name:</my-input>
 </q:template>
-
-export default Qute(RootTemplate);
 ```
 
 This component is injecting parts of the `q:attrs` attributes in different places in the nesting content.
@@ -78,6 +70,7 @@ Example:
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
 <q:template name='MyLinkTemplate'>
     <a href='#' q:class="{btn: $attrs.type === 'button'}" q:attrs>{{linkText}}</a>
@@ -87,15 +80,14 @@ import Qute from '@qutejs/runtime';
     <my-link type='button' q:attrs />
 </q:template>
 
-<q:template name='RootTemplate'>
+<q:template export>
     <my-button title='Click me' link-text='My Button' />
 </q:template>
 
-const MyLink = Qute(MyLinkTemplate).properties({
-    linkText: "Placeholder"
-});
-
-export default Qute(RootTemplate);
+@Template(MyLinkTemplate)
+class MyLink extends ViewModel {
+    @Property linkText = "Placeholder"
+}
 ```
 
 The `root` component will render as:

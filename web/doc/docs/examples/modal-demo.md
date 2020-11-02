@@ -3,6 +3,7 @@
 ```jsq
 import Qute from '@qutejs/runtime';
 import qModal from '@qutejs/modal';
+const { ViewModel, Template, Property } = Qute;
 
 <q:template name='RootTemplate'>
   <div>
@@ -30,15 +31,19 @@ import qModal from '@qutejs/modal';
   </div>
 </q:template>
 
-export default Qute(RootTemplate, {
+
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property animation;
+
     openModal(e) {
       this.postAsync("my-modal", "open");
-    },
+    }
+
     changeAnimation(e) {
       this.animation = e.target.value;
     }
-}).properties({
-    animation: null
-});
+}
+export default Root;
 ```
 

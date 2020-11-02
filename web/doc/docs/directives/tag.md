@@ -11,24 +11,20 @@ You can use both `is='expr'` or `is={expr}` syntaxes to specify the `is` value.
 
 ```jsq
 import window from '@qutejs/window';
-import Qute from '@qutejs/runtime';
 
 <q:template name='MyAction'>
 <tag is={$attrs.is||"a"} href='#' q:emit-click><slot/></tag>
 </q:template>
 
-<q:template name='RootTemplate'>
+<q:template export>
 <my-action is='button' @click='window.alert("Hello!")'>My Button</my-action>
 </q:template>
-
-export default Qute(RootTemplate);
 ```
 
 #### A dynamic Qute component
 
 ```jsq
 import window from '@qutejs/window';
-import Qute from '@qutejs/runtime';
 
 <q:template name='MyLink'>
     <a class='link' href='#' q:emit-click><slot/></a>
@@ -38,11 +34,9 @@ import Qute from '@qutejs/runtime';
     <tag is={$attrs.is} q:attrs><nested><slot/></nested></tag>
 </q:template>
 
-<q:template name='RootTemplate' import='MyLink'>
+<q:template import='MyLink' export>
     <my-component is={MyLink} @click='window.alert("Hello!")'>My Link</my-component>
 </q:template>
-
-export default Qute(RootTemplate);
 ```
 
 **Notes**

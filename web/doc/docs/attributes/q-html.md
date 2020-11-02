@@ -16,21 +16,25 @@ where `someVar` resolve to a valid HTML text. The HTML text will be injected as 
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
 <q:template name='RootTemplate'>
-    <div q:html='content' />
+    <div q:html={content} />
 </q:template>
 
-export default Qute(RootTemplate).properties({
-    content: "<p>This is some <b>HTML</b> content</p><p>Expressions are not interpreted: {{someProperty}}</p>",
-    someProperty: 'hello!'
-});
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property content = "<p>This is some <b>HTML</b> content</p><p>Expressions are not interpreted: {{someProperty}}</p>";
+    @Property someProperty = 'hello!';
+}
+export default Root;
 ```
-changing the `content` property value will be reflected in the DOM:
 
+changing the `content` property value will be reflected in the DOM:
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
 <q:template name='RootTemplate'>
 <div>
@@ -39,16 +43,18 @@ import Qute from '@qutejs/runtime';
 </div>
 </q:template>
 
-export default Qute(RootTemplate, {
-	changeContent() {
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property content = "<p>This is some <b>HTML</b> content</p><p>Expressions are not interpreted: {{someProperty}}</p>";
+    @Property someProperty = 'hello!';
+    @Property changed = false;
+
+    changeContent() {
 		this.content = "<p>The content <b>changed</b>!</p>";
 		this.changed = true;
 	}
-}).properties({
-    content: "<p>This is some <b>HTML</b> content</p><p>Expressions are not interpreted: {{someProperty}}</p>",
-    someProperty: 'hello!',
-    changed: false
-});
+}
+export default Root;
 ```
 
 
@@ -58,6 +64,7 @@ export default Qute(RootTemplate, {
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
 <q:template name='RootTemplate'>
 <div q:html>
@@ -66,7 +73,11 @@ import Qute from '@qutejs/runtime';
 </div>
 </q:template>
 
-export default Qute(RootTemplate, {someProperty: "hello!"})
+@Template(RootTemplate)
+class Root extends ViewModel {
+    someProperty = "hello!"
+}
+export default Root;
 ```
 
 This construct is usefull to nest static content which will be never interpreted. It will be rendered as is.

@@ -8,6 +8,7 @@ See the **[Templates](#/model/templates)** section for more details.
 ```jsq
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
 <q:template name='RootTemplate'>
   <div>
@@ -16,9 +17,11 @@ import Qute from '@qutejs/runtime';
   </div>
 </q:template>
 
-export default Qute(RootTemplate, {
+@Template(RootTemplate)
+class Root extends ViewModel {
 	handleClick() {
 		window.alert('hello!');
 	}
-});
+}
+export default Root;
 ```

@@ -9,6 +9,9 @@ This gives you the ability to create recursive calls.
 ## Example
 
 ```jsq
+import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property, Required } = Qute;
+
 <q:template name='RecursiveTemplate'>
     <ul>
         <for value='item in items'>
@@ -26,14 +29,18 @@ This gives you the ability to create recursive calls.
     <my-tree items={tree} />
 </q:template>
 
-const MyTree = Qute(RecursiveTemplate).properties(() => ({
-    items: null
-}));
+@Template(RecursiveTemplate)
+class MyTree extends ViewModel {
+    @Required @Property(Array) items;
+}
 
-export default Qute(RootTemplate).properties(() => ({
-    tree: [
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property(Array) tree = [
         {name: "Item 1", children: [{name: "Item 1.1"}, {name: "Item 1.2"}]},
         {name: "Item 2"}
     ]
-}));
+}
+
+export default Root;
 ```

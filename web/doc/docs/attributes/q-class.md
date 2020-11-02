@@ -77,6 +77,7 @@ Example:
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
 <q:template name='TestClass'>
 	<div><slot/></div>
@@ -86,10 +87,11 @@ import Qute from '@qutejs/runtime';
 	<test-class q:class='{active: selected}'>Hello!</test-class>
 </q:template>
 
-
-export default Qute(RootTemplate, {
-    selected: true
-});
+@Template(RootTemplate)
+class Root extends ViewModel {
+    selected = true;
+}
+export default Root;
 ```
 
 ## Example: Conditionaly adding or removing a class
@@ -99,6 +101,7 @@ Here is a simple example on how to use the `q:class` object notation to conditio
 ```jsq
 import "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css";
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
 <q:template name='RootTemplate'>
 <ul class="nav nav-pills" @click='e => page = e.target.getAttribute("data-key")'>
@@ -114,7 +117,9 @@ import Qute from '@qutejs/runtime';
 </ul>
 </q:template>
 
-export default Qute(RootTemplate).properties({
-    page: 'home'
-})
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property page = 'home';
+}
+export default Root;
 ```

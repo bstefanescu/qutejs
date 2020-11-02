@@ -22,18 +22,22 @@ When using `q:call` on a `ViewModel` or template component tag the `q:call` func
 ```jsq
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
 <q:template name='RootTemplate'>
 	<div>
-	<input type='text' name='name' q:call='el => this.inputEl = el'><button @click='onClick'>Click me!</button>
+	<input type='text' name='name' q:call='el => this._input = el'><button @click='onClick'>Click me!</button>
 	</div>
 </q:template>
 
-export default Qute(RootTemplate, {
-	onClick() {
-		window.alert('Input value is '+this.inputEl.value);
+@Template(RootTemplate)
+class Root extends ViewModel {
+    _input = null;
+    onClick() {
+		window.alert('Input value is '+this._input.value);
 	}
-});
+}
+export default Root;
 ```
 
 Here we used an arrow function to store the input element instance as a component property.
@@ -47,6 +51,7 @@ Let's do more, we can initialize the input if empty:
 ```jsq
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
 <q:template name='RootTemplate'>
 	<div>
@@ -55,15 +60,19 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-export default Qute(RootTemplate, {
+@Template(RootTemplate)
+class Root extends ViewModel {
+    _input = null;
+
 	onInputCreate(el) {
-		this.inputEl = el;
+		this._input = el;
 		if (!el.value) el.value = 'Hello!';
-	},
-	onClick() {
-		window.alert('Input value is '+this.inputEl.value);
 	}
-});
+    onClick() {
+		window.alert('Input value is '+this._input.value);
+	}
+}
+export default Root;
 ```
 
 ### Template Components and the Life Cycle
@@ -72,13 +81,11 @@ A template component doesn't take part on the component life cycle.  \
 Anyway, we can use the `q:call` directive to register a handler for connect and disconnect life cycle events on the current rendering context.
 
 ```jsq
-import Qute from '@qutejs/runtime';
-
-<q:template name='TemplateComp' import='handleFuncLoad'>
-    <div q:call='handleFuncLoad'>I am a template component</div>
+<q:template name='TemplateComp' import='handleTemplateLoad'>
+    <div q:call='handleTemplateLoad'>I am a template component</div>
 </q:template>
 
-<q:template name='RootTemplate'>
+<q:template export>
     <TemplateComp />
 </q:template>
 
@@ -93,12 +100,10 @@ var ConnectionHandler = {
   }
 }
 
-function handleFuncLoad(el) {
+function handleTemplateLoad(el) {
   // register the connect / disconnect handlers
   this.$r.$push(ConnectionHandler);
 }
-
-export default Qute(RootTemplate);
 ```
 
 In this example, we are registering the connect / disconnect handlers using the current rendering context `$push` method.

@@ -7,6 +7,7 @@ See the **[Templates](#/model/templates)** section for more details.
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
 <q:template name='RootTemplate'>
   <ul>
@@ -15,9 +16,9 @@ import Qute from '@qutejs/runtime';
   </ul>
 </q:template>
 
-export default Qute(RootTemplate, {
-	init() {
-		this.color = 'green';
-	}
-});
+@Template(RootTemplate)
+class Root extends ViewModel {
+    color = 'green';
+}
+export default Root;
 ```

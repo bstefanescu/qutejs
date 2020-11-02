@@ -1,10 +1,9 @@
 # Component Life Cycle
 
-A Qute Component provides 5 life cycle events that can be used events that can be used to set up and clean up components.
+A Qute Component provides 4 life cycle events that can be used events that can be used to set up and clean up components.
 
-1. **INIT** - the component is initialized. The `init(app)` method is called.
-2. **CREATED** - the component root element was created. The `created(element)` method is called.
-3. **READY** - the component root element was created, properties injected and listeners registered. The `ready(element)` method is called.
+1. **CREATED** - the component root element was created. The `created(element)` method is called.
+2. **READY** - the component root element was created, attributes injected and listeners registered. The `ready(element)` method is called.
 3. **CONNECTED** - the component root element was attached to the DOM. The `connected()` method is called.
 4. **DISCONNECTED** - the component element root was detached from the DOM. The `disconnected` method is called.
 
@@ -16,17 +15,12 @@ A Qute Component provides 5 life cycle events that can be used events that can b
 </div>
 
 
-### `init(app)`
-
-Called just after the component is instantiated and the reactive properties created. Can be used to do any initialization stuff.
-
-The current [application instance](#/app/instance) is passed as an argument to the `init` callback.
 
 ### `created(element)`
 
 Called just after the component root element was created (i.e. component was rendered). The component is not yet connected to the DOM.
 
-This handler is called only once in the component life cycle, after the init method and before the element attributes are injected into component properties and before listeners are registered.
+This handler is called only once in the component life cycle, before the element attributes are injected into component properties and before listeners are registered.
 
 The **element** argument is the DOM element created by the rendering function.  \
 It is also available at any time as the **`$el`** property of the component instance.

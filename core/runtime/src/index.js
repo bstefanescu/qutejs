@@ -36,8 +36,8 @@ function Qute(renderFn, def) {
         ERR("Usage: Qute(RenderFunction[, Model])");
     }
 
-	function ViewModelImpl(app, attrs) {
-        ViewModel.call(this, app, attrs);
+	function ViewModelImpl(app) {
+        ViewModel.call(this, app);
         this.init && this.init(app);
 	}
 

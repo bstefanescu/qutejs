@@ -144,12 +144,13 @@ function onButtonClick(context, event) {
 
 ## Transpiling
 
-There are two special constructs in a `JSQ` file that are transpiled to javascript:
+The `q:template` and `q:style` constructs are transpiled to JavaScript code by thew Qute compiler.
 
-const __QUTE_DEFAULT_EXPORT__ = function($){return $.c(MyButton,{"href":"#"},[$.t("Click me!")],0);};
+Here is an example of a template transpilation:
 
-1. `q:template` - this construct will be tranbspiled into something like `const TemplateName = function($){return  ... }, true);`
-2. `q:style` - this construct will be transpiled to a javascript code that will inject the style rules into a `<style>` tag inside the page `<head>`.
+`const __QUTE_DEFAULT_EXPORT__ = function($){return $.c(MyButton,{"href":"#"},[$.t("Click me!")],0);};`
+
+Styles are transpiled to a CSS file `import` that will be handled by the postcss rollup plugin or any other CSS plugin you configured in your build.
 
 You can see the transpilation output for any playable example in the Qute documentation by clicking the `Javascript` tab in the **[Qute Playground](/playground/index.html)**.
 

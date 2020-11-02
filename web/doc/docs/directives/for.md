@@ -9,7 +9,7 @@ If you need a `for` directive **optimized for reactivity and DOM updates** then 
 This directive was optimized to work over static lists and is giving some additional features over the `q:for` directive:
 
 1. Each iteration renders a document fragment, and not a single element.
-2. It provides extra an `index` and `hasNext` attributes for each iterated item.
+2. It provides an extra `index` and `hasNext` attributes for each iterated item.
 3. Can iterate over object keys by obtaining the array using `Object.keys()`.
 
 Any object having a `length` property will be treated as an **array like object**, otherwise the list will be obtained using `Object.keys(...)`.
@@ -25,6 +25,7 @@ Any object having a `length` property will be treated as an **array like object*
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
 <q:template name='RootTemplate'>
 <for value='item in list'>
@@ -32,21 +33,22 @@ import Qute from '@qutejs/runtime';
 </for>
 </q:template>
 
-export default Qute(RootTemplate, {
-	init() {
-		this.list = [
-			{href: '#1', title: 'Item 1'},
-			{href: '#2', title: 'Item 2'},
-			{href: '#3', title: 'Item 3'}
-		]
-	}
-});
+@Template(RootTemplate)
+class RootComponent extends ViewModel {
+    list = [
+        {href: '#1', title: 'Item 1'},
+        {href: '#2', title: 'Item 2'},
+        {href: '#3', title: 'Item 3'}
+    ]
+}
+export default RootComponent;
 ```
 
 #### Retrieving the index:
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
 <q:template name='RootTemplate'>
 <for value='item,index in list'>
@@ -54,21 +56,22 @@ import Qute from '@qutejs/runtime';
 </for>
 </q:template>
 
-export default Qute(RootTemplate, {
-	init() {
-		this.list = [
-			{href: '#1', title: 'Item 1'},
-			{href: '#2', title: 'Item 2'},
-			{href: '#3', title: 'Item 3'}
-		]
-	}
-});
+@Template(RootTemplate)
+class RootComponent extends ViewModel {
+    list = [
+        {href: '#1', title: 'Item 1'},
+        {href: '#2', title: 'Item 2'},
+        {href: '#3', title: 'Item 3'}
+    ]
+}
+export default RootComponent;
 ```
 
 #### Using hasNext:
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
 <q:template name='RootTemplate'>
 <for value='item,index,hasNext in list'>
@@ -76,15 +79,15 @@ import Qute from '@qutejs/runtime';
 </for>
 </q:template>
 
-export default Qute(RootTemplate, {
-	init() {
-		this.list = [
-			{href: '#1', title: 'Item 1'},
-			{href: '#2', title: 'Item 2'},
-			{href: '#3', title: 'Item 3'}
-		]
-	}
-});
+@Template(RootTemplate)
+class RootComponent extends ViewModel {
+    list = [
+        {href: '#1', title: 'Item 1'},
+        {href: '#2', title: 'Item 2'},
+        {href: '#3', title: 'Item 3'}
+    ]
+}
+export default RootComponent;
 ```
 
 ### Iterating over non array like objects
@@ -93,6 +96,7 @@ When using a regular object instead of an array like object to iterate on then, 
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
 <q:template name='RootTemplate'>
 <for value='key in dict'>
@@ -100,21 +104,22 @@ import Qute from '@qutejs/runtime';
 </for>
 </q:template>
 
-export default Qute(RootTemplate, {
-	init() {
-		this.dict = {
-			a: 1,
-			b: 2,
-			c: 3
-		}
+@Template(RootTemplate)
+class RootComponent extends ViewModel {
+	dict = {
+        a: 1,
+        b: 2,
+        c: 3
 	}
-});
+}
+export default RootComponent;
 ```
 
 ### List instance reactivity
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
 <q:template name='RootTemplate'>
 <div>
@@ -127,21 +132,22 @@ import Qute from '@qutejs/runtime';
 </div>
 </q:template>
 
-export default Qute(RootTemplate, {
+@Template(RootTemplate)
+class RootComponent extends ViewModel {
+    @Property listIndex = 0;
+    lists = [
+        ["a", "b", "c", "d"],
+        [1, 2, 3]
+    ];
+
 	changeList() {
 		this.listIndex = (this.listIndex + 1) % 2;
-	},
-	init() {
-        this.lists = [
-            ["a", "b", "c", "d"],
-            [1, 2, 3]
-        ]
-	},
+	}
+
     get list() {
         return this.lists[this.listIndex];
     }
-}).properties(() => ({
-    listIndex: 0
-}));
+}
+export default RootComponent;
 ```
 

@@ -1,18 +1,18 @@
 
 # Property Watchers
 
-Sometimes you want to be notified when a reactive property is about to change. This can be done using a **property watcher**.
+A property watcher is a component method that is notified when a reactive property is about to update so you can perform some custom logic or even cancel the update.
 
-You can register property watchers when you define your component using the `Qute.watch(propName, watcher)` method. This method can be chained so you can easily declare watchers on multiple properties.
+To register a property watcher you need to define a method which will intercept the update and decorate it using the `@Watch(propertyName)` decorator.
 
-The `propName` argument is the name of the reactive property you want to watch and the `watcher` argument is a function with the signature `function (newValue, oldValue) { ... }`
+The decorator takes one argument: the property name to watch. The decorated method takes two arguments: the new value and the old value: `watch(newValue, oldValue)`.
 
-The `newValue` argument is the new value being assigned to the property, and the `oldValue` is the existing property value. You can **cancel** the property update by returning `false` from the watcher function. Returning any other value will be ignored and the property update will be done (which will trigger a DOM update).
-
-The watcher function is called in the context of the component instance (i.e. `this` points to the component instance).
+You can **cancel** the property update by returning `false` from the watcher function. Returning any other value will have no effect and the property update will be done (which will trigger a DOM update).
 
 ```jsq
 import Qute from '@qutejs/runtime';
+
+const {ViewModel, Template, Property, Watch} = Qute;
 
 <q:template name='RootTemplate'>
 <div>
@@ -21,19 +21,28 @@ import Qute from '@qutejs/runtime';
 </div>
 </q:template>
 
-export default Qute(RootTemplate).properties({
-    counter1: 0,
-    counter2: 0
-}).watch('counter1', function(newValue, oldValue) {
+@Template(RootTemplate)
+class RootComponent extends ViewModel {
+    @Property counter1 = 0;
+    @Property counter2 = 0;
+
+    @Watch('counter1')
+    watchCounter1(newValue, oldValue) {
 	// just log the update
 	console.log('Updating counter1', oldValue, ' -> ', newValue);
-}).watch('counter2', function(newValue, oldValue) {
-	// log the update
-	console.log('Updating counter2', oldValue, ' -> ', newValue);
-	// cancel update if counter is greater than 2
-	if (newValue > 2) {
-		alert('Counter cannot be incremented further!');
-		return false;
-	}
-});
+    }
+
+    @Watch('counter2')
+    watchCounter2(newValue, oldValue) {
+        // log the update
+        console.log('Updating counter2', oldValue, ' -> ', newValue);
+        // and cancel update if counter is greater than 2
+        if (newValue > 2) {
+            alert('Counter cannot be incremented further!');
+            return false;
+        }
+    }
+}
+
+export default RootComponent;
 ```

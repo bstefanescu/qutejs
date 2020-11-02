@@ -361,7 +361,7 @@ function RootNode() {
 	}
 	this.compile = function(ctx) {
 		var children = this.children;
-		if (children.length !== 1) ERR("the root node must have a single children element");
+		if (children.length !== 1) ERR("the root node must have a single child element");
 		return this.children[0].compile(ctx);
 	}
 	// trim the children (remove trailing and leading blank nodes)

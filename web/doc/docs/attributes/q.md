@@ -125,11 +125,13 @@ To register a directive on a `ViewModel` or a `template` tag you need to pass th
 **Example:**
 
 ```jsq-norun
-// 1. On a ViewMOdel
-const MyComponent = Qute(MyComponentTemplate);
+// 1. On a ViewModel
+@Template(MyComponentTemplate)
+class MyComponent extends ViewModel {
+}
 Qute.registerDirective(MyComponent, 'value', selectValueDirective);
 
-// 2. ON a template
+// 2. On a template
 <q:template name='MyTemplate'>
     <div>some content ... </div>
 </q:template>
@@ -154,7 +156,7 @@ In this example we change the font color to green, for all `span` elements conta
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='RootTemplate'>
+<q:template export>
 	<div q:color-spans>Hello <span>world</span>!</div>
 </q:template>
 
@@ -167,7 +169,6 @@ Qute.registerDirective('color-spans', function(xattrs, valueExpr) {
 		for (var i=0,l=spans.length; i<l; i++) spans[i].style.color = 'green';
 	}
 });
-export default Qute(RootTemplate);
 ```
 
 ### A simple directive with configuration
@@ -177,7 +178,7 @@ Let's now modify the previous example and use a value to specify a color.
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='RootTemplate'>
+<q:template export>
 	<div q:color-spans='red'>Hello <span>world</span>!</div>
 </q:template>
 
@@ -189,8 +190,6 @@ Qute.registerDirective('color-spans', function(xattrs, valueExpr) {
 		for (var i=0,l=spans.length; i<l; i++) spans[i].style.color = color;
 	}
 });
-
-export default Qute(RootTemplate);
 ```
 
 **Note:** Here we used `valueExpr` as is (without evaluating it). This is because we expect the value to be a string literal and not an expression. But, you cannot know how the directive will be used by users. If someone is passing the value using an expression value like `q:color-spans={colorValue}`, then the previous code will no more work.
@@ -216,6 +215,7 @@ Let's now use a component reactive property to store the color to use. When the 
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
 <q:template name='RootTemplate'>
     <div color={color} q:color-spans={color}>
@@ -254,9 +254,11 @@ Qute.registerDirective('color-spans', function(xattrs, colorExpr) {
     };
 });
 
-export default Qute(RootTemplate).properties({
-    color: null
-});
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property color;
+}
+export default Root;
 ```
 
 **Notes:**

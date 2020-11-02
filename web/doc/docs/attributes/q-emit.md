@@ -33,8 +33,9 @@ Here is an working example, demontsrating the `q-emit` usage from both a fucntio
 ```jsq
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
-<q:template name='FunButton'>
+<q:template name='TemplateButton'>
 	<a href='#' q:emit-action-onclick><slot/></a>
 </q:template>
 
@@ -44,22 +45,24 @@ import Qute from '@qutejs/runtime';
 
 <q:template name='RootTemplate'>
 	<div>
-	<fun-button @action='handleAction'>Fun Button - Click Me</fun-button>
+	<template-button @action='handleAction'>Fun Button - Click Me</template-button>
 	<hr/>
 	<my-button @click='handleAction' id='bla'>VM Button - Click Me</my-button>
 	</div>
 </q:template>
 
 
-var MyButton = Qute(MyButtonTemplate);
+var MyButton = Qute(MyButtonTemplate); // create a empty ViewModel
 
-export default Qute(RootTemplate, {
-	handleAction(e) {
+@Template(RootTemplate)
+class Root extends ViewModel {
+    handleAction(e) {
 		console.log('Action Event', e, e.detail);
 		console.log('Original Event', e.originalEvent)
 		window.alert('Handling Action!');
 	}
-});
+}
+export default Root;
 ```
 
 ## The `#new-event@source-event` notation.

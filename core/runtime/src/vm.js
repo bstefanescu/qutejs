@@ -24,7 +24,7 @@ function SetVMAttrs(vm, parentVM, filter) {
 	}
 }
 
-function ViewModel(app, attrs) {
+function ViewModel(app) {
 	if (!app) app = new Application(app);
 	var prop = {};
 	// the attributes set on vm tag which are not declared as props
@@ -50,34 +50,6 @@ function ViewModel(app, attrs) {
 
 	prop.value = {};
     Object.defineProperty(this, '$data', prop);
-    /*
-    var props = this.$props || {};
-    if (typeof props === 'function') props = props(app);
-    for (var key in props) {
-        Object.defineProperty(this, key, createProp(this, key, props[key]));
-    }
-    */
-    this.$defineProps && this.$defineProps();
-
-    // initialize data model from attributes if any - this will not trigger an update
-	if (attrs) {
-		var $data = this.$data;
-		var $attrs = this.$attrs;
-		Object.keys(attrs).forEach(function(key) {
-			var value = attrs[key];
-			if (key in $data) { // a declared property
-				$data[key] = value;
-			} else {
-				var camelKey = kebabToCamel(key);
-				if (camelKey !== key && camelKey in $data) {
-					$data[camelKey] = value;
-				} else if ($attrs[key] !== value) {
-					// attributes are not camelized
-					$attrs[key] = value;
-				}
-			}
-		});
-    }
 
 	if (!this.render) ERR("No render function defined for the ViewModel!");
 }

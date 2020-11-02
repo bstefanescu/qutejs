@@ -24,7 +24,7 @@ Some quick facts:
 * Small and fast **MVVM** framework for building modern javascript applications or UI components.  \
 About **9K** gzipped.
 * Resource friendly: No Virtual DOM. It's **green software**!
-* Friendly and concise API: uses JavaScript **classes** and **decorators** to define components.
+* Friendly and concise API: uses JavaScript **[classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)** and **[decorators](https://github.com/tc39/proposal-decorators)** to define components.
 * **Quickly design components** using the playground.
 * Provides a **project generator** tool for a modern development experience.
 * Development extension for **Visual Studio Code**: **[vscode-qutejs](https://marketplace.visualstudio.com/items?itemName=quandora.vscode-qutejs)**.

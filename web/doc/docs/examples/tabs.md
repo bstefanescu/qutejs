@@ -12,6 +12,8 @@ These examples demonstrates the usage of:
 ```jsq
 import Qute from '@qutejs/runtime';
 
+const { ViewModel, Template, Property } = Qute;
+
 // -------------------------------------------------- Tab Bar styles
 
 <q:style>
@@ -55,15 +57,22 @@ import Qute from '@qutejs/runtime';
 
 // --------------------------------------------------- Tab Bar component
 
-const TabBar = Qute(TabBarTemplate, {
-	get activeView() { return this.activeTab && this.activeTab.view },
+@Template(TabBarTemplate)
+class TabBar extends ViewModel {
+    @Property(Array) tabs;
+
+    get activeView() {
+        return this.activeTab && this.activeTab.view
+    }
+
 	get activeTab() {
 		var tab = null;
 		if (this.tabs) {
 			var tab = this.tabs.find(tab => tab.active);
 		}
 		return tab || null;
-	},
+    }
+
 	set activeTab(tab) {
 		var oldTab = this.tabs.find(tab => tab.active);
 		if (oldTab !== tab)	{
@@ -72,9 +81,7 @@ const TabBar = Qute(TabBarTemplate, {
 			this.update();
 		}
 	}
-}).properties({
-    tabs: null
-});
+}
 
 // --------------------------------------------------- Usage
 
@@ -89,12 +96,15 @@ const TabBar = Qute(TabBarTemplate, {
 	<tab-bar tabs={tabs} />
 </q:template>
 
-export default Qute(RootTemplate).properties(() => ({
-    tabs: [
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property(Array) tabs = [
         {name: 'home', label: 'Home', view: HomePage, active: true},
         {name: 'settings', label: 'Settings', view: SettingsPage}
     ]
-}));
+
+}
+export default Root;
 ```
 
 ## Advanced Tab Bar Implemenetation
@@ -111,6 +121,8 @@ Note that most of the code in the example is `css` code. The javascript code of 
 ```jsq
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
+
+const { ViewModel, Template, Property } = Qute;
 
 // -------------------------------------------------- Tab Bar styles
 
@@ -183,15 +195,22 @@ import Qute from '@qutejs/runtime';
 
 // --------------------------------------------------- Tab Bar component
 
-const TabBar = Qute(TabBarTemplate, {
-	get activeView() { return this.activeTab && this.activeTab.view },
+@Template(TabBarTemplate)
+class TabBar extends ViewModel {
+    @Property(Array) tabs;
+
+	get activeView() {
+        return this.activeTab && this.activeTab.view
+    }
+
 	get activeTab() {
 		var tab = null;
 		if (this.tabs) {
 			var tab = this.tabs.find(tab => tab.active);
 		}
 		return tab || null;
-	},
+	}
+
 	set activeTab(tab) {
 		var oldTab = this.tabs.find(tab => tab.active);
 		if (oldTab !== tab)	{
@@ -200,9 +219,7 @@ const TabBar = Qute(TabBarTemplate, {
 			this.update();
 		}
 	}
-}).properties({
-    tabs: null
-});
+}
 
 // --------------------------------------------------- Usage
 
@@ -225,17 +242,20 @@ const TabBar = Qute(TabBarTemplate, {
 	</tab-bar>
 </q:template>
 
-export default Qute(RootTemplate, {
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property(Array) tabs = [
+        {name: 'home', label: 'Home', view: HomePage, active: true},
+        {name: 'settings', label: 'Settings', view: SettingsPage, component: CustomTab},
+    ];
+
 	onTabRemove() {
 		window.alert('Handle tab remove ...');
-	},
+	}
+
 	onTabAdd() {
 		window.alert('Handle tab add ...');
 	}
-}).properties(() => ({
-    tabs: [
-        {name: 'home', label: 'Home', view: HomePage, active: true},
-        {name: 'settings', label: 'Settings', view: SettingsPage, component: CustomTab},
-    ]
-}));
+}
+export default Root;
 ```

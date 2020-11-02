@@ -22,33 +22,33 @@ It **only works on DOM elements** and cannot be used on component tags.
 ## Example
 
 ```jsq
-import Qute from '@qutejs/runtime';
-
-<q:template name='RootTemplate'>
+<q:template export>
 <div q:markdown>
 # My Header
 
 Some content
 </div>
 </q:template>
-
-export default Qute(RootTemplate);
 ```
 
 You can also pass the markdown content through an attribute:
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
 <q:template name='RootTemplate'>
 <div q:markdown={content} />
 </q:template>
 
-export default Qute(RootTemplate).properties({ content: `
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property content = `
 # My Header
 
-Some content
-`});
+Some content`;
+}
+export default Root;
 ```
 
 
@@ -64,17 +64,13 @@ Qute.Rendering.converters.typeName = theConvertFunction;
 ## Example
 
 ```jsq
-import Qute from '@qutejs/runtime';
-
-<q:template name='RootTemplate'>
+<q:template export>
 <div q:content-random />
 </q:template>
 
 Qute.Rendering.converters.random = function() {
 	return Math.random().toString(36).substring(2, 15);
 }
-
-export default Qute(RootTemplate);
 ```
 
 

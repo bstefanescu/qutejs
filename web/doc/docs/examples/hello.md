@@ -4,7 +4,7 @@ The following examples demonstrates the usage of:
 
 1. basic **templating** features.
 2. **[event](#/model/events)** handling.
-3. **[q:call](#/attributes/q-call)** directive.
+3. **[q:ref](#/attributes/q-ref)** directive.
 4. **reactive** `ViewModel` properties.
 5. **non reactive** `ViewModel` properties.
 5. the `q:model` directive provided by **[form plugin](#/plugins/form)**.
@@ -13,13 +13,9 @@ The following examples demonstrates the usage of:
 The following component is just printing "Hello World!".
 
 ```jsq
-import Qute from '@qutejs/runtime';
-
-<q:template name='HelloTemplate'>
+<q:template export>
 	<div>Hello World!</div>
 </q:template>
-
-export default Qute(HelloTemplate);
 ```
 
 ## Using event listeners
@@ -29,19 +25,22 @@ The following compopnent is displaying a "Hello World!" alert when clicking a bu
 ```jsq
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
 <q:template name='HelloTemplate'>
 	<button @click='sayHello'>Say Hello</button>
 </q:template>
 
-export default Qute(HelloTemplate, {
+@Template(HelloTemplate)
+class Hello extends ViewModel {
 	sayHello() {
 		window.alert('Hello world!');
 	}
-});
+}
+export default Hello;
 ```
 
-## Using `q:call` to retrieve a DOM element instance
+## Using `q:ref` to retrieve a DOM element instance
 
 The following component is displaying a "Hello {name}!" where `{name}` is the value entered in a text input.
 
@@ -49,19 +48,22 @@ The following component is displaying a "Hello {name}!" where `{name}` is the va
 ```jsq
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
 <q:template name='HelloTemplate'>
 	<div>
-		<input type='text' value="World" q:call="element => this.inputElement = element" />
+		<input type='text' value="World" q:ref="_input" />
 		<button @click='sayHello'>Say Hello</button>
 	</div>
 </q:template>
 
-export default Qute(HelloTemplate, {
+@Template(HelloTemplate)
+class Hello extends ViewModel {
 	sayHello() {
-		window.alert('Hello '+this.inputElement.value+'!');
+		window.alert('Hello '+this._input.value+'!');
 	}
-});
+}
+export default Hello;
 ```
 
 ## Using component reactive properties
@@ -72,6 +74,7 @@ Use a reactive property to store the user name to greet. When changing the user 
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
 <q:template name='HelloTemplate'>
 	<div>
@@ -80,9 +83,11 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-export default Qute(HelloTemplate).properties({
-    name: "Foo"
-});
+@Template(HelloTemplate)
+class Hello extends ViewModel {
+    @Property name = 'Foo';
+}
+export default Hello;
 ```
 
 ## Using component non-reactive properties
@@ -94,6 +99,7 @@ The initial property value will be correctly displayed, but when changed the dis
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
 <q:template name='HelloTemplate'>
 	<div>
@@ -103,12 +109,11 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-export default Qute(HelloTemplate, {
-	init() {
-		// define a none reactive property
-		this.name = 'Foo';
-	}
-});
+@Template(HelloTemplate)
+class Hello extends ViewModel {
+    name = 'Foo';
+}
+export default Hello;
 ```
 
 ## Binding a form control to a reactive property through `q:model` directive
@@ -117,7 +122,10 @@ The same as the reactive property example, but we will use the `q:model` directi
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import '@qutejs/form';
+import FormPlugin from '@qutejs/form';
+const { ViewModel, Template, Property } = Qute;
+
+Qute.install(FormPlugin);
 
 <q:template name='HelloTemplate'>
 	<div>
@@ -126,9 +134,11 @@ import '@qutejs/form';
 	</div>
 </q:template>
 
-export default Qute(HelloTemplate).properties({
-    name: "Foo"
-});
+@Template(HelloTemplate)
+class Hello extends ViewModel {
+    @Property name = 'Foo';
+}
+export default Hello;
 ```
 
 **Note** that we need to import the `form` plugin since the `q:model` directive is defined there.
@@ -139,7 +149,8 @@ This example is using the **[i18n plugin](#/plugins/i18n)**.
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import '@qutejs/i18n';
+import QuteIntl from '@qutejs/i18n';
+const { ViewModel, Template } = Qute;
 
 <q:template name='HelloTemplate'>
 	<div>
@@ -154,7 +165,7 @@ import '@qutejs/i18n';
 	</div>
 </q:template>
 
-var i18n = new Qute.Intl({
+var i18n = new QuteIntl({
     resources: {
         en: {
             hello: 'Hello World!'
@@ -163,7 +174,8 @@ var i18n = new Qute.Intl({
     }
 });
 
-var Hello = Qute(HelloTemplate, {
+@Template(HelloTemplate)
+class Hello extends ViewModel {
 	changeLanguage(event) {
 		var lang = event.target.value;
 		var self = this;
@@ -171,7 +183,7 @@ var Hello = Qute(HelloTemplate, {
 			changed && self.refresh();
 		});
 	}
-});
+}
 
 i18n.load('en').then(function() {
     // language loaded -> ready to use i18n

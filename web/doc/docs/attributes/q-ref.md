@@ -10,6 +10,9 @@ When the `q:ref` attribute is used on a DOM element then a reference to the elem
 In this example we will inject the span element instance in the current view model as a regular property named `spanElement`.
 
 ```jsq
+import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
+
 <q:template name='RootTemplate'>
 	<div>
 		<button @click='increment'>Increment</button>
@@ -17,12 +20,14 @@ In this example we will inject the span element instance in the current view mod
 	</div>
 </q:template>
 
-export default Qute(RootTemplate, {
+@Template(RootTemplate)
+class Root extends ViewModel {
 	increment() {
 		var value = parseInt(this.spanElement.textContent);
 		this.spanElement.textContent = value+1;
 	}
-});
+}
+export default Root;
 ```
 
 ## Using `q:ref` on components.
@@ -32,6 +37,9 @@ As mentioned when using `q:ref` on a component, a reference to the component its
 Let's rewrite the example as above but using a `ViewModel` component to wrap the `span`.
 
 ```jsq
+import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
+
 <q:template name='MySpanTemplate'>
 	<span><slot/></span>
 </q:template>
@@ -42,13 +50,16 @@ Let's rewrite the example as above but using a `ViewModel` component to wrap the
 	</div>
 </q:template>
 
-const MySpan = Qute(MySpanTemplate);
-export default Qute(RootTemplate, {
-	increment() {
+const MySpan = Qute(MySpanTemplate); // wrap the template in a ViewModel component5
+
+@Template(RootTemplate)
+class Root extends ViewModel {
+    increment() {
 		var value = parseInt(this.mySpan.$el.textContent);
 		this.mySpan.$el.textContent = value+1;
 	}
-});
+}
+export default Root;
 ```
 
 **Note** that we used the `$el` property of the component to get the reference to the component root element.
@@ -57,6 +68,9 @@ Let's rewrite the example above by encapsulating the increment logic in the `my-
 
 
 ```jsq
+import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
+
 <q:template name='MySpanTemplate'>
 	<span><slot/></span>
 </q:template>
@@ -67,18 +81,21 @@ Let's rewrite the example above by encapsulating the increment logic in the `my-
 	</div>
 </q:template>
 
-const MySpan = Qute(MySpanTemplate, {
+@Template(MySpanTemplate)
+class MySpan extends ViewModel {
 	increment() {
 		var value = parseInt(this.$el.textContent);
 		this.$el.textContent = value+1;
 	}
-});
+}
 
-export default Qute(RootTemplate, {
+@Template(RootTemplate)
+class Root extends ViewModel {
 	increment() {
 		this.mySpan.increment();
 	}
-});
+}
+export default Root;
 ```
 
 

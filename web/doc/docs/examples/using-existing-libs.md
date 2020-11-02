@@ -7,18 +7,13 @@ As Qute is working directly on the DOM you can easily use any plain javascript c
 ```jsq
 import "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css";
 
-import window from '@qutejs/window';
-import Qute from '@qutejs/runtime';
-
 <q:template name='BsButton'>
 	<button class={$attrs['bs-type']?'btn btn-'+$attrs['bs-type']:'btn'} q:attrs='!bs-type' q:emit-click><slot/></button>
 </q:template>
 
-<q:template name='MyComponent'>
+<q:template export>
 	<bs-button bs-type='primary' @click='window.alert("Hello!")'>My Button</bs-button>
 </q:template>
-
-export default Qute(MyComponent)
 ```
 
 ### Example 2: Using [jQuery](https://jquery.com/) with [selectivity](https://arendjr.github.io/selectivity/)
@@ -30,11 +25,14 @@ import Qute from '@qutejs/runtime';
 import "https://code.jquery.com/jquery-3.4.1.slim.min.js";
 import "../doc/files/selectivity-jquery.min.js";
 
-<q:template name='MyComponent'>
+const { ViewModel, Template } = Qute;
+
+<q:template name='MyComponentTemplate'>
 	<div></div>
 </q:template>
 
-export default Qute(MyComponent, {
+@Template(MyComponentTemplate)
+class MyComponent extends ViewModel {
 	created(el) {
 		$(this.$el).selectivity({
 	    	allowClear: true,
@@ -43,7 +41,8 @@ export default Qute(MyComponent, {
 	    	placeholder: 'No city selected'
 		});
 	}
-});
+}
+export default MyComponent;
 ```
 Of course, you can use reactive properties and/or watchers to update the state of external components.
 

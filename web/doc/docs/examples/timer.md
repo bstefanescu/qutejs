@@ -12,27 +12,33 @@ The following component is regularly updating the DOM to display the current tim
 ```jsq
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
 <q:template name='TimeTemplate'>
 	<div>{{now()}}</div>
 </q:template>
 
-export default Qute(TimeTemplate, {
-	now() {
+@Template(TimeTemplate)
+class TimeComponent extends ViewModel {
+
+    now() {
 		return new Date().toTimeString();
-	},
+	}
+
 	connected() {
 		var self = this;
 		this.timer = window.setInterval(function() {
 			self.update();
 		}, 500)
-	},
-	disconnected() {
+	}
+
+    disconnected() {
 		if (this.timer) {
 			window.clearInterval(this.timer);
 			this.timer = null;
 		}
 	}
-});
 
+}
+export default TimeComponent;
 ```

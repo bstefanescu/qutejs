@@ -6,8 +6,9 @@ Let's say you want to create a component which display an alert message. You wan
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
-<q:template name='alert-message'>
+<q:template name='AlertMessage'>
 <div class='alert'><slot/></div>
 </q:template>
 
@@ -15,11 +16,11 @@ import Qute from '@qutejs/runtime';
 <alert-message><b>Error:</b> {{errorMessage}}</alert-message>
 </q:template>
 
-export default Qute(RootTemplate, {
-	init() {
-		this.errorMessage = "Something bad happened!"
-	}
-});
+@Template(RootTemplate)
+class Root extends ViewModel {
+    errorMessage = "Something bad happened!"
+}
+export default Root;
 ```
 
 The content of the alert-message component will replace the <slot/> element in the component template.
@@ -35,6 +36,7 @@ In some situations you may want more than one injectable content. In this case y
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
 <q:template name='AlertMessage'>
 <div>
@@ -50,11 +52,11 @@ import Qute from '@qutejs/runtime';
 </alert-message>
 </q:template>
 
-export default Qute(RootTemplate, {
-	init() {
-		this.errorMessage = "Something bad happened!"
-	}
-});
+@Template(RootTemplate)
+class Root extends ViewModel {
+    errorMessage = "Something bad happened!"
+}
+export default Root;
 ```
 
 **Note** that the nested tag must be a direct child of the target component. Any content outside a nested directive which is a direct child of the target component will be ignored.
@@ -66,17 +68,13 @@ A slot can have a default value. If no content is injected in the slot (i.e. no 
 #### Example
 
 ```jsq
-import Qute from '@qutejs/runtime';
-
 <q:template name='AlertMessage'>
 <div class='alert'><slot>Unknown Error!</slot></div>
 </q:template>
 
-<q:template name='RootTemplate'>
+<q:template export>
 <alert-message />
 </q:template>
-
-export default Qute(RootTemplate);
 ```
 
 By calling `<alert-message/>` (with no content) then the slot will use the default value: `Unknown Error!`
@@ -100,8 +98,6 @@ In the same way a `nested` directive can be used without a name. In this case it
 Slots can be propagated down to components on any nested level. Here is an example:
 
 ```jsq
-import Qute from '@qutejs/runtime';
-
 <q:template name='MyTitle'>
 	<h3><slot/></h3>
 </q:template>
@@ -121,14 +117,12 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-<q:template name='RootTemplate'>
+<q:template export>
 <my-panel>
 	<nested name='title'>The panel title</nested>
 	<nested name='content'>The panel content</nested>
 </my-panel>
 </q:template>
-
-export default Qute(RootTemplate);
 ```
 
 ## Injecting variable content
@@ -139,6 +133,7 @@ We can rewrite the previous example like this:
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template } = Qute;
 
 <q:template name='MyTitle'>
 	<h3><slot/></h3>
@@ -166,11 +161,11 @@ import Qute from '@qutejs/runtime';
 </my-panel>
 </q:template>
 
-export default Qute(RootTemplate, {
-	init() {
-		this.title = "The <span style='color: green'>title</span>";
-	}
-});
+@Template(RootTemplate)
+class Root extends ViewModel {
+    title = "The <span style='color: green'>title</span>";
+}
+export default Root;
 ```
 
 In that case the `title` slot will get its HTML content from the variable named `title`. Of course the `title` variable is resolved in the context of the `my-panel` component.
@@ -204,8 +199,6 @@ The above example is equivalent to:
 Here is an working example:
 
 ```jsq
-import Qute from '@qutejs/runtime';
-
 <q:template name='MyDialog'>
     <div class='dialog' style='border:1px solid #cecece'>
         <div><slot name='title'/></div>
@@ -214,12 +207,10 @@ import Qute from '@qutejs/runtime';
     </div>
 </q:template>
 
-<q:template name='RootTemplate'>
+<q:template export>
     <my-dialog>
         <h3 q:slot='title'>The title</h3>
         <div class='dialog-body' q:slot>The dialog body.</div>
     </my-dialog>
 </q:template>
-
-export default Qute(RootTemplate);
 ```

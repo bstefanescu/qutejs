@@ -16,6 +16,7 @@ Both of these notations are equivalent.
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
 <q:template name='RootTemplate'>
 	<div>
@@ -27,10 +28,12 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-export default Qute(RootTemplate).properties({
-    disableButton1: false,
-    disableButton2: false
-});
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property disableButton1 = false;
+    @Property disableButton2 = false;
+}
+export default Root;
 ```
 
 ## Using q:toggle on components
@@ -39,6 +42,7 @@ When using `q:toggle` attribute on components it will modify the attributes on t
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
 <q:template name='FirstButtonTemplate'>
 	<button><slot/></button>
@@ -57,10 +61,12 @@ import Qute from '@qutejs/runtime';
 	</div>
 </q:template>
 
-const FirstButton = Qute(FirstButtonTemplate);
+const FirstButton = Qute(FirstButtonTemplate); // wrap the template in a ViewModel component
 
-export default Qute(RootTemplate).properties({
-    disableButton1: false,
-    disableButton2: false
-});
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property disableButton1 = false;
+    @Property disableButton2 = false;
+}
+export default Root;
 ```

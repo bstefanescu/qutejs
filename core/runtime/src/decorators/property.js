@@ -6,6 +6,6 @@ export default function Property(Type, arg) {
         vm.defineProp(Type, key, value, arg);
     }
 }
-Property.register = registerType;
+Property.registerType = registerType;
 Property.getType = getType;
 

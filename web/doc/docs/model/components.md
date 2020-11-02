@@ -1,20 +1,20 @@
 # Qute Components
 
-As we've seen in the **[Overview](#/overview)** section, components are objects that can be referenced inside a tmeplate through custom elements.
+As we've seen in the **[Overview](#/overview)** section, components are objects that can be referenced inside a template through custom elements.
 
-There are three tyopes of such objects in Qute:
+There are three types of components:
 
 1. Pure rendering functions
 2. Templates which are compiled as rendering functions.
 3. `ViewModel` components which provides a rendering function (usually a template) and a rendering context:
-    - a data model: the comoponent itself (providing properties and methods to the template).
+    - a data model: the component itself (providing properties and methods to the template).
     - DOM event listeners: to be called from templates
 
 ## Pure Rendering Functions
 
 These components are low level functions, they take a rendering context and should return a DOM element or fragment.
 
-You may want to write a rendering function to create very simple a static DOM structures. If you need a data model or reactivity then it is recommended to use templates or `ViewModel`components.
+You may want to write rendering function from scratch to create very simple or static DOM structures. If you need a data model or reactivity then it is recommended to use templates or `ViewModel`components.
 
 The signature of the rendering function is: `DOMElement function(renderingContext, attrs, slots)`
 
@@ -29,10 +29,10 @@ The signature of the rendering function is: `DOMElement function(renderingContex
 ```jsq
 import {document} from '@qutejs/window';
 
-function MyElement(r, attrs, slots) {
+function MyElement(rendering, attrs, slots) {
     const span = document.createElement('SPAN');
 	if (attrs.color) {
-        span.style.color = r.eval(attrs.color);
+        span.style.color = rendering.eval(attrs.color);
     }
     if (slots.default) {
         slots.default.forEach(child => span.appendChild(child));
@@ -94,7 +94,7 @@ See the **[Life Cycle](#/model/lifecycle)** section for more details.
 `ViewModel` components are fully featured components, providing:
 
 + a data model containing reactive or regular properties
-+ methods accessible from template
++ methods accessible from the template
 + life cycle hooks
 + DOM event handling
 + property watchers
@@ -108,85 +108,133 @@ Also, a `ViewModel` component **must** define a `render` method which is the ren
 
 To make it simpler, we will use the term **ViewModel** interchangeably with **ViewModel Component**.
 
-To create a `ViewModel` component you should use the `Qute(Template, Model)` function.
+To create a `ViewModel` component you need to declare a class extending `Qute.ViewModel`. A `ViewModel` class can use  **[decorators](https://github.com/tc39/proposal-decorators)** and **[class fields](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Public_class_fields)**. The Qute compiler will generate ES6 compatible code for all of these non standard features.
 
 Let's rewrite the example above using a `ViewModel` component. We will make some changes on the previous example to add additonal behavior: we will use a button instead of a span and  will display a message when clicked:
 
 ```jsq
+import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
+
 <q:template name='MyComponentTemplate'>
     <button style={'color:'+color} @click='sayHello'><slot/></button>
 </q:template>
 
-const MyComponent = Qute(MyComponentTemplate, {
+@Template(MyComponentTemplate)
+class MyComponent extends ViewModel {
+    @Property color = 'blue';
+
     sayHello() {
         window.alert('Hello!');
     }
-}).properties({
-    color: 'blue'
-});
+}
 
 <q:template export>
     <MyComponent color='green'>Hello!</MyComponent>
 </q:template>
 ```
 
+You can see the usage of the `@Template` and `@Property` decorators as well of class fields.
+
 The only change from the template component example is that now we explicitly define a reactive `color` property, and we no more use the `$attrs` object to get the color since reactive properties are automatically bound to attributes which match the property name (as explained in the [Overview](#/overview) section).
 
 As we've seen, template components provide a very basic data model `{ $attrs: ... }` which epxose the attributes used on the component element. When using a `ViewModel` component the data model will be the component instance itself. So, any method, regular or reactive property defined by the component will be part of the data model, and so, will be exposed to the template. The `this` built-in variable will point to the component instance.
 
-### Creating a `ViewModel` component
 
-A `ViewModel` component is created using the `Qute(Template, Model)` function.
+### `ViewModel` decorators
 
-**Arguments:**
+Here is the list of all the built-in decorators you can use on a `ViewModel` class:
 
-+ **Template** - an optional template or pure rendering function
-+ **Model** - an optional object used to define the component prototype. The model can be either a **class** extending `Qute.ViewModel`, either a **plain object**.
+#### `@Template(TemplateFunction)`
 
-Both `Template` and `Model`arguments are optional, but **at least one** must be defined. If the `Template` argument is defined then the component will use it as the render method, otherwise the `Model` object must define a `render()` method.
+This is a class decorator which binds a template to a `ViewModel`.
 
-Any properties, getters or methods defined by the **Model** will be added to the component prototyoe. Here is an example of a `Model` object:
+#### `@Mixin(Mixin1, Mixin2, ...)`
+
+A class decorator which applies **[mixins](https://javascript.info/mixins)** to the class prototype.
+
+See the **[Mixins](#/model/mixins)** section for more details.
+
+#### `@Watch(propertyName)`
+
+A method decorator which install a watcher on a reactive property given its name. A property watcher is called before the reactive property is updated and can cancel the update.
+
+See the **[Property Watchers](#/model/watchers)** section for more details.
+
+#### `@On(event[, selector])`
+
+A method decorator which install a DOM event handler given and event name and an optional element selector. The event handler is installed when component is connected to the DOM and automatically uninstalled when it is disconnected.
+
+See the **[Working with DOM Events](#/model/events)** section for more details.
+
+#### `@Channel`
+
+A method decorator which defines a message handler for inter-component messaging.
+
+See the **[Messaging](#/model/messaging)** section for more details.
+
+#### `@Property([PropertyType])`
+
+A class field decorator used to define reactive properties. Accepts an optional property type object.
+
+See the **[Component Properties](#/model/properties)** section for more details.
+
+#### `@Required`
+
+Can be used to mark a reactive property as required.
+
+See the **[Component Properties](#/model/properties)** section for more details.
+
+#### `@Link(dataModelKey)`
+
+A class field decorator used to define a `ViewModel` reactive property linked to an **Application Data Model** property given the application property key.
+
+See the **[Component Properties](#/model/properties)** section for more details.
+
+### ViewModel Properties
+
+A `ViewModel` component can define two types of properties: **reactive properties** and **regular properties**.
+
+See the **[Component Properties](#/model/properties)** section for more details.
+
+#### Reactive Properties
+
+A reactive property will trigger a DOM update each time the property value changes. Reactive properties can be set through component's element attributes.
+
+Reactive properties can be defined using class fields decorated using the `@Property` decorator.
+
+#### Regular properties
+
+Regular properties will not affect the DOM when udpated. You can either define them using class fields, either directly in the class constructor using `this.prop = value;` expressions.
+
+**Note** You can define properties that are not enumerable by using a name which starts with an underscore character. This is true for both regular and reactive properties.
+
+#### Computed Properties
+
+Computed properties can be defined using the getter syntax.
+
+**Example:**
 
 ```javascript
-{
-	// initialization code
-	init(app) {
-		// do any initialization here
-		this.aNonReactiveProperty = 'I am a non-reactive property';
-	},
-	// you can define computed properties
-	get fullName() {
-		return this.firstName +' '+this.lastName;
-	},
-	// you can define methods
-	sayHello() {
-		console.log('Hello!');
-	},
-	// you can define static properties
-	aStaticProperty: 'I am a static property',
-	// you can define lifecycle event handlers:
-	created(element) {
-		console.log('component was created');
-    },
-	ready(element) {
-		console.log('the component element was created and properties / listeners initialized');
-    },
-	connected() {
-		console.log('component was connected');
-	},
-	disconnected() {
-		console.log('component was disconnected');
-	},
-	// you can define a pure rendering function if not using a template
-	render(rendering) {
-		var span = document.createElement('SPAN');
-		span.textContent(this.fullName);
-		return span;
-	}
+@Template(MyTemplate)
+class MyComponent extends ViewModel {
+    @Property reactiveProperty = 'default value';
+    @Property _nonEnumerableReactiveProp = new Date();
+    regularProperty = 123;
+    _nonEnumerableProp = true;
+
+    constructor(...args) {
+        super(...args);
+        this.someProp = null; // define a regular property inside the constructor
+    }
+
+    get computedProperty() {
+        return this.reactiveProperty + '!';
+    }
 }
 ```
 
-To define the **Model** using a JavaScript class see the **[Class Syntax](#/model/class)** section.
+See the **[Component Properties](#/model/properties)** section for more details.
 
 ### `ViewModel` DOM element
 
@@ -203,62 +251,12 @@ The **`$attrs`** property we saw on the template components is defined  on `View
 
 Check the  **[Component Properties](#/model/properties)** section for more details on properties and attributes mapping.
 
-### `ViewModel` Initialization
-
-The component initialization can be customized by defining an `init` method.
-The `init` method takes as argument the current Qute application.
-
-For more on the application object see the **[Application Instance](#/app/instance)** section.
-
-This method will be called only once in the component life-cycle, just aftert the instance is created and all the declared reactive properties are defined.  \
-You can use this method to initialize any non-reactive **component properties**.
-
-### Reactive Properties
-To define reactive properties you must call the `properties()` method on the component constructor returned by the `Qute()` function:
-
-**Example**:
-
-```javascript
-Qute(SomeTemplate).properties({
-    firstName: "John",
-    lastName: "Doe",
-    age: null
-});
-```
-
-This will define 3 reactive properties: `firstName`, `lastName` and `age` which will be initialized with the specified values.
-
-See the **[Component Properties](#/model/properties)** section for more details.
-
-### Regular (non-reactive) Properties
-
-Any `ViewModel` property which is not declared as reactive will not trigger any DOM update when changed.
-
-Non reactive properties can be defined inside the `init()` method.
-
-**Example**:
-
-```javascript
-init() {
-	this.nonReactiveProp = 'I am a non-reactive property';
-}
-```
-
-### Computed Properties
-
-Computed properties can be defined using the ES6 getter syntax.
-If you don't want for some reason to use the ES6 syntax then you need to define the computed properties using `Object.defineProperty` in the `init` method.
-
-### Static Properties
-
-You can also define random properties in the definition object that will be injected as **static** properties on the component (*static* because these properties will be injected on the component prototype).
-
 ### The `render(renderingContext)` method
 
 If you specify a method named `render` it will be used as the rendering function (overwriting any attached template).  \
 The `render` method is called once when the component is created and must return a DOM element or null. The rendering method will never be called again during the component life cycle.
 
-The render function gets one argument: the rendering context. We will not document the rendering API here.  \
+The render method gets one argument: the rendering context. We will not document the rendering API here.  \
 However, here is an example of how a custom `render` method may look:
 
 ```javascript
@@ -271,17 +269,61 @@ However, here is an example of how a custom `render` method may look:
 
 This will create a DIV element and will append a reactive text which will take the value of the `ViewModel`'s **fullName** property.
 
-### `ViewModel` Life Cycle
+Usually, you will want to use templates to define the rendering of a `ViewModel`. To this, just use the `@Template` annotation to bind the template fucntion to the `VieModel`'s render method.
 
-There are five life cycle handlers that can be defined in a definition object:
+The following code
 
-#### `init(app)`
+```javascript
+@Template(MyTemplate)
+class MyComponent extends ViewModel {
 
-The `init` method we discussed above. Called just after the component is instantiated and reactive properties (if any) are defined.
+}
+```
+
+is equivalent to:
+
+```javascript
+class MyComponent extends ViewModel {
+
+}
+MyComponent.prototype.render = MyTemplate;
+```
+
+### The `ViewModel` constructor
+
+The `ViewModel` constructor signature is `constructor(app)` where **app** is an optional application instance to use. If the  application instance is not specified an implicit instance will be created by the `super` constructor.
+
+**Note** that you **must** always pass down the `app` argument to the `super` constructor!
+
+**Example:**
+
+```javascript
+class MyComponent extends ViewModel {
+    constructor(app) {
+        super(app);
+        // do your initialization here
+    }
+}
+```
+
+A more generic way to pass constructor arguments down to the `super` constructor is to use the **[rest parameter syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters)**:
+
+```javascript
+class MyComponent extends ViewModel {
+    constructor(...args) {
+        super(...args);
+        // do your initialization here
+    }
+}
+```
+
+### The `ViewModel` Life Cycle
+
+There are four life cycle methods you can be define on a `ViewModel` component:
 
 #### `created(element)`
 
-Called just after the component root element was created (i.e. component was rendered). The component is not yet connected to the DOM.
+Called just after the component root element was created (i.e. component was rendered) . The component is not yet connected to the DOM.
 
 This handler is called only once in the component life-cycle, after the init method and before element attributes are injected into component properties.
 
@@ -296,9 +338,9 @@ As for the `created` handler the `ready` handler is called only once in the comp
 
 #### `connected()`
 
-Called just after the component is connected to the DOM (i.e. the component element is attached to the DOM).
+Called just after the component is connected to the DOM.
 
-This handler may be called several times in the component life-cycle, every time the component element is attached to the DOM. A component can be attached to the DOM or detached from the DOM multiple times. For example if the component is conditionally displayed by using the [if directive](#/directives/if), it will be detached / attached every time the `if` state changes.
+This handler may be called several times in the component life-cycle, every time the component element is attached to the DOM. A component can be attached to the DOM or detached from the DOM multiple times. For example if the component is conditionally displayed by using the [if directive](#/directives/if), it will be connected / disconnected every time the `if` state changes.
 
 This handler can be used to add event listeners, setup timers etc.
 
@@ -308,172 +350,16 @@ Called just after the component is disconnected from the DOM. It may be called s
 
 This handler can be used to clean up resources setup by the `connected` handler.
 
-### Methods
-
-Any method specified in a definition object which is not a getter and neither none of `init`, `created`, `ready`, `connected`, `disconnected` will become a **Component Method**.
-
-Component methods are injected at the ViewModel's prototype level, and can be used from templates.
-
-**Example**
-
-```javascript
-{
-	hello() {
-		console.log('Hello!');
-	}
-}
-```
-
-Then, you can use it from the component template:
-
-```xml
-<button @click='hello'>Click Me</button>
-```
-
-or
-
-```xml
-<button @click='e => hello()'>Click Me</button>
-```
-
-### Interacting through DOM Events
-
-Components can trigger and listen to DOM events. This is especially useful in communicating with a parent component or to simply listen to standard user actions like clicks, key press etc.
-
-Components can also create new event types (as instances of the `CustomEvent` object) and fire these events on the component element.
-
-See the **[Working with DOM Events](#/model/events)** section for more details.
-
-## The `ViewModel` constructor
-
-The `Qute` function is creating a `ViewModel` constructor which can be used then to define further aspects of the component like event listeners, watchers, a communication channel and, of course, to instantiate the component.
-
-The constructor takes two optional arguments:
-
-1. A **Qute Application** instance - see [Application Instance](#/app/instance)). If no one is provided an implicit application instance is created. Sharing an application instance between isolated component trees enable these components to communicate through the [Message Bus](#/app/bus).
-2. An object defining the attributes, the same as the attributes you may use when instantiating the component through a template.
-
-```javascript
-var MyComponent = Qute(MyComponentTemplate).properties({
-    message: 'Hello!'
-});
-var componentInstance = new MyComponent();
-```
-
-### Registering DOM Event Listeners
-
-You can easily register event listeners on the component element using the constructor `on` method:
-
-**`on(event[, selector], listener)`**
-
-Event listeners declared like this will be registered when component is connected to the DOM and automatically removed when component is disconnected from the DOM.
-
-See the **[Working with DOM Events](#/model/events)** section for more details.
-
-**Example**
-
-```javascript
-var MyComponent = Qute(MyComponentTemplate).properties({
-    message: 'Hello!'
-}).on('click', function() {
-	console.log('component clicked', this.message);
-	return false;
-});
-```
-
-### Registering Watchers
-
-A watcher is a function that will be called each time a reactive property value changes. The watcher can cancel the DOM update if needed.
-
-You can easily register watchers using the constructor `watch` method.
-
-**`watch(propName, watcher)`**
-
-**Example**
-
-```javascript
-var MyComponent = Qute(MyComponentTemplate).properties({
-    message: 'Hello!'
-}).watch('message', function() {
-	console.log('message changed');
-});
-```
-
-See the **[Watchers](/#model/watchers)** section for more details.
-
-### Registering a Channel
-
-Channels can be used to implement inter-component communication.
-
-To register a component channel you can use the constructor `channel` method.
-
-See the **[Message Bus](#/app/bus)** section for more details.
-
-**Example**
-
-```javascript
-var MyComponent = Qute(MyComponentTemplate).properties({
-    message: 'Hello!'
-}).channel(function(msg) {
-	console.log('received a message', msg);
-});
-```
-
-### Adding Mixins
-
-You can group common methods in shareable objects and then add the methods as `mixins` to a component.
-
-**Example**
-
-```jsq
-import Qute from '@qutejs/runtime'
-
-<q:template name='RootTemplate'>
-    <div>
-        {{message}} <button @click={changeGreeting}>Change Greeting</button>
-    </div>
-</q:template>
-
-export default Qute(RootTemplate).properties({
-    message: 'Hello!'
-}).mixin({
-    changeGreeting() {
-        this.message= 'Hi!';
-    }
-});
-```
-
-**Note** that you can pass any number of mixins: `Component.mixin(Mixin1, Mixin2, Mixin3, ...)`
-
-### Chaining registrations
-
-You can chain all these methods to easily define listeners, watchers and a channel.
-
-**Example**
-
-```javascript
-var MyComponent = Qute(MyComponentTemplate).properties({
-    message: 'Hello!'
-}).on('click', function() {
-	console.log('component clicked', this.message);
-	return false;
-}).watch('message', function() {
-	console.log('message changed');
-}).channel(function(msg) {
-	console.log('received a message', msg);
-});
-```
-
-## Mounting ViewModel Components
+### Mounting `ViewModel` Components
 
 A **Root Component** can be attached to the DOM by **mounting** it.
 When mounting a component all the components referred by the template will be recursively instantiated and mounted too.
 
-When a child component is mounted through the template of a parent component, it will be initialized with the attributes specified in the template on the component tag. These attributes will be bound to [component properties](#/model/properties). Child components are automatically instantiated and mounted when the parent component is mounted.
+When a child component is mounted through the template of a parent component, it will be initialized with the attributes specified in the template on the component tag. These attributes will be bound to [component properties](#/model/properties).
 
 **Root components** must be **instantiated** and **mounted** manually. When manually instantiating a component you can still specify the **attributes** to be bound on properties (as the component was instantiated through a component tag). This can be done by passing a **second argument to the ViewModel constructor**, which is mapping attribute names to attribute values.
 
-To mount a component instance you need to use the **`mount(elOrId, insertBefore)`** function.
+To mount a component instance you need to use the **`mount(elOrId, insertBefore)`** method.
 
 Both arguments are optional.
 
@@ -482,19 +368,20 @@ Both arguments are optional.
 
 If no argument is provided then the component element will be appended to the current document body.
 
-```javascript
-var MyComponent = Qute(MyComponentTemplate).properties({
-    message: 'Hello!'
-});
+```jsq
+import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property } = Qute;
 
-var myComp = new MyComponent(null, {message: 'Hello World!'});
+<q:template name='MyComponentTemplate'>
+    <div>{{message}}</div>
+</q:template>
+
+@Template(MyComponentTemplate)
+class MyComponent extends ViewModel {
+    @Property message = 'Hello!';
+}
+var myComp = new MyComponent();
 myComp.mount('app');
-```
-
-In the previous example the `myComp` is instantiated in the same way as if it was called from a template using:
-
-```xml
-<my-component message='Hello World!' />
 ```
 
 To unmount a root component you should call the `unmount` method:
@@ -505,7 +392,7 @@ myComp.unmount();
 
 This will disconnect the root component (and all its descendants components) from the DOM and then it removes the root component element from the DOM.
 
-## Inter-Component Communication
+### Inter-Component Communication
 
 There are three ways components can communicate with each other:
 
@@ -517,38 +404,52 @@ There are three ways components can communicate with each other:
 
 For more details see the [Message Bus](#/app/bus) and the [Application Instance](#/app/instance) sections.
 
-## Updating the DOM
+### Interacting with DOM Events
+
+Components can trigger and listen to DOM events. This is especially useful in communicating with a parent component or to simply listen to standard user actions like clicks, key press etc.
+
+Components can also create new event types (as instances of the `CustomEvent` object) and fire these events on the component element.
+
+See the **[Working with DOM Events](#/model/events)** section for more details.
+
+### Updating the DOM
 
 The DOM sub-tree corresponding to a component is automatically updated whenever a reactive property changes.
 When the DOM is updated it will not be rendered again, but only the impacted nodes are updated. The DOM sub-tree of a component is rendered only once at the component creation.
 
-There are cases when you want to manually update the DOM sub-tree corresponding to a component. To do so, just use the component `update` method.
+There are cases when you want to manually update the DOM sub-tree corresponding to a component. To do so, just call the component `update()` method.
 
 ## Complete Example
 
 ```jsq
 import Qute from '@qutejs/runtime';
+const { ViewModel, Template, Property, On, Watch } = Qute;
 
 <q:template name='MyComponentTemplate'>
   <button>{{buttonLabel}}</button>
 </q:template>
 
-var MyComponent = Qute(MyComponentTemplate, {
-	init() {
-		this.message = 'Click me!';
-	},
+@Template(MyComponentTemplate)
+class MyComponent extends ViewModel {
+    @Property cnt = 0;
+    message = 'Click me!';
+
 	get buttonLabel() {
 		return this.message+' ('+ this.cnt+')';
-	},
-}).properties({
-    cnt: 0
-}).on('click', function() {
-	console.log('component clicked!');
-	this.cnt++;
-	return false;
-}).watch('cnt', function(newVal, oldVal) {
-	console.log('counter changed', newVal, oldVal);
-});
+	}
+
+    @On('click')
+    onClick(event) {
+        console.log('component clicked!', event);
+        this.cnt++;
+        return false;
+    }
+
+    @Watch('cnt')
+    counterChange(newVal, oldVal) {
+        console.log('counter changed', newVal, oldVal);
+    }
+}
 
 new MyComponent().mount('app');
 ```

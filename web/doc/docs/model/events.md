@@ -3,13 +3,13 @@
 
 ## Registering DOM Event listeners
 
-Registering a DOM event listener can be done either **declaratively** by using *event attributes*, either **programmatically** by using the event API exposed by the Qute ViewModel.
+Registering a DOM event listener can be done either **declaratively** by using *event attributes*, either **programmatically** by using the `@On(event, selector)` decorator or the event API exposed by the `ViewModel`.
 
 Listeners registered using any of these methods are **automatically removed** when the component is disconnected.
 
 A listener function only takes one argument, the **event object**, and will always be called in the **context of the component who registered** the listener (i.e. `this` will point to the component `ViewModel` instance).
 
-The listener may return `false` to stop event propagation and prevent any default handling, any other return value is ignored.  \
+The listener may return `false` to stop event propagation and prevent any default handling; any other return value is ignored.  \
 Thus, returning `false` will have the same effect as calling:
 
 ```javascript
@@ -19,77 +19,57 @@ event.preventDefault();
 
 ### Declarative Event Listener Registration
 
-You can register a DOM event listener directly in the template by using a special attribute starting with the **@** character and followed by the event name to listen: `@event-name='listener'`.
+You can register a DOM event listener directly in the template by using a special attribute starting with the **@** character and followed by the event name to listen: `@event-name='listener'`. You can also use the long form of the event attribute: `q:on{event-name}`.
 
 #### Example
 
 ```jsq
+import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
+
+const { ViewModel, Template } = Qute;
 
 <q:template name='RootTemplate'>
   <button @click='handleClick'>Click me</button>
 </q:template>
 
-export default Qute(RootTemplate, {
+@Template(RootTemplate)
+class RootComponent extends ViewModel {
 	handleClick(event, target) {
 		console.log('Handling event: ', this, event);
+        window.alert('Handling event: '+event);
 	}
-})
+}
+export default RootComponent;
 ```
 
-You can also use simple expressions instead of passing a listener method name:
+You can also use an inlined arrow function as the event handler:
 
 ```jsq
 import Qute from '@qutejs/runtime';
 
-<q:template name='RootTemplate'>
-  <button @click='console.log("Handling event: ", this, $1)'>Click me</button>
+<q:template export>
+  <button @click = ' event => { window.alert("Handling event: "+event); } '>Click me</button>
 </q:template>
 
-export default Qute(RootTemplate);
-```
-
-In that case the event object is accessible as a variable named `$1`.
-
-An alternate way to write inline expressions is to use an arrow functions:
-
-```jsq
-import Qute from '@qutejs/runtime';
-
-<q:template name='RootTemplate'>
-  <button @click='event => console.log("Handling event: ", this, event)'>Click me</button>
-</q:template>
-
-export default Qute(RootTemplate);
 ```
 
 
-### Event Listener Registration through API
+### Event Listener Registration Using the `@On` Decorator
 
 When you want to listen to many elements it is better to register the listener on a parent DOM element so that it catches all the events from children elements of interest.
-The component factory **API** provides you an easy way to do it.
 
-You can declare a listener when defining the component **ViewModel** by using the `on(event[, selector], listener)` method like in the example below:
+You can declare an event listener by deocrating the event handler method with the `@On(event[, selector])` decorator. You can pass two arguments to the decorator:
 
-```jsq
-import Qute from '@qutejs/runtime';
+1. **event** - required - the event name
+2. **selector** - optional - a CSS selector to only retain events triggered by the selected elements.
 
-<q:template name='RootTemplate'>
-  <button>Click me</button>
-</q:template>
-
-export default Qute(RootTemplate).on('click', function(event) {
-	console.log("Handling event: ", this, event);
-});
-```
-
-This will register a **click** listener on the component root element (in this case on the **button** element).
-The listener will be automatically registered when the component is connected to the DOM and will be removed when component disconnects from the DOM.
-
-The `on` method used above can be chained to easily register multiple listeners:
 
 ```jsq
+import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
+
+const { ViewModel, Template, Property, On } = Qute;
 
 <q:template name='RootTemplate'>
 <div>
@@ -98,42 +78,54 @@ import Qute from '@qutejs/runtime';
 </div>
 </q:template>
 
-export default Qute(RootTemplate).properties({
-    text: "some text"
-}).on('click', 'button', function(event) {
-	console.log("Handling click event: ", this, event);
-}).on('change', 'input', function(event) {
-	console.log("Handling input event: ", this, event);
-});
+@Template(RootTemplate)
+class RootComponent extends ViewModel {
+    @Property text = "some text";
 
+    @On('click', 'button')
+    onButtonClicked(event) {
+        console.log("Handling click event: ", this, event);
+        window.alert('Button clicked!');
+    }
+
+    @On('change', 'input')
+    onInputChanged(event) {
+        console.log("Handling change event: ", this, event);
+        window.alert('Input changed!');
+    }
+}
+export default RootComponent;
 ```
-
-In the examples above the listeners are declared at component factory level. The listeners will be registered anytime an instance of the component is connected to the DOM. But what if you want to conditionally register a listener?
 
 #### Conditionally Registering an Event Listener
 
-You can also use the `$on` method on the **ViewModel** instance to register a listener. This method has the same signature as the one provided by the component constructor.
+In the examples above the listeners are registered when the component is connected to the DOM. But what if you want to conditionally register a listener?
 
-When using this registration method it is recommended to do the registration when the component is connected to the DOM.
+In this case you can use the `$on(event[, selector], listener)` method on the **ViewModel** instance to register a listener.
+When using this registration method it is recommended to do the registration when the component is connected to the DOM. The listener will be automatically unregistered when the component is disconnected.
 
 ```jsq
 import Qute from '@qutejs/runtime';
+
+const { ViewModel, Template } = Qute;
 
 <q:template name='RootTemplate'>
   <button>Click me</button>
 </q:template>
 
-export default Qute(RootTemplate, {
-	logClicks: true,
-	connected: function() {
+@Template(RootTemplate)
+class RootComponent extends ViewModel {
+	@Property logClicks = true;
+
+	connected() {
 		if (this.logClicks) this.$on('click', function(event) {
 			console.log("Handling event: ", this, event);
+            window.alert('Handling click event!');
 		});
 	}
-});
+}
+export default RootComponent;
 ```
-
-Listeners registered like this will be automatically removed when the component is disconnected, so you don't need to worry about the cleanup.
 
 
 ## Firing Events
@@ -163,6 +155,8 @@ Emitting an event from a `ViewModel` instance is firing the event at the compone
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
+const { ViewModel, Template } = Qute;
+
 <q:template name='MyButtonTemplate'>
 	<button @click='handleClick'><slot/></button>
 </q:template>
@@ -171,42 +165,52 @@ import Qute from '@qutejs/runtime';
 	<my-button @action='performAction'>Click me!</my-button>
 </q:template>
 
-const MyButton = Qute(MyButtonTemplate, {
+@Template(MyButtonTemplate)
+class MyButton extends ViewModel {
 	handleClick(event) {
 		this.emitAsync('action');
 		return false;
 	}
-});
+}
 
-export default Qute(RootTemplate, {
+@Template(RootTemplate)
+class RootComponent extends ViewModel {
 	performAction(event) {
 		window.alert('The button was clicked');
 	}
-});
+}
+
+export default RootComponent;
 ```
 
 ### Firing events from template components.
 
-Template components are also exposing `emit` and `emitAsync`. In that case the event will be dispatched at the template component root element.
+Template components are also exposing the `emit` and `emitAsync` methods. In that case the event will be dispatched at the template component root element.
 
 ```jsq
 import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
+const { ViewModel, Template } = Qute;
+
 <q:template name='MyButton'>
-	<button @click='emitAsync("action")'><slot/></button>
+	<button @click={event => emitAsync("action")}><slot/></button>
 </q:template>
 
 <q:template name='RootTemplate'>
 	<my-button @action='performAction'>Click me!</my-button>
 </q:template>
 
-export default Qute(RootTemplate, {
+@Template(RootTemplate)
+class RootComponent extends ViewModel {
 	performAction(event) {
 		window.alert('The button was clicked');
 	}
-});
+}
+
+export default RootComponent;
 ```
+
 ## Forwarding events.
 
 You can forward (and optionally rewrite) existing events using the **[q:emit](#/attributes/q-emit)** attribute directive. This is especially usefull to forward events from a component context to the parent context. The event is fired from the root element of the current component.
@@ -234,14 +238,11 @@ import Qute from '@qutejs/runtime';
 	<a href='#' q:emit-action-onclick='$attrs.id'><slot/></a>
 </q:template>
 
-<q:template name='RootTemplate'>
+<q:template export>
 	<div>
-	<my-action @action='e=>window.alert("Action: "+e.detail)' id='action-id'>Click Me</my-action>
+	<my-action @action={e => window.alert("Action: "+e.detail)} id='action-id'>Click Me</my-action>
 	</div>
 </q:template>
-
-
-export default Qute(RootTemplate);
 ```
 
 

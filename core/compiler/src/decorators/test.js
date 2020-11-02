@@ -32,6 +32,8 @@ class MyViewModel extends Qute.ViewModel {
     @Property(List, 'id') items = [];
     @Property(Link, 'UserSession/user') user;
 
+    @Link('thelink') myLink = true;
+
     @Watch('myString') @log
     watchProp() {
     }

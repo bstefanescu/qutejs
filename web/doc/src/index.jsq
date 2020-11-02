@@ -124,7 +124,9 @@ var TOC = [
 		{ title: 'Watchers', href: 'model/watchers'},
 		{ title: 'Events', href: 'model/events'},
 		{ title: 'Life Cycle', href: 'model/lifecycle'},
-		{ title: 'Class Syntax', href: 'model/class'},
+        { title: 'Messaging', href: 'model/messaging'},
+        { title: 'Mixins', href: 'model/mixins'},
+		{ title: 'ES5 Components API', href: 'model/es5'},
         { title: 'JSQ File Format', href: 'model/jsq'},
 	]},
 	{ title: 'Directives', expand: true, items: [
@@ -182,7 +184,7 @@ var TOC = [
 		{ title: 'Custom Form Control', href: 'examples/counter'},
 		{ title: 'Todo List', href: 'examples/todo'},
 		{ title: 'Tab Bar', href: 'examples/tabs'},
-		{ title: 'Using Existing Libraries', href: 'examples/using-existing-libs'},
+		{ title: 'Using Third Party Libraries', href: 'examples/using-existing-libs'},
 		{ title: 'Popup Demo', href: 'examples/popup-demo'},
 		{ title: 'Modal Demo', href: 'examples/modal-demo'},
 	]}
