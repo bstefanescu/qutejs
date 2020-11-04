@@ -126,7 +126,7 @@ var TOC = [
 		{ title: 'Life Cycle', href: 'model/lifecycle'},
         { title: 'Messaging', href: 'model/messaging'},
         { title: 'Mixins', href: 'model/mixins'},
-		{ title: 'ES5 Components API', href: 'model/es5'},
+		{ title: 'ES5 Component API', href: 'model/es5'},
         { title: 'JSQ File Format', href: 'model/jsq'},
 	]},
 	{ title: 'Directives', expand: true, items: [

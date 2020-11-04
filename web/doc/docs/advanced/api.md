@@ -1,8 +1,69 @@
 # Qute API
 
-The main entry point when using Qute is the `Qute` global object. The object itself is a function that can be used to define components
+The main entry point when using Qute is the `Qute` global object. The object itself is a function that can be used to define components using a ES5 compatible API. Also the Qute object serves as a namespace for all the other Qute entities.
 
-## The `Qute()` Function
+## The Qute namespace
+
+Here is a list of all the methods and objects exposed by the `Qute` global object:
+
++ `ViewModel` - the base class for `ViewModel` components
++ `Application` - the base class for user defined applications.
++ `Service` - the base class for user defined services.
++ `Rendering` - the rendering constructor. Used internally to render components.
++ `UpdateQueue` - the object instance managing reactive component DOM updates.
++ `Template` - a class decorator. Can only be used on `ViewModel` derived classes.
++ `Mixin` - a class decorator. Can be used on any class.
++ `View` - a class decorator. Can only be used on `Qute.Application` derived classes.
++ `On` - a class method decorator. Can only be used inside ViewModel dervied classes.
++ `Watch` - a class method decorator. Can only be used inside ViewModel derived classes.
++ `Channel` - a class method decorator. Can only be used inside ViewModel derived classes.
++ `Property` - a class field decorator. Can only be used inside ViewModel derived classes.
++ `Required` - a class field decorator. Can only be used inside ViewModel derived classes.
++ `Link` - a class field decorator. Can only be used inside ViewModel derived classes or inside classes having a `app` field which points to the current Qute Application (like Qute.Service derived classes).
++ `DataModel` - a class field decorator. To be used on Qute.Service or Qute.Application derived classes.
++ `AsyncDataModel` - a class field decorator. To be used on Qute.Service or Qute.Application derived classes.
++ `List` - a reactive list wrapping an array to be used with **[q:for](#/attributes/q-for)** directive.
++ `render(template, model)` - render a template given a model.
++ `runAfter(callback)` - run a function after all queued updates are performed.
++ `registerDirective([tag,] name, directiveFn)` - register a custom attribute directive.
++ `defineMethod(name, method)` - enrich the `ViewModel` and template components prototype with new methods.
+
+To find more about `ViewModel` decorators go to the **[Components](#/model/components)** section
+
+### `Qute.runAfter(callback)`
+
+Register a callback to be invoked after all the tasks in the update queue are run. If the queue is empty then the callback is immediately run.
+
+Because the updates are run asynchronously you cannot know when the update job related to a reactive property change is done. Using this function you can be notified after the current update is done.
+
+This is usefull when writing tests, to make assertions after the DOM changed in response to model change.
+
+### `Qute.registerDirective([tagOrComponentType, ]name, fn)`
+
+Register a custom attribute directive. The `tagOrComponentType` argument is optional, and should be used when the directive should only be enabled for the given tag.
+
+See **[Custom Attributes](#/attributes/q)** for more details.
+
+### `Qute.render(renderFn, dataModel)`
+
+Manualy render a template function given its render fucntion and a **model** object.
+
+The model can any object. You can thus use Qute templates to render anyhting, not only `ViewModel` objects.
+
+Return a DOM element (the root of the rendered elements tree).
+
+### `Qute.defineMethod(name, fn)`
+
+Define a method on `ViewModel` and template component prototype. Can be used to extend the component API. See **[Internationalization Support](#/app/i18n)** for an example.
+
+### `Qute.Rendering.converters`
+
+A converter registry. To be used with  __[q:content-\*](#/attributes/q-markdown)__ attributes.
+
+
+## The ES5 Component API
+
+### The `Qute()` Function
 
 The `Qute(renderingFn, model)` function is used to define `ViewModel` components. It takes 2 arguments:
 
@@ -14,21 +75,18 @@ The `Qute(renderingFn, model)` function is used to define `ViewModel` components
 
 The `Qute()` function **returns** a **ViewModel Constructor**.
 
-## The `ViewModel` constructor (i.e. the Component Type)
+### The `ViewModel` constructor (i.e. the Component Type)
 
-This object is returned by the `Qute()` function explained above. We also name this object the **component type**.
-The component type provides a set of chainable functions to further customize the **component**. Each chainable function is returning backl the component type.
+The object returned by the `Qute()` function is a `ViewModel` costructor.
+The constructor provides a set of chainable functions to further customize the **component**. Each chainable function is returning back the constructor.
 
-The component type can be used as a constructor to create new component instances. Usually, you only instantiate the root component by hand. All the other components will be instantiated when needed by the component templates.
+The costructor can be used to create new component instances. You only need to instantiate the root component by hand. All the other components will be instantiated when needed by the component templates.
 
 **Example:**
 
 ```javascript
 const MyComponent = Qute(MyComponentTemplate, {
     // define here component methods, getters, lifecycle callbacks etc.
-}).properties({
-    // define here reactive properties
-    title: 'Hello!'
 }).watch('title', function(newValue, oldValue) {
     // define a listener on the title reactive property
 	// do something when the title property changes ...
@@ -43,87 +101,29 @@ const MyComponent = Qute(MyComponentTemplate, {
 new MyComponent().mount(); // instantiate and mount the root component
 ```
 
-Here is the list of the chainable functions provided by the component type:
+For more information go to the **[ES5 Component API](#/model/es5)**.
 
-### `properties(factoryOrProperties)`
 
-Define the reactive properties exposed by the component.
+## The `ViewModel` Component Instance API
 
-You can either pass a plain object of mapping property names to initial values, either you can pass a factory function, which will be called at component instaqntiation time to get the mapping of property names / initial values.
-
-The factory function is usefull when using complex property values like array or objects, to avoid sharing these intial values between component isntances. By using a factory function, these intiial values will be created each time a component instance is created.
-
-You can also define constraints on the reactive properties or special properties like `_Link` and `_List` properties. You can find more on this on the [Property Types page](#/model/proptypes).
-
-### `watch(prop, watcher)`
-
-Register a **property watcher**.
-
-The `prop` argument is the property name to watch and the `watcher` is a function thgat will be called when the value of the watched property is changing.
-
-The watcher signature is: `function(newValue, oldValue)`.
-
-### `on(event[, selector], listener)`
-
-Register an event handler on the component element. This function has a similar syntax as the `jQuery.on` method.
-
-The `event` argument is the event name.  \
-The `selector` is optional and can be used to filter the event target.  \
-The `listener` function will be called when the event is fired. It takes one argument: the **event** object, and can return `false` to stop propagation and prevent the default browser action.
-
-For more details see the **[Events](#/model/events)** section.
-
-### `channel(handler)`
-
-Register a communication channel handler for the component.
-
-The `handler` has the signature: `function(message, data)`
-
-The channel is not opened by registering the handler. To open a channel you must use a `q:channel` attribute on the component element toi give the channel a name, or, for root components use the `listen(channelName)` method.
-
-For more details see the **[Message Bus](#/app/bus)** and the **[Components](#/model/components)** section.
-
-### `mixin(mixin1, mixin2, ...)`
-
-Add mixins to a component type.
-
-**Example**
-
-```jsq
-import Qute from '@qutejs/runtime'
-
-<q:template name='root'>
-    <div>
-        {{message}} <button @click={changeGreeting}>Change Greeting</button>
-    </div>
-</q:template>
-
-export default Qute('root', {
-   init() { return { message: 'Hello!' } }
-}).mixin({
-    changeGreeting() {
-        this.message= 'Hi!';
-    }
-});
-```
-
-## The Component Instance API
-
-A component instance is obtained by instantiating the component constructor. The constructor accepts two **optional** arguments:
-
-1. A **Qute Application** instance.
-
-2. An object of attributes, the same as the attributes you may use when instantiating the component through a template.
+The constructor of a `ViewModel` component accepts a **optional** appliation instance as argument.
 
 **Example:**
 
 ```javascript
-var MyComponent = Qute('my-component', {
+
+// define a ViewModel component as a class
+@Template(MyComponentTemplate)
+class MyComponent extends ViewModel {
+
+}
+// or define it using the ES5 API:
+var MyComponent = Qute(MyComponentTemplate, {
 	// component model definition here
 });
-var myComponent1 = new MyComponent();
-// or you can use a specific app instance and some initial attributes
-var myComponent2 = new MyComponent(app, attrs);
+
+// istantiate the component
+var myComponent = new MyComponent();
 ```
 
 ### Component properties
@@ -251,61 +251,3 @@ This has the same effect as `ComponentConstructor.on()`. The difference is that 
 #### `render(rendering)`
 
 Render the component given a rendering instance. Returns the rendered DOM element.
-
-
-
-## The `Qute` Facade
-
-We saw `Qute()` is mainly used as a component factory. Bu the `Qute` function object also acts as a namespace for several global properties and methods.
-
-### `Qute.closest(element)`
-
-Find the closest Qute ViewModel Component containing the given DOM element.
-
-### `Qute.runAfter(callback)`
-
-Register a callback to be invoked after all the tasks in the update queue are run. If the queue is empty then the callback is immediately run.
-
-Because the updates are run asynchronously you cannot know when the update job related to a reactive property change is done. Using this function you can be notified after the current update is done.
-
-This is usefull when writing tests, to make assertions after the DOM changed in response to model change.
-
-### `Qute.registerDirective([tagOrComponentType, ]name, fn)`
-
-Register a custom attribute directive. The `tagOrComponentType` argument is optional, and should be used when the directive should only be enabled for the given tag.
-
-See **[Custom Attributes](#/attributes/q)** for more details.
-
-### `Qute.render(renderFn, dataModel)`
-
-Manualy render a template function given its render fucntion and a **model** object.
-
-The model can any object. You can thus use Qute templates to render anyhting, not only `ViewModel` objects.
-
-Return a DOM element (the root of the rendered elements tree).
-
-### `Qute.defineMethod(name, fn)`
-
-Define a method on `ViewModel` and template component prototype. Can be used to extend the component API. See **[Internationalization Support](#/app/i18n)** for an example.
-
-### `Qute.Application`
-
-The **Qute Application** type.
-
-### `Qute.ViewModel`
-
-The **View Model** type. Should be extended by components declared through **[class syntax](#/model/class)**
-
-### `Qute.Rendering`
-
-The **Qute Rendering** type.
-
-### `Qute.UpdateQueue`
-
-The **Qute** update queue.
-
-### `Qute.Rendering.converters`
-
-A converter registry. To be used with  __[q:content-\*](#/attributes/q-markdown)__ attributes.
-
-
