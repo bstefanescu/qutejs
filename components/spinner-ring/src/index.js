@@ -1,5 +1,5 @@
 import { document } from '@qutejs/window';
-import Qute from '@qutejs/runtime';
+import baseSpinner from '@qutejs/spinner-base';
 import './ring.css';
 
 /*
@@ -23,7 +23,8 @@ function createPart(color, width) {
 }
 
 
-function create(el, xattrs) {
+export default function Spinner(r, xattrs) {
+    var el = document.createElement('DIV');
 	var color, size, width;
 	if (xattrs) {
 		color = xattrs.color;
@@ -33,19 +34,16 @@ function create(el, xattrs) {
 	if (size) {
 		el.style.width = size;
 		el.style.height = size;
-	}
+    }
+    let className = 'qute-spinner-ring';
 	if (!color) {
-		el.className += ' qute-spinner-colors';
-	}
+		className += ' qute-spinner-colors';
+    }
+    el.className = className;
+    baseSpinner(el, r, xattrs);
 	el.appendChild(createPart(color, width));
 	el.appendChild(createPart(color, width));
 	el.appendChild(createPart(color, width));
 	el.appendChild(createPart(color, width));
 	return el;
 }
-
-export default {
-	tag: 'DIV',
-	class: 'qute-spinner-ring',
-	create: create
-};

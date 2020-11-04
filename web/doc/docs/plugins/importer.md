@@ -16,11 +16,13 @@ To define a lazy component you need to use the `LazyComponent(pathOrUrl[, export
 import Qute from '@qutejs/runtime';
 import { LazyComponent } from '@qutejs/importer';
 
+const { ViewModel, Template, Property } = Qute;
+
 // define a lazy component
 const MyLazyComponent = LazyComponent('/doc/files/lazy-component.js');
 
 // use the component in a template
-<q:template name='MyTemplate'>
+<q:template name='RootTemplate'>
     <div>
         <if value={showLazyComponent}>
             <my-lazy-component color='green'/>
@@ -30,9 +32,11 @@ const MyLazyComponent = LazyComponent('/doc/files/lazy-component.js');
     </div>
 </q:template>
 
-export default Qute(MyTemplate).properties({
-    showLazyComponent: false
-})
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property showLazyComponent = false;
+}
+export default Root;
 ```
 
 Here is the the [lazy component code](/doc/files/lazy-component.js) used int the example above.

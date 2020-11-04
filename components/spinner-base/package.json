@@ -1,11 +1,11 @@
 {
-  "name": "@qutejs/spinner-ellipsis",
+  "name": "@qutejs/spinner-base",
   "version": "2.0.0-beta.1",
-  "description": "Qute Spinner ellipsis implementation",
+  "description": "Qute Spinner base - to be used by spinner implementations",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
-  "browser": "lib/qute-spinner-ellipsis.js",
-  "unpkg": "lib/qute-spinner-ellipsis.min.js",
+  "browser": "lib/qute-spinner.js",
+  "unpkg": "lib/qute-spinner.min.js",
   "files": [
     "lib"
   ],
@@ -19,26 +19,14 @@
     "qute",
     "spinner",
     "loading",
-    "icon",
-    "DOM",
-    "view"
+    "base"
   ],
   "homepage": "https://qutejs.org",
   "repository": {
     "url": "https://github.com/bstefanescu/qutejs",
     "type": "git"
   },
-  "dependencies": {
-    "@qutejs/window": "2.0.0-beta.1",
-    "@qutejs/spinner-base": "2.0.0-beta.1"
-  },
-  "devDependencies": {
-    "@qutejs/rollup-plugin-qute": "2.0.0-beta.1"
-  },
   "build": {
-    "external": [
-      "@qutejs/window"
-    ],
     "config": "component"
   }
 }

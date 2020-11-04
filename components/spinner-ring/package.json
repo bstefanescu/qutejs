@@ -1,5 +1,5 @@
 {
-  "name": "@qutejs/spinner",
+  "name": "@qutejs/spinner-ring",
   "version": "2.0.0-beta.1",
   "description": "Qute Spinner component",
   "main": "lib/index.cjs.js",
@@ -29,13 +29,13 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/runtime": "2.0.0-beta.1",
+    "@qutejs/spinner-base": "2.0.0-beta.1",
     "@qutejs/window": "2.0.0-beta.1"
   },
-  "devDependencies": {
-    "@qutejs/rollup-plugin-qute": "2.0.0-beta.1"
-  },
   "build": {
+    "external": [
+      "@qutejs/window"
+    ],
     "config": "component"
   }
 }

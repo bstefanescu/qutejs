@@ -19,7 +19,7 @@ Qute.install(groupPlugin);
 
 The `model` attribute is implemented in a similar way with the **[form input model attribute](#/plugins/form)**.
 
-The model attribute is restricted to `UL` and `OL` elements, and provide a way to bind a reactive value as the **value of the group**. Any children `LI` elements defining a `data-value` attribute will take part to the grouping. The `LI` element which `data-value` is matching the group value will be selected (i.e. active). Each time the gropup value changes the corresponding `LI` element is selected.
+The model attribute is restricted to `UL` and `OL` elements, and provide a way to bind a reactive value as the **value of the group**. Any children `LI` elements defining a `data-value` attribute will take part to the grouping. The `LI` element which `data-value` is matching the group value will be selected (i.e. the `active` class is added ti the `LI` element). Each time the gropup value changes the corresponding `LI` element is selected.
 
 You can specify two types of `model` values:
 
@@ -46,6 +46,8 @@ Let's implement a tabs bar using the **actions group** custom attributes.
 ```jsq
 import Qute from '@qutejs/runtime';
 import groupPlugin from '@qutejs/group';
+
+const { ViewModel, Template, Property} = Qute;
 
 <q:style>
 ul.group {
@@ -93,24 +95,26 @@ ul.group a, ul.group a:hover, ul.group a:active {
 // register the group directive
 Qute.install(groupPlugin);
 
-export default Qute(RootTemplate, {
-	init() {
-        this.views = {
-            placeholder: ViewPlaceholder,
-            view1: ViewOne,
-            view2: ViewTwo,
-            view3: ViewThree
-        }
-	},
+@Template(RootTemplate)
+class Root extends ViewModel {
+    views = {
+        placeholder: ViewPlaceholder,
+        view1: ViewOne,
+        view2: ViewTwo,
+        view3: ViewThree
+    };
+
+	@Property currentViewName = 'placeholder';
+
     removeCurrentView() {
         this.currentViewName = 'placeholder';
-    },
+    }
+
     get currentView() {
         return this.views[this.currentViewName];
     }
-}).properties({
-	currentViewName: 'placeholder'
-});
+}
+export default Root;
 ```
 
 **Note** that we installed the group directive using `Qute.install(groupDirective)`
@@ -122,6 +126,8 @@ We will rewrite the previous example by using an expression binding and an expli
 ```jsq
 import Qute from '@qutejs/runtime';
 import groupPlugin from '@qutejs/group';
+
+const { ViewModel, Template, Property} = Qute;
 
 <q:style>
 ul.group {
@@ -169,24 +175,28 @@ ul.group a, ul.group a:hover, ul.group a:active {
 // register the group directive
 Qute.install(groupPlugin);
 
-export default Qute(RootTemplate, {
-	init() {
-        this.views = {
-            placeholder: ViewPlaceholder,
-            view1: ViewOne,
-            view2: ViewTwo,
-            view3: ViewThree
-        }
-	},
+
+@Template(RootTemplate)
+class Root extends ViewModel {
+    views = {
+        placeholder: ViewPlaceholder,
+        view1: ViewOne,
+        view2: ViewTwo,
+        view3: ViewThree
+    }
+
+    @Property currentViewName = 'placeholder';
+
     removeCurrentView() {
         this.currentViewName = 'placeholder';
-    },
+    }
+
     get currentView() {
         return this.views[this.currentViewName];
     }
-}).properties({
-    currentViewName: 'placeholder'
-});
+
+}
+export default Root;
 ```
 
 **Note:** Only one line was changed to achieve the same thing using an expression binding and an explicit change listener:

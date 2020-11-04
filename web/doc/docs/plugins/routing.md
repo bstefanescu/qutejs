@@ -25,7 +25,10 @@ var app = new Qute.Application();
 app.router = router;
 
 // define the root component
-var Root = Qute(RootTemplate);
+@Template(RootTemplate)
+class Root extends ViewModel {
+    ...
+}
 // create the a root component and mount it
 new Root(app).mount('app');
 ```
@@ -46,8 +49,12 @@ app.subscribe('route', function(key) {
   router.route(key);
 });
 
+// define the root component
+@Template(RootTemplate)
+class Root extends ViewModel {
+    ...
+}
 // mount the app using the Root component
-var Root = Qute(RootTemplate);
 new Root(app).mount('app');
 ```
 
@@ -59,6 +66,8 @@ Here is an example that change the content of a view from a **Qute Application**
 
 ```jsq
 import Qute from '@qutejs/runtime';
+
+const { ViewModel, Template, Link } = Qute;
 
 <q:template name='RootTemplate'>
     <div>
@@ -103,9 +112,10 @@ app.subscribe('route', function(key) {
   router.route(key);
 });
 
-var Root = Qute(RootTemplate).properties(app => ({
-    currentPage: app.prop('Pages/current') // bind to app property
-}));
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Link('Pages/current') currentPage; // bind to app property
+}
 new Root(app).mount('app');
 ```
 
@@ -136,7 +146,11 @@ var router = new Router({
 // initialize the app here
 var app = new Qute.Application();
 // create the root component
-var Root = Qute(RootTemplate);
+// define the root component
+@Template(RootTemplate)
+class Root extends ViewModel {
+    ...
+}
 // mount the application
 new Root(app).mount('app');
 
@@ -147,7 +161,11 @@ If you are not explicitly instantiating a **Qute application** you can also inst
 
 ```javascript
 var router = new Router({ ... });
-var Root = Qute(RootTemplate);
+// define the root component
+@Template(RootTemplate)
+class Root extends ViewModel {
+    ...
+}
 var root = new Root().mount('app');
 router.install(root).start();
 ```

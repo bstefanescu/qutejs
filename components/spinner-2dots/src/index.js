@@ -1,5 +1,5 @@
 import { document } from '@qutejs/window';
-import Spinner from '@qutejs/spinner';
+import baseSpinner from '@qutejs/spinner-base';
 import './2dots.css';
 
 
@@ -18,8 +18,9 @@ function createDot(className, color) {
 }
 
 
-function create(el, xattrs) {
-	var color, color1, color2, size;
+export default function Spinner(r, xattrs) {
+    const el = document.createElement('DIV');
+    var color, color1, color2, size;
 	if (xattrs) {
 		color = xattrs.color;
 		color1 = xattrs.color1;
@@ -33,20 +34,15 @@ function create(el, xattrs) {
 	if (size) {
 		el.style.width = size;
 		el.style.height = size;
-	}
+    }
+    let className = 'qute-spinner-2dots';
 	if (!color1 && !color2) {
-		el.className += ' qute-spinner-2dots-colors';
-	}
+		className += ' qute-spinner-2dots-colors';
+    }
+    el.className = className;
+    baseSpinner(el, r, xattrs);
 	el.appendChild(createDot('dot1', color1));
 	el.appendChild(createDot('dot2', color2));
 	return el;
 }
-
-Spinner.add('2dots', {
-	tag: 'DIV',
-	class: 'qute-spinner-2dots',
-	create: create
-});
-
-export default Spinner;
 

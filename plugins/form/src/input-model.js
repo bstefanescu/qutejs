@@ -25,7 +25,7 @@ export default function inputValueDirective(xattrs, valueExpr) {
         } else if (type === 'radio') {
             el.checked = el.value === value;
         } else if (el.value !== value) {
-            el.value = value;
+            el.value = value == null ? '' : value;
         }
     }
 

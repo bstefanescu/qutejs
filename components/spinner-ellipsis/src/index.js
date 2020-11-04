@@ -1,5 +1,5 @@
 import { document } from '@qutejs/window';
-import Spinner from '@qutejs/spinner';
+import baseSpinner from '@qutejs/spinner-base';
 import './ellipsis.css';
 
 /*
@@ -22,26 +22,21 @@ function createDot(className, color, size) {
 	return div;
 }
 
-
-function create(el, xattrs) {
-	var color, size;
+export default function Spinner(r, xattrs) {
+    const el = document.createElement('DIV');
+	let color, size;
 	if (xattrs) {
 		color = xattrs.color;
 		size = xattrs.size;
 	}
+    let className = 'qute-spinner-ellipsis';
 	if (!color) {
-		el.className += ' qute-spinner-ellipsis-colors';
+		className += ' qute-spinner-ellipsis-colors';
 	}
+    el.className += className;
+    baseSpinner(el, r, xattrs);
 	el.appendChild(createDot('bounce1', color, size));
 	el.appendChild(createDot('bounce2', color, size));
-	el.appendChild(createDot('bounce3', color, size));
+    el.appendChild(createDot('bounce3', color, size));
 	return el;
 }
-
-Spinner.add('ellipsis', {
-	tag: 'DIV',
-	class: 'qute-spinner-ellipsis',
-	create: create
-});
-
-export default Spinner;

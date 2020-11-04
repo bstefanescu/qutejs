@@ -45,6 +45,8 @@ and
 import Qute from '@qutejs/runtime';
 import formPlugin from '@qutejs/form';
 
+const { ViewModel, Template, Property} = Qute;
+
 <q:style>
 div {
 	padding: 10px
@@ -79,18 +81,20 @@ div {
 // register form directives
 Qute.install(formPlugin);
 
-export default Qute(RootTemplate, {
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property name;
+    @Property agree = false;
+    @Property city = 'Paris';
+    @Property gender;
+
 	handleSubmit() {
 		var json = JSON.stringify(this);
 		alert(json);
 		return false;
 	}
-}).properties({
-    name: null,
-    agree: false,
-    city: 'Paris',
-    gender: null
-});
+}
+export default Root;
 ```
 
 # Form validation (q:validate)
@@ -226,6 +230,8 @@ Here is a complete example on form validation
 import Qute from '@qutejs/runtime';
 import formPlugin from '@qutejs/form';
 
+const { ViewModel, Template, Property} = Qute;
+
 <q:style>
 .row {
 	margin: 8px 0;
@@ -276,34 +282,35 @@ button {
 // register form directives
 Qute.install(formPlugin);
 
-export default Qute(RootTemplate, {
-	init() {
-		this.config = {
-			messages: {
-				username: {
-					required: 'Username is required.',
-					error: 'Username must contains only alphanumeric or underscore characters.'
-				},
-				email: 'Please type an email address.',
-				pass: {
-					required: 'Password is required.',
-					error: 'Password must contains at least 4 chatacters.'
-				}
-			}
-		}
+@Template(RootTemplate)
+class Root extends ViewModel {
+    config = {
+        messages: {
+            username: {
+                required: 'Username is required.',
+                error: 'Username must contains only alphanumeric or underscore characters.'
+            },
+            email: 'Please type an email address.',
+            pass: {
+                required: 'Password is required.',
+                error: 'Password must contains at least 4 chatacters.'
+            }
+        }
+    };
 
-		this.checkPassword = function(el) {
-			return this.pass !== el.value ? 'Passwords does not match!' : '';
-		}.bind(this);
-	},
+    @Property user;
+    @Property email;
+    @Property pass;
+
+    checkPassword = function(el) {
+		return this.pass !== el.value ? 'Passwords does not match!' : '';
+	}
+
 	handleSubmit() {
 		alert('Username: '+this.user+'\nE-mail: '+this.email+'\nPassword: '+this.pass);
 		return false;
 	}
-}).properties({
-    user: null,
-    email: null,
-    pass: null,
-});
+}
+export default Root;
 ```
 

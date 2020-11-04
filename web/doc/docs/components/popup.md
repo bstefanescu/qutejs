@@ -122,6 +122,8 @@ To open the popup through the API we need to obtain the popup component instance
 import Qute from '@qutejs/runtime';
 import qPopup from '@qutejs/popup';
 
+const { ViewModel, Template } = Qute;
+
 <q:template name='RootTemplate'>
   <div>
     <button style='margin-left: 50px; margin-top: 50px; padding: 10px'
@@ -136,17 +138,19 @@ import qPopup from '@qutejs/popup';
   </div>
 </q:template>
 
-export default Qute(RootTemplate, {
+@Template(RootTemplate)
+class Root extends ViewModel {
   openPopup(event) {
     this.thePopup.toggle(event.target);
-  },
+  }
   onOpen(event) {
     console.log('popup about to open', event.detail);
-  },
+  }
   onClose(event) {
     console.log('popup closed', event.detail);
   }
-});
+}
+export default Root;
 ```
 
 ## Example: Using a channel to open the popup
@@ -154,6 +158,8 @@ export default Qute(RootTemplate, {
 ```jsq
 import Qute from '@qutejs/runtime';
 import qPopup from '@qutejs/popup';
+
+const { ViewModel, Template } = Qute;
 
 <q:template name='RootTemplate'>
   <div>
@@ -169,14 +175,16 @@ import qPopup from '@qutejs/popup';
   </div>
 </q:template>
 
-export default Qute(RootTemplate, {
+@Template(RootTemplate)
+class Root extends ViewModel {
   onOpen(event) {
     console.log('popup about to open', event.detail);
-  },
+  }
   onClose(event) {
     console.log('popup closed', event.detail);
   }
-});
+}
+export default Root;
 ```
 
 ## Demo

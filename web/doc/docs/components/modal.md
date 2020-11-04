@@ -150,6 +150,8 @@ To open the modal through the API we need to obtain the modal component instance
 import Qute from '@qutejs/runtime';
 import qModal from '@qutejs/modal';
 
+const { ViewModel, Template } = Qute;
+
 <q:template name='RootTemplate'>
   <div>
     <button style='margin-left: 10px; margin-top: 10px; padding: 10px'
@@ -168,25 +170,27 @@ import qModal from '@qutejs/modal';
   </div>
 </q:template>
 
-export default Qute(RootTemplate, {
+@Template(RootTemplate)
+class Root extends ViewModel {
   openModal(event) {
     this.theModal.open();
-  },
+  }
   onOpen(event) {
     console.log('modal about to open', event.detail);
-  },
+  }
   onReady(event) {
     console.log('modal ready', event.detail);
-  },
+  }
   onClose(event) {
     console.log('modal about to close', event.detail);
-  },
+  }
   onAction(event) {
     console.log('modal action', event.detail);
     alert("Action: "+event.detail.name+" Dialog will be closed.");
     this.post('my-modal', 'close');
   }
-});
+}
+export default Root;
 ```
 
 ## Example: Using a channel to open the modal
@@ -194,6 +198,8 @@ export default Qute(RootTemplate, {
 ```jsq
 import Qute from '@qutejs/runtime';
 import qModal from '@qutejs/modal';
+
+const { ViewModel, Template } = Qute;
 
 <q:template name='RootTemplate'>
   <div>
@@ -213,22 +219,24 @@ import qModal from '@qutejs/modal';
   </div>
 </q:template>
 
-export default Qute(RootTemplate, {
+@Template(RootTemplate)
+class Root extends ViewModel {
   onOpen(event) {
     console.log('modal about to open', event.detail);
-  },
+  }
   onReady(event) {
     console.log('modal ready', event.detail);
-  },
+  }
   onClose(event) {
     console.log('modal about to close', event.detail);
-  },
+  }
   onAction(event) {
     console.log('modal action', event.detail);
     alert("Action: "+event.detail.name+" Dialog will be closed.");
     this.post('my-modal', 'close');
   }
-});
+}
+export default Root;
 ```
 
 ## Demo
