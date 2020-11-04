@@ -1,5 +1,5 @@
 import window from '@qutejs/window';
-
+import Qute from '@qutejs/runtime';
 
 function liValueDirective(xattrs, valueExpr) {
     return function(el) {
@@ -60,7 +60,7 @@ function groupDirective(xattrs, valueExpr) {
     }
 }
 
-groupDirective.install = function(Qute) {
+groupDirective.install = function() {
     Qute.registerDirective('li', 'value', liValueDirective);
     Qute.registerDirective('ul', 'model', groupDirective);
     Qute.registerDirective('ol', 'model', groupDirective);

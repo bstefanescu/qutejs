@@ -4,13 +4,13 @@ To ease working with HTML `forms`, Qute is providing several **[custom attribute
 
 These directives are not part of the default qute runtime package. The form directives are provided by the `@qutejs/form` plugin.
 
-Before using the form directives you need to install the plugin using `Qute.install()`. Example:
+Before using the form directives you need to install the plugin using the plugi `install()` method. Example:
 
 ```javascript
 import Qute from '@qutejs/runtime';
 import formPlugin from '@qutejs/form';
 
-Qute.install(formPlugin);
+formPlugin.install();
 ```
 
 ## The `model` attribute
@@ -79,7 +79,7 @@ div {
 </q:template>
 
 // register form directives
-Qute.install(formPlugin);
+formPlugin.install();
 
 @Template(RootTemplate)
 class Root extends ViewModel {
@@ -280,7 +280,7 @@ button {
 </q:template>
 
 // register form directives
-Qute.install(formPlugin);
+formPlugin.install();
 
 @Template(RootTemplate)
 class Root extends ViewModel {
@@ -298,13 +298,13 @@ class Root extends ViewModel {
         }
     };
 
+	checkPassword = function checkPassword(el) {
+        return this.pass !== el.value ? 'Passwords does not match!' : '';
+    }.bind(this);
+
     @Property user;
     @Property email;
     @Property pass;
-
-    checkPassword = function(el) {
-		return this.pass !== el.value ? 'Passwords does not match!' : '';
-	}
 
 	handleSubmit() {
 		alert('Username: '+this.user+'\nE-mail: '+this.email+'\nPassword: '+this.pass);

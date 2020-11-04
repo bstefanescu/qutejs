@@ -179,7 +179,7 @@ const { ViewModel, Template, Property } = Qute;
 
 // ------------------------------------------ Javascript
 
-Qute.install(FormPlugin);
+FormPlugin.install();
 
 @Template(CounterTemplate)
 class MyCounter extends ViewModel {

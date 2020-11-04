@@ -6,13 +6,13 @@ The directives can be used to implement button groups in a toolbar or a tabs bar
 
 These directives are not part of the default qute runtime package. The group directives are provided by the `@qutejs/group` plugin.
 
-Before using the group directives you need to install the plugin using `Qute.install()`. Example:
+Before using the group directives you need to install the plugin using the `install()` method. Example:
 
 ```javascript
 import Qute from '@qutejs/runtime';
 import groupPlugin from '@qutejs/group';
 
-Qute.install(groupPlugin);
+groupPlugin.install();
 ```
 
 ## The `model` attribute
@@ -93,7 +93,7 @@ ul.group a, ul.group a:hover, ul.group a:active {
 </q:template>
 
 // register the group directive
-Qute.install(groupPlugin);
+groupPlugin.install();
 
 @Template(RootTemplate)
 class Root extends ViewModel {
@@ -117,7 +117,7 @@ class Root extends ViewModel {
 export default Root;
 ```
 
-**Note** that we installed the group directive using `Qute.install(groupDirective)`
+**Note** that we installed the group directive using `groupPlugin.install()`
 
 ## Example: Using an expression as value
 
@@ -173,7 +173,7 @@ ul.group a, ul.group a:hover, ul.group a:active {
 </q:template>
 
 // register the group directive
-Qute.install(groupPlugin);
+groupPlugin.install();
 
 
 @Template(RootTemplate)

@@ -125,7 +125,7 @@ import Qute from '@qutejs/runtime';
 import FormPlugin from '@qutejs/form';
 const { ViewModel, Template, Property } = Qute;
 
-Qute.install(FormPlugin);
+FormPlugin.install();
 
 <q:template name='HelloTemplate'>
 	<div>
@@ -185,7 +185,7 @@ class Hello extends ViewModel {
 	}
 }
 
-Qute.install(i18n).load('en').then(function() {
+i18n.load('en').then(function() {
     // language loaded -> ready to use i18n
     // you can mount your application now
 	new Hello().mount('app');

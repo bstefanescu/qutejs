@@ -35,7 +35,8 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/window": "2.0.0-beta.1"
+    "@qutejs/window": "2.0.0-beta.1",
+    "@qutejs/runtime": "2.0.0-beta.1"
   },
   "devDependencies": {
     "@qutejs/rollup-plugin-qute": "2.0.0-beta.1"

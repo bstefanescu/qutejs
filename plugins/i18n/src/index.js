@@ -1,4 +1,5 @@
 import Polyglot from 'node-polyglot';
+import Qute from '@qutejs/runtime';
 
 function fetchJSON(url, done) {
     var xhr = new XMLHttpRequest();
@@ -46,13 +47,19 @@ function QuteIntl(config) {
     this.t = translate;
 }
 
+let INSTALLED = false;
+
 QuteIntl.prototype = {
-    install(Qute) {
+    install() {
         // install translation methods on ViewModel and functional component prototypes
-        Qute.defineMethod('t', this.t);
+        if (!INSTALLED) {
+            Qute.defineMethod('t', this.t);
+            INSTALLED = true;
+        }
         return this;
     },
     load(lang) {
+        this.install();
         if (!lang) lang = 'guess';
         if (this.lang !== lang) {
             if (lang === 'guess') {

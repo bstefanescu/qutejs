@@ -112,7 +112,6 @@ Qute.defineMethod = function(name, fn) {
     Rendering.FunComp.prototype[name] = fn;
 }
 Qute.registerDirective = registerDirective;
-Qute.install = function(plugin) { return plugin.install(Qute); }
 Qute.runAfter = function(cb) { UpdateQueue.runAfter(cb); }
 
 // store Qute instance in window - this is important so that imported components use the same Qute instance

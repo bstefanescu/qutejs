@@ -2,7 +2,7 @@ import {formValidateDirective, validationMessageDirective, inputValidationDirect
 import inputModelDirective from './input-model.js';
 import selectModelDirective from './select-model.js';
 import controlModelDirective from './control-model.js';
-
+import Qute from '@qutejs/runtime';
 
 const QuteForms = {
 	// Enable the q:model directive on a custom form control
@@ -11,7 +11,7 @@ const QuteForms = {
 	registerControl: function(VMType) {
 		Qute.registerDirective(VMType, 'model', controlModelDirective);
     },
-    install: function(Qute) {
+    install: function() {
         Qute.registerDirective('form', 'validate', formValidateDirective);
         Qute.registerDirective('input', 'model', inputModelDirective);
         Qute.registerDirective('select', 'model', selectModelDirective);
