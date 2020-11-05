@@ -39,7 +39,7 @@ class Root extends ViewModel {
 export default Root;
 ```
 
-Here is the the [lazy component code](/doc/files/lazy-component.js) used int the example above.
+Here is the the [lazy component code](/doc/files/lazy-component.js) used in the example above.
 
 To be able to import components without specifying an export name, yout must expose your component instance in the `window.__QUTE_IMPORT__` property. Otherwise you must specify the export name as the second argument:
 

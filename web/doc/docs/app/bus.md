@@ -15,6 +15,8 @@ This is the most basic form of communication.
 ```jsq
 import Qute from '@qutejs/runtime';
 
+const { ViewModel, Template, Property } = Qute;
+
 <q:template name='ChildComponent'>
 	<div>{{$attrs.message}}</div>
 </q:template>
@@ -23,10 +25,11 @@ import Qute from '@qutejs/runtime';
 	<child-component message={message}></child-component>
 </q:template>
 
-
-export default Qute(RootTemplate).properties({
-    message: "Hello!"
-});
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property message = 'Hello!';
+}
+export default Root;
 ```
 
 You can see in this example how the parent component is passing a `message` to the child component.
@@ -40,6 +43,8 @@ This type of communication can be done through DOM events that bubbles up to anc
 ```jsq
 import Qute from '@qutejs/runtime';
 
+const { ViewModel, Template, Property } = Qute;
+
 <q:template name='ChildComponent'>
 	<button>Remove Me!</button>
 </q:template>
@@ -52,14 +57,15 @@ import Qute from '@qutejs/runtime';
 	</if>
 </q:template>
 
+@Template(RootTemplate)
+class Root extends ViewModel {
+    @Property hasButton = true;
 
-export default Qute(RootTemplate, {
 	removeButton() {
 		this.hasButton = false;
 	}
-}).properties({
-    hasButton: true
-});
+}
+export default Root;
 ```
 
 ## Transversal Communication Between Components
@@ -71,6 +77,8 @@ Let's take the example of a dropdown menu:
 
 ```jsq
 import Qute from '@qutejs/runtime';
+
+const { ViewModel, Template, Channel } = Qute;
 
 <q:template name='AlertBoxTemplate'>
 	<div style='display:none;position:fixed; left:40%; top:40%; border: 1px solid red; padding: 10px'>
@@ -86,23 +94,29 @@ import Qute from '@qutejs/runtime';
 </div>
 </q:template>
 
-const AlertBox = Qute(AlertBoxTemplate, {
+@Template(AlertBoxTemplate)
+class AlertBox extends ViewModel {
 	hideAlert() {
 		this.postAsync('hello', 'hide');
 	}
-}).channel(function(message, data) {
-	if (message === 'show') {
-		this.$el.style.display='';
-	} else if (message === 'hide') {
-		this.$el.style.display='none';
-	}
-});
 
-export default Qute(RootTemplate, {
+    @Channel
+    onMessage(message, data) {
+        if (message === 'show') {
+            this.$el.style.display='';
+        } else if (message === 'hide') {
+            this.$el.style.display='none';
+        }
+    }
+}
+
+@Template(RootTemplate)
+class Root extends ViewModel {
 	showAlert() {
 		this.postAsync('hello', 'show');
 	}
-});
+}
+export default Root;
 ```
 
 In the previous example, the `alert` component is declaring a communication channel by calling the `channel(channelListener)` method. The channel is only declared.
@@ -127,119 +141,46 @@ See the **[Application Data Model](#/app/data)** section for an example.
 More, you can use this communication mechanism to provide shared services to all components in the application.
 This is because the message bus is provided to components via the [application instance](#/app/instance) which is shared between all components.
 
-Let's see an example:
-
 ```jsq
 import Qute from '@qutejs/runtime';
 
+const { ViewModel, Template, Property } = Qute;
+
 <q:template name='ChildOneTemplate'>
 <div>
-	<button @click='askSeconds'>Ask Seconds!</button>
-</div>
-</q:template>
-
-<q:template name='ChildTwoTemplate'>
-<div>
-	<button @click='askMinutes'>Ask Minutes!</button>
+	<button @click='fetchDate'>Print date</button> {{date}}
 </div>
 </q:template>
 
 <q:template name='RootTemplate'>
 <div>
 	<child-one />
-	<child-two />
 </div>
 </q:template>
 
-const ChildOne = Qute(ChildOneTemplate, {
-	askSeconds() {
-		this.postAsync('time-channel', 'seconds');
+@Template(ChildOneTemplate)
+class ChildOne extends ViewModel {
+    @Property(Date) date;
+
+	fetchDate() {
+		this.postAsync('time-channel', 'date', date => {
+            this.date = date;
+        });
 	}
-});
-
-const ChildTwo = Qute(ChildTwoTemplate, {
-	askMinutes() {
-		this.postAsync('time-channel', 'minutes');
-	}
-});
-
-var app = new Qute.Application();
-app.subscribe('time-channel', function(message) {
-	var date = new Date();
-	if (message === 'seconds') {
-		alert('Seconds: '+date.getSeconds());
-	} else if (message === 'minutes') {
-		alert('Minutes: '+date.getMinutes());
-	}
-});
-
-var Root = Qute(RootTemplate);
-new Root(app).mount('app');
-
-```
-
-The `post` and `postAsync` methods accept a third argument which can be a random object attached to the request.
-Let's rewrite the previous example to pass a callback to retrieve the information from the service:
-
-
-```jsq
-import Qute from '@qutejs/runtime';
-
-<q:template name='ChildOneTemplate'>
-<div>
-	<button @click='askSeconds'>Ask Seconds! {{seconds}}</button>
-</div>
-</q:template>
-
-<q:template name='ChildTwoTemplate'>
-<div>
-	<button @click='askMinutes'>Ask Minutes! {{minutes}}</button>
-</div>
-</q:template>
-
-<q:template name='RootTemplate'>
-<div>
-	<child-one />
-	<child-two />
-</div>
-</q:template>
-
-const ChildOne = Qute(ChildOneTemplate, {
-	askSeconds() {
-		var self = this;
-		this.postAsync('time-channel', 'seconds', function(seconds) {
-			self.seconds = seconds;
-		});
-	}
-}).properties({
-    seconds: ''
-});
-
-const ChildTwo = Qute(ChildTwoTemplate, {
-	askMinutes() {
-		var self = this;
-		this.postAsync('time-channel', 'minutes', function(minutes) {
-			self.minutes = minutes;
-		});
-	}
-}).properties({
-    minutes: ''
-});
+}
 
 var app = new Qute.Application();
 app.subscribe('time-channel', function(message, cb) {
-	var date = new Date();
-	if (message === 'seconds') {
-		cb(date.getSeconds());
-	} else if (message === 'minutes') {
-		cb(date.getMinutes());
-	}
+	if (message === 'date') {
+        cb(new Date());
+    }
 });
 
 var Root = Qute(RootTemplate);
 new Root(app).mount('app');
-
 ```
+
+The `post` and `postAsync` methods accept a third argument which can be a random object attached to the request. In the example above we passed a callback to get the information we needed.
 
 You can also find an [example of implementing routing](#/plugins/routing) through the message bus
 
@@ -255,6 +196,8 @@ When installing a root component we can use the same application instance used b
 ```jsq
 import {document} from '@qutejs/window';
 import Qute from '@qutejs/runtime';
+
+const { ViewModel, Template, Channel } = Qute;
 
 <q:template name='ChildOneTemplate'>
 <div>I am child1 from root1</div>
@@ -274,21 +217,28 @@ import Qute from '@qutejs/runtime';
 </div>
 </q:template>
 
-const ChildOne = Qute(ChildOneTemplate).channel(function(message, data) {
-	if (message === 'color') this.$el.style.color = data;
-});
-var Root1 = Qute(FirstRootTemplate);
-var Root2 = Qute(SecondRootTemplate, {
-	init() {
-		this.colorIndex = 0;
-		this.colors = ['green', 'blue', 'yellow', 'red', 'cyan', 'magenta', 'brown', 'black'];
-	},
+@Template(ChildOneTemplate)
+class ChildOne extends ViewModel {
+    @Channel
+    onMessage(message, data) {
+        if (message === 'color') this.$el.style.color = data;
+    }
+}
+
+// we use Qute() to wraqp the template to create a empoty ViewModel
+const Root1 = Qute(FirstRootTemplate);
+
+@Template(SecondRootTemplate)
+class Root2 extends ViewModel {
+    colorIndex = 0;
+    colors = ['green', 'blue', 'yellow', 'red', 'cyan', 'magenta', 'brown', 'black'];
+
 	sendMessage() {
 		var color = this.colors[this.colorIndex++];
 		if (this.colorIndex > this.colors.length) this.colorIndex = 0;
 		this.postAsync('child1-channel', 'color', color);
 	}
-});
+}
 
 // create insertion points
 var div = document.createElement('DIV');

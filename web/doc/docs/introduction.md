@@ -31,6 +31,7 @@ About **9K** gzipped.
 * You can reuse any plain javascript UI component (e.g. jQuey UI etc.).
 * Provides a concise **Application Data Model** which replace the verbose state management frameworks like **redux**. You write less code and focus on business logic.
 * Provides a message bus between components: solve edge case problems like communicating between components in different roots.
+* **Lazy component loading**: enables you to load optional components on demand reducing thus the application size.
 * Accepts both xml and jsx like element names an attribute binding notations.
 * DOM updates are optimized. Updates are very fast - no reconciliation is needed. Only nodes listening for changes are updated.
 * **ES6** compliant.

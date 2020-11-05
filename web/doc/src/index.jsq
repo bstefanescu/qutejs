@@ -119,6 +119,7 @@ var TOC = [
 	{ title: 'Component Model', expand: true, items: [
         { title: 'Templates', href: 'model/templates'},
         { title: 'Components', href: 'model/components'},
+        { title: 'Lazy Components', href: 'model/lazy'},
 		{ title: 'Properties', href: 'model/properties'},
         { title: 'Property Types', href: 'model/proptypes'},
 		{ title: 'Watchers', href: 'model/watchers'},
@@ -128,6 +129,13 @@ var TOC = [
         { title: 'Mixins', href: 'model/mixins'},
 		{ title: 'ES5 Component API', href: 'model/es5'},
         { title: 'JSQ File Format', href: 'model/jsq'},
+	]},
+	{ title: 'Application Model', expand: true, items: [
+		{ title: 'Application Instance', href: 'app/instance'},
+		{ title: 'Data Model', href: 'app/data'},
+		{ title: 'Message Bus', href: 'app/bus'},
+		{ title: 'Internationalization', href: 'app/i18n'},
+		{ title: 'Example', href: 'app/example'},
 	]},
 	{ title: 'Directives', expand: true, items: [
 		{ title: 'if', href: 'directives/if' },
@@ -155,13 +163,6 @@ var TOC = [
 		{ title: 'q:bind', href: 'attributes/q-bind' },
 		{ title: 'q:on', href: 'attributes/q-on' },
 		{ title: 'Custom Attributes', href: 'attributes/q' }
-	]},
-	{ title: 'Application Model', expand: true, items: [
-		{ title: 'Application Instance', href: 'app/instance'},
-		{ title: 'Message Bus', href: 'app/bus'},
-		{ title: 'Data Model', href: 'app/data'},
-		{ title: 'Internationalization', href: 'app/i18n'},
-		{ title: 'Example', href: 'app/example'},
 	]},
 	{ title: 'Plugins', expand: true, items: [
         { title: 'Importer', href: 'plugins/importer' },
