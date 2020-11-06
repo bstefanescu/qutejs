@@ -26,7 +26,7 @@ module.exports = function(project, args) {
         replace({ 'process.env.NODE_ENV': '"production"' }), // used by polyglot
         nodeResolve( {preferBuiltins: true} ),
         commonjs({
-            include: ['node_modules/**'],
+            include: ['**/node_modules/**', 'node_modules/**']
         }),
         postcss({
             inject: qute.injectStyle,
