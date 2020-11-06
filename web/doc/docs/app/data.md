@@ -6,15 +6,14 @@ In frameworks like **react** or **vue** this is achieved using state management 
 
 Qute is providing a built-in solution to achieve this through the **application data model**.
 
-Anyway, you can still integrate a state management system like **redux** with Qute. See the `__qute_prop` function at the bottom of this page.
+Anyway, you can still integrate a state management system like **redux** with Qute.
 
 
-## Application Data Properties
+## Data Model Properties
 
-A data object or an application state is defined as an application data property.
-Data properties are stored inside the `data` property of the application instance.
+Data Model properties are stored inside the `data` property of the application instance.
 
-To define an application property you can use the `defineProp(name, initialValue)` method of the application instance.
+To define an application property you can use the `defineProp(name, initialValue)` method of the application instance, or the `@DataModel` decorator on the application class or any Qute service class.
 
 When defining a property you must use a unique property name at the application level. It is recommended to use qualified names like `PropertyGroup/subgroup/localName` names when you want to group related  properties.
 
@@ -36,36 +35,13 @@ prop.set({name: 'foo', email: 'foo@bar.com'});
 
 To get an existing property object you can use the `prop(name)` method.
 
-Another useful method is the property `link(target, name)` method which will create a **mirror property** on another object. Any modification on the mirror property will be reflected on the source application property.  \
-In this way, you can link application properties to a service instance, to simplify accessing the application property:
+Another useful method is the property `link(target, name)` method which will create a **mirror property** on another object. Any modification on the mirror property will be reflected on the source application property. This is the method used internally by the `@Link` decorator.
 
-```jsq
-import Qute from '@qutejs/runtime';
+### Aynchronous properties
 
-function SessionManager(app) {
-	// this will create an application property named 'Session/user'
-	// and then will create a local mirror property named 'user'.
-	app.defineProp("Session/user", null).link(this, 'user');
-	this.login = function(user) {
-		this.user = user;
-	}
-	this.logout = function() {
-		this.user = null;
-	}
-}
-var app = new Qute.Application();
-var sm = new SessionManager(app);
-app.prop('Session/user').addChangeListener(function(newValue, oldValue) {
-	alert('user object changed: '+JSON.stringify(newValue));
-})
-sm.login({name: 'foo', email:'foo@bar.com'});
-```
+There is a special type of property named **asynchronous property**. This kind of property let's you define properties that are set as a result of an asynchronous operation, like an ajax call.
 
-## Asynchronous Properties
-
-When you need to set a property as a result of an asynchronous operation, like an ajax call, then you can use an **asynchronous property**.
-
-Asynchronous properties are defined using the `defineAsyncProp(name, value)` application method.
+Asynchronous properties are defined using the `defineAsyncProp(name, value)` application method or using the `@AsyncDataModel` decorator.
 
 Defining an asynchronous property will automatically define two additional regular properties: a **pending** and a n **error** one.  \
 For example, calling: `app.defineAsyncProp('Session/user')` will define:
@@ -74,32 +50,46 @@ For example, calling: `app.defineAsyncProp('Session/user')` will define:
 2. A regular property named 'Session/user/pending'
 3. A regular property named 'Session/user/error'
 
-An asynchonous property can be set to a **[Promise (or thenable)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** object or to a regular value.
-If the value is not a promise or a thenable object then it is converted to a resolved promise (as using `Promise.resolve(value)`).  \
-If the value is a promise that is not yet resolved then the **pending** property will be set to `true` and will be set back to `false` when the promise is fulfilled or rejected.  \
+When setting an asynchronous property you should use a **[Promise (or thenable)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** object. You can also use a regular value, in that case the value will be converted to a resolved promise (i.e. `Promise.resolve(value)`).
+
+If you set to an asynchronous property a promise that is not yet resolved then the **pending** property will be automatically set to `true` and will be set back to `false` when the promise is fulfilled or rejected.  \
 If the promise is rejected then the **error** property is set to the rejection value (usually an `Error` object).
 
 This is considerably helping to implement asynchronous actions in UI components, where the **pending** property can be used to display a progress indicator.
+
+Using the  `@DataModel`, `@AsyncDataModel` and `@Link` decorators you can wire services and components toghether through the application data model.
+
+### The `@DataModel(key)` decorator.
+
+This is a field decorator that will publish the field as a Data Model property given a key.
+
+The decorator can be used either on a custom application class, either on a Qute service class (i.e. extending Qute.Service or exposing an `app` field).
+
+When applied on a service field, the decorator is equivalent on calling the following code in the servcie constructor: `this.app.createProp(key, fieldValue).link(this, fieldName)`.
+
+### The `@AsyncDataModel(key)` decorator.
+
+This is a field decorator that will publish the field as a Data Model asynchrnous property given a key.
+
+The decorator can be used either on a custom application class, either on a Qute service class (i.e. extending Qute.Service or exposing an `app` field).
+
+When applied on a service field, the decorator is equivalent on calling the following code in the servcie constructor: `this.app.createAsyncProp(key, fieldValue).link(this, fieldName)`.
+
+### The `@Link(key)` decorator.
+
+This is a field decorator that will link the data model property identified by the key argument to the target field.
+The field will behave like a proxy to the data model property. When the decorated field is set the data model property will change accordingly, and vice versa, when the data model property is set the decorated field will change accordingly.
+
+The decorator can be used on both Qute service and ViewModel component classes.
+
+When used on a `ViewModel` component class, the field will be reactive: when the linked data model property changes the component DOM will be udpated too.
 
 ## Binding a Reactive Component Property to an Application Property.
 
 To bind a reactive component property to an application property you should use the application property as the initial value of the reactive property.  \
 Application properties which are bound to component properties will trigger a component update each time the property changes.
 
-You can link an application data model property to a component property either using a property of type `Link`, either using the `Link` decorator:
-
-### Using a `Link` property
-
-```javascript
-import Qute} from '@qutejs/runtime';
-const {ViewModel, Template, Link} = Qute;
-
-class MyComponent extends ViewModel {
-    @Property(Link, 'MyApplicationProperty') myReactiveProperty;
-}
-```
-
-### Using the `Link` decorator
+You can link an application data model property to a component property either using a property of type `Link`, either using the `Link` decorator.
 
 ```javascript
 import Qute} from '@qutejs/runtime';
@@ -110,7 +100,10 @@ class MyComponent extends ViewModel {
 }
 ```
 
-### Example - Binding an async property to a ViewModel Component
+**Note** that `@Link('MyApplicationProperty') myReactiveProperty;` is equivalent with `@Property(Link, 'MyApplicationProperty') myReactiveProperty;`. Both statements are creating reactive data model links.
+
+
+## Example
 
 ```jsq
 import window from '@qutejs/window';
@@ -163,13 +156,12 @@ new MyApp().mount('app');
 ## Application properties vs. Component properties
 
 We've seen we can define properties either at component level, either are application level.
+
 **When should one use application properties?**
 
-**The answer is:** if the property is part of the application logic, then use an application property.
-
+**The answer is:** if the property is part of the application logic, or it reflects an application state that should be accessible from any component then use an application property.  \
 You can also use application properties if you need to **share the property between multiple components which are not necessarily visible for each other**. When a parent component need to share a property with its children then you can pass the property as an attribute to the children components, and you don't need an application property.  \
 There are cases when you need to pass many properties as attributes around. If these properties are not internal to the component logic, then you could define them as application properties to minimize the attributes you pass around.
-
 
 ## Application Data Property API
 
@@ -208,20 +200,3 @@ Link the property to an object property.
 
 The property created on the target object will be synchronized with the source application property.
 The linked property will act as a proxy to the application property.
-
-## `__qute_prop(vm, key)`
-
-This is a private method used to bind the application property to a component reactive property. It binds the application property itself as a data source for the reactive property identified by `key` in the given `vm` component instance.
-The function returns a property definition that can be used with `Object.defineProperty()`.
-
-To bind the application property to a component reactive property you just assign it as the default value:
-
-```javascript
-Qute(ComponentTemplate).properties(app => ({
-    myReactiveProp: app.prop('MyApplicationProp')
-}))
-```
-
-You can use it as an example if you need to integrate a state manager like **redux** into Qute.
-In that case, to map a state property to a reactive component property you need to create an object that provide a `__qute_prop` function that is responsible to create the reactive property.
-

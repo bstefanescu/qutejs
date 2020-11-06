@@ -1,64 +1,193 @@
 # Application Instance
 
-When designing an application using the MVVM pattern you separate your code in two parts:
-a business logic and a presentation logic.
+In **Qute** the presentation layer is made from the UI components you define using `ViewModel` or template components.
 
-In **Qute** the presentation layer is made from the UI components you define using Qute ViewModel or template components.
+The application layer provides the business logic and a data model visible to all components in the presentation layer.
 
-The application model entry point is the `Qute.Application` object that you need to create and share between all UI components of the application. Here you can define the business logic and the data model of the application. The application data you define can then be easily bound to any UI component.
+The application layer is structured arround a singleton object: the application instance. Thi object is passed as an argument to the root component constrcutor and then passed down to all components in the rendered tree. If no application instance is passed to the root component then an implicit one will be created.
 
-For generic components like popups, modals etc. you don't need an application model. The component properties are enough to keep the state of a component. In that case you don't even need to create a `Qute.Application` object. This kind of components will inherit the current application instance when used in a component tree.
+The application instance is the backbone of a Qute application which provides a global **data model**, **services** and a **message bus** to be used by components making up the presentation layer.
 
-To bind an application instance to a component tree you need to pass the instance to the root component. If you don't pass an application instance to the root component, an empty instance will be automatically created and used by the root component.
+## Customizing an Application
 
-```jsq
+An application can be customized either by using the Qute class based API (using JavaScript classes and decorators), either by using the ES5 Qute API.
+
+In the following example we define a custom application, an `UserManager` service and a root component and we wire all that objects together through the application data model.
+
+### Using JavaScript classes and decorators
+
+```javascript
 import Qute from '@qutejs/runtime';
 
-<q:template name='MyRootTemplate'>
-	<div>Hello World!</div>
-</q:template>
+const { Application, View, Service, DataModel, AsyncDataModel } = Qute;
 
-var app = new Qute.Application();
-// create the root component constructor using 'my-root' as a template
-var MyRoot = Qute(MyRootTemplate);
-// mount the root component in the element which ID is 'app'
-new MyRoot(app).mount('app');
+
+class UserManager extends Service {
+
+    // publish the user property as an async data model property (can take Promise as a value)
+    @AsyncDataModel('Session/user') user;
+
+    login() {
+        // user will be set to a promise
+        this.user = doLogin(); // return a Promise
+    }
+
+    logout() {
+        this.user = null;
+    }
+
+    oLogin() {
+        // login implementation => return a Promise which resolve to the user object
+    }
+}
+
+// define a root component
+@Template(RootTemplate)
+class Root extends ViewModel {
+    // link the data model property 'Session/user' to a reactive property
+    @Link('Session/user') user;
+
+    // link the login service instance published as the 'Session' data model property to a reactive property
+    @Link('Session') session;
+
+}
+
+@View(Root) // define the application root component (i.e. the application view)
+class MyApplication extends Application {
+
+    // define a data model property named 'Application/version'
+    @DataModel('Application/version') version = '1.0.0';
+
+    // publish the SessionService instance as a DataModel property named 'Session'
+    @DataModel('Session') session = new UserManager(this);
+}
+
+// mount the application root component
+new MyApplication().mount();
 ```
 
-This example will simply render *Hello World!* in the page. No need for that to create an application instance. The same can be done by ommiting to pass the `app` instance to the root component:
+### Using ES5 API
 
-```jsq
+The same example as above but using the ES5 Qute API.
+
+```javascript
 import Qute from '@qutejs/runtime';
 
-<q:template name='MyRootTemplate'>
-	<div>Hello World!</div>
-</q:template>
+// define a service
+function UserManager(app) {
+    // define an user property and publish it as an async data model property (can take Promise as a value)
+    app.defineAsyncProp('Session/user').link(this, 'user');
+}
+UserManager.prototype = {
+    login() {
+        // user will be set to a promise
+        this.user = doLogin(); // return a Promise
+    },
+    logout() {
+        this.user = null;
+    },
+    oLogin() {
+        // login implementation => return a Promise which resolve to the user object
+    }
+}
 
-// create the root component constructor using 'my-root' as a template
-var MyRoot = Qute(MyRootTemplate);
-// mount the root component in the element which ID is 'app'
-new MyRoot().mount('app');
+// define a root component
+const Root = Qute(RootTemplate, {
+    init(app) {
+        // define the session an the user reactive properties (which are linked to the app data model properties)
+        this.defineProp(Qute.Link, 'user', null, 'Session/user');
+        this.defineProp(Qute.Link, 'session', null, 'Session');
+    }
+})
+
+// create a new application
+const myApp = new Qute.Application();
+myApp.version = '1.0.0';
+myApp.session = new UserManager(myApp);
+// pulish version and session as data model properries
+myApp.defineProp('Application/version', myApp.version);
+myApp.defineProp('Session', myApp.session);
+
+// instantiate the root using the myApp application
+const root = new Root(myApp);
+// mount the root component
+root.mount();
 ```
 
-In both cases the root component, and any component rendered as part of the component tree, will have an `$app` property that will point to the application instance passed to the root component (or to the implicit instance created when not explicitly passing one).
+Although using the ES5 Qute API you can do anything you do with Qute classes and decorators, using classes is much cleaner and easy to read than its ES5 counterpart.
 
-Thus, the application instance will be shared between all the components in the tree. Components will usually use the application instance to bind properties to application data properties or to use services provided by the application.
+In the rest of the documentation we will only use the class based API.
 
-The application instance is passed as an argument to the `init(app)` method of a `ViewModel` component.
-Also, it is passed as argument to the properties factory function if any (see **[ViewModel Properties](#/model/properties)**) and to the factory functions used to specify a default property value (see **[Property Types](#/model/proptypes)**).
+Here you can find a **[complete example](#/app/example)** on customizing an application.
 
-The factory functions are used to create defualt values for reactive properties. You may want to bind there a component property to an application data property. To do this you need to access the `app.prop(propName)`. This is why the `app` instance is provided to factory functions. There is also a easiest way to bind component reactive properties to application properties: by using the `_Link` property type.
-
-You can see a complete example demonstrating application data binding in **[Application Data Model](#/app/data)** section.
-
-Most of the UI components will never have to explicitly use the application instance.
 
 ## The Application Model
 
 The application instance is providing:
-1. A message bus
-2. A data model - usually defined by application services.
-3. A set of user defined services that implements the application logic.
+
+1. A shared data model.
+2. A set of user defined services that implements the application logic.
+3. A message bus.
+
+### The Data Model
+
+When building applications you need a way to store application data and state outside the presentation layer, to share that data between UI components and to keep these components synchronized with the application data and state.
+
+The application data is defined as an map of application properties. There are two type of application properties: regular properties and **asynchronous** properties.
+
+In frameworks like **react** or **vue** this is achieved using state management systems like **redux**.
+
+Go to **[Application Data Model](#/app/data)** section to learn more.
+
+### The Application Logic
+
+The application layer contains all the code you need to write to implement your application logic. This code can be grouped in services like **data fetching** (through ajax or not), **view state management** (e.g. show or hide a modal etc), **routing** (i.e. change views when navigating to other pages) etc.
+
+The main goal of **Qute** is to let you focus on this part and not on the presentation layer
+logic.
+
+To be able to use the wiring provided by `@DataModel`, `@AsyncDataModel` and `@DataModel` decorators a service class must define an `app` field which points to the current application instance:
+
+```javascript
+class MyService {
+    constructor(app) {
+        this.app = app;
+    }
+}
+```
+
+For convenience, Qute is providing a base `Service` class which is defining the required constructor and `app` field. Just extend it to implement a service. If you need to pass arguments to your service via the constructor do not forget to propagate the `app` instance to the super class by calling `super(app)`:
+
+```javascript
+class MyService extends Qute.Service {
+}
+```
+
+or using a custom constructor:
+
+```javascript
+class MyService extends Qute.Service {
+    constructor(app, config) {
+        super(app);
+        this.config =config;
+    }
+}
+```
+
+To publish a service property as an application data model property you can use the `@DataModel` and `@AsyncDataModel` decorators.
+To inject a data model property as a service property use the `@Link` decorator:
+
+```javascript
+class MyService extends Qute.Service {
+    // publish the `user` field as the 'Session/user' data model property
+    @AsyncDataModel('Session/user') user;
+    // inject the Configuration/loginUrl data model property in the `loginUrl` field
+    @Link('Configuration/loginUrl') loginUrl;
+}
+```
+
+Go to **[Application Data Model](#/app/data)** section to learn more about these decorators.
+
 
 ### The Message Bus
 
@@ -69,31 +198,6 @@ It is also internally used to implement the synchronization between components a
 For convenience, the `ViewModel` components are wrapping message bus methods like `subscribe`, `post` etc. and delegate the calls to the application instance.
 
 For more information see the **[Message Bus](#/app/bus)** section.
-
-### The Data Model
-
-When building applications you need a way to store application data and state outside the presentation layer, to share that data between UI components and to keep these components synchronized with the application data and state.
-
-The application data is defined as a map of application properties. There are two type of application properties: regular properties and **asynchronous** properties.
-
-In frameworks like **react** or **vue** this is achieved using state management systems like **redux**.
-
-Qute is providing a built-in solution to achieve this through the **application data model**.
-
-To learn more about go to the **[Application Data Model](#/app/data)** section.
-
-
-### The Application Logic
-
-The application logic layer contains all the code you need to write to implement your application logic. This code can be grouped in services like **data fetching** (through ajax or not), **view state management** (e.g. show or hide a modal etc), **routing** (i.e. change views when navigating to other pages) etc.
-
-The main goal of **Qute** is to let you focus on this part and not on the presentation layer
-logic.
-
-### Example
-
-**You can find here an [example of using application data and services](#/app/example)**
-
 
 ## The Application API
 

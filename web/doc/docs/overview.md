@@ -201,7 +201,7 @@ Let's say you build the login logic for an application. You want to display in t
 
 The information should stored at the application level. It is part of the application data model which is visible to any interested component. Also the service providing the login flow which will update the applciation login status is not hardcoded in some UI components but is part of the application logic and should be defined at application level.
 
-The **Application Model** provides the business logic and a shared data model visible to any interested component.
+The **Application Model** provides the business logic and a data model visible to all components in the presentation layer.
 
 If a component is interested in some application property (like for example the login state) you can reference the application property from a component using `Link` type properties. These component properties acts like a proxy to the application property: if you set the component property the linked application property will be updated, and vice-versa if some other component change the application property, the linked component property will change too and the component DOM updated (since the `Link` property is a reactive property. In fact a `Link` property value is only stored at application level.
 

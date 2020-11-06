@@ -97,6 +97,11 @@ function __x(expr, ctx) {
 function _x(expr, ctx) {
     return '(' + __x(expr, ctx) + ')';
 }
+// text expressio we needd to check if null or undefied to output ''
+// for this we use the renderig `.u` method
+function _tx(expr, ctx) {
+    return '$.u(' + __x(expr, ctx) + ')';
+}
 // write literal object by rewriting vars
 function _o(expr, ctx) {
     return '(' + expr.replace(OBJ_RX, function(match, p1, p2) {
@@ -743,10 +748,9 @@ function ExprNode() {
 		var parts = this.parts;
 		var out = [];
 		for (var i=0,l=parts.length; i<l; i+=2) {
-			if (parts[i]) out.push(_x(parts[i+1], ctx));
+			if (parts[i]) out.push(_tx(parts[i+1], ctx));
 			else out.push(_s(parts[i+1]));
 		}
-		;
 		return _fn('x', _v(out.join('+')));
 	}
 }

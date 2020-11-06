@@ -87,7 +87,11 @@ var RenderingProto = {
 		var el = document.createTextNode(text);
 		this.up(SetText(el, this.model, expr));
 		return el;
-	},
+    },
+    // check for udefied ad ull values ad out put ''
+    u: function(value) {
+        return value == null ? '' : value;
+    },
 	t: function(value) { // text
 		return document.createTextNode(value);
 	},
