@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/polyfill",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0-beta.2",
   "keywords": [],
   "author": "Bogdan Stefanescu <bogdan@quandora.com>",
   "license": "MIT",
@@ -16,7 +16,7 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/window": "2.0.0-beta.1",
+    "@qutejs/window": "2.0.0-beta.2",
     "promise-polyfill": "^8.1.3"
   },
   "build": {
