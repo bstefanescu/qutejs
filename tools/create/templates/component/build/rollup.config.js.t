@@ -30,7 +30,9 @@ if (isNaN(devServerPort)) {
 
 let plugins = [
 	nodeResolve( {preferBuiltins: true} ),
-	commonjs(),
+	commonjs({
+        include: ['node_modules/**'],
+    }),
 	postcss({
 		inject: qute.injectStyle,
 		plugins: [
