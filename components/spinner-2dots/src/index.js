@@ -1,5 +1,5 @@
 import { document } from '@qutejs/window';
-import baseSpinner from '@qutejs/spinner-base';
+import baseSpinner from '../../spinner/src/base-spinner.js';
 import './2dots.css';
 
 
