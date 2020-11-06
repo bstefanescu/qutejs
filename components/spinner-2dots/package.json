@@ -36,9 +36,6 @@
     "@qutejs/rollup-plugin-qute": "2.0.0-beta.2"
   },
   "build": {
-    "external": [
-      "@qutejs/window"
-    ],
     "config": "component"
   }
 }
