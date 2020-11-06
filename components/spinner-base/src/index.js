@@ -1,3 +1,5 @@
+import Qute from '@qutejs/runtime';
+
 export default function baseSpinner(el, r, xattrs) {
     if (!xattrs) return;
     // x-small, small, large, x-large or size?

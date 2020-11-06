@@ -9,9 +9,9 @@ All the spinner implementations are accepting the following attributes:
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import SpinnerRing from '@qutejs/spinner-ring';
+import SpinnerRing from '@qutejs/spinner';
 import SpinnerEllipsis from '@qutejs/spinner-ellipsis';
-import Spinner3dots from '@qutejs/spinner-3dots';
+import Spinner2dots from '@qutejs/spinner-2dots';
 
 <q:template export>
     <div style='margin-top: 20px'>
@@ -19,7 +19,7 @@ import Spinner3dots from '@qutejs/spinner-3dots';
         <hr>
         <SpinnerEllipsis />
         <hr>
-        <Spinner3dots />
+        <Spinner2dots />
 	</div>
 </q:template>
 ```
@@ -28,9 +28,9 @@ import Spinner3dots from '@qutejs/spinner-3dots';
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import SpinnerRing from '@qutejs/spinner-ring';
+import SpinnerRing from '@qutejs/spinner';
 import SpinnerEllipsis from '@qutejs/spinner-ellipsis';
-import Spinner3dots from '@qutejs/spinner-3dots';
+import Spinner2dots from '@qutejs/spinner-2dots';
 
 <q:template export>
     <div style='margin-top: 20px'>
@@ -38,13 +38,13 @@ import Spinner3dots from '@qutejs/spinner-3dots';
         <hr>
         <SpinnerEllipsis color='green' size='32px' width='4pxp'/>
         <hr>
-        <Spinner3dots color='green' size='32px' width='4pxp'/>
+        <Spinner2dots color='green' size='32px' width='4pxp'/>
 	</div>
 </q:template>
 ```
 ## Ring Spinner
 
-This spinner is provided by the [@qutejs/spinner-ring](https://www.npmjs.com/package/@qutejs/spinner-ring) package.
+This spinner is provided by the [@qutejs/spinner](https://www.npmjs.com/package/@qutejs/spinner) package.
 
 The spinner is accepting the following additional attributes:
 
@@ -75,11 +75,11 @@ The 2dots spinner is accepting the following attributes:
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import Spinner3dots from '@qutejs/spinner-3dots';
+import Spinner2dots from '@qutejs/spinner-2dots';
 
 <q:template export>
     <div style='margin-top: 20px'>
-	    <Spinner3dots type='2dots' size='32px' center/>
+	    <Spinner2dots type='2dots' size='32px' center/>
 	</div>
 </q:template>
 ```

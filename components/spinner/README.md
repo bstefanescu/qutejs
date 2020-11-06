@@ -1,4 +1,4 @@
-# Qute Spinner Component (@qutejs/spinner-ring)
+# Qute Spinner Component (@qutejs/spinner)
 
 This package implements a CSS spinner similar to the [material design circular progress indicator](https://material.io/components/progress-indicators/#circular-progress-indicators). The spinner works in IE10+.
 
@@ -17,13 +17,13 @@ npm init @qutejs
 # Installing
 
 ```
-npm install @qutejs/spinner-ring
+npm install @qutejs/spinner
 ```
 
 # Usage
 
 ```javascript
-import Spinner from '@qutejs/spinner-ring';
+import Spinner from '@qutejs/spinner';
 ```
 
 The spinner supports the following attributes: `class`, `center`, `size`, `width` and `color`.

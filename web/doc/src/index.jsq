@@ -1,6 +1,5 @@
 import '@qutejs/polyfill';
-import Spinner from '@qutejs/spinner';
-import '@qutejs/spinner-ellipsis';
+import Spinner from '@qutejs/spinner-ellipsis';
 import window, { document, navigator } from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import Router from '@qutejs/router';
@@ -72,7 +71,7 @@ const {ViewModel, Template, Property, Channel, On} = Qute;
 			<if docPageContent>
 				<div q:html='docPageContent' class='markdown-body' />
 			<else>
-				<Spinner type='ellipsis' center />
+				<Spinner center />
 			</if>
 		</div>
     </div>
@@ -210,9 +209,6 @@ function highlightItem(root, target) {
 @Template(TocTemplate)
 class Toc extends ViewModel {
 
-connected() {
-    console.log('======================CONNNECTED', this.$attrs.items);
-}
     @On('click', 'a')
     handleTocItemClick(e) {
 		var parentNode = e.target.parentNode;

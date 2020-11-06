@@ -29,7 +29,6 @@
     "@qutejs/runtime": "2.0.0-beta.1",
     "@qutejs/window": "2.0.0-beta.1",
     "@qutejs/router": "2.0.0-beta.1",
-    "@qutejs/spinner": "2.0.0-beta.1",
     "@qutejs/spinner-ellipsis": "2.0.0-beta.1",
     "@qutejs/polyfill": "2.0.0-beta.1"
   },

@@ -26,6 +26,9 @@
     "url": "https://github.com/bstefanescu/qutejs",
     "type": "git"
   },
+  "dependencies": {
+    "@qutejs/runtime": "2.0.0-beta.1"
+  },
   "build": {
     "config": "weblib"
   }
