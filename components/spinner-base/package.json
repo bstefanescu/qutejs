@@ -27,6 +27,6 @@
     "type": "git"
   },
   "build": {
-    "config": "component"
+    "config": "weblib"
   }
 }
