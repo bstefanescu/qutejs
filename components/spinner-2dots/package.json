@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/spinner-2dots",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0-beta.4",
   "description": "Qute Spinner 2dots implementation",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
@@ -29,11 +29,11 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/runtime": "2.0.0-beta.3",
-    "@qutejs/window": "2.0.0-beta.3"
+    "@qutejs/runtime": "2.0.0-beta.4",
+    "@qutejs/window": "2.0.0-beta.4"
   },
   "devDependencies": {
-    "@qutejs/rollup-plugin-qute": "2.0.0-beta.3"
+    "@qutejs/rollup-plugin-qute": "2.0.0-beta.4"
   },
   "build": {
     "config": "component"
