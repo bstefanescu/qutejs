@@ -14,7 +14,7 @@ var transpiling = false;
 
 var cache;
 
-var DEFAULT_EXTS = ['.jsq'];
+var DEFAULT_EXTS = ['.js', '.jsq', '.qute'];
 var CACHE_FILE = findCacheDir({name: 'qute'}) || os.tmpdir();
 
 function Cache(filename) {
@@ -71,18 +71,20 @@ function mtime(filename) {
   return fs.statSync(filename).mtime.getTime();
 }
 
-function transpile(code) {
-        code = new Compiler().transpile(code, {sourceMap: false}).code;
+function transpile(code, isJsq) {
+        if (isJsq) {
+            code = new Compiler().transpile(code, {sourceMap: false}).code;
+        }
         const r =  new Compiler.DecoratorTranspiler().transpile(code, false);
         return r ? r.code : code;
 }
 
-function cachedTranspile(code, filename) {
+function cachedTranspile(code, filename, isJsq) {
 	var key = filename; //TODO improve cache key
 	var cached = cache.get(key);
 	var tm = mtime(filename);
 	if (!cached || cached.mtime !== tm) {
-        cached = { code: transpile(code), mtime: tm };
+        cached = { code: transpile(code, isJsq), mtime: tm };
         cache.put(cached);
 	}
 	return cached.code;
@@ -93,7 +95,8 @@ function transpileHook(code, filename) {
 	try {
         transpiling = true;
         try {
-            code = cache ? cachedTranspile(code, filename) : transpile(code);
+            const isJsq = filename.endsWith('.jsq') || filename.endsWith('.qute');
+            code = cache ? cachedTranspile(code, filename, isJsq) : transpile(code, isJsq);
             //console.log('============= Code for ',filename,'=============\n', code, '\n=================================');
         } catch(e) {
             console.error('Qute transpiler: Failed to process '+filename, e);

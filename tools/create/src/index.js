@@ -49,25 +49,23 @@ import { normalizeName, componentName, npmInstall } from './utils.js';
 function installDeps(target) {
       var cmds = [
       ['-D', 'rollup'],
-      ['-D', 'rollup-plugin-commonjs'],
-      ['-D', 'rollup-plugin-node-resolve'],
-      ['-D', 'rollup-plugin-buble'],
+      ['-D', '@rollup/plugin-commonjs'],
+      ['-D', '@rollup/plugin-node-resolve'],
+      ['-D', '@rollup/plugin-buble'],
+      ['-D', '@rollup/plugin-multi-entry'], // for tests
       ['-D', 'rollup-plugin-uglify'],
       ['-D', 'rollup-plugin-postcss'],
       ['-D', 'postcss-qute'],
       ['-D', 'cssnano'],
       ['-D', 'rollup-plugin-koa-devserver'],
+      ['-D', '@qutejs/rollup-plugin-qute'],
       // test deps
       ['-D', 'mocha'],
-      ['-D', '@babel/core'],
-      ['-D', '@babel/register'],
-      ['-D', '@babel/preset-env'],
       ['-D', 'source-map-support'],
-      ['-P', '@qutejs/window'],
-      ['-P', '@qutejs/runtime'],
-      ['-D', '@qutejs/rollup-plugin-qute'],
-      ['-D', '@qutejs/register'],
       //['-D', '@qutejs/test-utils']
+      // runtime deps
+      ['-P', '@qutejs/window'],
+      ['-P', '@qutejs/runtime']
     ];
     var progress = new Progress('Installing dependencies [:bar] :percent > :token', {
       total: cmds.length+1,
