@@ -2,12 +2,12 @@
   "name": "%%name%%",
   "version": "%%version%%",
   "description": "%%description%%",
-  "main": "lib/index.cjs.js",
-  "module": "lib/index.esm.js",
-  "browser": "lib/%%name%%.js",
-  "unpkg": "lib/%%name%%.min.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "browser": "dist/%%name%%.js",
+  "unpkg": "dist/%%name%%.min.js",
   "files": [
-    "lib"
+    "dist"
   ],
   "scripts": {
     "start": "npx rollup -c .qute/rollup.config.js -w --environment NODE_ENV:development",
