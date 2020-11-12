@@ -8,7 +8,7 @@ function decorateMethod(methodName, decoratorCalls) {
             out += `  ${dcall.value}(proto, ${name}, d);\n`;
         } else {
             callDefine = true;
-            out += `  d = ${dcall.value}(proto, ${name}, d)) || d;\n`;
+            out += `  d = ${dcall.value}(proto, ${name}, d) || d;\n`;
         }
     });
     if (callDefine) out += `  Object.defineProperty(proto, ${name}, d);\n`;
