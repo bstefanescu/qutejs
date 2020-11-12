@@ -94,17 +94,26 @@ DecoratedClass.prototype = {
         if (this.fields) {
             var vmprops = [];
             var fields = [];
+            var staticFields = [];
             this.fields.forEach(field => {
-                const meta = unit.getPropMeta(field);
-                if (meta) meta.checkSuperClass(this);
-                if (meta && meta.vmProp) {
-                    vmprops.push(field);
+                if (field.static) {
+                    if (field.decorators && field.decorators.length > 0) {
+                        throw new Error('Decorators are not supported on static fields: '+ms.original.substring(field.start, field.end));
+                    }
+                    staticFields.push(field);
                 } else {
-                    fields.push(field);
+                    const meta = unit.getPropMeta(field);
+                    if (meta) meta.checkSuperClass(this);
+                    if (meta && meta.vmProp) {
+                        vmprops.push(field);
+                    } else {
+                        fields.push(field);
+                    }
                 }
             })
             if (vmprops.length) this.transpileVMProps(ms, vmprops, unit);
             if (fields.length) this.transpileFields(ms, fields, unit);
+            if (staticFields.length) this.transpileStaticFields(ms, staticFields, unit);
         }
         if (this.methods) {
             this.transpileMethods(ms, this.methods, unit);
@@ -232,6 +241,18 @@ DecoratedClass.prototype = {
                     unit.removeDecorator(ms, decorator);
                 });
             }
+            unit.removeField(ms, field);
+        });
+    },
+    transpileStaticFields(ms, fields, unit) {
+        const text = ms.original;
+        fields.forEach(field => {
+            const key = field.key.name;
+            let value = 'void(0)';
+            if (field.value) {
+                value = text.substring(field.value.start, field.value.end);
+            }
+            this.appendCode(`${this.name}.${key} = ${value};`);
             unit.removeField(ms, field);
         });
     },

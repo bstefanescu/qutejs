@@ -108,7 +108,7 @@ function removeDecorator(ms, start, end) {
 
 
 function removeField(ms, start, end) {
-    _removeStmt(ms, start, end, /\s*;?[ \t]*\n?/m);
+    _removeStmt(ms, start, end, /\s*?\n|(\s*;?[ \t]*\n?)/m);
 }
 
 function _removeStmt(ms, start, end, tailRX) {

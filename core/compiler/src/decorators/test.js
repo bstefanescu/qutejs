@@ -5,8 +5,13 @@ const code = `
 import Qute from '@qutejs/runtime';
 const { Render, Template, Prop, Watch, Mixin, Required, DataModel, AsyncDataModel, View} = Qute;
 
-@ViewModel(MyViewModel)
+@View(MyViewModel)
 class MyApp extends Qute.Application {
+    static aStaticField = 'Hello!'
+
+    get hello() {
+        return "hello";
+    }
 
     @Service('Router')
     router = new Router(this, config);
@@ -40,6 +45,7 @@ class MyViewModel extends Qute.ViewModel {
 
     @On('click')
     onClick() {}
+
 }`;
 
 const r = new Transpiler().transpile(code);

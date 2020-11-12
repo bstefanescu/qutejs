@@ -31,7 +31,18 @@ DecoratedUnit.prototype = {
     },
     removeField(ms, field) {
         var fn = this.comment ? commentField : removeField;
-        fn(ms, field.start, field.end);
+        var start = field.start;
+        if (field.static) {
+            // in the current version of meriyah the 'static' keyword is not part of the field range
+            const text = ms.original;
+            if (!/^static\s/m.test(text.substring(field.start, field.end).trim())) {
+                //search for the static keyword
+                const preText = text.substring(0, field.start);
+                start = preText.search(/\sstatic\s+$/m);
+                if (start < 0) throw new Error('Could not find static keyword for static field: '+text.substring(field.start, field.end));
+            }
+        }
+        fn(ms, start, field.end);
     },
     getPropMeta(property) {
         let meta = null;
