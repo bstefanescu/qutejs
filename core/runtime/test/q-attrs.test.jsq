@@ -41,6 +41,14 @@ const { Template, ViewModel, Property } = Qute;
 </q:template>
 
 
+<q:template name='CompClassAndArgs'>
+    <vm-comp q:attrs />
+</q:template>
+<q:template name='TestClassAndArgs'>
+    <CompClassAndArgs class='base-class' q:class={{"other-class":true}} />
+</q:template>
+
+
 @Template(TestFnRootTemplate)
 class TestFnRoot extends ViewModel {
     @Property theClass = 'the_class';
@@ -123,5 +131,15 @@ describe('q:attrs attribute', function() {
 
 	});
 
+	context('q:attrs works along with q:class', function() {
+
+        var Test = Qute(TestClassAndArgs);
+		var test = mountTest(Test);
+
+		it('works injecting class through q:args and adding new classes through q:class', function() {
+			assert.equal(test.querySelectorAll('.base-class.other-class').length, 1);
+		});
+
+	});
 
 });

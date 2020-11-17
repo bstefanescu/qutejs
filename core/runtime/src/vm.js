@@ -15,7 +15,7 @@ function SetVMAttrs(vm, parentVM, filter) {
 	return function() {
 		var parentAttrs = parentVM.$attrs;
 		if (parentAttrs) {
-			var keys = filterKeys(parentAttrs, filter);
+            var keys = filterKeys(parentAttrs, filter);
 			for (var i=0,l=keys.length; i<l; i++) {
 				var key = keys[i];
 				vm.$set(key, parentAttrs[key]);
@@ -197,7 +197,6 @@ ViewModel.prototype = {
 		el.__qute__ = this;
 		this.$el = el;
         this.created && this.created(el);
-
 		if (bindings) for (var i=0,l=bindings.length; i<l; i+=2) {
 			var up = bindings[i](el, model, bindings[i+1]);
 			parentRendering.up(up)();

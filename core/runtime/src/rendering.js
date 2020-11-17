@@ -18,7 +18,7 @@ function SetDOMAttrs(el, model, filter) {
 		if ($attrs) {
 			var keys = filterKeys($attrs, filter);
 			for (var i=0,l=keys.length; i<l; i++) {
-				var key = keys[i];
+                var key = keys[i];
 				el.setAttribute(key, $attrs[key]);
 			}
 		}
@@ -109,11 +109,19 @@ var RenderingProto = {
 			var model = this.model;
 			if (xattrs.$use) {
 				$use = applyUserDirectives(this, tag, xattrs, el);
-			}
+            }
+            if ('$attrs' in xattrs) {
+                // the $attrs directive must be executed first before $class or other directive that may override base attributes
+                // for example if you have a root element <button q:class={someExpr} q:attrs></button>
+                // and a `class` attribute is injected through q:attrs it will be lost (replaced by q:class) if we
+                // don't process first the $attrs ... this is because the q:class is making a copy of the initial `class` which is empty
+                // if the $class comes before $attrs and the $attrs class is lost.
+                this.up(SetDOMAttrs(el, model, xattrs.$attrs))();
+            }
 			for (var key in xattrs) {
 				var up = null;
-				var val = xattrs[key];
-				if (key.charCodeAt(0) === 36) { // $ - extended attribute
+                var val = xattrs[key];
+                if (key.charCodeAt(0) === 36) { // $ - extended attribute
 					if (key === '$on') {
 						applyListeners(el, model, val);
 					} else if (key === '$class') {
@@ -126,8 +134,6 @@ var RenderingProto = {
 						up = SetToggle(el, model, val);
 					} else if (key === '$html') {
 						up = SetInnerHTML(el, model, val);
-					} else if (key === '$attrs') {
-						up = SetDOMAttrs(el, model, val);
 					} else if (key === '$emit') {
 						applyEmitters(el, model, val);
 					} else if (key === '$slot') {
@@ -136,7 +142,7 @@ var RenderingProto = {
 						this.model[val] = el;
 					} else if (key === '$channel') {
 						ERR("q:channel cannot be used on regular DOM elements: %s", tag);
-					}
+                    }
 				} else if (typeof val === 'function') { // a dynamic binding
 					up = SetAttr(el, model, key, val);
 				} else {
