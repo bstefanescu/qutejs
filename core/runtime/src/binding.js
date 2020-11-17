@@ -44,7 +44,7 @@ function bindStyle(elt, value) {
 }
 
 // the listeners injected from a vm to a nested functional view
-// must run in parent vm, context not in fucntional view context!
+// must run in parent vm, context not in functional view context!
 // This is why we need to use the vm from the closure scope when the listener was created
 export function createListener(vm, fn) {
 	return function(e) {

@@ -4,10 +4,10 @@ This directive can be used to declaratively emit DOM events in response to recei
 
 The syntax of `q:emit` attribute is `q-emit-[new-event-name]-on[original-event-name]` or `q-emit-[event-name]`. In the first form the the original event is `forwarded` as a new custom event event having the gigen name. In the later form the original event is `forwarded` as a custom event having the same event name than the original one.
 
-Let's say for example that you have a `remove-button` component which wraps a `button` and need to emit a 'remove' event whe the button is clicked. This can be simply done usiong a `q:emit` directive:
+Let's say you have a `remove-button` component which wraps a `button` and need to emit a 'remove' event when the button is clicked. This can be simply done usiong a `q:emit` directive:
 
 ```xml
-<q:template name='remove-button'>
+<q:template name='RemoveButton'>
 	<button q:emit-remove-onclick>Remove</button>
 </q:template>
 ```
@@ -17,7 +17,7 @@ This component will emit a custom event named 'remove' when the button is clicke
 You can change the event detail to store some meaningfull value like for example the id of the removed item. Example:
 
 ```xml
-<q:template name='remove-button'>
+<q:template name='RemoveButton'>
 	<button q:emit-remove-onclick={$attrs.id}>Remove</button>
 </q:template>
 <!-- then to you use the component you need to pass an id: -->
@@ -28,7 +28,7 @@ This button will trigger a 'remove' event with. the `detail` field set to the it
 
 Sometimes you may want to preserve the original event name. For example you may want to create a custom form control that emits a 'change' events when some internal text input emit a change event. In that case you simply specify the original event name without the `on` prefix: `q-emit-change`.
 
-Here is an working example, demontsrating the `q-emit` usage from both a fucntional component and a `ViewModel` component.
+Here is an working example, demontsrating the `q-emit` usage from both a functional component and a `ViewModel` component.
 
 ```jsq
 import window from '@qutejs/window';
