@@ -2,32 +2,29 @@ import window from '@qutejs/window';
 import { closestComp } from '@qutejs/commons';
 import { stopEvent } from './utils.js';
 
-function addClassMap(cl, value) {
+function _addClassesFromObject(classes, value) {
 	var keys = Object.keys(value);
 	for (var i=0,l=keys.length; i<l; i++) {
 		var key = keys[i];
-		var val = value[key];
-		if (val) cl.add(key); else cl.remove(key);
+		if (value[key]) classes.push(key);
 	}
 }
-
-function bindClass(elt, value) {
-	if (!value) return;
-	var cl = elt.classList;
+function _stringifyClasses(out, value) {
 	if (Array.isArray(value)) {
 		for (var i=0,l=value.length; i<l; i++) {
 			var val = value[i];
 			if (val) {
 				if (typeof val === 'string') {
-					cl.add(val);
-				} else { // an object?
-					addClassMap(cl, val);
+                    out.push(val);
+                } else { // an object?
+					_addClassesFromObject(out, val);
 				}
 			}
 		}
 	} else { // an object
-		addClassMap(cl, value);
-	}
+		_addClassesFromObject(out, value);
+    }
+    return out.join(' ');
 }
 
 function bindStyle(elt, value) {
@@ -141,10 +138,19 @@ export function SetToggle(el, model, valFn) {
 	}
 }
 
-export function SetClass(el, model, valFn) {
+export function SetClass(elt, model, valFn) {
 	return function() {
-		//TODO only if modified
-		bindClass(el, valFn(model));
+        var value = valFn(model)
+        if (!value) return;
+        if (elt.__qute_class__ == null) {
+            // not yet set
+            elt.__qute_class__ = elt.className || ''; // backup origial class
+        }
+        var out = elt.__qute_class__ ? [ elt.__qute_class__ ] : [];
+        var newClasses = _stringifyClasses(out, value);
+        if (newClasses !== elt.className) { // only if modified
+            elt.className = newClasses;
+        }
 	}
 }
 
