@@ -28,7 +28,7 @@ This button will trigger a 'remove' event with. the `detail` field set to the it
 
 Sometimes you may want to preserve the original event name. For example you may want to create a custom form control that emits a 'change' events when some internal text input emit a change event. In that case you simply specify the original event name without the `on` prefix: `q-emit-change`.
 
-Here is an working example, demontsrating the `q-emit` usage from both a functional component and a `ViewModel` component.
+Here is an working example, demontsrating the `q-emit` usage from both a regular element and a `ViewModel` component.
 
 ```jsq
 import window from '@qutejs/window';
@@ -40,14 +40,14 @@ const { ViewModel, Template } = Qute;
 </q:template>
 
 <q:template name='MyButtonTemplate'>
-	<a href='#' q:emit-click={$attrs.id}><slot/></a>
+	<a href='#'><slot/></a>
 </q:template>
 
 <q:template name='RootTemplate'>
 	<div>
 	<template-button @action='handleAction'>Fun Button - Click Me</template-button>
 	<hr/>
-	<my-button @click='handleAction' id='bla'>VM Button - Click Me</my-button>
+	<my-button @action='handleAction' id='bla' q:emit-action-onclick='bla'>VM Button - Click Me</my-button>
 	</div>
 </q:template>
 
