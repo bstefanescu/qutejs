@@ -135,14 +135,6 @@ Usage:
 ```javascript
 import Router from '@qutejs/router';
 
-var router = new Router({
-  "some/<path>+": function(vars) {
-    // do somehting
-  },
-  "some/exact/path": "some/path/redirect",
-  "some/<view>": "post:main-content/${view}"
-});
-
 // initialize the app here
 var app = new Qute.Application();
 // create the root component
@@ -151,23 +143,31 @@ var app = new Qute.Application();
 class Root extends ViewModel {
     ...
 }
+
+var router = new Router(app, {
+  "some/<path>+": function(path, vars) {
+    // do somehting
+  },
+  "some/exact/path": "some/path/redirect",
+  "some/<view>": "post:main-content/${view}"
+});
+router.start();
 // mount the application
 new Root(app).mount('app');
-
-router.install(app).start();
 ```
 
 If you are not explicitly instantiating a **Qute application** you can also install the router directly on the root component (this will install the router on the implicit application instance created by the root component):
 
 ```javascript
-var router = new Router({ ... });
 // define the root component
 @Template(RootTemplate)
 class Root extends ViewModel {
     ...
 }
-var root = new Root().mount('app');
-router.install(root).start();
+var root = new Root();
+var router = new Router(root, { ... });
+router.start();
+root.mount('app');
 ```
 
 ## Routes Mapping
@@ -222,9 +222,9 @@ There are 4 types of routes handlers:
 
 ### 1. Functions
 
-When the route is matched, fucntions are invoked with the captured variables passed as the first argument.
+When the route is matched, functions are invoked with the matched path and the captured variables passed as arguments.
 
-**Example:** `{'/some/path': function(vars) { ... } }`
+**Example:** `{'/some/path': function(path, vars) { ... } }`
 
 ### 2. Redirection Paths
 
@@ -284,23 +284,20 @@ Matching 'some/search' will trigger the following operation:
 
 ## Router Methods
 
-### `Qute.Router(mapping)`
+### `Qute.Router(appOrComponent, mapping)`
 
-The router constructor. The mapping argument is optional and contains route definitions.
+The router constructor. Takes two arguments:
 
-### `install(coponentOrApp)`
-
-Install the router in the given `Qute Application`. You can pass as argument either a [Qute Application instance](#/app/instance), either a component (in which case the application bound to the component will be used).
-
-Returns back the router instance.
+* appOrComponent - required - the applicaiton instance to install the router to. Can also be a ViewModel component (in which case the application bound to the component will be used)
+* mappinng - optional - a object containing route definitions.
 
 ### `map(bindings)`
 
-Add the given path mappings
+Add the given path mappings. Returns back the route instance.
 
 ### `add(path, to)`
 
-Add a single path mapping
+Add a single path mapping. Returns back the route instance.
 
 ### `start(options)`
 

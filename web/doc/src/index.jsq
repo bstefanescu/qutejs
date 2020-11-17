@@ -254,12 +254,12 @@ class App extends ViewModel {
 		var self = this;
 		this.docPages = {};
 		this.toc = TOC;
-		this.router = new Router({
+		this.router = new Router(app, {
 			'*': function(path) {
 				self.updateDocPage(path);
 			},
 			'/': 'introduction'
-		}).install(app).start();
+		}).start();
 
 		this.router.onChange(function(path) {
 			self.postAsync('toc', 'select', path);

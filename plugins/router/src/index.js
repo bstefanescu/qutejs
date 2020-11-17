@@ -1,20 +1,16 @@
 import Router from './router.js';
 
-function QuteRouter(bindings) {
-	Router.call(this, bindings);
-}
-
-var QuteRouterProto = Object.create(Router.prototype);
-QuteRouterProto.install = function(quteApp) {
+function QuteRouter(quteApp, bindings) {
+    Router.call(this, bindings);
     if (quteApp.$app) quteApp = quteApp.$app; // accept Qute components too.
     this.app = quteApp;
-	quteApp.router = this;
 	quteApp.subscribe('route', function(msg, data) {
 		// data can be 'true' to replace the current entry in history
 		quteApp.router.navigate(msg, data);
 	});
-    return this;
 }
+
+var QuteRouterProto = Object.create(Router.prototype);
 QuteRouterProto.handlerFromString = function(path, to) {
 	var i = path.indexOf(':');
 	if (i < 0) return null;
