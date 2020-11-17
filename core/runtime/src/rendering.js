@@ -1,7 +1,7 @@
 import {document} from '@qutejs/window';
 import {ERR} from '@qutejs/commons';
 
-import {applyListeners, applyEmiters, SetClass, SetStyle,
+import {applyListeners, applyEmitters, SetClass, SetStyle,
 			SetDisplay, SetToggle, SetText, SetInnerHTML, SetAttr} from './binding.js';
 import { filterKeys } from './utils.js';
 import {applyUserDirectives} from './q-attr.js';
@@ -129,7 +129,7 @@ var RenderingProto = {
 					} else if (key === '$attrs') {
 						up = SetDOMAttrs(el, model, val);
 					} else if (key === '$emit') {
-						applyEmiters(el, model, val);
+						applyEmitters(el, model, val);
 					} else if (key === '$slot') {
 						el.__qute_slot__ = val;
 					} else if (key === '$ref') {

@@ -4,7 +4,7 @@ functional components
 
 import Emitter from './emit.js';
 import UpdateQueue from './update.js';
-import {applyListeners, SetStyle, SetClass, SetDisplay, SetToggle} from './binding.js';
+import {applyListeners, applyEmitters, SetStyle, SetClass, SetDisplay, SetToggle} from './binding.js';
 import {applyUserDirectives} from './q-attr.js';
 import { filterKeys } from './utils.js';
 
@@ -61,7 +61,7 @@ FunComp.prototype = {
 		this.$slots = slots;
 
 		var model = rendering.model, attrs = this.$attrs, $use, $ref,
-			bindings, listeners;
+			bindings, listeners, emitters;
 
 		if (model) {
 			this.$app = model.$app;
@@ -89,7 +89,9 @@ FunComp.prototype = {
 						rendering.up(SetFuncAttrs(this, model, val))();
 					}
 				} else if (key === '$on') {
-					listeners = val;
+                    listeners = val;
+                } else if (key === '$emit') {
+                    emitters = val;
 				} else if (key === '$class') {
 					if (!bindings) bindings = [];
 					bindings.push(SetClass, val);
@@ -116,7 +118,11 @@ FunComp.prototype = {
 				var up = bindings[i](el, model, bindings[i+1]);
 				rendering.up(up)();
 			}
-		}
+        }
+
+        if (emitters) {
+            applyEmitters(el, model, emitters);
+        }
 
 		// apply listeners if any
 		if (listeners) {

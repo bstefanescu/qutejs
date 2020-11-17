@@ -201,7 +201,7 @@ function retargetEvent(el, model, srcEvent, toEvent, detailFn, isAsync) {
 	});
 }
 
-export function applyEmiters(el, model, ar) {
+export function applyEmitters(el, model, ar) {
 	for (var i=0,l=ar.length; i<l; i+=4) {
 		retargetEvent(el, model, ar[i+1], ar[i], ar[i+2], ar[i+3]);
 	}

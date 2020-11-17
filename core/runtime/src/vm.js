@@ -5,7 +5,7 @@ import { stopEvent, filterKeys, chainFnAfter } from './utils.js';
 import Rendering from './rendering.js';
 import UpdateQueue from './update.js';
 import Application from './app.js';
-import {applyListeners, SetProp, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
+import {applyListeners, applyEmitters, SetProp, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
 import Emitter from './emit.js';
 import {applyUserDirectives} from './q-attr.js';
 import { Property } from './decorators/index.js';
@@ -181,7 +181,8 @@ ViewModel.prototype = {
 	$create: function(parentRendering, xattrs, slots) {
 		var $use,
 			model = parentRendering && parentRendering.model,
-			listeners = xattrs && xattrs.$on;
+            listeners = xattrs && xattrs.$on,
+            emitters = xattrs && xattrs.$emit;
 		if (xattrs && xattrs.$use) {
 			$use = applyUserDirectives(parentRendering, this.constructor, xattrs, this);
 		}
@@ -200,7 +201,11 @@ ViewModel.prototype = {
 		if (bindings) for (var i=0,l=bindings.length; i<l; i+=2) {
 			var up = bindings[i](el, model, bindings[i+1]);
 			parentRendering.up(up)();
-		}
+        }
+
+        if (emitters) {
+            applyEmitters(el, model, emitters);
+        }
 
 		if (listeners) {
 			applyListeners(el, model, listeners);
