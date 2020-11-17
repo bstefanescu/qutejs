@@ -15,8 +15,8 @@ The view component supports the following attributes:
 The listener will be called in the context of the ViewModel containing the **view** directive (the `this` variable will point to the container component instance) and the current rendering component instance will be passed as the first argument.  \
 The first time the **view** directive is rendered the listener will not be notified.
 
-3. **nocache** - *optional*. Turn the cache off.
-By default the view directive is caching the rendered components. If you are switching a component off and  back on again, then the second time the component is displayed it will not be rendered again (it will only be updated so that model modifications are reflected on the component DOM tree).
+3. **cache** - *optional*. Turn the cache on.
+By default the view directive is not caching the rendered components. When the cache is on, if you are switching a component off and back on again, then the second time the component is displayed it will not be rendered again (it will only be updated so that model modifications are reflected on the component DOM tree).
 
 All the other attributes or nested content will be passed down to the actual rendering component - as if you were directly invoking the component.
 

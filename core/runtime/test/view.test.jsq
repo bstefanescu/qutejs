@@ -23,9 +23,9 @@ const { Template, ViewModel, Property } = Qute;
 </div>
 </q:template>
 
-<q:template name='NoCacheViewTestTemplate'>
+<q:template name='CacheViewTestTemplate'>
 <div>
-	<view is='activeView' user={user} nocache  onchange='viewChanged'>Are you fine?</view>
+	<view is='activeView' user={user} cache onchange='viewChanged'>Are you fine?</view>
 </div>
 </q:template>
 
@@ -42,7 +42,7 @@ const { Template, ViewModel, Property } = Qute;
 
 
 var VIEW_SWITCH_CNT = 0;
-var NOCACHE_VIEW_SWITCH_CNT = 0;
+var CACHE_VIEW_SWITCH_CNT = 0;
 
 @Template(ViewTestTemplate)
 class ViewTest extends ViewModel {
@@ -54,13 +54,13 @@ class ViewTest extends ViewModel {
 	}
 }
 
-@Template(NoCacheViewTestTemplate)
-class NoCacheViewTest extends ViewModel {
+@Template(CacheViewTestTemplate)
+class CacheViewTest extends ViewModel {
     @Property activeView = null;
     @Property user = 'John';
 
 	viewChanged() {
-		NOCACHE_VIEW_SWITCH_CNT++;
+		CACHE_VIEW_SWITCH_CNT++;
 	}
 }
 
@@ -70,7 +70,7 @@ class ByeUser extends ViewModel {
 }
 
 
-describe('View Directive - cache ON', function() {
+describe('View Directive - cache OFF', function() {
 	var root = new ViewTest();
 	var container = createMountPoint('root1');
 	root.mount(container);
@@ -138,8 +138,8 @@ describe('View Directive - cache ON', function() {
 });
 
 // run trhe same tests but whitout caching
-describe('View Directive - cache OFF', function() {
-	var root = new NoCacheViewTest();
+describe('View Directive - cache ON', function() {
+	var root = new CacheViewTest();
 	var container = createMountPoint('root2');
 	root.mount(container);
 
@@ -202,7 +202,7 @@ describe('View Directive - cache OFF', function() {
 	});
 
 	specify('view change listener invoked', function() {
-		assert.equal(NOCACHE_VIEW_SWITCH_CNT, 4); // we switch 3 times the view
+		assert.equal(CACHE_VIEW_SWITCH_CNT, 4); // we switch 3 times the view
 	});
 
 });

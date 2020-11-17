@@ -1,4 +1,5 @@
 import {document} from '@qutejs/window';
+import Map from './map.js'; // for IE < 11 support we need to use a simple map impl
 
 /*
 	- exprFn - is a model binding fn (i.e. takes a model as argument) that returns a key
@@ -7,7 +8,7 @@ import {document} from '@qutejs/window';
 export default function SwitchFragment(rendering, name, exprFn, render, changeCb, nocache) {
 	this.key = null; // the active case key
 	this.caseR = null;
-	this.cache = nocache ? null : {}; // key to rendering instance cache if cache is used.
+	this.cache = nocache ? null : new Map(); // key to rendering instance cache if cache is used.
 	this.r = rendering;
 	this.exprFn = exprFn;
 	this.render = render;
@@ -53,7 +54,7 @@ SwitchFragment.prototype = {
 		if (this.key !== key) { // case changed -> render case
 			this.clear(); // remove existing content
 			var cache = this.cache;
-			var r = cache && cache[key];
+			var r = cache && cache.get(key);
 			if (!r) {
 				r = this.r.spawn();
 				var nodes = this.render(r, key);
@@ -61,7 +62,7 @@ SwitchFragment.prototype = {
 					nodes = [nodes];
 				}
 				r.$nodes = nodes;
-				if (cache) cache[key] = r;
+				if (cache) cache.set(key, r);
 			}
 			// render nodes
 			var nodes = r.$nodes;

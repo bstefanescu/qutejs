@@ -560,12 +560,12 @@ function DomNode(name, caseSensitiveName, attrs) {
 				ERR("<view> requires an 'is' attribute");
 			}
 
-			var noCache = 'false';
+			var noCache = 'true';
 			var onChange = 'null';
 			if (attrs) {
-				if ('nocache' in attrs) {
-					noCache = 'true';
-					delete attrs['nocache'];
+				if ('cache' in attrs) {
+					noCache = 'false';
+					delete attrs['cache'];
 				}
 				if ('onchange' in attrs) {
 					onChange = _cb(attrs['onchange'], ctx);
