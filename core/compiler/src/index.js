@@ -961,7 +961,7 @@ var NODES = {
 
 var SYMBOLS = {
     "true": true, "false": true, "undefined": true, "null": true, "void": true, "return": true,
-    "typeof": true, "instanceof": true,
+    "typeof": true, "instanceof": true, "in": true,
 	"$0": true, "$1": true, "$2": true, "$3": true,
 	"$": true, "this": true, "_": true,
 	"JSON": true, "Object": true, "console": true, "window": true

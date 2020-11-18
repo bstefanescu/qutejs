@@ -170,6 +170,23 @@ export default Root;
 
 In that case the `title` slot will get its HTML content from the variable named `title`. Of course the `title` variable is resolved in the context of the `my-panel` component.
 
+## Testing if a slot was defined
+
+You can use the `$slots` component property to test from the component template whether or not a slot was defined when component was used in a template. To test if a slot exists use this expression: `$slots && $slots['slot-name']` where `slot-name` is the slot name to test. To test if the default slot is defined, use: `$slots && $slots.default`.
+
+Using this technique we can for example wrap the slot in an element only if the slot is defined:
+
+```xml
+<q:template name='TestSlot'>
+    ...
+    <if value={$slots && $slots.default}>
+        <div class='slot-wrapper'>
+            <slot />
+        </div>
+    </if>
+    ...
+</q:template>
+```
 
 ## The `q:slot` attribute directive
 

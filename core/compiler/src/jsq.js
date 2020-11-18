@@ -34,7 +34,7 @@ function compileTemplate(compiler, attrs, text) {
         exportLine = 'export default '+name+';\n';
     } else if (exportAttr) {
         name = exportAttr;
-        exportLine = 'export '+name+';\n';
+        exportLine = 'export {'+name+'};\n';
     }
 
     return "const "+name+" = "+compiledFn+';\n'+name+'.$compiled = true;\n'+exportLine;
