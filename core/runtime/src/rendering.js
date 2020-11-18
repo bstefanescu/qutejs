@@ -310,8 +310,7 @@ var RenderingProto = {
 			r = r.parent;
 		} while (r);
 		return null;
-	},
-
+	}
 }
 
 function Rendering(parent, model) {

@@ -33,7 +33,7 @@ function compileTemplate(compiler, attrs, text) {
         name = "__QUTE_DEFAULT_EXPORT__";
         exportLine = 'export default '+name+';\n';
     } else if (exportAttr) {
-        name = exportAtrr;
+        name = exportAttr;
         exportLine = 'export '+name+';\n';
     }
 

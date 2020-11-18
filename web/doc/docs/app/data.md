@@ -160,8 +160,12 @@ We've seen we can define properties either at component level, either are applic
 **When should one use application properties?**
 
 **The answer is:** if the property is part of the application logic, or it reflects an application state that should be accessible from any component then use an application property.  \
-You can also use application properties if you need to **share the property between multiple components which are not necessarily visible for each other**. When a parent component need to share a property with its children then you can pass the property as an attribute to the children components, and you don't need an application property.  \
+You can also use application properties if you need to **share the property or some state between multiple components**. When a parent component need to share a property with its children then you can pass the property as an attribute to the children components, and you don't need an application property.  \
 There are cases when you need to pass many properties as attributes around. If these properties are not internal to the component logic, then you could define them as application properties to minimize the attributes you pass around.
+
+Keep in mind that using application properties in components will tie your component to the application. So it will be difficult to reuse your component outside the application (since it needs the application context). To use the component in another application you need to recreate the required application properties.  \
+If you plan to create a component reusable in any context do not use application properties in your componnent.
+
 
 ## Application Data Property API
 
