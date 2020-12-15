@@ -24,9 +24,14 @@ function Mixin() {
     }
 }
 
-function On(key, selector) {
+/**
+ * Register an event listener
+ * @param {string} event
+ * @param {*string} selector
+ */
+function On(event, selector) {
     return function(VMProto, name, descriptor) {
-        _on(VMProto, key, selector, descriptor.value);
+        _on(VMProto, event, selector, descriptor.value);
     }
 }
 

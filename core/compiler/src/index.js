@@ -324,11 +324,24 @@ function _xattrs(attrs, bindings, xattrs, directives, events, ctx) {
 				var $emit = xattrs[key];
 				var emitOut = [];
 				for (var i=0,l=$emit.length; i<l; i+=4) {
-					var detail = $emit[i+2];
+                    var _detail, isAsync = !!$emit[i+3], detail = $emit[i+2];
+                    var flags = isAsync ? 1 : 0;
+                    if (!detail) {
+                        _detail = _s(detail);
+                    } else {
+                        var arrowFn = getArrowFn(detail, ctx);
+                        if (arrowFn) {
+                            flags |= 2; // set bit 1
+                            _detail = "function($1){var _=this;return "+arrowFn+"}";
+                        } else {
+                            _detail = _v(_xo(detail, ctx));
+                        }
+                    }
 					emitOut.push(
 						_s($emit[i]),
 						_s($emit[i+1]),
-						detail ? _v(_xo(detail, ctx)) : _s(detail), _s(!!$emit[i+3])
+                        _detail,
+                        _s(flags)
 					);
 				}
 				val = "["+emitOut.join(',')+"]";

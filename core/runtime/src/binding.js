@@ -170,8 +170,16 @@ export function SetProp(vm, model, key, valFn) {
 }
 
 
-
-function retargetEvent(el, model, srcEvent, toEvent, detailFn, isAsync) {
+/*
+flags is a bitset:
+- bit 0 is storing the isAsync attribute: if 1 isAsync is true, otherwise if 0 isAsync is false
+- bit 1 is storing the detailFactory attribute: if 1 the detail is a function which takes the original event as argument and return the detail, otherwise if 0 the detail is a regular model value function
+if (flags & 1) =>  is async
+if (flags & 2)
+*/
+function retargetEvent(el, model, srcEvent, toEvent, detailFn, flags) {
+    const isAsync = flags & 1;
+    const isDetailFactory = flags & 2;
 	el.addEventListener(srcEvent, function(e) {
 		// avoid infinite loop when emiting from a component root element a
 		// custom event with the same name of the original event
@@ -181,10 +189,10 @@ function retargetEvent(el, model, srcEvent, toEvent, detailFn, isAsync) {
 
 		var comp = closestComp(el);
 		if (comp) {
-			var targetEl = comp.$el;
+            var targetEl = comp.$el;
 			var newEvent = new window.CustomEvent(toEvent, {
 				bubbles: e.bubbles,
-				detail: detailFn ? detailFn(model) : e
+				detail: detailFn ? (isDetailFactory ? detailFn.call(model, e) : detailFn(model)) : model
 			});
 			newEvent.$originalEvent = e;
 			newEvent.$originalTarget = el;

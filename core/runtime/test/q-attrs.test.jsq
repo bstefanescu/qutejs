@@ -82,9 +82,12 @@ describe('q:attrs attribute', function() {
 		it('injected attributes are reactive', function(done) {
 			test.firstChild.__qute__.theClass = 'the_changed_class';
 			runAfter(function() {
-				assert.equal(test.querySelectorAll('.the_class').length, 0);
-				assert.equal(test.querySelectorAll('.the_changed_class').length, 2);
-				done();
+                try {
+                    assert.equal(test.querySelectorAll('.the_class').length, 0);
+                    assert.equal(test.querySelectorAll('.the_changed_class').length, 2);
+                } finally {
+				    done();
+                }
 			});
 		});
 

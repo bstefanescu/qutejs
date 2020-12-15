@@ -12,7 +12,7 @@ Let's say you have a `remove-button` component which wraps a `button` and need t
 </q:template>
 ```
 
-This component will emit a custom event named 'remove' when the button is clicked. The **event detail** will point to the original click event.
+This component will emit a custom event named 'remove' when the button is clicked. The **event detail** will point to the context component in which the event was emited. The event will also contains two special properties: `$originalEvent` and `$originalTarget` which will point to the source event and respectively the source event target.
 
 You can change the event detail to store some meaningfull value like for example the id of the removed item. Example:
 
@@ -47,7 +47,7 @@ const { ViewModel, Template } = Qute;
 	<div>
 	<template-button @action='handleAction'>Fun Button - Click Me</template-button>
 	<hr/>
-	<my-button @action='handleAction' id='bla' q:emit-action-onclick='bla'>VM Button - Click Me</my-button>
+	<my-button @action='handleAction' q:emit-action-onclick={msg}>VM Button - Click Me</my-button>
 	</div>
 </q:template>
 
@@ -56,13 +56,22 @@ var MyButton = Qute(MyButtonTemplate); // create a empty ViewModel
 
 @Template(RootTemplate)
 class Root extends ViewModel {
+    msg = 'hello';
     handleAction(e) {
 		console.log('Action Event', e, e.detail);
-		console.log('Original Event', e.originalEvent)
+		console.log('Original Event', e.$originalEvent)
 		window.alert('Handling Action!');
 	}
 }
 export default Root;
+```
+
+## Using a function to generate the detail from the source event
+
+You can also use a function to generate the detail set to the new event. Let's say we want to forward a custom event to a new custom event and reuse the detail from the source event in the ew evennt. We ca do this by using an arrow function that takes as the first argument the source event:
+
+```xml
+<my-button @action='handleAction' q:emit-action-onclick={sourceEvent => { return {value: 'new-detail', source: sourceEvent.detail}}>VM Button - Click Me</my-button>
 ```
 
 ## The `#new-event@source-event` notation.
