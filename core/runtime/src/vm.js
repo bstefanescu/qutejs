@@ -5,7 +5,7 @@ import { stopEvent, filterKeys, chainFnAfter } from './utils.js';
 import Rendering from './rendering.js';
 import UpdateQueue from './update.js';
 import Application from './app.js';
-import {applyListeners, applyEmitters, SetProp, SetClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
+import {applyListeners, applyEmitters, SetProp, InheritQClass, SetStyle, SetToggle, SetDisplay} from './binding.js';
 import Emitter from './emit.js';
 import {applyUserDirectives} from './q-attr.js';
 import { Property } from './decorators/index.js';
@@ -148,7 +148,7 @@ ViewModel.prototype = {
 						rendering.up(SetVMAttrs(this, model, val))();
 					} else if (key === '$class') {
 						if (!bindings) bindings = [];
-						bindings.push(SetClass, val);
+						bindings.push(InheritQClass, val);
 					} else if (key === '$style') {
 						if (!bindings) bindings = [];
 						bindings.push(SetStyle, val);

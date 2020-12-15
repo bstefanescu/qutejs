@@ -4,7 +4,7 @@ functional components
 
 import Emitter from './emit.js';
 import UpdateQueue from './update.js';
-import {applyListeners, applyEmitters, SetStyle, SetClass, SetDisplay, SetToggle} from './binding.js';
+import {applyListeners, applyEmitters, SetStyle, InheritQClass, SetDisplay, SetToggle} from './binding.js';
 import {applyUserDirectives} from './q-attr.js';
 import { filterKeys } from './utils.js';
 
@@ -94,7 +94,7 @@ FunComp.prototype = {
                     emitters = val;
 				} else if (key === '$class') {
 					if (!bindings) bindings = [];
-					bindings.push(SetClass, val);
+					bindings.push(InheritQClass, val);
 				} else if (key === '$style') {
 					if (!bindings) bindings = [];
 					bindings.push(SetStyle, val);

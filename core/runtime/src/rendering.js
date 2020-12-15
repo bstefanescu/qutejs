@@ -1,7 +1,7 @@
 import {document} from '@qutejs/window';
 import {ERR} from '@qutejs/commons';
 
-import {applyListeners, applyEmitters, SetClass, SetStyle,
+import {applyListeners, applyEmitters, SetFixedClass, SetComputedClass, InheritClass, SetQClass, SetStyle,
 			SetDisplay, SetToggle, SetText, SetInnerHTML, SetAttr} from './binding.js';
 import { filterKeys } from './utils.js';
 import {applyUserDirectives} from './q-attr.js';
@@ -11,7 +11,7 @@ import ForFragment from './for-fragment.js';
 import FunComp from './func.js';
 
 const converters = {};
-
+// q:attrs values are already evaluated - so the injected values are liiterals
 function SetDOMAttrs(el, model, filter) {
 	return function() {
 		var $attrs = model.$attrs;
@@ -19,7 +19,12 @@ function SetDOMAttrs(el, model, filter) {
 			var keys = filterKeys($attrs, filter);
 			for (var i=0,l=keys.length; i<l; i++) {
                 var key = keys[i];
-				el.setAttribute(key, $attrs[key]);
+                if (key === 'class') {
+                    // the class is handled apart to sync with q:class and other dynamkic class changes
+                    InheritClass(el, $attrs[key]);
+                } else {
+                    el.setAttribute(key, $attrs[key]);
+                }
 			}
 		}
 	}
@@ -102,21 +107,13 @@ var RenderingProto = {
         }
         return typeof tagOrFn === 'string' ? this.h(tagOrFn, xattrs, children) : this.c(tagOrFn, xattrs, children);
 	},
-	h: function(tag, xattrs, children, svg) { // dom node
+    h: function(tag, xattrs, children, svg) { // dom node
 		var el = svg ? document.createElementNS('http://www.w3.org/2000/svg', tag)
             : document.createElement(tag), $use = null;
 		if (xattrs) {
 			var model = this.model;
 			if (xattrs.$use) {
 				$use = applyUserDirectives(this, tag, xattrs, el);
-            }
-            if ('$attrs' in xattrs) {
-                // the $attrs directive must be executed first before $class or other directive that may override base attributes
-                // for example if you have a root element <button q:class={someExpr} q:attrs></button>
-                // and a `class` attribute is injected through q:attrs it will be lost (replaced by q:class) if we
-                // don't process first the $attrs ... this is because the q:class is making a copy of the initial `class` which is empty
-                // if the $class comes before $attrs and the $attrs class is lost.
-                this.up(SetDOMAttrs(el, model, xattrs.$attrs))();
             }
 			for (var key in xattrs) {
 				var up = null;
@@ -125,7 +122,7 @@ var RenderingProto = {
 					if (key === '$on') {
 						applyListeners(el, model, val);
 					} else if (key === '$class') {
-						up = SetClass(el, model, val);
+						up = SetQClass(el, model, val);
 					} else if (key === '$style') {
 						up = SetStyle(el, model, val);
 					} else if (key === '$show') {
@@ -133,7 +130,9 @@ var RenderingProto = {
 					} else if (key === '$toggle') {
 						up = SetToggle(el, model, val);
 					} else if (key === '$html') {
-						up = SetInnerHTML(el, model, val);
+                        up = SetInnerHTML(el, model, val);
+					} else if (key === '$attrs') {
+						up = SetDOMAttrs(el, model, val);
 					} else if (key === '$emit') {
 						applyEmitters(el, model, val);
 					} else if (key === '$slot') {
@@ -143,16 +142,24 @@ var RenderingProto = {
 					} else if (key === '$channel') {
 						ERR("q:channel cannot be used on regular DOM elements: %s", tag);
                     }
+                } else if (key === 'class') {
+                    // special handling of classes to sync with inherited class and q:class
+                    if (typeof val === 'function') {
+                        up = SetComputedClass(el, model, val);
+                    } else {
+                        SetFixedClass(el, val);
+                    }
 				} else if (typeof val === 'function') { // a dynamic binding
-					up = SetAttr(el, model, key, val);
-				} else {
+                    up = SetAttr(el, model, key, val);
+                } else {
 					el.setAttribute(key, val);
 				}
 				if (up) {
 					this.up(up)(); // push then execute
 				}
-			}
-		}
+            }
+        }
+
 		if (children) appendChildren(el, children);
 		// we should apply any user directive after the children are added.
 		if ($use) {

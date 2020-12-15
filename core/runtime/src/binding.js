@@ -2,30 +2,6 @@ import window from '@qutejs/window';
 import { closestComp } from '@qutejs/commons';
 import { stopEvent } from './utils.js';
 
-function _addClassesFromObject(classes, value) {
-	var keys = Object.keys(value);
-	for (var i=0,l=keys.length; i<l; i++) {
-		var key = keys[i];
-		if (value[key]) classes.push(key);
-	}
-}
-function _stringifyClasses(out, value) {
-	if (Array.isArray(value)) {
-		for (var i=0,l=value.length; i<l; i++) {
-			var val = value[i];
-			if (val) {
-				if (typeof val === 'string') {
-                    out.push(val);
-                } else { // an object?
-					_addClassesFromObject(out, val);
-				}
-			}
-		}
-	} else { // an object
-		_addClassesFromObject(out, value);
-    }
-    return out.join(' ');
-}
 
 function bindStyle(elt, value) {
 	if (!value) return;
@@ -138,22 +114,6 @@ export function SetToggle(el, model, valFn) {
 	}
 }
 
-export function SetClass(elt, model, valFn) {
-	return function() {
-        var value = valFn(model)
-        if (!value) return;
-        if (elt.__qute_class__ == null) {
-            // not yet set
-            elt.__qute_class__ = elt.className || ''; // backup origial class
-        }
-        var out = elt.__qute_class__ ? [ elt.__qute_class__ ] : [];
-        var newClasses = _stringifyClasses(out, value);
-        if (newClasses !== elt.className) { // only if modified
-            elt.className = newClasses;
-        }
-	}
-}
-
 export function SetStyle(el, model, valFn) {
 	return function() {
 		//TODO only if modified
@@ -212,5 +172,124 @@ function retargetEvent(el, model, srcEvent, toEvent, detailFn, flags) {
 export function applyEmitters(el, model, ar) {
 	for (var i=0,l=ar.length; i<l; i+=4) {
 		retargetEvent(el, model, ar[i+1], ar[i], ar[i+2], ar[i+3]);
+	}
+}
+
+// ------- Element class handling -------
+
+function _addClassesFromObject(classes, value) {
+	var keys = Object.keys(value);
+	for (var i=0,l=keys.length; i<l; i++) {
+		var key = keys[i];
+		if (value[key]) classes.push(key);
+	}
+}
+function _stringifyClasses(out, value) {
+	if (Array.isArray(value)) {
+		for (var i=0,l=value.length; i<l; i++) {
+			var val = value[i];
+			if (val) {
+				if (typeof val === 'string') {
+                    out.push(val);
+                } else { // an object?
+					_addClassesFromObject(out, val);
+				}
+			}
+		}
+	} else { // an object
+		_addClassesFromObject(out, value);
+    }
+    return out.join(' ');
+}
+
+export function ClassHandler(fixedClassName) {
+    // 0 - fixed or computed part set through class attribute,
+    // 1 - dynamic part set through q:class
+    // 2 - fixed or computed part inherited from parent component element through q:attrs
+    // 3 - dyanmic part inhertied from parent component element through q:class if any
+    this.parts = [fixedClassName || '','','',''];
+    this.dirty = false;
+}
+ClassHandler.prototype = {
+    attr(className) {
+        if (this.parts[0] !== className) {
+            this.parts[0] = className;
+            this.dirty = true;
+        }
+        return this;
+    },
+    qclass(expr) {
+        const className = _stringifyClasses([], expr);
+        if (this.parts[1] !== className) {
+            this.parts[1] = className;
+            this.dirty = true;
+        }
+        return this;
+    },
+    iattr(className) { // inject class literal from q:attrs (inherited class attribute)
+        if (this.parts[2] !== className) {
+            this.parts[2] = className;
+            this.dirty = true;
+        }
+        return this;
+    },
+    iqclass(expr) {
+        const className = _stringifyClasses([], expr);
+        if (this.parts[3] !== className) {
+            this.parts[3] = className;
+            this.dirty = true;
+        }
+        return this;
+    },
+    apply(el) {
+        if (this.dirty) {
+            el.className = this.parts.join(' ').trim();
+            this.dirty = false;
+        }
+    }
+}
+
+export function SetFixedClass(elt, value) {
+    if (elt.__qute_clh__) {
+        elt.__qute_clh__.attr(value).apply(elt);
+    } else {
+        elt.className = value;
+    }
+}
+
+export function SetComputedClass(elt, model, valFn) {
+    if (!elt.__qute_clh__) {
+        elt.__qute_clh__ = new ClassHandler(elt.className);
+    }
+	return function() {
+        var value = valFn(model);
+        elt.__qute_clh__.attr(value || '').apply(elt);
+	}
+}
+
+export function InheritClass(elt, className) {
+    if (!elt.__qute_clh__) {
+        elt.__qute_clh__ = new ClassHandler(elt.className);
+    }
+    elt.__qute_clh__.iattr(className).apply(elt);
+}
+
+export function SetQClass(elt, model, valFn) {
+    if (!elt.__qute_clh__) {
+        elt.__qute_clh__ = new ClassHandler(elt.className);
+    }
+	return function() {
+        var value = valFn(model);
+        elt.__qute_clh__.qclass(value || '').apply(elt);
+	}
+}
+
+export function InheritQClass(elt, model, valFn) {
+    if (!elt.__qute_clh__) {
+        elt.__qute_clh__ = new ClassHandler(elt.className);
+    }
+	return function() {
+        var value = valFn(model);
+        elt.__qute_clh__.iqclass(value || '').apply(elt);
 	}
 }
