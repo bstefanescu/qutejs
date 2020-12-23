@@ -1,7 +1,7 @@
 import {document} from '@qutejs/window';
 import {ERR} from '@qutejs/commons';
 
-import {applyListeners, applyEmitters, SetFixedClass, SetComputedClass, InheritClass, SetQClass, SetStyle,
+import {applyListeners, applyEmitters, SetFixedClass, SetComputedClass, InheritClass, SetQClass, AddClass, SetStyle,
 			SetDisplay, SetToggle, SetText, SetInnerHTML, SetAttr} from './binding.js';
 import { filterKeys } from './utils.js';
 import {applyUserDirectives} from './q-attr.js';
@@ -317,6 +317,10 @@ var RenderingProto = {
 			r = r.parent;
 		} while (r);
 		return null;
+	},
+	// to be used b y custom directives to safely add fixed class names to an element
+	addClass(el, className) {
+		AddClass(el, className);
 	}
 }
 

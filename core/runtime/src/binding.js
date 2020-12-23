@@ -211,6 +211,18 @@ export function ClassHandler(fixedClassName) {
     this.dirty = false;
 }
 ClassHandler.prototype = {
+	// append class names to the fixed part
+	add(className) {
+		let fixedPart = this.parts[0];
+		if (fixedPart) {
+			fixedPart += ' '+className;
+		} else {
+			fixedPart = className;
+		}
+		this.parts[0] = fixedPart;
+        this.dirty = true;
+        return this;
+	},
     attr(className) {
         if (this.parts[0] !== className) {
             this.parts[0] = className;
@@ -246,6 +258,15 @@ ClassHandler.prototype = {
             el.className = this.parts.join(' ').trim();
             this.dirty = false;
         }
+    }
+}
+
+// to be used by user directives to append fixed class on an element
+export function AddClass(elt, value) {
+    if (elt.__qute_clh__) {
+        elt.__qute_clh__.add(value).apply(elt);
+    } else {
+        elt.className = value;
     }
 }
 

@@ -187,13 +187,14 @@ ViewModel.prototype = {
             listeners = xattrs && xattrs.$on,
             emitters = xattrs && xattrs.$emit;
 
-		// load definition
-		var bindings = parentRendering && this.$load(parentRendering, xattrs, slots);
-        // we need to ccall user direcrtives before creating the element to give a chances
-        // to the directive to inject properties
+		// we need to call user direcrtives before creating the element and loading bindings
+		// to give a chance to the directive to inject properties
         if (xattrs && xattrs.$use) {
 			$use = applyUserDirectives(parentRendering, xattrs, null, this);
 		}
+
+		// load definition
+		var bindings = parentRendering && this.$load(parentRendering, xattrs, slots);
 
         var rendering = new Rendering(parentRendering, this);
 		rendering.vm = this;

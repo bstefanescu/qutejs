@@ -1,0 +1,5 @@
+<q:template export>
+    <tag is={$attrs.is||'div'} q:attrs='!is'>
+        <slot />
+    </tag>
+</q:template>
