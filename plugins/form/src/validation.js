@@ -172,7 +172,7 @@ function reportValidationError(el, config) {
 	}
 }
 
-export function formValidateDirective(xattrs, valueExpr, el) {
+export function qValidate(xattrs, valueExpr, el, comp) {
 	var config = Object.assign({
 		onblur: true,
 		report: null,
@@ -193,7 +193,7 @@ export function formValidateDirective(xattrs, valueExpr, el) {
 	}
 }
 
-export function validationMessageDirective(xattrs, valueExpr, el) {
+export function qValidationMessage(xattrs, valueExpr, el, comp) {
 	var inputName = this.eval(valueExpr);
 	if (!inputName) throw new Error('q:validation-message must take as value the related input name');
 	return function(el) {
@@ -202,7 +202,7 @@ export function validationMessageDirective(xattrs, valueExpr, el) {
 }
 
 // custom validation
-export function inputValidationDirective(xattrs, valueExpr, el) {
+export function qValidator(xattrs, valueExpr, el, comp) {
 	el.__qute_validator = this.eval(valueExpr);
 }
 

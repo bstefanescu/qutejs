@@ -6,7 +6,6 @@ import Rendering from './rendering.js';
 import ViewModel from './vm.js';
 import Application from './app.js';
 import Service from './service.js';
-import { registerDirective } from './q-attr.js';
 
 import { _mixin, _watch, _on, _channel, _require } from './decorators/helpers.js';
 import { View, Template, Mixin, On, Watch, Channel, Required, DataModel, AsyncDataModel, Property, Link } from './decorators/index.js';
@@ -111,7 +110,6 @@ Qute.defineMethod = function(name, fn) {
 	ViewModel.prototype[name] = fn;
     Rendering.FunComp.prototype[name] = fn;
 }
-Qute.registerDirective = registerDirective;
 Qute.runAfter = function(cb) { UpdateQueue.runAfter(cb); }
 
 // store Qute instance in window - this is important so that imported components use the same Qute instance

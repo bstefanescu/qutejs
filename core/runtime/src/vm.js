@@ -183,20 +183,25 @@ ViewModel.prototype = {
 			model = parentRendering && parentRendering.model,
             listeners = xattrs && xattrs.$on,
             emitters = xattrs && xattrs.$emit;
-		if (xattrs && xattrs.$use) {
-			$use = applyUserDirectives(parentRendering, this.constructor, xattrs, this);
-		}
 
 		// load definition
 		var bindings = parentRendering && this.$load(parentRendering, xattrs, slots);
-		var rendering = new Rendering(parentRendering, this);
+        // we need to ccall user direcrtives before creating the element to give a chances
+        // to the directive to inject properties
+        if (xattrs && xattrs.$use) {
+			$use = applyUserDirectives(parentRendering, xattrs, null, this);
+		}
+
+        var rendering = new Rendering(parentRendering, this);
 		rendering.vm = this;
-		this.$r = rendering;
+        this.$r = rendering;
+
 		// must never return null - for non rendering components like popups we return a comment
 		var el = this.render(rendering) || document.createComment('<'+this.toString()+'/>');
 		el.__qute__ = this;
-		this.$el = el;
+        this.$el = el;
         this.created && this.created(el);
+
 		if (bindings) for (var i=0,l=bindings.length; i<l; i+=2) {
 			var up = bindings[i](el, model, bindings[i+1]);
 			parentRendering.up(up)();

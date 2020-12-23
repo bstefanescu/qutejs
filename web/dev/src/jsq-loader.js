@@ -22,6 +22,7 @@ function compileStyle(compiler, attrs, text) {
     return text ? 'Qute.css('+JSON.stringify(text)+');' : '';
 }
 
+let IMPORT_CNT = 0;
 /**
  * Collect imports (styles too) and comment imports in source code.
  * Returns the modifie source code.
@@ -38,6 +39,10 @@ function processImports(code, imports, styles) {
                     if (p1.startsWith('{')) {
                         extraCode = "\nconst "+p1+" = Qute.Importer;\n";
                     }
+                } else if (p1.startsWith('{')) {
+                    const importName = '__QUTE_IMPORT_OBJ_'+(++IMPORT_CNT)+'__';
+                    extraCode = "\nconst "+p1+" = "+importName+";\n";
+                    imports[path] = importName;
                 } else {
                     imports[path] = p1;
                 }

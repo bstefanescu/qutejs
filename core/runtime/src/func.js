@@ -37,6 +37,7 @@ export default function FunComp() {
 }
 
 FunComp.prototype = {
+    __QUTE_TPL__: true,
 	set: function(key, val) {
 		var oldVal = this.$attrs[key];
 		if (val !== oldVal) {
@@ -69,9 +70,6 @@ FunComp.prototype = {
 
 		if (xattrs) {
 			$ref = xattrs.$ref;
-			if (xattrs.$use) {
-				$use = applyUserDirectives(rendering, XTag, xattrs, this);
-			}
 
 			for (var key in xattrs) { // class, style and show, $attrs, $listeners are ignored
 				var val = xattrs[key];
@@ -104,8 +102,12 @@ FunComp.prototype = {
 				} else if (key === '$toggle') {
 					if (!bindings) bindings = [];
 					bindings.push(SetToggle, val);
-				}
-			}
+                }
+            }
+
+            if (xattrs.$use) {
+                $use = applyUserDirectives(rendering, xattrs, null, this);
+            }
 		}
 
 		var el = XTag(this.$r, xattrs, slots);

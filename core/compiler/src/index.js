@@ -239,28 +239,34 @@ function _events(events, ctx) {
 	return out.length ? '{'+out.join(',')+'}' : null;
 }
 function _directives(directives, ctx) { // apply custom directives
-	var out = [];
-	for (var key in directives) {
-		// we store the attr itself - we need to know if the directive value is an expression or not using expr
-		var val, attr = directives[key];
-		if (key === '@') {
-			// @ is used for q:call
-			val = _cb(attr.value, ctx);
-		} else if (attr.expr) {
-			val = _v(_xo(attr.value, ctx));
-		} else {
-			var attrVal = attr.value;
-			var first = attrVal[0], last = attrVal[attrVal.length-1];
-				if ((first === '{' && last === '}') || (first === '[' && last === ']')) {
-				// an object?
-				val = _o(attrVal, ctx);
-			} else {
-				val = _s(attrVal);
-			}
-		}
-		out.push(_s(key)+':'+val);
-	}
-	return out.length ? '{'+out.join(',')+'}' : null;
+    var out = [];
+	for (let i=0,l=directives.length; i<l; i++) {
+        const attr = directives[i];
+        if (attr.name === 'q:call') {
+            out.push('null', _cb(attr.value, ctx));
+        } else {
+            out.push(kebabToCompName(attr.name));
+            let val;
+            if (attr.expr) {
+                val = _v(_xo(attr.value, ctx));
+            } else {
+                var attrVal = attr.value;
+                if (attrVal === true) {
+                    val = 'null';
+                } else {
+                    var first = attrVal[0], last = attrVal[attrVal.length-1];
+                        if ((first === '{' && last === '}') || (first === '[' && last === ']')) {
+                        // an object?
+                        val = _o(attrVal, ctx);
+                    } else {
+                        val = _s(attrVal);
+                    }
+                }
+            }
+            out.push(val);
+        }
+    }
+	return out.length ? '['+out.join(',')+']' : null;
 }
 /*
 function _attrs(attrs) {
@@ -438,9 +444,6 @@ var QATTRS = {
 			this.xattr('$html', ctype !== 'html' ? "$.cvt("+attr.value+", "+_s(ctype)+")":attr.value);
 		}
     },
-	call(attr) {
-		this.directive('@', attr);
-	},
 	key(attr) {
 		this.attr('q:key', attrValue(attr));
 	},
@@ -503,10 +506,10 @@ function DomNode(name, caseSensitiveName, attrs) {
 		if (!this.xattrs) this.xattrs = {};
 		this.xattrs[name] = value.trim();
 	}
-	this.directive = function(name, value) {
-		if (!this.directives) this.directives = {};
-		this.directives[name] = value === true ? "true" : value;
-	}
+	this.directive = function(attr) {
+        if (!this.directives) this.directives = [];
+        this.directives.push(attr);
+    }
 	this.emit = function(name, value, isAsync) {
 		var eventName = name;
 		var targetEvent = name;
@@ -659,7 +662,7 @@ function DomNode(name, caseSensitiveName, attrs) {
 		} else if (name.startsWith('content-')) {
             return QATTRS.content.call(this, attr, name.substring(8));
 		} else {
-			this.directive(name, attr);
+			this.directive(attr);
 		}
 		return r ? r : this;
 	}
@@ -679,7 +682,9 @@ function DomNode(name, caseSensitiveName, attrs) {
 	        	this.emit(name.substring(1), attr.value, false);
            	} else if (c === 'q' && name[1] === ':') {
            		var r = this.handleQAttr(name.substring(2), attr);
-           		if (!ret) ret = r;
+                   if (!ret) ret = r;
+            } else if (name.indexOf(':') > 0) { // a nameaspace
+                this.directive(attr);
            	} else if (attr.expr) {
 	    		this.bind(name, attr.value);
 	        } else {

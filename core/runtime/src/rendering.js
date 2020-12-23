@@ -113,7 +113,7 @@ var RenderingProto = {
 		if (xattrs) {
 			var model = this.model;
 			if (xattrs.$use) {
-				$use = applyUserDirectives(this, tag, xattrs, el);
+				$use = applyUserDirectives(this, xattrs, el);
             }
 			for (var key in xattrs) {
 				var up = null;

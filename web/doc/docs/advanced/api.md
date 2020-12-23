@@ -25,7 +25,6 @@ Here is a list of all the methods and objects exposed by the `Qute` global objec
 + `List` - a reactive list wrapping an array to be used with **[q:for](#/attributes/q-for)** directive.
 + `render(template, model)` - render a template given a model.
 + `runAfter(callback)` - run a function after all queued updates are performed.
-+ `registerDirective([tag,] name, directiveFn)` - register a custom attribute directive.
 + `defineMethod(name, method)` - enrich the `ViewModel` and template components prototype with new methods.
 
 To find more about `ViewModel` decorators go to the **[Components](#/model/components)** section
@@ -37,12 +36,6 @@ Register a callback to be invoked after all the tasks in the update queue are ru
 Because the updates are run asynchronously you cannot know when the update job related to a reactive property change is done. Using this function you can be notified after the current update is done.
 
 This is usefull when writing tests, to make assertions after the DOM changed in response to model change.
-
-### `Qute.registerDirective([tagOrComponentType, ]name, fn)`
-
-Register a custom attribute directive. The `tagOrComponentType` argument is optional, and should be used when the directive should only be enabled for the given tag.
-
-See **[Custom Attributes](#/attributes/q)** for more details.
 
 ### `Qute.render(renderFn, dataModel)`
 
