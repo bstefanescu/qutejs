@@ -1,15 +1,18 @@
+import Qute from '@qutejs/runtime';
+
+const { ViewModel, Template, Property } = Qute;
+
 // ---------- Templates
-<q:template name='root'>
+<q:template name=RootTemplate>
 	<div>Let's start {{verb}}</div>
 </q:template>
 
 // ----------- Javascript
+@Template(RootTemplate)
+class Root extends ViewModel {
+	@Property verb = 'coding';
+}
+
 // You must export using 'export default' the root component
 // to be mounted by the Preview panel
-export default Qute('root', {
-	init() {
-		return {
-			verb: 'coding'
-		}
-	}
-});
+export default Root;
