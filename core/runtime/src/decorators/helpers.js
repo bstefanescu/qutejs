@@ -26,8 +26,7 @@ export function _mixin(VMProto, mixins) {
  * @param {*} fn
  */
 export function _watch(VMProto, prop, fn) {
-    if (!VMProto.$watch) Object.defineProperty(VMProto, '$watch', {value:{}});
-    VMProto.$watch[prop] = fn;
+    Object.defineProperty(VMProto, '$watch_'+prop, {value: fn});
 }
 
 /**

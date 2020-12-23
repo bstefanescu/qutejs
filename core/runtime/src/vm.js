@@ -109,6 +109,9 @@ ViewModel.prototype = {
 	refresh: function() {
 		this.$r && this.$r.refresh();
 	},
+	isConnected() {
+		return this.$r && this.$r.isc;
+	},
 	willConnect: function() {
 		// TODO the connected flag is no mor euseful since we can use $r.isc
 		if (this.$st & 1) return; // ignore

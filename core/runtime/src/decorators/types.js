@@ -35,7 +35,7 @@ const BaseType = {
                 if (setter) value = setter.call(this, value, arg);
                 if (old !== value) {
                     this.$data[key] = value;
-                    var watcher = this.$el && this.$watch && this.$watch[key]; // if not connected whatchers are not enabled
+                    var watcher = this.$el && this['$watch_'+key]; // if not connected whatchers are not enabled
                     // avoid updating if watcher return false
                     if (watcher && watcher.call(this, value, old) === false) return;
                     this.update();
