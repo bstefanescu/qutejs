@@ -1,5 +1,9 @@
 # Qute Items Group  (@qutejs/group)
 
+>
+> :warning: This **Qute**  plugin was **discontinued**.
+>
+
 A **Qute** custom attribute directive to create radio like actions using links or buttons.
 
 **[Qute](https://qutejs.org)** is a **reactive component model** designed for **plain old javascript** lovers.

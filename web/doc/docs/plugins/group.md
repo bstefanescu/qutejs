@@ -45,7 +45,7 @@ Let's implement a tabs bar using the **actions group** custom attributes.
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import groupPlugin from '@qutejs/group';
+import {qModel, qValue} from '@qutejs/group';
 
 const { ViewModel, Template, Property} = Qute;
 
@@ -92,9 +92,6 @@ ul.group a, ul.group a:hover, ul.group a:active {
 	</div>
 </q:template>
 
-// register the group directive
-groupPlugin.install();
-
 @Template(RootTemplate)
 class Root extends ViewModel {
     views = {
@@ -125,7 +122,7 @@ We will rewrite the previous example by using an expression binding and an expli
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import groupPlugin from '@qutejs/group';
+import {qModel, qValue} from '@qutejs/group';
 
 const { ViewModel, Template, Property} = Qute;
 
@@ -171,10 +168,6 @@ ul.group a, ul.group a:hover, ul.group a:active {
 		<button @click="removeCurrentView">Reset</button>
 	</div>
 </q:template>
-
-// register the group directive
-groupPlugin.install();
-
 
 @Template(RootTemplate)
 class Root extends ViewModel {

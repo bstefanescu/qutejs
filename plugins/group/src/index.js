@@ -1,13 +1,12 @@
 import window from '@qutejs/window';
-import Qute from '@qutejs/runtime';
 
-function liValueDirective(xattrs, valueExpr) {
+function qValue(xattrs, valueExpr) {
     return function(el) {
         el.setAttribute('data-value', this.eval(valueExpr) || '');
     }
 }
 
-function groupDirective(xattrs, valueExpr) {
+function qModel(xattrs, valueExpr) {
     var rendering = this, value, boundProp = (typeof valueExpr === 'string') ? valueExpr : null;
 
     if (boundProp && !rendering.vm) {
@@ -60,10 +59,7 @@ function groupDirective(xattrs, valueExpr) {
     }
 }
 
-groupDirective.install = function() {
-    Qute.registerDirective('li', 'value', liValueDirective);
-    Qute.registerDirective('ul', 'model', groupDirective);
-    Qute.registerDirective('ol', 'model', groupDirective);
+export {
+    qModel,
+    qValue
 }
-
-export default groupDirective;
