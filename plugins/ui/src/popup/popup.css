@@ -1,0 +1,30 @@
+
+.qute-Popup {
+	visibility: hidden;
+	position: absolute;
+	overflow: hidden;
+}
+
+.qute-Popup-content {
+    position: relative;
+    will-change: opacity, transform;
+}
+
+.qute-Popup--fade .qute-Popup-content {
+	opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.qute-Popup--fade.is-visible .qute-Popup-content {
+    opacity: 1;
+}
+
+.qute-Popup--slide .qute-Popup-content {
+	transform: translateY(-20%);
+	opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+}
+.qute-Popup--slide.is-visible .qute-Popup-content {
+	transform: translateY(0);
+	opacity: 1;
+}

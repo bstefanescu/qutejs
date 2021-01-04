@@ -1,0 +1,44 @@
+{
+  "name": "@qutejs/ui",
+  "version": "2.0.0-beta.5",
+  "description": "Provides basic components and utilities for developing user interfaces using the Qute framework.",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "browser": "lib/qute-ui.js",
+  "unpkg": "lib/qute-ui.min.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bogdan Stefanescu <bogdan@quandora.com>",
+  "license": "MIT",
+  "keywords": [
+    "ui",
+    "popup",
+    "modal",
+    "spinner",
+    "component",
+    "qute",
+    "popup",
+    "dropdown",
+    "DOM",
+    "view"
+  ],
+  "homepage": "https://qutejs.org",
+  "repository": {
+    "url": "https://github.com/bstefanescu/qutejs",
+    "type": "git"
+  },
+  "dependencies": {
+    "@qutejs/runtime": "2.0.0-beta.5",
+    "@qutejs/window": "2.0.0-beta.5"
+  },
+  "devDependencies": {
+    "@qutejs/rollup-plugin-qute": "2.0.0-beta.5"
+  },
+  "build": {
+    "config": "component"
+  }
+}
