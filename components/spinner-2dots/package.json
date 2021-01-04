@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@qutejs/runtime": "2.0.0-beta.5",
+    "@qutejs/ui": "2.0.0-beta.5",
     "@qutejs/window": "2.0.0-beta.5"
   },
   "devDependencies": {

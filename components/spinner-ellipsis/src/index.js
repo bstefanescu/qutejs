@@ -1,5 +1,5 @@
 import { document } from '@qutejs/window';
-import baseSpinner from '../../spinner/src/base-spinner.js';
+import { baseSpinner } from '@qutejs/ui';
 import './ellipsis.css';
 
 /*
