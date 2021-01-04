@@ -1,31 +1,30 @@
 
-.qute-popup.qute-effect-fade .qute-popup-content {
+.qute-Popup {
+	visibility: hidden;
+	position: absolute;
+	overflow: hidden;
+}
+
+.qute-Popup-content {
+    position: relative;
+    will-change: opacity, transform;
+}
+
+.qute-Popup--fade .qute-Popup-content {
 	opacity: 0;
-	-webkit-transition: opacity 0.3s;
-	-moz-transition: opacity 0.3s;
-	-ms-transition: opacity 0.3s;
-	transition: opacity 0.3s;
-}
-.qute-popup.qute-effect-fade.qute-show .qute-popup-content {
-	opacity: 1;
+    transition: opacity 0.3s;
 }
 
+.qute-Popup--fade.is-visible .qute-Popup-content {
+    opacity: 1;
+}
 
-.qute-popup.qute-effect-slide .qute-popup-content {
-	-webkit-transform: translateY(-20%);
-	-moz-transform: translateY(-20%);
-	-ms-transform: translateY(-20%);
+.qute-Popup--slide .qute-Popup-content {
 	transform: translateY(-20%);
 	opacity: 0;
-	-webkit-transition: opacity 0.3s, transform 0.3s;
-	-moz-transition: opacity 0.3s, transform 0.3s;
-	-ms-transition: opacity 0.3s, transform 0.3s;
-	transition: opacity 0.3s, transform 0.3s;
+    transition: opacity 0.3s, transform 0.3s;
 }
-.qute-popup.qute-effect-slide.qute-show .qute-popup-content {
-	-webkit-transform: translateY(0);
-	-moz-transform: translateY(0);
-	-ms-transform: translateY(0);
+.qute-Popup--slide.is-visible .qute-Popup-content {
 	transform: translateY(0);
 	opacity: 1;
 }

@@ -1,27 +1,10 @@
 import {document} from '@qutejs/window';
+import { onTransitionEnd } from '@qutejs/ui';
 
 /*
 @see https://tympanus.net/codrops/2013/06/25/nifty-modal-window-effects/ for modal effects
 @see https://davidwalsh.name/css-vertical-center for vertical centering using translate
 */
-
-// TODO share this with popup - put it directly on Qute.Animation?
-function whichTransitionend() {
-    var transitions = {
-        "transition"      : "transitionend",
-        "OTransition"     : "oTransitionEnd",
-        "MozTransition"   : "transitionend",
-        "WebkitTransition": "webkitTransitionEnd"
-    }
-    var bodyStyle = document.body.style;
-    for(var transition in transitions) {
-        if(bodyStyle[transition] != undefined) {
-            return transitions[transition];
-        }
-    }
-}
-
-var TRANSITION_END = whichTransitionend();
 
 function toggleScroll(enable) {
 	var body = document.body;
@@ -46,11 +29,11 @@ function trapFocus() {
 
 }
 
-function createModal(id, content, effect) {
+function createModal(id, content, animation) {
 	var container = document.createElement('DIV');
 	container.id = id;
 	var modal = document.createElement('DIV');
-	modal.className = effect ? 'md-modal md-effect-'+effect : 'md-modal';
+	modal.className = animation ? 'md-modal md-effect-'+animation : 'md-modal';
 	modal.tabIndex = -1;
 	var contentEl = document.createElement('DIV');
 	contentEl.className = 'md-content';
@@ -76,18 +59,18 @@ function createModal(id, content, effect) {
 }
 
 
-export default function Modal(name, content, settings) {
+export default function Modal(name, content, options) {
 	this.id = '--qute-modal-'+name;
-	this.settings = {
-		effect: null,
+	this.opts = {
+		animation: null,
 		closeOnEsc: true,
 		closeOnClick: true,
 		disableScroll: true
 	}
-	if (settings) {
-		Object.assign(this.settings, settings);
+	if (options) {
+		Object.assign(this.opts, options);
 	}
-	this.el = createModal(this.id, content, settings.effect);
+	this.el = createModal(this.id, content, this.opts.animation);
 	this.activeElement = null;
 	this.cleanup = null;
 }
@@ -101,28 +84,28 @@ Modal.prototype = {
 		if (cl.contains('md-show')) return; // already visible
 
 		var self = this;
-		var settings = this.settings;
-		settings.open && settings.open(this);
+		var opts = this.opts;
+		opts.open && opts.open(this);
 
 		cl.add('md-show');
 		// 0. save focus status
 		this.activeElement = document.activeElement; // save the active element before opening
 		// 1. disable scroll
-		if (settings.disableScroll) toggleScroll(false);
+		if (opts.disableScroll) toggleScroll(false);
 		// 2. add click listener to handle close and other actions
 		this.addListener(this.el, 'click', function(e) {
 			var handled = false, target = e.target;
-			if ((target === self.el.lastChild && settings.closeOnClick) || target.classList.contains('md-close')) {
+			if ((target === self.el.lastChild && opts.closeOnClick) || target.classList.contains('md-close')) {
 				// click on overlay or .md-close
 				self.close();
 				handled = true;
-			} else if (settings.action) {
+			} else if (opts.action) {
 				var action = target.getAttribute('data-md-action');
 				if (action === 'close') {
 					self.close();
 					handled = true;
 				} else if (action) {
-					settings.action(action, target);
+					opts.action(action, target);
 					handled = true;
 				}
 			}
@@ -140,7 +123,7 @@ Modal.prototype = {
 		}
 		this.addListener(modal, 'keydown', function(e) {
 			if (e.keyCode === 27) {
-				self.settings.closeOnEsc && self.close();
+				self.opts.closeOnEsc && self.close();
 			} else if (firstFocusable && e.keyCode === 9) {
 				var toFocus, focus = document.activeElement;
 				if (e.shiftKey) {
@@ -161,24 +144,20 @@ Modal.prototype = {
 		var toFocus = modal.getElementsByClassName('md-focus')[0] || modal;
 		function acquireFocus() {
 			toFocus.focus();
-			settings.ready && settings.ready(this);
+			opts.ready && opts.ready(this);
 		}
-		if (settings.effect) {
-            if (TRANSITION_END) {
-    			var transitionEnd = function() {
-    				acquireFocus();
-    				modal.firstChild.removeEventListener(TRANSITION_END, transitionEnd);
-    			}
-    			modal.firstChild.addEventListener(TRANSITION_END, transitionEnd);
-            }
+		if (opts.animation) {
+            onTransitionEnd(modal, function() {
+                acquireFocus();
+            });
 		} else {
 			acquireFocus();
 		}
 	},
 	close: function() {
 		this.el.firstChild.classList.remove('md-show');
-		this.settings.close && this.settings.close(this);
-		if (this.settings.disableScroll) toggleScroll(true);
+		this.opts.close && this.opts.close(this);
+		if (this.opts.disableScroll) toggleScroll(true);
 		if (this.activeElement) this.activeElement.focus();
 		this.activeElement = null;
 		if (this.cleanup) {
@@ -194,11 +173,11 @@ Modal.prototype = {
 			nextCleanup && nextCleanup();
 		}
 	},
-	// dinamically change the effect
-	effect: function(effect) {
-		this.settings.effect = effect;
+	// dinamically change the animation
+	animation: function(animation) {
+		this.opts.animation = animation;
 		if (this.el) {
-			this.el.firstChild.className = effect ? 'md-modal md-effect-'+effect : 'md-modal';
+			this.el.firstChild.className = animation ? 'md-modal md-effect-'+animation : 'md-modal';
 		}
 	}
 

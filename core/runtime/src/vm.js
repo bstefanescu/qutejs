@@ -25,7 +25,7 @@ function SetVMAttrs(vm, parentVM, filter) {
 }
 
 function ViewModel(app) {
-	if (!app) app = new Application(app);
+	if (!app) app = new Application();
 	var prop = {};
 	// the attributes set on vm tag which are not declared as props
 	prop.value = {};
@@ -121,9 +121,9 @@ ViewModel.prototype = {
 		if (this.$setup) {
 			this.$setup(this);
 		}
-
+		
 		// TODO update DOM if previously disconnected
-		if (false) this.$update();
+		//if (false) this.$update();
 
 		// call the connected callback
 		//this.connected && this.connected();
@@ -133,9 +133,20 @@ ViewModel.prototype = {
 		if (!(this.$st & 1)) return; // ignore
 		this.$st ^= 1; // clear connected flag
 		if (this.$clean) {
-			this.$clean();
+			this.$clean(this);
 			this.$clean = null;
 		}
+	},
+	publish: function(id) {
+		this.setup(function(vm) {			
+			vm.$app.publish(id, vm);
+			vm.cleanup(function(vm) {
+				vm.$app.unpublish(id);
+			});	
+		});
+	},
+	lookup(id) {
+		return this.$app.lookup(id);
 	},
 	// initialize a vm from tag raw data
 	$load: function(rendering, xattrs, slots) {

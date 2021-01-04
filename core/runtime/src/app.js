@@ -96,6 +96,7 @@ AsyncProp.prototype = AsyncPropProto;
 export default function Application(data) {
 	this.topics = {};
 	this.data = {};
+	this.components = {}; // components lookup by id
 	data && this.putAll(data);
 }
 
@@ -118,8 +119,18 @@ Application.prototype = {
         this.root.umount();
         this.root = null;
         this.unmounted && this.unmounted();
-    },
-
+	},
+	// register / unregister components 
+	unpublish(key) {
+		delete this.components[key];
+	},
+	lookup(key) {
+		return this.components[key];
+	},
+	publish(key, value) {
+		if (key in this.components) console.warning('A component was already register as "', key, '"');
+		this.components[key] = value;
+	},
 	post(topic, msg, data) {
 		var listeners = this.topics[topic];
 		if (listeners) for (var i=0,l=listeners.length;i<l;i++) {

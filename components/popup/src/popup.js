@@ -1,26 +1,7 @@
 import window, {document} from '@qutejs/window';
+import { onTransitionEnd } from '@qutejs/ui';
 
-//TODO: 1. add position classes to be able to adapt the effects: bottom, top, right, left
-// 2. remove popup.css and use some global animation css?
-// 3. use same api notations and styles with modal.js
-
-// TODO share this with modal - put it directly on Qute.Animation?
-function whichTransitionend() {
-    var transitions = {
-        "transition"      : "transitionend",
-        "OTransition"     : "oTransitionEnd",
-        "MozTransition"   : "transitionend",
-        "WebkitTransition": "webkitTransitionEnd"
-    }
-    var bodyStyle = document.body.style;
-    for(var transition in transitions) {
-        if(bodyStyle[transition] != undefined) {
-            return transitions[transition];
-        }
-    }
-}
-
-var TRANSITION_END = whichTransitionend();
+// Add cover option? to be able to cover the target
 
 
 function toBottom(erect, rect, crect, out) {
@@ -116,9 +97,9 @@ var HALIGN_FNS = {
 
 
 /*
-* Get the visible client rect contenttaining the target - relative to viewport
+* Get the visible container rect defined by the given overflow parents. If no overflow parents are given the viewport will be used.
 */
-function getVisibleClientRect(target, overflowingParents) {
+function getVisibleClientRect(overflowingParents) {
 	var left=0, top=0, right = window.innerWidth, bottom = window.innerHeight;
 	if (overflowingParents.length) {
 		for (var i=0,l=overflowingParents.length; i<l; i++) {
@@ -138,17 +119,11 @@ function getVisibleClientRect(target, overflowingParents) {
 	};
 }
 
-function createPopup(content) {
+function createPopup(content, modifierClass) {
 	var el = document.createElement('DIV');
-	el.className = 'qute-popup';
-	var style = el.style;
-	style.visibility = 'hidden';
-	style.position = 'absolute';
-	style.overflow = 'hidden'; // needed by some effects (e.g. slide in)
-
+	el.className = modifierClass ? 'qute-Popup '+modifierClass : 'qute-Popup';
 	var contentEl = document.createElement('DIV');
-	contentEl.className = 'qute-popup-content';
-	contentEl.style.position = 'relative';
+	contentEl.className = 'qute-Popup-content';
 	el.appendChild(contentEl);
 
 	if (content.jquery) {
@@ -159,25 +134,37 @@ function createPopup(content) {
 		for (var i=0, l=content.length; i<l; i++) {
 			contentEl.appendChild(content[i]);
 		}
-	} else { // assume a element
+	} else { // assume an element
 		contentEl.appendChild(content);
-	}
+    }
 	return el;
 }
 /*
- * options: closeOnClick, position, align
+ * options: closeOnClick, position, align, effect, modifierClass, onOpen, onShow, onClose
+ * onOpen is called before the popup is added to the DOM (it is not yet visible)
+ * onShow is called when the popup was opened after it is added to the DOM (it is visible on the screen)
  */
-function Popup(content) {
-	this.el = createPopup(content);
-	this.pos = 'bottom';
-	this.align = 'start';
-	this.closeOnClickOpt = true;
-	this.effectName = null;
+function Popup(content, options) {
+    if (!options) options = {};
+	this.el = createPopup(content, options.modifierClass);
+	this.opts = {
+		position: 'bottom',
+		align: 'start',
+		closeOnClick: true,
+		animation: null,
+		onOpen: null,
+		onShow: null,
+		onClose: null
+	}
+	if (options) {
+		Object.assign(this.opts, options);
+	}
 }
 Popup.prototype = {
 	update: function(anchor) {
+		const opts = this.opts;
 		if (anchor.jquery) anchor = anchor[0];
-		var crect = getVisibleClientRect(anchor, this.ofs);
+		var crect = getVisibleClientRect(this.ofs);
 		var rect = anchor.getBoundingClientRect();
 		// if anchor is not hidden by the overflow then hide the popup
 		if (rect.top >= crect.bottom || rect.bottom <= crect.top
@@ -188,9 +175,10 @@ Popup.prototype = {
 
 		var style = this.el.style;
 		// first check for special modifier 'fill' (before getting the boundingclient rect since setting the height/width will modify the rect)
-		var align = this.align;
+		var pos = opts.position;
+		var align = opts.align;
 		if (align === 'fill') {
-			if (this.pos ===  'bottom' || this.pos === 'top') {
+			if (pos ===  'bottom' || pos === 'top') {
 				style.width = anchor.offsetWidth+'px';
 			} else {
 				style.height = anchor.offsetHeight+'px';
@@ -205,19 +193,14 @@ Popup.prototype = {
 		var erect = this.el.getBoundingClientRect(); // we only need width and height
 		var out = {};
 
-		var posFn = POS_FNS[this.pos];
-		if (!posFn) throw new Error('Invalid position argument: '+this.pos+'. Expecting: top|bottom|left|right');
+		var posFn = POS_FNS[pos];
+		if (!posFn) throw new Error('Invalid position argument: '+pos+'. Expecting: top|bottom|left|right');
 		posFn(erect, rect, crect, out);
 
 		var ALIGN_FNS = out.top == null ? VALIGN_FNS : HALIGN_FNS;
 		var alignFn = ALIGN_FNS[align];
 		if (!alignFn) throw new Error('Invalid vert align argument: '+align+'. Expecting: '+Object.keys(ALIGN_FNS).join('|'));
 		alignFn(erect, rect, crect, out);
-
-		//var className = out.position+' '+out.align;
-		//if (this.className) className = this.className + ' ' + className;
-		//this.el.className = this.c
-
 
 		style.left = (out.left + window.pageXOffset)+'px';
 		style.top = (out.top + window.pageYOffset)+'px';
@@ -226,7 +209,7 @@ Popup.prototype = {
 		return this;
 	},
 	open: function(anchor) {
-		if (!anchor) throw new Error('Attempting to open a popup without specifying a target element!');
+        if (!anchor) throw new Error('Attempting to open a popup without specifying a target element!');
 		// compute overflowing parents and register scroll listeners
 		if (this.el.parentNode) { // already opened
 			return;
@@ -258,8 +241,8 @@ Popup.prototype = {
 		this.ofs = ofs;
 		// add close on click listener
 		var closeOnClick;
-		if (this.closeOnClickOpt) {
-			closeOnClick = function(e) {
+		if (this.opts.closeOnClick) {
+            closeOnClick = function(e) {
 				if (!self.el.contains(e.target)) {
 					self.close();
 				}
@@ -282,38 +265,38 @@ Popup.prototype = {
 			}
 		}
 
-		this.onOpen && this.onOpen(this);
+		this.opts.onOpen && this.opts.onOpen(this);
 		// mount the popup
 		document.body.appendChild(this.el);
 		// show it
 		this.update(anchor);
-		this.el.classList.add('qute-show');
+        this.el.classList.add('is-visible');
+        this.opts.onShow && this.opts.onShow(this);
+        return this;
 	},
 	close: function() {
-		this.onClose && this.onClose(this);
+		this.opts.onClose && this.opts.onClose(this);
 		this.cleanup();
 		var el = this.el;
-		el.classList.remove('qute-show');
-		if (this.effectName) {
-            if (TRANSITION_END) {
-    			var fn = function() {
-    				el.style.visibility = 'hidden';
-    				el.parentNode && el.parentNode.removeChild(el);
-    				el.removeEventListener(TRANSITION_END, fn);
-    			}
-    			el.addEventListener(TRANSITION_END, fn);
-            }
+		el.classList.remove('is-visible');
+		if (this.opts.animation) {
+            onTransitionEnd(el, function() {
+                el.style.visibility = 'hidden';
+                el.parentNode && el.parentNode.removeChild(el);
+            });
 		} else {
-			el.style.visibility = 'hidden';
+            el.style.visibility = 'hidden';
 			el.parentNode.removeChild(el);
-		}
+        }
+        return this;
 	},
 	toggle: function(anchor) {
 		if (this.el.parentNode) { // already opened
 			this.close();
 		} else {
 			this.open(anchor);
-		}
+        }
+        return this;
 	},
 	isOpen: function() {
 		return this.el.parentNode;
@@ -327,17 +310,22 @@ Popup.prototype = {
 				position = position.substring(0, i);
 			}
 		}
-		this.pos = position;
-		if (align) this.align = align;
+		this.opts.position = position;
+		if (align) this.opts.align = align;
 		return this;
 	},
 	closeOnClick: function(closeOnClick) {
-		this.closeOnClickOpt = closeOnClick;
+		this.opts.closeOnClick = closeOnClick;
 		return this;
 	},
-	effect: function(effect) {
-		this.effectName = effect;
-		this.el.className = effect ? 'qute-popup qute-effect-'+effect : 'qute-popup';
+	animation: function(animation) {
+        var previousAnimation = this.opts.animation;
+        this.opts.animation = animation;
+        var cl = this.el.classList;
+        if (previousAnimation) {
+            cl.remove('qute-Popup--'+previousAnimation);
+        }
+        cl.add('qute-Popup--'+animation);
 		return this;
 	}
 }
