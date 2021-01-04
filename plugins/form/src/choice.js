@@ -1,8 +1,8 @@
-
-
 import Qute from '@qutejs/runtime';
 
 const { ViewModel, Property, Watch } = Qute;
+
+const BASE_CLASS_NAME = '--qute-choice';
 
 /* abstract */ class Choice extends ViewModel {
     render() {
@@ -10,21 +10,29 @@ const { ViewModel, Property, Watch } = Qute;
     }
 
     @Property value;
-    @Property checked;
+    @Property(Boolean) checked;
 
     _input;
+
+    get isExclusive() {
+        return this.__qute_choice;
+    }
+
+    ready() {
+        this._input.value = this.value || 'true';
+        this._input.checked = this.checked;
+    }
 
     connected() {
         // init -> set value
         this._onInputChange = event => {
-            this.$data.checked = this._input.checked;
+            this.checked = this._input.checked;
             event.stopPropagation();
             event.preventDefault();
+            this.onToggle && this.onToggle(); 
             this.emit('change', this);
         }
-        this._input.value = this.value || '';
-        this._input.checked = this.checked;
-        this._input.addEventListener('change', this._onInputChange);        
+        this._input.addEventListener('change', this._onInputChange);
     }
 
     disconnect() {
@@ -40,7 +48,8 @@ const { ViewModel, Property, Watch } = Qute;
     @Watch('checked')
     _onCheckedChange(value) {
         this._input.checked = value;
-        return false;
+        // let subclasses update their state
+        this.onToggle && this.onToggle(); 
     }
 
 }

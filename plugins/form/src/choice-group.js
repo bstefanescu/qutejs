@@ -7,8 +7,9 @@ const { ViewModel, Template, Property, On, Watch } = Qute;
 const BASE_CLASS_NAME = '--qute-choice';
 
 function qChoice(xattrs, val, el, comp) {
-    return function(el) {
-        this.addClass(el, val ? BASE_CLASS_NAME + '-'+this.eval(val) : BASE_CLASS_NAME)
+    (el || comp).__qute_choice = true;
+    return function(el) {        
+        this.addClass(el, val ? BASE_CLASS_NAME+' '+BASE_CLASS_NAME + '-'+this.eval(val) : BASE_CLASS_NAME)
     }
 }
 
