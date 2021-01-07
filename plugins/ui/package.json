@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/ui",
-  "version": "2.0.0-beta.5",
+  "version": "2.0.0-beta.6",
   "description": "A library providing utility functions to build UI components.",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
@@ -32,11 +32,11 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/runtime": "2.0.0-beta.5",
-    "@qutejs/window": "2.0.0-beta.5"
+    "@qutejs/runtime": "2.0.0-beta.6",
+    "@qutejs/window": "2.0.0-beta.6"
   },
   "devDependencies": {
-    "@qutejs/rollup-plugin-qute": "2.0.0-beta.5"
+    "@qutejs/rollup-plugin-qute": "2.0.0-beta.6"
   },
   "build": {
     "config": "component"
