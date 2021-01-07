@@ -33,13 +33,13 @@ function createModal(id, content, animation) {
 	var container = document.createElement('DIV');
 	container.id = id;
 	var modal = document.createElement('DIV');
-	modal.className = animation ? 'md-modal md-effect-'+animation : 'md-modal';
+	modal.className = animation ? 'qute-Modal qute-Modal--'+animation : 'qute-Modal';
 	modal.tabIndex = -1;
 	var contentEl = document.createElement('DIV');
-	contentEl.className = 'md-content';
+	contentEl.className = 'qute-Modal-content';
 	modal.appendChild(contentEl);
 	var overlay = document.createElement('DIV');
-	overlay.className = 'md-overlay';
+	overlay.className = 'qute-Modal-overlay';
 	container.appendChild(modal);
 	container.appendChild(overlay);
 
@@ -65,7 +65,11 @@ export default function Modal(name, content, options) {
 		animation: null,
 		closeOnEsc: true,
 		closeOnClick: true,
-		disableScroll: true
+		disableScroll: true,
+		open: null,
+		close: null,
+		ready: null,
+		action: null
 	}
 	if (options) {
 		Object.assign(this.opts, options);
@@ -76,18 +80,18 @@ export default function Modal(name, content, options) {
 }
 Modal.prototype = {
 	isOpen: function() {
-		return this.el.firstChild.classList.contains('md-show');
+		return this.el.firstChild.classList.contains('is-visible');
 	},
 	open: function() {
 		var modal = this.el.firstChild;
 		var cl = modal.classList;
-		if (cl.contains('md-show')) return; // already visible
+		if (cl.contains('is-visible')) return; // already visible
 
 		var self = this;
 		var opts = this.opts;
 		opts.open && opts.open(this);
 
-		cl.add('md-show');
+		cl.add('is-visible');
 		// 0. save focus status
 		this.activeElement = document.activeElement; // save the active element before opening
 		// 1. disable scroll
@@ -95,8 +99,8 @@ Modal.prototype = {
 		// 2. add click listener to handle close and other actions
 		this.addListener(this.el, 'click', function(e) {
 			var handled = false, target = e.target;
-			if ((target === self.el.lastChild && opts.closeOnClick) || target.classList.contains('md-close')) {
-				// click on overlay or .md-close
+			if ((target === self.el.lastChild && opts.closeOnClick) || target.classList.contains('qute-Modal-close')) {
+				// click on overlay or .qute-Modal-close
 				self.close();
 				handled = true;
 			} else if (opts.action) {
@@ -155,7 +159,7 @@ Modal.prototype = {
 		}
 	},
 	close: function() {
-		this.el.firstChild.classList.remove('md-show');
+		this.el.firstChild.classList.remove('is-visible');
 		this.opts.close && this.opts.close(this);
 		if (this.opts.disableScroll) toggleScroll(true);
 		if (this.activeElement) this.activeElement.focus();
@@ -177,7 +181,7 @@ Modal.prototype = {
 	animation: function(animation) {
 		this.opts.animation = animation;
 		if (this.el) {
-			this.el.firstChild.className = animation ? 'md-modal md-effect-'+animation : 'md-modal';
+			this.el.firstChild.className = animation ? 'qute-Modal qute-Modal--'+animation : 'qute-Modal';
 		}
 	}
 

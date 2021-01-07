@@ -1,5 +1,5 @@
 import { document } from '@qutejs/window';
-import baseSpinner from './base-spinner';
+import { baseSpinner } from '@qutejs/ui';
 import './ring.css';
 
 /*

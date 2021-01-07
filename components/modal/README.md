@@ -27,7 +27,7 @@ import '@qutejs/modal';
 or
 
 ```
-import Modal from '@qutejs/modal'
+import {qModal, qModalTrigger} from '@qutejs/modal';
 ```
 
 Go to the **[Qute Modal Component documentation](https://qutejs.org/doc/#/components/modal)**.

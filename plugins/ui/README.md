@@ -1,6 +1,6 @@
 # Qute UI (@qutejs/ui)
 
-Provides basic components and utilities for developing user interfaces using the **Qute** framework.
+Provides a set of utility functions and browser shims to build UI **Qute** components.
 
 Qute is a **reactive component model** designed for **plain old javascript** lovers.
 
@@ -15,21 +15,16 @@ npm init @qutejs
 # Installing
 
 ```
-npm install @qutejs/popup
+npm install @qutejs/ui
 ```
 
 # Usage
 
 ```
-import '@qutejs/popup';
+import { debounce } from '@qutejs/ui'
 ```
 
-or
-
-```
-import Popup from '@qutejs/popup'
-```
-
+Functions 
 Go to the **[Qute Popup Component documentation](https://qutejs.org/doc/#/plugins/ui)**.
 
 # Building

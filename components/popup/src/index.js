@@ -61,13 +61,13 @@ class qPopup extends ViewModel {
 		var slots = this.$slots;
 		if (!slots || !slots.default) throw new Error('<popup> requires a content!');
 		this.popup = new Popup(slots.default, {
-			onOpen: function () {
+			open: function () {
 				self.emit("open", self.popup.el);
 			}, 
-			onShow: function () {
-				self.emit("show", self.popup.el);
+			ready: function () {
+				self.emit("ready", self.popup.el);
 			},
-			onClose: function () {
+			close: function () {
 				self.emit("close", self.popup.el);
 			}
 		}).animation(this.animation).position(this.position).closeOnClick(this.autoClose);
@@ -123,6 +123,5 @@ class qPopup extends ViewModel {
 	}
 
 }
-qPopup.Popup = Popup;
 
-export { qPopup, qPopupTrigger };
+export { Popup, qPopup, qPopupTrigger };

@@ -23,17 +23,17 @@ npm install @qutejs/spinner
 # Usage
 
 ```javascript
-import '@qutejs/spinner-2dots';
+import qSpinner from '@qutejs/spinner-2dots';
 ```
 then to use the spinner
 
 ```xml
-<spinner type='2dots' />
+<q:spinner type='2dots' />
 ```
 or
 
 ```xml
-<spinner size='32px' color='green' />
+<q:spinner size='32px' color='green' />
 ```
 
 if this spinner is the only (or default) spinner implementation included in your Qute app.

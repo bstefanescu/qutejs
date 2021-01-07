@@ -121,8 +121,13 @@ function getVisibleClientRect(overflowingParents) {
 
 function createPopup(content, modifierClass) {
 	var el = document.createElement('DIV');
+	var style = el.style;
+	style.visibility = "hidden";
+	style.position = "absolute";
+	style.overflow = "hidden";
 	el.className = modifierClass ? 'qute-Popup '+modifierClass : 'qute-Popup';
 	var contentEl = document.createElement('DIV');
+	contentEl.style.position = "relative";
 	contentEl.className = 'qute-Popup-content';
 	el.appendChild(contentEl);
 
@@ -140,9 +145,9 @@ function createPopup(content, modifierClass) {
 	return el;
 }
 /*
- * options: closeOnClick, position, align, effect, modifierClass, onOpen, onShow, onClose
- * onOpen is called before the popup is added to the DOM (it is not yet visible)
- * onShow is called when the popup was opened after it is added to the DOM (it is visible on the screen)
+ * options: closeOnClick, position, align, effect, modifierClass, open, ready, close
+ * the open callback is called before the popup is added to the DOM (it is not yet visible)
+ * the ready callback is called when the popup was opened (after it was added to the DOM and it is visible on the screen)
  */
 function Popup(content, options) {
     if (!options) options = {};
@@ -152,9 +157,9 @@ function Popup(content, options) {
 		align: 'start',
 		closeOnClick: true,
 		animation: null,
-		onOpen: null,
-		onShow: null,
-		onClose: null
+		open: null,
+		ready: null,
+		close: null
 	}
 	if (options) {
 		Object.assign(this.opts, options);
@@ -265,17 +270,17 @@ Popup.prototype = {
 			}
 		}
 
-		this.opts.onOpen && this.opts.onOpen(this);
+		this.opts.open && this.opts.open(this);
 		// mount the popup
 		document.body.appendChild(this.el);
 		// show it
 		this.update(anchor);
         this.el.classList.add('is-visible');
-        this.opts.onShow && this.opts.onShow(this);
+        this.opts.ready && this.opts.ready(this);
         return this;
 	},
 	close: function() {
-		this.opts.onClose && this.opts.onClose(this);
+		this.opts.close && this.opts.close(this);
 		this.cleanup();
 		var el = this.el;
 		el.classList.remove('is-visible');

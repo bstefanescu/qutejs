@@ -1,7 +1,7 @@
 {
   "name": "@qutejs/ui",
   "version": "2.0.0-beta.5",
-  "description": "Provides basic components and utilities for developing user interfaces using the Qute framework.",
+  "description": "A library providing utility functions to build UI components.",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
   "browser": "lib/qute-ui.js",

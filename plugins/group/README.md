@@ -27,7 +27,7 @@ npm install @qutejs/group
 # Usage
 
 ```
-import '@qutejs/group';
+import { qModel, qValue } '@qutejs/group';
 ```
 
 # Building

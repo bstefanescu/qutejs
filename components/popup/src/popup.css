@@ -1,10 +1,11 @@
-
+/*
+injected directly as an inline style see popup.js
 .qute-Popup {
 	visibility: hidden;
 	position: absolute;
 	overflow: hidden;
 }
-
+*/
 .qute-Popup-content {
     position: relative;
     will-change: opacity, transform;

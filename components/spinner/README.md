@@ -23,7 +23,7 @@ npm install @qutejs/spinner
 # Usage
 
 ```javascript
-import Spinner from '@qutejs/spinner';
+import qSpinner from '@qutejs/spinner';
 ```
 
 The spinner supports the following attributes: `class`, `center`, `size`, `width` and `color`.

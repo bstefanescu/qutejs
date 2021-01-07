@@ -23,12 +23,12 @@ npm install @qutejs/spinner-ellipsis
 # Usage
 
 ```javascript
-import '@qutejs/spinner-ellipsis';
+import qSpinner from '@qutejs/spinner-ellipsis';
 ```
 then to use the spinner
 
 ```xml
-<spinner type='ellipsis' />
+<q:spinner />
 ```
 
 The spinner supports the following attributes: `style`, `class`, `center`, `size` and `color`.

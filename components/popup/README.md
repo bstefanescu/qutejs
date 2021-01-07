@@ -21,13 +21,7 @@ npm install @qutejs/popup
 # Usage
 
 ```
-import '@qutejs/popup';
-```
-
-or
-
-```
-import Popup from '@qutejs/popup'
+import {qPopup, qPopupTrigger} from '@qutejs/popup';
 ```
 
 Go to the **[Qute Popup Component documentation](https://qutejs.org/doc/#/components/popup)**.

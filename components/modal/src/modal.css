@@ -1,11 +1,11 @@
 
-.md-close {
+.qute-Modal-close {
 	opacity: .5;
 }
-.md-close:hover {
+.qute-Modal-close:hover {
 	opacity: .8;
 }
-.md-close:before {
+.qute-Modal-close:before {
 	position: absolute;
 	right:0;
 	top:0;
@@ -17,7 +17,7 @@
 	padding: 6px 14px;
 }
 
-.md-modal {
+.qute-Modal {
 	position: fixed;
 	top: 50%;
 	left: 50%;
@@ -35,15 +35,23 @@
 	-ms-transform: translateX(-50%) translateY(-50%);
 	transform: translateX(-50%) translateY(-50%);
 }
-.md-modal:focus {
+.qute-Modal:focus {
 	outline:none;
 }
-
-.md-show {
+.qute-Modal.is-visible {
 	visibility: visible;
 }
 
-.md-overlay {
+/* Content styles */
+.qute-Modal-content {
+	color: #333;
+	background: white;
+	position: relative;
+	border-radius: 3px;
+	margin: 0 auto;
+}
+
+.qute-Modal-overlay {
 	position: fixed;
 	width: 100%;
 	height: 100%;
@@ -58,24 +66,15 @@
 	transition: all 0.3s;
 }
 
-.md-show ~ .md-overlay {
+.qute-Modal.is-visible ~ .qute-Modal-overlay {
 	opacity: 1;
 	visibility: visible;
-}
-
-/* Content styles */
-.md-content {
-	color: #333;
-	background: white;
-	position: relative;
-	border-radius: 3px;
-	margin: 0 auto;
 }
 
 /* ---------------------- effects --------------------- */
 
 /* Effect 1: Fade in and scale up */
-.md-effect-scale-up .md-content {
+.qute-Modal.qute-Modal--scale-up .qute-Modal-content {
 	-webkit-transform: scale(0.7);
 	-moz-transform: scale(0.7);
 	-ms-transform: scale(0.7);
@@ -86,7 +85,7 @@
 	transition: all 0.3s;
 }
 
-.md-show.md-effect-scale-up .md-content {
+.qute-Modal.qute-Modal--scale-up.is-visible .qute-Modal-content {
 	-webkit-transform: scale(1);
 	-moz-transform: scale(1);
 	-ms-transform: scale(1);
@@ -95,7 +94,7 @@
 }
 
 /* Effect 2: Slide from the right */
-.md-effect-slide-right .md-content {
+.qute-Modal.qute-Modal--slide-right .qute-Modal-content {
 	-webkit-transform: translateX(20%);
 	-moz-transform: translateX(20%);
 	-ms-transform: translateX(20%);
@@ -106,7 +105,7 @@
 	transition: all 0.3s cubic-bezier(0.25, 0.5, 0.5, 0.9);
 }
 
-.md-show.md-effect-slide-right .md-content {
+.qute-Modal.qute-Modal--slide-right.is-visible .qute-Modal-content {
 	-webkit-transform: translateX(0);
 	-moz-transform: translateX(0);
 	-ms-transform: translateX(0);
@@ -115,7 +114,7 @@
 }
 
 /* Effect 3: Slide from the bottom */
-.md-effect-slide-bottom .md-content {
+.qute-Modal.qute-Modal--slide-bottom .qute-Modal-content {
 	-webkit-transform: translateY(20%);
 	-moz-transform: translateY(20%);
 	-ms-transform: translateY(20%);
@@ -126,7 +125,7 @@
 	transition: all 0.3s;
 }
 
-.md-show.md-effect-slide-bottom .md-content {
+.qute-Modal.qute-Modal--slide-bottom.is-visible .qute-Modal-content {
 	-webkit-transform: translateY(0);
 	-moz-transform: translateY(0);
 	-ms-transform: translateY(0);
@@ -135,7 +134,7 @@
 }
 
 /* Effect 4: Newspaper */
-.md-effect-newspaper .md-content {
+.qute-Modal.qute-Modal--newspaper .qute-Modal-content {
 	-webkit-transform: scale(0) rotate(720deg);
 	-moz-transform: scale(0) rotate(720deg);
 	-ms-transform: scale(0) rotate(720deg);
@@ -143,14 +142,14 @@
 	opacity: 0;
 }
 
-.md-show.md-effect-newspaper ~ .md-overlay,
-.md-effect-newspaper .md-content {
+.qute-Modal.qute-Modal--newspaper.is-visible ~ .qute-Modal-overlay,
+.qute-Modal.qute-Modal--newspaper .qute-Modal-content {
 	-webkit-transition: all 0.5s;
 	-moz-transition: all 0.5s;
 	transition: all 0.5s;
 }
 
-.md-show.md-effect-newspaper .md-content {
+.qute-Modal.qute-Modal--newspaper.is-visible .qute-Modal-content {
 	-webkit-transform: scale(1) rotate(0deg);
 	-moz-transform: scale(1) rotate(0deg);
 	-ms-transform: scale(1) rotate(0deg);
@@ -159,13 +158,13 @@
 }
 
 /* Effect 5: fall */
-.md-effect-fall.md-modal {
+.qute-Modal.qute-Modal--fall {
 	-webkit-perspective: 1300px;
 	-moz-perspective: 1300px;
 	perspective: 1300px;
 }
 
-.md-effect-fall .md-content {
+.qute-Modal.qute-Modal--fall .qute-Modal-content {
 	-webkit-transform-style: preserve-3d;
 	-moz-transform-style: preserve-3d;
 	transform-style: preserve-3d;
@@ -176,7 +175,7 @@
 	opacity: 0;
 }
 
-.md-show.md-effect-fall .md-content {
+.qute-Modal.qute-Modal--fall.is-visible .qute-Modal-content {
 	-webkit-transition: all 0.3s ease-in;
 	-moz-transition: all 0.3s ease-in;
 	transition: all 0.3s ease-in;
@@ -188,13 +187,13 @@
 }
 
 /* Effect 6: side fall */
-.md-effect-side-fall.md-modal {
+.qute-Modal.qute-Modal--side-fall {
 	-webkit-perspective: 1300px;
 	-moz-perspective: 1300px;
 	perspective: 1300px;
 }
 
-.md-effect-side-fall .md-content {
+.qute-Modal.qute-Modal--side-fall .qute-Modal-content {
 	-webkit-transform-style: preserve-3d;
 	-moz-transform-style: preserve-3d;
 	transform-style: preserve-3d;
@@ -205,7 +204,7 @@
 	opacity: 0;
 }
 
-.md-show.md-effect-side-fall .md-content {
+.qute-Modal.qute-Modal--side-fall.is-visible .qute-Modal-content {
 	-webkit-transition: all 0.3s ease-in;
 	-moz-transition: all 0.3s ease-in;
 	transition: all 0.3s ease-in;
@@ -217,7 +216,7 @@
 }
 
 /* Effect 7:  slide and stick to top */
-.md-effect-sticky-up {
+.qute-Modal.qute-Modal--sticky-up {
 	top: 0;
 	-webkit-transform: translateX(-50%);
 	-moz-transform: translateX(-50%);
@@ -225,7 +224,7 @@
 	transform: translateX(-50%);
 }
 
-.md-effect-sticky-up .md-content {
+.qute-Modal.qute-Modal--sticky-up .qute-Modal-content {
 	-webkit-transform: translateY(-200%);
 	-moz-transform: translateY(-200%);
 	-ms-transform: translateY(-200%);
@@ -236,7 +235,7 @@
 	opacity: 0;
 }
 
-.md-show.md-effect-sticky-up .md-content {
+.qute-Modal.qute-Modal--sticky-up.is-visible .qute-Modal-content {
 	-webkit-transform: translateY(0%);
 	-moz-transform: translateY(0%);
 	-ms-transform: translateY(0%);

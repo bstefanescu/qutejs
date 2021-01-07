@@ -2,15 +2,29 @@
 
 The modal component display a modal dialog.
 
-The modal component is intended to be used through the `q:ref` attribute, to get the modal instance and call its API.
+To open a modal yuou need to get the the instance of the modal component to call the corresponding methods. To get the instance of a modal you can use the **[q:ref](#/attributes/q-ref)** attribute to inject the instance in a parent component property. 
 
-When the modal component is not accessible from the component who want to open (or manipulate) the modal then you can also access it by posting a message to the modal channel.
+Another way to open a modal is to use the `id` attribute on the modal component to bind the modal component to a unique id, then on the modal trigger element you can use the `q:modal-trigger` attribute to identify open the modal on click. The `q:modal-trigger` takes the modal id as value:
+
+```jsq-norun
+import { qModal, qModalTrigger } from '@qutejs/modal';
+
+<q:template export>
+  <q:modal id='my-modal'>Some content</q:modal>
+  <button q:modal-trigger='my-modal'>Click me</button>
+</q:template>
+```
+
+The `qute-Modal` class name is used on the modal root element.
 
 ## Modal API
 
-### `open([openNow])`
+### `open()`
 
-Open the modal. The `openNow` attribute is optional and defaults to false. If false, the modal will be open _asynchrounously_ (i.e. after the current UI loop task is processed)
+Open the modal. 
+
+### `openAsync()`
+Call `open()` inside a `window.setTimeout()` using a 0 timeout.
 
 ### `close()`
 
@@ -21,30 +35,6 @@ Close the modal.
 A read only property to get the open status of a modal component.
 
 ## Attributes
-
-### q:channel
-
-This attribute is **required**.
-
-Indicates, the channel name to use when interacting with the modal instance. The modal channel provides two message types **open** and **close**.
-
-#### open
-
-Open the modal.
-
-**Example**
-```
-app.post('modal-channel', 'open');
-```
-
-#### close
-
-Close the modal.
-
-**Example**
-```
-app.post('modal-channel', 'close');
-```
 
 ### animation
 
@@ -142,13 +132,13 @@ The `event.detail` field points to an object like:
 
 **Example:** `<button data-md-action='next'>Next</button>`.
 
-## Example: Using the API to open the modal
+## Example: Using `q:ref` to open the modal
 
 To open the modal through the API we need to obtain the modal component instance using the `q:ref` attribute.
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import qModal from '@qutejs/modal';
+import { qModal } from '@qutejs/modal';
 
 const { ViewModel, Template } = Qute;
 
@@ -197,15 +187,14 @@ export default Root;
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import qModal from '@qutejs/modal';
+import { qModal, qModalTrigger } from '@qutejs/modal';
 
 const { ViewModel, Template } = Qute;
 
 <q:template name='RootTemplate'>
   <div>
-    <button style='margin-left: 10px; margin-top: 10px; padding: 10px'
-      @click='this.post("my-modal", "open")'>Open modal</button>
-    <q:modal animation='scale-up' q:channel='my-modal'
+    <button q:modal-trigger='my-modal' style='margin-left: 10px; margin-top: 10px; padding: 10px'>Open modal</button>
+    <q:modal animation='scale-up' id='my-modal'
       @open='onOpen' @close='onClose' @ready='onReady' @action='onAction'>
       <div style='border: 1px solid gray'>
         <h3 style='padding: 10px;margin-top:0; border-bottom: 1px solid gray'>Modal header</h3>

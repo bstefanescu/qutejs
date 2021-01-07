@@ -2,7 +2,7 @@
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import qModal from '@qutejs/modal';
+import { qModal, qModalTrigger } from '@qutejs/modal';
 const { ViewModel, Template, Property } = Qute;
 
 <q:template name='RootTemplate'>
@@ -18,9 +18,9 @@ const { ViewModel, Template, Property } = Qute;
         <option value='sticky-up'>Slide and Stick to Top</option>
   </select>
     <br/>
-    <button @click='openModal' style='padding:10px;margin:10px;'>Open modal</button>
+    <button q:modal-trigger='my-modal' style='padding:10px;margin:10px;'>Open modal</button>
 
-    <q:modal animation={animation} q:channel='my-modal'>
+    <q:modal animation={animation} id='my-modal'>
         <div class='my-modal' sttyle='border: 1px solid gray'>
           <h3 style='padding: 10px;margin-top:0; border-bottom: 1px solid gray'>Modal header</h3>
           <div style='padding:10px'>
@@ -35,10 +35,6 @@ const { ViewModel, Template, Property } = Qute;
 @Template(RootTemplate)
 class Root extends ViewModel {
     @Property animation;
-
-    openModal(e) {
-      this.postAsync("my-modal", "open");
-    }
 
     changeAnimation(e) {
       this.animation = e.target.value;

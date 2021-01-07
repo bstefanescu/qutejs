@@ -2,19 +2,37 @@
 
 The popup component display a popup element that can be positioned relative to a **target** element.
 
-The Popup component is intended to be used through the `q:ref` attribute, to get the popup instance and call its API.
+To open a popup yuou need to get the the instance of the popup component to call the corresponding method. To get the instance of a popup you can use the **[q:ref](#/attributes/q-ref)** attribute to inject the instance in a parent component property. 
 
-When the popup component is not accessible from the component who want to open (or manipulate) the popup then you can also access it by posting a message to the popup channel.
+Another way to open a popup is to use the `id` attribute on the popup component to bind the popup component to a unique id, then on the popup trigger element you can use the `q:popup-trigger` attribute to identify open / close the popup on click. The `q:popup-trigger` takes the popup id as value:
+
+```jsq-norun
+import { qPopup, qPopupTrigger } from '@qutejs/popup';
+
+<q:template export>
+  <q:popup id='my-popup'>Some content</q:popup>
+  <button q:popup-trigger='my-popup'>Click me</button>
+</q:template>
+
+```
+
+The `qute-Popup` class name is used on the popup root element.
 
 ## Popup API
 
-### `open(anchor[, openNow])`
+### `open(anchor)`
 
-Open the popup relative to the given anchor element. The `openNow` attribute is optional and defaults to false. If false, the popup will be open _asynchrounously_ (i.e. after the current UI loop task is processed)
+Open the popup relative to the given anchor element.
 
-### `toggle(anchor[, toggleNow])`
+### `openAsync(anchor)`
+Call `open()` inside a `window.setTimeout()` using a 0 timeout.
+
+### `toggle(anchor)`
 
 Toggle the popup relative to the given anchor element. The `toggleNow` attribute is optional and defaults to false. If false, the popup will be toggled _asynchrounously_ (i.e. after the current UI loop task is processed)
+
+### `toggleAsync(anchor)`
+Call `toggle()` inside a `window.setTimeout()` using a 0 timeout.
 
 ### `close()`
 
@@ -25,40 +43,6 @@ Close the popup
 A read only property to get the open status of a popup component.
 
 ## Attributes
-
-### q:channel
-
-This attribute is **required**.
-
-Indicates, the channel name to use when interacting with the popup instance. The popup channel provides three message types **open**, **toggle** and **close**.
-
-#### open
-
-Open the popup. You must specify the **target** element as the extra data attribute of the message.
-
-**Example**
-```
-app.post('popup-channel', 'open', targetEl);
-```
-
-#### toggle
-
-Toggle the popup. You must specify the **target** element as the extra data attribute of the message.
-
-**Example**
-```
-app.post('popup-channel', 'toggle', targetEl);
-```
-
-
-#### close
-
-Close the popup
-
-**Example**
-```
-app.post('popup-channel', 'close');
-```
 
 ### position
 
@@ -82,15 +66,13 @@ You can also use **custom animation names** by creating some `CSS` rules for you
 Here are, as an example, the `CSS` rules for the `fade` animation:
 
 ```css
-.qute-popup.qute-effect-fade .qute-popup-content {
-  opacity: 0;
-  -webkit-transition: opacity 0.3s;
-  -moz-transition: opacity 0.3s;
-  -ms-transition: opacity 0.3s;
-  transition: opacity 0.3s;
+.qute-Popup--fade .qute-Popup-content {
+    opacity: 0;
+    transition: opacity 0.3s;
 }
-.qute-popup.qute-effect-fade.qute-show .qute-popup-content {
-  opacity: 1;
+
+.qute-Popup--fade.is-visible .qute-Popup-content {
+    opacity: 1;
 }
 ```
 
@@ -108,19 +90,25 @@ Fired when the popup is opened but before becoming visible.
 
 The `event.detail` field points to the popup root element.
 
+### ready
+
+Fired when the popup is opened and after becoming visible.
+
+The `event.detail` field points to the popup root element.
+
 ### close
 
 Fired when the popup is closed.
 
 The `event.detail` field points to the popup root element.
 
-## Example: Using the API to toggle the popup
+## Example: Using `q:ref` to open the popup
 
 To open the popup through the API we need to obtain the popup component instance using the `q:ref` attribute.
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import qPopup from '@qutejs/popup';
+import { qPopup } from '@qutejs/popup';
 
 const { ViewModel, Template } = Qute;
 
@@ -153,19 +141,19 @@ class Root extends ViewModel {
 export default Root;
 ```
 
-## Example: Using a channel to open the popup
+## Example: Using `q:popup-trigger` to open the popup
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import qPopup from '@qutejs/popup';
+import { qPopup, qPopupTrigger } from '@qutejs/popup';
 
 const { ViewModel, Template } = Qute;
 
 <q:template name='RootTemplate'>
   <div>
     <button style='margin-left: 50px; margin-top: 50px; padding: 10px'
-      @click='this.post("my-popup", "open", $1.target)'>Open popup</button>
-    <q:popup position='bottom start' animation='slide' q:channel='my-popup'
+      q:popup-trigger='my-popup'>Open popup</button>
+    <q:popup position='bottom start' animation='slide' id='my-popup'
       @open='onOpen' @close='onClose'>
       <div style='border: 1px solid gray; padding: 10px'>
         <h3 style='margin-top:0'>Popup header</h3>

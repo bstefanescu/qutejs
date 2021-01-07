@@ -2,7 +2,7 @@
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import qPopup from '@qutejs/popup';
+import { qPopup, qPopupTrigger } from '@qutejs/popup';
 const { ViewModel, Template, Property } = Qute;
 
 <q:template name='RootTemplate'>
@@ -48,9 +48,9 @@ const { ViewModel, Template, Property } = Qute;
         </optgroup>
     </select>
     <br/>
-    <button class='popup-btn' @click='openPopup'>Open popup</button>
+    <button class='popup-btn' q:popup-trigger='my-popup'>Open popup</button>
 
-    <q:popup position={position} animation={animation} q:channel='my-popup'>
+    <q:popup position={position} animation={animation} id='my-popup'>
         <div class='my-popup'>
           <h3>Popup header</h3>
           <div>
@@ -86,9 +86,6 @@ class Root extends ViewModel {
     @Property animation;
     @Property position = "bottom start";
 
-    openPopup(event) {
-      this.postAsync("my-popup", "open", event.target);
-	}
     changeAnimation(e) {
       this.animation = e.target.value;
     }

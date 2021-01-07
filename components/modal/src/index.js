@@ -117,4 +117,4 @@ class qModal extends ViewModel {
     }
 }
 
-export { qModal, qModalTrigger };
+export { Modal, qModal, qModalTrigger };
