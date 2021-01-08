@@ -35,7 +35,7 @@ const BASE_CLASS_NAME = '--qute-choice';
         this._input.addEventListener('change', this._onInputChange);
     }
 
-    disconnect() {
+    disconnected() {
         this._onInputChange && this._input.removeEventListener('change', this._onInputChange);
     }
 
