@@ -10,11 +10,12 @@ var modal_id = 0;
 
 function qModalTrigger(attrs, val, el, comp) {
 	return function (el) {
-		if (typeof val !== 'string') {
-			throw new Error('Invalid value for q:modal-trigger. A modal id is expected.');
-		}
 		const id = this.eval(val);
 		const app = this.model.$app;
+		if (typeof id !== 'string') {
+			throw new Error('Invalid value for q:modal-trigger. A modal id is expected.');
+		}
+
 		el.addEventListener('click', ev => {
 			const modal = app.lookup(id);
 			if (!modal) {

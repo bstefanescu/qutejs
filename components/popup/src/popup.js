@@ -67,6 +67,11 @@ function toHEnd(erect, rect, crect, out) {
 
 function toHCenter(erect, rect, crect, out) {
 	out.left = rect.left + (rect.width - erect.width) / 2;
+	if (out.left < crect.left) { // move to the right so the popup is entirely visible on the left side
+		out.left = crect.left;
+	} else if (out.left + erect.width > crect.right) { // move to the left so the popup is entirely visible on the right side
+		out.left = crect.right - erect.width;
+	}
 }
 
 
@@ -99,8 +104,20 @@ var HALIGN_FNS = {
 /*
 * Get the visible container rect defined by the given overflow parents. If no overflow parents are given the viewport will be used.
 */
-function getVisibleClientRect(overflowingParents) {
-	var left=0, top=0, right = window.innerWidth, bottom = window.innerHeight;
+function getVisibleClientRect(container, overflowingParents) {
+	var left, top, right, bottom;
+	if (container) {
+		var rect = container.getBoundingClientRect();
+		left = rect.left;
+		top = rect.top;
+		right = rect.right;
+		bottom = rect.bottom;
+	} else {
+		left = 0;
+		top = 0;
+		right = window.innerWidth;
+		bottom = window.innerHeight;
+	}
 	if (overflowingParents.length) {
 		for (var i=0,l=overflowingParents.length; i<l; i++) {
 			var parent = overflowingParents[i];
@@ -148,6 +165,8 @@ function createPopup(content, modifierClass) {
  * options: closeOnClick, position, align, effect, modifierClass, open, ready, close
  * the open callback is called before the popup is added to the DOM (it is not yet visible)
  * the ready callback is called when the popup was opened (after it was added to the DOM and it is visible on the screen)
+ * 
+ * To control the viewport where the popup is diplayed you can use a .qute-Popup--container class on a parent element to restrict to that element
  */
 function Popup(content, options) {
     if (!options) options = {};
@@ -169,7 +188,7 @@ Popup.prototype = {
 	update: function(anchor) {
 		const opts = this.opts;
 		if (anchor.jquery) anchor = anchor[0];
-		var crect = getVisibleClientRect(this.ofs);
+		var crect = getVisibleClientRect(this.container, this.ofs);
 		var rect = anchor.getBoundingClientRect();
 		// if anchor is not hidden by the overflow then hide the popup
 		if (rect.top >= crect.bottom || rect.bottom <= crect.top
@@ -229,10 +248,10 @@ Popup.prototype = {
 				updating = true;
 			}
 		}
-		var ofs = [],
-			body = document.body,
-			parent = anchor.parentNode;
-		while (parent && parent !== body) {
+		var container = anchor.closest('.qute-Popup--container');
+		var root = container ? container : document.body;
+		var ofs = [], parent = anchor.parentNode;
+		while (parent && parent !== root) {
 			if (parent.scrollHeight > parent.clientHeight || parent.scrollWidth > parent.clientWidth) {
 				ofs.push(parent);
 				parent.addEventListener('scroll', updateFn);
@@ -243,6 +262,7 @@ Popup.prototype = {
 		window.addEventListener('resize', updateFn);
 		// TODO add resize listener
 
+		this.container = container;
 		this.ofs = ofs;
 		// add close on click listener
 		var closeOnClick;

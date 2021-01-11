@@ -30,11 +30,11 @@ API:
 
 function qPopupTrigger(attrs, val, el, comp) {
 	return function (el) {
-		if (typeof val !== 'string') {
-			throw new Error('Invalid value for q:popup-trigger. A popup id is expected.');
-		}
 		const id = this.eval(val);
 		const app = this.model.$app;
+		if (typeof id !== 'string') {
+			throw new Error('Invalid value for q:popup-trigger. A popup id is expected.');
+		}
 		el.addEventListener('click', ev => {
 			const popup = app.lookup(id);
 			if (!popup) {

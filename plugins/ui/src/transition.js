@@ -9,8 +9,8 @@ import window, {document} from '@qutejs/window';
 
 function whichTransitionend() {
     // check cached result
-    if ('__transitionEndEvent' in whichTransitionend) {
-        return whichTransitionend.__transitionEndEvent;
+    if ('__qute_cache' in whichTransitionend) {
+        return whichTransitionend.__qute_cache;
     } else {
         var transitions = {
             "transition"      : "transitionend",
@@ -26,8 +26,7 @@ function whichTransitionend() {
             }
         }
         // cache event name
-        whichTransitionend.__transitionEndEvent = transitionEndEvent;
-        return transitionEndEvent;
+        return (whichTransitionend.__qute_cache = transitionEndEvent);
     }
 }
 
