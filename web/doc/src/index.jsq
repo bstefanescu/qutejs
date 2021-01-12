@@ -173,6 +173,7 @@ var TOC = [
 	{ title: 'Basic Components', expand: true, items: [
 		{ title: 'modal', href: 'components/modal' },
 		{ title: 'popup', href: 'components/popup' },
+		{ title: 'tooltip', href: 'components/tooltip' },
 		{ title: 'spinner', href: 'components/spinner' },
 	]},
 	{ title: 'API Reference', expand: true, items: [

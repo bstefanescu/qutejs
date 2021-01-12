@@ -1,0 +1,10 @@
+.qute-Popup.qute-Popup--tooltip .qute-Popup-content {
+    -webkit-font-smoothing: antialiased;
+    background-color: #232F34;
+    color: white;
+    font-size: 1rem;
+    padding: 4px 6px;
+    margin: 10px;
+    pointer-events:none;
+    border-radius: 2px;
+}

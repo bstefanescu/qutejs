@@ -1,0 +1,44 @@
+{
+  "name": "@qutejs/tooltip",
+  "version": "2.0.0-beta.6",
+  "description": "Qute Tooltip component",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "browser": "lib/qute-tooltip.js",
+  "unpkg": "lib/qute-tooltip.min.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bogdan Stefanescu <bogdan@quandora.com>",
+  "license": "MIT",
+  "keywords": [
+    "component",
+    "qute",
+    "tooltip",
+    "DOM",
+    "view"
+  ],
+  "homepage": "https://qutejs.org",
+  "repository": {
+    "url": "https://github.com/bstefanescu/qutejs",
+    "type": "git"
+  },
+  "dependencies": {
+    "@qutejs/runtime": "2.0.0-beta.6",
+    "@qutejs/popup": "2.0.0-beta.6",
+    "@qutejs/window": "2.0.0-beta.6"
+  },
+  "devDependencies": {
+    "@qutejs/rollup-plugin-qute": "2.0.0-beta.6"
+  },
+  "build": {
+    "config": "component",
+    "external": [
+      "@qutejs/runtime",
+      "@qutejs/window"
+    ]
+  }
+}

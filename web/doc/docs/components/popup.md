@@ -48,12 +48,13 @@ A read only property to get the open status of a popup component.
 
 This attribute is **optional** and defaults to `bottom start`
 
-Indicates the popup position relative to the target element. The position value is specified as a "position alignment" string where possible values are: `bottom`, `top`, `left` or `right` for position part and `start`, `end`, `center`, `fill`, `left`, `right`, `top` or `bottom` for the alignment part. When using a `vertical` only `horizontal` aligments can be specified. Same, when using an `horizontal`position only `vertical` aligment can be specified.
+Indicates the popup position relative to the target element. The position value is specified as a "position alignment" string where possible values are: `bottom`, `top`, `left` or `right` for position part and `start`, `end`, `center`, `fill`, `left`, `right`, `top` or `bottom` for the alignment part. When using a `vertical` position only `horizontal` aligments can be specified. Same, when using an `horizontal` position only `vertical` aligment can be specified.
 
 **Examples:** `bottom start`, `bottom right`, `bottom fill`, `right start`, `right center`, `right top` etc.
 
 See the **[Popup demo](playground/index.html#popup-demo)** in the playground for all the possible positions.
 
+**Note** The `position` property is a **hint**. The popup will be displayed as close as possible to the given position, depending on the parent client area. If the popup will not be entirely visible then it will  be moved to fit into the parent client area. All overflowing parents (i.e. having the posibility to scroll) and the window viewport are used to compute the final position. If you need to restrict the positioning to a certain container element (and not to the window viewport) you can use a `qute-Popup--container` class on the container element. You can have multiple nested `qute-Popup--container` elements: in that case only the closest container to the popup trigger will be used as the container.
 
 ### animation
 
