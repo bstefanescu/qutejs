@@ -42,4 +42,3 @@ class Root extends ViewModel {
 }
 export default Root;
 ```
-

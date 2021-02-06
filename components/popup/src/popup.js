@@ -1,8 +1,21 @@
 import window, {document} from '@qutejs/window';
 import { onTransitionEnd } from '@qutejs/ui';
 
-// Add cover option? to be able to cover the target
+// cover option: coverup / coverdown 
 
+function toBottomCover(erect, rect, crect, out) {
+	out.top = rect.top;	
+	if (out.top + erect.height > crect.bottom) { // flip to top
+		out.top = rect.bottom - erect.height;
+	}
+}
+
+function toTopCover(erect, rect, crect, out) {
+	out.top = rect.bottom - erect.height;
+	if (out.top < crect.top) { // flip to bottom
+		out.top = rect.top;
+	}
+}
 
 function toBottom(erect, rect, crect, out) {
 	out.top = rect.bottom;
@@ -80,7 +93,9 @@ var POS_FNS = {
 	top: toTop,
 	bottom: toBottom,
 	left: toLeft,
-	right: toRight
+	right: toRight,
+	coverup: toTopCover,
+	coverdown: toBottomCover
 }
 
 var VALIGN_FNS = {
@@ -202,10 +217,10 @@ Popup.prototype = {
 		var pos = opts.position;
 		var align = opts.align;
 		if (align === 'fill') {
-			if (pos ===  'bottom' || pos === 'top') {
-				style.width = anchor.offsetWidth+'px';
-			} else {
+			if (pos ===  'left' || pos === 'right') {
 				style.height = anchor.offsetHeight+'px';
+			} else {
+				style.width = anchor.offsetWidth+'px';				
 			}
 			align = 'start';
 		} else {

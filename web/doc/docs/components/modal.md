@@ -2,7 +2,7 @@
 
 The modal component display a modal dialog.
 
-To open a modal yuou need to get the the instance of the modal component to call the corresponding methods. To get the instance of a modal you can use the **[q:ref](#/attributes/q-ref)** attribute to inject the instance in a parent component property. 
+To open a modal yuou need to get the the instance of the modal component to call the corresponding methods. To get the instance of a modal you can use the **[q:ref](#/attributes/q-ref)** attribute to inject the instance in a parent component property.
 
 Another way to open a modal is to use the `id` attribute on the modal component to bind the modal component to a unique id, then on the modal trigger element you can use the `q:modal-trigger` attribute to identify open the modal on click. The `q:modal-trigger` takes the modal id as value:
 
@@ -21,7 +21,7 @@ The `qute-Modal` class name is used on the modal root element.
 
 ### `open()`
 
-Open the modal. 
+Open the modal.
 
 ### `openAsync()`
 Call `open()` inside a `window.setTimeout()` using a 0 timeout.
@@ -116,7 +116,7 @@ The `event.detail` field points to the modal root element.
 
 ### action
 
-Fired when an `action` was clicked. A clickable `action` is any clickable element inside the modal that define a `data-md-action` attribute. The attribute value will be the action name.
+Fired when an `action` was clicked. A clickable `action` is any clickable element inside the modal that define a `data-modal-action` attribute. The attribute value will be the action name.
 
 The `event.detail` field points to an object like:
 
@@ -130,7 +130,7 @@ The `event.detail` field points to an object like:
 
 **Note** that the `close` action will trigger a `close` event instead of the `action` event.
 
-**Example:** `<button data-md-action='next'>Next</button>`.
+**Example:** `<button data-modal-action='next'>Next</button>`.
 
 ## Example: Using `q:ref` to open the modal
 
@@ -153,7 +153,7 @@ const { ViewModel, Template } = Qute;
         <div style='padding: 10px'>
             The modal content.
             <hr>
-            <button data-md-action='my-action'>Modal Action</button>
+            <button data-modal-action='my-action'>Modal Action</button>
         </div>
       </div>
     </q:modal>
@@ -201,7 +201,7 @@ const { ViewModel, Template } = Qute;
         <div style='padding: 10px'>
             The modal content.
             <hr>
-            <button data-md-action='my-action'>Modal Action</button>
+            <button data-modal-action='my-action'>Modal Action</button>
         </div>
       </div>
     </q:modal>

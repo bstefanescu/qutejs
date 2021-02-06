@@ -46,6 +46,14 @@ const { ViewModel, Template, Property } = Qute;
           <option value='left top'>Left Top</option>
           <option value='left bottom'>Left Bottom</option>
         </optgroup>
+        <optgroup label='Cover'>
+          <option value='coverdown start'>Cover Down + Start</option>
+          <option value='coverdown end'>Cover Down + End</option>
+          <option value='coverdown fill'>Cover Down + Fill</option>
+          <option value='coverup start'>Cover Up + Start</option>
+          <option value='coverup end'>Cover Up + End</option>
+          <option value='coverup fill'>Cover Up + Fill</option>
+        </optgroup>
     </select>
     <br/>
     <button class='popup-btn' q:popup-trigger='my-popup'>Open popup</button>

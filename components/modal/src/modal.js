@@ -104,7 +104,7 @@ Modal.prototype = {
 				self.close();
 				handled = true;
 			} else if (opts.action) {
-				var action = target.getAttribute('data-md-action');
+				var action = target.getAttribute('data-modal-action');
 				if (action === 'close') {
 					self.close();
 					handled = true;

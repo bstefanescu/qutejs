@@ -48,7 +48,7 @@ A read only property to get the open status of a popup component.
 
 This attribute is **optional** and defaults to `bottom start`
 
-Indicates the popup position relative to the target element. The position value is specified as a "position alignment" string where possible values are: `bottom`, `top`, `left` or `right` for position part and `start`, `end`, `center`, `fill`, `left`, `right`, `top` or `bottom` for the alignment part. When using a `vertical` position only `horizontal` aligments can be specified. Same, when using an `horizontal` position only `vertical` aligment can be specified.
+Indicates the popup position relative to the target element. The position value is specified as a "position alignment" string where possible values are: `bottom`, `top`, `left`, `right`, `coverdown`, `coverup` for position part and `start`, `end`, `center`, `fill`, `left`, `right`, `top` or `bottom` for the alignment part. When using a `vertical` position only `horizontal` aligments can be specified. Same, when using an `horizontal` position only `vertical` aligment can be specified.
 
 **Examples:** `bottom start`, `bottom right`, `bottom fill`, `right start`, `right center`, `right top` etc.
 
