@@ -75,9 +75,27 @@ export function SetBindings(el, model, bindFn) {
 export function SetInnerHTML(el, model, valFn) {
 	return function() {
 		var val = valFn(model);
+		if (val === false) return; // false can be used to avoid updating
+		// the check is not optimal ... and the returned el innertHTML may be different even if not changed
 		if (el.innerHTML !== val) {
 			el.innerHTML = val || '';
 		}
+	}
+}
+
+// update an user generated element through q:dom. Only used to update not to initialize
+export function UpdateUserDom(valueFn, model, start, end) {
+	return function() {
+		var val = valueFn(model);
+		if (val === false) return; // false can be used to avoid updating
+
+		// remove existing content
+		const parent = end.parentNode;
+		// remove existing content
+		while (start.nextSibling && start.nextSibling !== end) {
+			parent.removeChild(start.nextSibling);
+		}
+		val && parent.insertBefore(val, end);
 	}
 }
 

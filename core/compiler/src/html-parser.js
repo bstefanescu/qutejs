@@ -5,7 +5,7 @@ import parseAttrs from './parse-attrs.js';
 var STAG_RX = /^<([-A-Za-z0-9_:]+)((?:\s+[-\w@#\?:]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|(?:\{.*\})|[^>\s]+))?)*)\s*(\/?)>/,
     ETAG_RX = /^<\/([-A-Za-z0-9_:]+)[^>]*>/;
 
-var voids = {'else-if':true, else:true, case:true, area:true, base:true, br:true, col:true, embed:true, hr:true, img:true, input:true, link:true, meta:true, param:true, source:true, track:true, wbr:true};
+var voids = {dom:true, 'else-if':true, else:true, case:true, area:true, base:true, br:true, col:true, embed:true, hr:true, img:true, input:true, link:true, meta:true, param:true, source:true, track:true, wbr:true};
 
 export default function parseHTML(html, handler) {
     function handleStartTag(tagName, attrsDecl, isVoid) { // void elements are tags with no close tag
@@ -72,4 +72,3 @@ export default function parseHTML(html, handler) {
         throw new Error("Unclosed tag: "+stack[0]);
     }
 }
-

@@ -1,6 +1,6 @@
 import window, {document} from '@qutejs/window';
 import Compiler from '@qutejs/compiler';
-import { serialLoadScripts } from './script-loader.js';
+import { serialLoadScripts, IGNORE_PACKAGES } from './script-loader.js';
 
 var IMPORT_RX = /^\s*import\s+(?:(\S+|\{[^}]+\})\s+from\s+)?(?:(\"[^"]+\")|(\'[^']+\')|([^"'][^;\s]*));?$/mg;
 var EXPORT_RX = /^\s*export\s+default\s+/m;
@@ -39,6 +39,8 @@ function processImports(code, imports, styles) {
                     if (p1.startsWith('{')) {
                         extraCode = "\nconst "+p1+" = Qute.Importer;\n";
                     }
+				} else if (IGNORE_PACKAGES[path]) {
+					//imports[path] = p1;
                 } else if (p1.startsWith('{')) {
                     const importName = '__QUTE_IMPORT_OBJ_'+(++IMPORT_CNT)+'__';
                     extraCode = "\nconst "+p1+" = "+importName+";\n";
@@ -221,4 +223,3 @@ function Script() {
 
 
 export default JSQLoader;
-

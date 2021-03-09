@@ -2,7 +2,7 @@ import {document} from '@qutejs/window';
 import {ERR} from '@qutejs/commons';
 
 import {applyListeners, applyEmitters, SetFixedClass, SetComputedClass, InheritClass, SetQClass, AddClass, SetStyle,
-			SetDisplay, SetToggle, SetText, SetInnerHTML, SetAttr} from './binding.js';
+			SetDisplay, SetToggle, SetText, SetInnerHTML, SetAttr, UpdateUserDom} from './binding.js';
 import { filterKeys } from './utils.js';
 import {applyUserDirectives} from './q-attr.js';
 import ListFragment from './list-fragment.js';
@@ -247,6 +247,20 @@ var RenderingProto = {
 	a: function(listFn, iterationFn) {
 		return new ForFragment(this, listFn, iterationFn).$create();
 	},
+	// dom element or fragment generated using custom user code.
+	z: function(valueFn, frozen) {
+		const value = valueFn(this.model);
+		const start = document.createComment('[dom]');
+		const end = document.createComment('[/dom]');
+		const frag = document.createDocumentFragment();
+		frag.appendChild(start);
+		value && frag.appendChild(value);
+		frag.appendChild(end);
+		if (!frozen) { // if not frozen register update function
+			this.up(UpdateUserDom(valueFn, this.model, start, end));
+		}
+		return frag;
+	},
 	up: function(fn) { // register a live update function
 		this.ups.push(fn);
 		return fn;
@@ -318,9 +332,12 @@ var RenderingProto = {
 		} while (r);
 		return null;
 	},
-	// to be used b y custom directives to safely add fixed class names to an element
+	// to be used by custom directives to safely add fixed class names to an element
 	addClass(el, className) {
 		AddClass(el, className);
+	},
+	get app() {
+		return this.model.$app;
 	}
 }
 

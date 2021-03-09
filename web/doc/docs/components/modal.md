@@ -124,7 +124,7 @@ The `event.detail` field points to an object like:
 {
   name: 'the-action-name',
   target: theActionElement,
-  modal: theModalRootElement
+  modal: theModalComponentInstance
 }
 ```
 

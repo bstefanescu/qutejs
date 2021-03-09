@@ -122,10 +122,8 @@ The same as the reactive property example, but we will use the `q:model` directi
 
 ```jsq
 import Qute from '@qutejs/runtime';
-import FormPlugin from '@qutejs/form';
+import { qModel } from '@qutejs/form';
 const { ViewModel, Template, Property } = Qute;
-
-FormPlugin.install();
 
 <q:template name='HelloTemplate'>
 	<div>

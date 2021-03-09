@@ -27,6 +27,8 @@ function qModalTrigger(attrs, val, el, comp) {
 }
 
 /**
+ * To customize the modal you can subclass it and implement the following methods:
+ * onOpen, onClose, onReady, onAction
  */
 class qModal extends ViewModel {
 
@@ -51,16 +53,20 @@ class qModal extends ViewModel {
 			closeOnClick: this.closeOnClick,
 			disableScroll: this.disableScroll,
 			open: function(modal) {
-				self.emit("open", self.modal.el);
+				self.onOpen && self.onOpen(modal);
+				self.emit("open", self);
 			},
 			close: function(modal) {
-				self.emit("close", self.modal.el);
+				self.onClose && self.onClose(modal);
+				self.emit("close", self);
 			},
 			ready: function(modal) {
-				self.emit("ready", self.modal.el);
+				self.onReady && self.onReady(modal);
+				self.emit("ready", self);
 			},
 			action: function(action, target) {
-				self.emit("action", {modal: self.modal.el, name: action, target: target});
+				self.onAction && self.onAction(action, target);
+				self.emit("action", {modal: self, name: action, target: target});
 			}
 		});
 		this.id && this.publish(this.id);
@@ -115,7 +121,16 @@ class qModal extends ViewModel {
     onDisableScrollChanged(value) {
         this.modal.opts.disableScroll = !!value;
         return false;
-    }
+	}
+
+	element() {
+		return this.modal.el;
+	}
+
+	find(selector) {
+		return this.modal.el && this.modal.el.querySelector(selector);
+	}
+
 }
 
 export { Modal, qModal, qModalTrigger };

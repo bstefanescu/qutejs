@@ -1,6 +1,6 @@
 import {importAll, serialImport} from '@qutejs/importer';
 
-var IGNORE_PACKAGES = {
+export const IGNORE_PACKAGES = {
     "@qutejs/runtime": true,
     "@qutejs/window": true,
     "@qutejs/dev": true,
