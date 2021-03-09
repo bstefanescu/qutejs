@@ -188,6 +188,20 @@ Using this technique we can for example wrap the slot in an element only if the 
 </q:template>
 ```
 
+The same can also be done using the **outer-slot** directive:
+
+```xml
+<q:template export>
+    ...
+	<outer-slot>
+	<div class='slot-wrapper'>
+		<slot/>
+	</div>
+	</outer-slot>
+    ...
+</q:template>
+```
+
 ## The `q:slot` attribute directive
 
 A `<nested></nested>` element behaves like an HTML fragment that will be injected in a target slot.

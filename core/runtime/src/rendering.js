@@ -214,6 +214,12 @@ var RenderingProto = {
 		}
 		return document.createComment('[slot/]'); // placeholder
 	},
+	o: function(slotName, children) { // outer slot
+		const slots = this.model.$slots;
+		if (slots && slots[slotName] && children) {
+			appendChildren(el, children);
+		}
+	},
 	v: function(isExpr, changeCb, noCache, xattrs, childrenFn) { // dynamic view
 		var renderFn = function(r, key) {
 			return key ? r.c(key, xattrs, childrenFn(r)) : null;

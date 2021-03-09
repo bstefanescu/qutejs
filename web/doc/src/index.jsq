@@ -140,6 +140,7 @@ var TOC = [
 		{ title: 'if', href: 'directives/if' },
 		{ title: 'for', href: 'directives/for' },
 		{ title: 'slot', href: 'directives/slot' },
+		{ title: 'outer-slot', href: 'directives/outer-slot' },
 		{ title: 'nested', href: 'directives/nested' },
 		{ title: 'tag', href: 'directives/tag' },
 		{ title: 'view', href: 'directives/view' },
