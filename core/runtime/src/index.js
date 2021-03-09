@@ -111,9 +111,9 @@ Qute.defineMethod = function(name, fn) {
     Rendering.FunComp.prototype[name] = fn;
 }
 Qute.runAfter = function(cb) { UpdateQueue.runAfter(cb); }
-
+// get a component from its root element
+Qute.get = function(elt) { return elt.__qute__; }
 // store Qute instance in window - this is important so that imported components use the same Qute instance
 window.Qute = Qute;
 
 export default Qute;
-
