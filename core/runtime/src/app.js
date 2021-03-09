@@ -96,6 +96,7 @@ AsyncProp.prototype = AsyncPropProto;
 export default function Application(data) {
 	this.topics = {};
 	this.data = {};
+	this.env = {};
 	this.components = {}; // components lookup by id
 	data && this.putAll(data);
 }
@@ -120,7 +121,7 @@ Application.prototype = {
         this.root = null;
         this.unmounted && this.unmounted();
 	},
-	// register / unregister components 
+	// register / unregister components
 	unpublish(key) {
 		delete this.components[key];
 	},
@@ -201,4 +202,3 @@ Application.prototype = {
 
 Application.Prop = Prop;
 Application.AsyncProp = AsyncProp;
-
