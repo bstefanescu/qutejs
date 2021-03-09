@@ -121,7 +121,7 @@ ViewModel.prototype = {
 		if (this.$setup) {
 			this.$setup(this);
 		}
-		
+
 		// TODO update DOM if previously disconnected
 		//if (false) this.$update();
 
@@ -138,11 +138,11 @@ ViewModel.prototype = {
 		}
 	},
 	publish: function(id) {
-		this.setup(function(vm) {			
+		this.setup(function(vm) {
 			vm.$app.publish(id, vm);
 			vm.cleanup(function(vm) {
 				vm.$app.unpublish(id);
-			});	
+			});
 		});
 	},
 	lookup(id) {
@@ -210,6 +210,8 @@ ViewModel.prototype = {
         var rendering = new Rendering(parentRendering, this);
 		rendering.vm = this;
         this.$r = rendering;
+
+		this.initialized && this.initialized();
 
 		// must never return null - for non rendering components like popups we return a comment
 		var el = this.render(rendering) || document.createComment('<'+this.toString()+'/>');
