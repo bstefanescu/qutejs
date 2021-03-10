@@ -49,10 +49,6 @@ Return a DOM element (the root of the rendered elements tree).
 
 Define a method on `ViewModel` and template component prototype. Can be used to extend the component API. See **[Internationalization Support](#/app/i18n)** for an example.
 
-### `Qute.Rendering.converters`
-
-A converter registry. To be used with  __[q:content-\*](#/attributes/q-markdown)__ attributes.
-
 
 ## The ES5 Component API
 

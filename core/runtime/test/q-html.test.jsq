@@ -24,11 +24,6 @@ const { Template, ViewModel, Property } = Qute;
 	</div>
 </q:template>
 
-<q:template name='TestStaticTextTemplate'>
-	<div q:content-text>
-		bla bla
-	</div>
-</q:template>
 
 @Template(TestHtmlTemplate)
 class TestHtml extends ViewModel {
@@ -36,7 +31,6 @@ class TestHtml extends ViewModel {
 }
 var TestStaticHtml = Qute(TestStaticHtmlTemplate);
 var TestStaticMarkdown = Qute(TestStaticMarkdownTemplate);
-var TestStaticText = Qute(TestStaticTextTemplate);
 
 
 describe('q:html attribute', function() {
@@ -66,7 +60,7 @@ describe('q:html attribute', function() {
 });
 
 describe('q:markdown attribute', function() {
-	Qute.Rendering.converters.markdown = function(content) {
+	Qute.Rendering.markdown = function(content) {
 		// we don't use a real converter for testing
 		assert.ok(content.trim().startsWith('# Header'));
 		return "<h1>Header</h1><p>Some markdown</p>";
@@ -77,19 +71,5 @@ describe('q:markdown attribute', function() {
 	it('should render static markdown content', function() {
 		assert.equal(test.firstChild.innerHTML.trim(), "<h1>Header</h1><p>Some markdown</p>");
 		assert.equal(test.firstChild.querySelector("h1").innerHTML, "Header");
-	});
-});
-
-describe('q:content attribute', function() {
-	Qute.Rendering.converters.text = function(content) {
-		assert.equal(content.trim(), 'bla bla');
-		return "Some <b>generated</b> HTML";
-	}
-
-	var test = mountTest(TestStaticText);
-
-	it('should render static markdown content', function() {
-		assert.equal(test.firstChild.innerHTML.trim(), "Some <b>generated</b> HTML");
-		assert.equal(test.firstChild.querySelector("b").innerHTML, "generated");
 	});
 });

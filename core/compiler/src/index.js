@@ -428,14 +428,7 @@ var QATTRS = {
 		if (attr.value === true) {
 			return new StaticNode(this, 'markdown');
 		} else {
-			this.xattr('$html', "$.cvt("+attr.value+", 'markdown')");
-		}
-    },
-    content(attr, ctype) {
-		if (attr.value === true) {
-			return new StaticNode(this, ctype !== 'html' ? ctype : null);
-		} else {
-			this.xattr('$html', ctype !== 'html' ? "$.cvt("+attr.value+", "+_s(ctype)+")":attr.value);
+			this.xattr('$html', "$.md("+attr.value+")");
 		}
     },
 	key(attr) {
@@ -629,16 +622,6 @@ function DomNode(name, caseSensitiveName, attrs) {
 			_nodes(this.children, ctx), this.svg?1:0);
 	}
 
-	this.xcontent = function(type, attr) {
-		if (attr.value === true) {
-			return new StaticNode(this, type);
-		} else {
-			//TODO: use type ...
-    		this.xattr('$html', attr.value);
-    	}
-    	return this;
-	}
-
 	this.handleQAttr = function(name, attr) {
 		var r, fn = QATTRS[name];
 		if (fn) {
@@ -653,8 +636,6 @@ function DomNode(name, caseSensitiveName, attrs) {
 			this.emit(name.substring(5), attr.value, false);
 		} else if (name.startsWith('async-emit-')) {
 			this.emit(name.substring(11), attr.value, true);
-		} else if (name.startsWith('content-')) {
-            return QATTRS.content.call(this, attr, name.substring(8));
 		} else {
 			this.directive(attr);
 		}

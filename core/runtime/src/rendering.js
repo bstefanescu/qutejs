@@ -10,7 +10,6 @@ import SwitchFragment from './switch-fragment.js';
 import ForFragment from './for-fragment.js';
 import FunComp from './func.js';
 
-const converters = {};
 // q:attrs values are already evaluated - so the injected values are liiterals
 function SetDOMAttrs(el, model, filter) {
 	return function() {
@@ -80,12 +79,11 @@ function extractSlots(children) {
 
 
 var RenderingProto = {
-    cvt: function(content, type) { // used by $html top convert markdown to html
-        var converter = converters[type];
-        if (!converter) {
-            ERR("Unknown converter: %s", type);
+    md: function(content) { // used by $html to convert markdown to html
+        if (!Rendering.markdown) {
+            ERR("No markdown converter defined. You need to define a Qute.Rendering.markdown(content) method");
         }
-        return converter(content, this);
+        return Rendering.markdown(content, this);
     },
 	x: function(expr) { // expression {{ ... }}
 		var text = expr(this.model);
@@ -168,12 +166,8 @@ var RenderingProto = {
 	// element with static children (innerHTML is set from the subtree)
 	hh:function(tag, xattrs, content, type) {
 		var el = this.h(tag, xattrs);
-		if (type) { // convert can be a function to convert the content before injecting in the dom
-			var converter = converters[type];
-			if (!converter) {
-				ERR("Unknown converter: %s", type);
-			}
-			content = converter(content, this);
+		if (type === 'markdown') { // convert can be a function to convert the content before injecting in the dom
+			content = this.md(content);
 		}
 		el.innerHTML = content;
 		return el;
@@ -385,5 +379,4 @@ Rendering.FunComp = FunComp;
 // add more bindigns here if needed
 Rendering.SetAttr = SetAttr;
 Rendering.SetDisplay = SetDisplay;
-Rendering.converters = converters;
 export default Rendering;

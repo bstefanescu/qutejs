@@ -104,7 +104,7 @@ function fetchPage(url, cb) {
   	xhttp.send();
 }
 
-Qute.Rendering.converters.markdown = marked;
+Qute.Rendering.markdown = marked;
 
 var TOC = [
     { title: 'Introduction', href: 'introduction', toplevel:true},
