@@ -208,7 +208,7 @@ var RenderingProto = {
 		var slots = model.$slots;
 		var children = slots && slots[slotName || 'default'] || defaultChildren;
 		if (children) {
-			var frag = document.createDocumentFragment();
+			const frag = document.createDocumentFragment();
 			appendChildren(frag, children);
 			return frag;
 		}
@@ -217,8 +217,11 @@ var RenderingProto = {
 	o: function(slotName, children) { // outer slot
 		const slots = this.model.$slots;
 		if (slots && slots[slotName] && children) {
-			appendChildren(el, children);
+			const frag = document.createDocumentFragment();
+			appendChildren(frag, children);
+			return frag;
 		}
+		return document.createComment('[outer-slot/]'); // placeholder
 	},
 	v: function(isExpr, changeCb, noCache, xattrs, childrenFn) { // dynamic view
 		var renderFn = function(r, key) {
