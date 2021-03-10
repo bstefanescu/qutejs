@@ -8,7 +8,6 @@ const TestMixin = Qute(function() {
     h1.textContent = 'Test Mixins';
     return h1;
 }, {});
-TestMixin.channel(()=>{})
 TestMixin.mixin({
     addMixin1Class() {
         this.$el.className = 'mixin1';

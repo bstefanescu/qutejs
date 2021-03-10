@@ -1,5 +1,5 @@
 import { ERR } from '@qutejs/commons/src';
-import { _template, _mixin, _watch, _on, _channel, _require } from './helpers.js';
+import { _template, _mixin, _watch, _on, _require } from './helpers.js';
 
 /**
  * To be used on Qute.Application derived classes
@@ -38,12 +38,6 @@ function On(event, selector) {
 function Watch(prop) {
     return function(VMProto, name, descriptor) {
         _watch(VMProto, prop, descriptor.value);
-    }
-}
-
-function Channel() {
-    return function(VMProto, name, descriptor) {
-        _channel(VMProto, descriptor.value);
     }
 }
 
@@ -89,7 +83,6 @@ export {
     Mixin,
     On,
     Watch,
-    Channel,
     Required,
     DataModel,
     AsyncDataModel

@@ -93,20 +93,6 @@ Quute(MyTemplate, {
 });
 ```
 
-## Registering a Channel
-
-To register a channel listener you can use the `channel(listener)` method:
-
-```javascript
-var MyComponent = Qute(MyComponentTemplate, {
-    init() {
-        this.message = 'Hello!'
-    }
-}).channel(function(msg) {
-	console.log('received a message', msg);
-});
-```
-
 ## Chainning Methods
 
 You can chain all these method to configure a `ViewModel` component:
@@ -121,7 +107,5 @@ var MyComponent = Qute(MyComponentTemplate, {
 	return false;
 }).watch('message', function() {
 	console.log('message changed');
-}).channel(function(msg) {
-	console.log('received a message', msg);
 });
 ```

@@ -7,8 +7,8 @@ import ViewModel from './vm.js';
 import Application from './app.js';
 import Service from './service.js';
 
-import { _mixin, _watch, _on, _channel, _require } from './decorators/helpers.js';
-import { View, Template, Mixin, On, Watch, Channel, Required, DataModel, AsyncDataModel, Property, Link } from './decorators/index.js';
+import { _mixin, _watch, _on, _require } from './decorators/helpers.js';
+import { View, Template, Mixin, On, Watch, Required, DataModel, AsyncDataModel, Property, Link } from './decorators/index.js';
 import List from './list.js';
 
 /**
@@ -65,10 +65,6 @@ function Qute(renderFn, def) {
         _on(VMProto, key, selector, cb);
 		return VMType;
 	}
-	VMType.channel = function(listenFn) {
-        _channel(VMProto, listenFn);
-		return VMType;
-	}
     VMType.mixin = function() {
         _mixin(VMProto, Array.prototype.slice.call(arguments));
         return VMType;
@@ -93,7 +89,6 @@ Qute.Render = Template; // export Template under the name Render too.
 Qute.Mixin = Mixin;
 Qute.On = On;
 Qute.Watch = Watch;
-Qute.Channel = Channel;
 Qute.Required = Required;
 Qute.DataModel = DataModel;
 Qute.AsyncDataModel = AsyncDataModel;

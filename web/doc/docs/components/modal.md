@@ -162,6 +162,9 @@ const { ViewModel, Template } = Qute;
 
 @Template(RootTemplate)
 class Root extends ViewModel {
+
+  theModal;
+
   openModal(event) {
     this.theModal.open();
   }
@@ -177,13 +180,13 @@ class Root extends ViewModel {
   onAction(event) {
     console.log('modal action', event.detail);
     alert("Action: "+event.detail.name+" Dialog will be closed.");
-    this.post('my-modal', 'close');
+    event.detail.modal.close();
   }
 }
 export default Root;
 ```
 
-## Example: Using a channel to open the modal
+## Example: Using `q:modal-trigger` to open the modal
 
 ```jsq
 import Qute from '@qutejs/runtime';
@@ -222,7 +225,7 @@ class Root extends ViewModel {
   onAction(event) {
     console.log('modal action', event.detail);
     alert("Action: "+event.detail.name+" Dialog will be closed.");
-    this.post('my-modal', 'close');
+    event.detail.modal.close();
   }
 }
 export default Root;

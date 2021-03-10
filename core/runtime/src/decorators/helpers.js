@@ -43,16 +43,6 @@ export function _on(VMProto, key, selector, cb) {
 }
 
 /**
- * Define amessaging channel on the given ViewModel prototype.
- * @param {*} VMProto
- * @param {*} listenFn
- */
-export function _channel(VMProto, listenFn) {
-    VMProto.$channel = listenFn;
-}
-
-
-/**
  * Define required properties given the ViewModel prototype and a list of property names
  * @param {*} VMProto
  * @param {*} names

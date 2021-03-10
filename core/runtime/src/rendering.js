@@ -139,8 +139,6 @@ var RenderingProto = {
 						el.__qute_slot__ = val;
 					} else if (key === '$ref') {
 						this.model[val] = el;
-					} else if (key === '$channel') {
-						ERR("q:channel cannot be used on regular DOM elements: %s", tag);
                     }
                 } else if (key === 'class') {
                     // special handling of classes to sync with inherited class and q:class

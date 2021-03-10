@@ -40,14 +40,13 @@ var PropProto = {
 	},
 
 	bindVM(vm, key) {
-		var self = this;
 		vm.$data[key] = this.value; // set the initial value
-		vm.setup(function() {
-			vm.subscribe('model:'+self.key, function(value, old) {
-				var watcher = this.$el && this['$watch_'+key]; // if not connected whatchers are not enabled
+		vm.setup(() => {
+			this.app.subscribe('model:'+this.key, function(value, old) {
+				var watcher = vm.$el && vm['$watch_'+key]; // if not connected whatchers are not enabled
 				// avoid updating if watcher return false
-				if (watcher && watcher.call(this, value, old) === false) return;
-				this.update();
+				if (watcher && watcher.call(vm, value, old) === false) return;
+				vm.update();
 			});
 		});
 		return createProp(this);

@@ -216,7 +216,6 @@ Apart the syntax differences from HTML, the `JSQ` language introduce some new ta
 * **[q:emit](#/attributes/q-emit)**
 * **[q:async-emit](#/attributes/q-async-emit)**
 * **[q:call](#/attributes/q-call)**
-* **[q:channel](#/attributes/q-channel)**
 * **[q:html](#/attributes/q-html)**
 * **[q:markdown](#/attributes/q-markdown)**
 * **[q:bind](#/attributes/q-bind)**

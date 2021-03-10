@@ -74,15 +74,6 @@ ViewModel.prototype = {
 			}
 		}
 	},
-	// subscribe to the given channel name - for use on root VMs
-	listen: function(channelName) {
-		if (!this.$channel) ERR("q:channel used on a VM not defining channels: %s", this.toString());
-		// add an init function
-		this.setup(function(thisObj) {
-			thisObj.subscribe(channelName, thisObj.$channel);
-		});
-		return this;
-	},
 	//TODO use setup in listen and $on
 	setup: function(setupFn) {
 		this.$setup = chainFnAfter(setupFn, this.$setup);
@@ -172,8 +163,6 @@ ViewModel.prototype = {
 					} else if (key === '$toggle') {
 						if (!bindings) bindings = [];
 						bindings.push(SetToggle, val);
-					} else if (key === '$channel') {
-						this.listen(val);
 					}
 				} else if (typeof val === 'function') { // a dynamic binding
 					rendering.up(SetProp(this, model, key, val))();
@@ -325,34 +314,17 @@ ViewModel.prototype = {
     },
     emit: Emitter.emit,
 	emitAsync: Emitter.emitAsync,
-	// -------- app event bus -------------
+	// -------- app event bus helper functions -------------
 	post: function(topic, msg, data) {
 		this.$app.post(topic, msg, data);
 	},
 	postAsync: function(topic, msg, data) {
 		this.$app.postAsync(topic, msg, data);
 	},
-	// subscribe and register cleanup to remove subscription at disconnect
-	subscribe: function(name, listenerFn) {
-		var app = this.$app;
-		app.subscribe(name, listenerFn.bind(this));
-		this.cleanup(function() {
-			app.unsubscribe(name, listenerFn);
-		});
-		return this;
-	},
-	subscribeOnce: function(topic, event, listenerFn) {
-		var app = this.$app;
-		var onceSubscription = app.subscribeOnce(topic, event, listenerFn.bind(this));
-		this.cleanup(function() {
-			app.unsubscribe(topic, onceSubscription);
-		});
-		return this;
-	},
+	// ---------------------------------------------
 	toHTML: function() {
 		return this.$el && this.$el.outerHTML;
 	}
-	// ---------------------------------------------
 }
 
 export default ViewModel;

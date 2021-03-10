@@ -408,9 +408,6 @@ var QATTRS = {
 	attrs(attr) {
 		this.xattr('$attrs', parseXAttrs(attr.value));
 	},
-	channel(attr) {
-		this.attr('$channel', attr.value); // use a regular attr since valkue is always a string literal
-	},
 	show(attr) {
 		this.xattr('$show', attr.value);
 	},

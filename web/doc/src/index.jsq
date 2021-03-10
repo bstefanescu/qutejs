@@ -4,7 +4,7 @@ import window, { document, navigator } from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import Router from '@qutejs/router';
 
-const {ViewModel, Template, Property, Channel, On} = Qute;
+const {ViewModel, Template, Property, On} = Qute;
 
 <q:template name='TocItem'>
 	<li class='toc-item' id={"toc_item:/"+$attrs.href}>
@@ -63,7 +63,7 @@ const {ViewModel, Template, Property, Channel, On} = Qute;
 	</div>
 	<div id='sidebar'>
 		<div class='sidebar-nav'>
-			<Toc items={toc} @select='openTocItem' q:channel='toc' />
+			<Toc items={toc} @select='openTocItem' />
 		</div>
 	</div>
 	<div id='main'>
@@ -124,7 +124,6 @@ var TOC = [
 		{ title: 'Watchers', href: 'model/watchers'},
 		{ title: 'Events', href: 'model/events'},
 		{ title: 'Life Cycle', href: 'model/lifecycle'},
-        { title: 'Messaging', href: 'model/messaging'},
         { title: 'Mixins', href: 'model/mixins'},
 		{ title: 'ES5 Component API', href: 'model/es5'},
         { title: 'JSQ File Format', href: 'model/jsq'},
@@ -156,7 +155,6 @@ var TOC = [
 		{ title: 'q:emit', href: 'attributes/q-emit' },
 		{ title: 'q:async-emit', href: 'attributes/q-async-emit' },
 		{ title: 'q:slot', href: 'attributes/q-slot' },
-		{ title: 'q:channel', href: 'attributes/q-channel' },
 		{ title: 'q:call', href: 'attributes/q-call' },
 		{ title: 'q:ref', href: 'attributes/q-ref' },
 		{ title: 'q:toggle', href: 'attributes/q-toggle' },
@@ -228,23 +226,27 @@ class Toc extends ViewModel {
 		return false;
     }
 
-    @Channel
-    handleMessage(msg, data) {
-        if (msg === 'select') {
-            var item = document.getElementById('toc_item:'+data);
-            if (item) {
-                var cl = item.classList;
-                if (!cl.contains('active')) {
-                    var section = item.closest('.toc-section');
-                    section && expandSection(section);
-                    highlightItem(this.$el, item);
-                    if (!isInViewport(item)) {
-                        item.scrollIntoView();
-                    }
-                }
-            }
-        }
-    }
+	connected() {
+		//TODO refactor this - do not use a channel but rather a model property
+		const handleMessage = (msg, data) => {
+			if (msg === 'select') {
+				var item = document.getElementById('toc_item:'+data);
+				if (item) {
+					var cl = item.classList;
+					if (!cl.contains('active')) {
+						var section = item.closest('.toc-section');
+						section && expandSection(section);
+						highlightItem(this.$el, item);
+						if (!isInViewport(item)) {
+							item.scrollIntoView();
+						}
+					}
+				}
+			}
+		}
+		this.$app.subscribe('toc', handleMessage);
+	}
+
 }
 
 @Template(AppTemplate)
@@ -264,10 +266,10 @@ class App extends ViewModel {
 		}).start();
 
 		this.router.onChange(function(path) {
-			self.postAsync('toc', 'select', path);
+			app.postAsync('toc', 'select', path);
 		});
 //TODO
-		this.subscribe('app#page', function(page) {
+		app.subscribe('app#page', page => {
 			this.router.navigate(page);
 			//this.updateDocPage(page); // no need to use self
 		});

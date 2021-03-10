@@ -86,9 +86,6 @@ const MyComponent = Qute(MyComponentTemplate, {
 }).on('click', function(e) {
     // define event handlers
 	// do something on click ...
-}).channel(function(message, data) {
-    // define a component messaging handler
-	// do something when a message is posted to the component channel.
 }).mixin(Mixin1, Mixin2, ...); // apply some mixins to the component model
 
 new MyComponent().mount(); // instantiate and mount the root component
@@ -164,12 +161,6 @@ The `insertBefore` argument is optional and default to false.
 
 Unmount the component. This will disconnect all the children ViewModel components and will remove the root element from the DOM.
 
-#### `listen(channelName)`
-
-Subscribe to `channelName` channel and use the component channel listener to handle incoming messages.
-
-This method is specially provided for **root components** and have the same efect as using the **[q:channel](#/attributes/q-channel)** attribute.
-
 #### `setup(setupFn)`
 
 Register a setup function that will run every time the component is connected to the DOM.
@@ -216,14 +207,6 @@ Emit a DOM CustomEvent.
 #### `emitAsync(event, data, timeout)`
 
 Emit a DOM event in next UI loop. The `timeout` argument is optional and defaults to 0.
-
-#### `subscribe(topic, listenerFn)`
-
-Create a communication channel by subscribing to the given topic.
-
-#### `subscribeOnce(topic, event, listenerFn)`
-
-Subscribe to the given topic for only one event. After the event will be received the listener will unsubscribe.
 
 #### `post(topic, msg, data)`
 

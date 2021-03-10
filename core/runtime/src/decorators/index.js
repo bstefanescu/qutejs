@@ -6,7 +6,6 @@ export {
     Mixin,
     On,
     Watch,
-    Channel,
     Required,
     DataModel,
     AsyncDataModel } from './decorators.js';

@@ -78,7 +78,7 @@ Let's take the example of a dropdown menu:
 ```jsq
 import Qute from '@qutejs/runtime';
 
-const { ViewModel, Template, Channel } = Qute;
+const { ViewModel, Template } = Qute;
 
 <q:template name='AlertBoxTemplate'>
 	<div style='display:none;position:fixed; left:40%; top:40%; border: 1px solid red; padding: 10px'>
@@ -89,7 +89,7 @@ const { ViewModel, Template, Channel } = Qute;
 
 <q:template name='RootTemplate'>
 <div>
-	<alert-box q:channel='hello'>Hello!</alert-box>
+	<alert-box>Hello!</alert-box>
 	<button @click='showAlert'>Show Alert!</button>
 </div>
 </q:template>
@@ -100,14 +100,19 @@ class AlertBox extends ViewModel {
 		this.postAsync('hello', 'hide');
 	}
 
-    @Channel
-    onMessage(message, data) {
-        if (message === 'show') {
-            this.$el.style.display='';
-        } else if (message === 'hide') {
-            this.$el.style.display='none';
-        }
-    }
+	connected() {
+		this._subscription = this.$app.subscribe('hello', (message, data) => {
+			if (message === 'show') {
+				this.$el.style.display='';
+			} else if (message === 'hide') {
+				this.$el.style.display='none';
+			}
+		});
+	}
+
+	disconnected() {
+		this.$app.unsubscribe('hello', this._subscription);
+	}
 }
 
 @Template(RootTemplate)
@@ -119,16 +124,9 @@ class Root extends ViewModel {
 export default Root;
 ```
 
-In the previous example, the `alert` component is declaring a communication channel by calling the `channel(channelListener)` method. The channel is only declared.
+In the previous example, the `alert` component is subscribing to a topic named `hello` when the component is connected to the DOM and unsubscribe when the component is disconnected. You can thus send message from other components to the `hello` topic to communicate with the `alert` component. To send a message you can use one of the `post` or `postAsync` methods.
 
-In order to create the channel you need to give the channel a name. This is done in the template by using the `q:channel` attribute on the `alert` component. This will create a communication channel to the `alert` component instance that will use the defined channel listener to respond to messages.
-
-If you create an `alert` component instance without using the `q:channel` attribute the channel will never be created on that instance (even if the channel listener was defined).
-
-Briefly, defining a channel function provides a messaging end-point. In order to open a channel to an instance end-point you need to use the `q:channel` attribute to assign the channel a name.
-
-Of course, the example above can be implemented using a mix of the first two communication methods (parent to child and child to panel) and by keeping the alert state in a reactive property.
-But there are situations when using a state property and up and down communication is to complex or not justified.
+However you will rarely want to use this technique. The messaging bus is especially usefull to communicate with application services global services like a routing service. The messaging bus is also used internally to implement reactive application properties, which we will describe below. Using application properties is the reccomended way to communicate between components which doesn't have a parent / child relationship.
 
 ### Application properties
 
@@ -187,9 +185,9 @@ You can also find an [example of implementing routing](#/plugins/routing) throug
 
 ## Communicating Between Components Having Different Roots
 
-Even more, we can use the message bus to communicate between components from two distinct Qute component trees running in the same web page. This way, we can use **Qute** to create components that integrate nicely into existing web pages.
+Even more, we can use the message bus to communicate between components from two distinct Qute component trees running in the same web page.
 
-When installing a root component we can use the same application instance used by the other roots in the page. This way we can share the same message bus to communicate between components, no matter where components were mounted in the page.
+When installing a root component you can share the application instance with another root component. Thus, you will also share the message bus.
 
 ### Example
 
@@ -197,7 +195,7 @@ When installing a root component we can use the same application instance used b
 import {document} from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
-const { ViewModel, Template, Channel } = Qute;
+const { ViewModel, Template } = Qute;
 
 <q:template name='ChildOneTemplate'>
 <div>I am child1 from root1</div>
@@ -206,7 +204,7 @@ const { ViewModel, Template, Channel } = Qute;
 <q:template name='FirstRootTemplate'>
 <div style='border: 1px solid green; padding: 10px;'>
     <h3>Root1</h3>
-	<child-one q:channel='child1-channel' />
+	<child-one />
 </div>
 </q:template>
 
@@ -219,10 +217,14 @@ const { ViewModel, Template, Channel } = Qute;
 
 @Template(ChildOneTemplate)
 class ChildOne extends ViewModel {
-    @Channel
-    onMessage(message, data) {
-        if (message === 'color') this.$el.style.color = data;
-    }
+	connected() {
+		this._subscribtion = this.$app.subscribe('child1-channel', (message, data) => {
+			if (message === 'color') this.$el.style.color = data;
+		});
+	}
+	disconnected() {
+		this.$app.unsubscribe('child1-channel', this._subscribtion);
+	}
 }
 
 // we use Qute() to wraqp the template to create a empoty ViewModel
@@ -254,4 +256,3 @@ var app = new Qute.Application();
 new Root1(app).mount('app1');
 new Root2(app).mount('app2');
 ```
-

@@ -2,7 +2,7 @@
 
 The popup component display a popup element that can be positioned relative to a **target** element.
 
-To open a popup yuou need to get the the instance of the popup component to call the corresponding method. To get the instance of a popup you can use the **[q:ref](#/attributes/q-ref)** attribute to inject the instance in a parent component property. 
+To open a popup yuou need to get the the instance of the popup component to call the corresponding method. To get the instance of a popup you can use the **[q:ref](#/attributes/q-ref)** attribute to inject the instance in a parent component property.
 
 Another way to open a popup is to use the `id` attribute on the popup component to bind the popup component to a unique id, then on the popup trigger element you can use the `q:popup-trigger` attribute to identify open / close the popup on click. The `q:popup-trigger` takes the popup id as value:
 
