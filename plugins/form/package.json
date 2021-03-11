@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/form",
-  "version": "2.0.0-beta.6",
+  "version": "2.0.0-beta.7",
   "description": "Qute Form helpers",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
@@ -31,11 +31,11 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/runtime": "2.0.0-beta.6",
-    "@qutejs/window": "2.0.0-beta.6"
+    "@qutejs/runtime": "2.0.0-beta.7",
+    "@qutejs/window": "2.0.0-beta.7"
   },
   "devDependencies": {
-    "@qutejs/rollup-plugin-qute": "2.0.0-beta.6"
+    "@qutejs/rollup-plugin-qute": "2.0.0-beta.7"
   },
   "build": {
     "config": "component",
