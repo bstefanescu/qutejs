@@ -111,9 +111,9 @@ DecoratedClass.prototype = {
                     }
                 }
             })
-            if (vmprops.length) this.transpileVMProps(ms, vmprops, unit);
-            if (fields.length) this.transpileFields(ms, fields, unit);
             if (staticFields.length) this.transpileStaticFields(ms, staticFields, unit);
+            if (fields.length) this.transpileFields(ms, fields, unit);
+            if (vmprops.length) this.transpileVMProps(ms, vmprops, unit);
         }
         if (this.methods) {
             this.transpileMethods(ms, this.methods, unit);
