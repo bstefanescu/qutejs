@@ -128,7 +128,7 @@ Application.prototype = {
 		return this.components[key];
 	},
 	publish(key, value) {
-		if (key in this.components) console.warning('A component was already register as "', key, '"');
+		if (key in this.components) console.warning('A component was already registered as "', key, '"');
 		this.components[key] = value;
 	},
 	post(topic, msg, data) {

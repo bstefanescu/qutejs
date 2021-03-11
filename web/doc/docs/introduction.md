@@ -22,7 +22,7 @@ It's time to adopt the **green programming**!
 Some quick facts:
 
 * Small and fast **MVVM** framework for building modern javascript applications or UI components.  \
-About **9K** gzipped.
+About **10K** gzipped.
 * Resource friendly: No Virtual DOM. It's **green software**!
 * Friendly and concise API: uses JavaScript **[classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)** and **[decorators](https://github.com/tc39/proposal-decorators)** to define components.
 * **Quickly design components** using the playground.
@@ -64,4 +64,3 @@ class MyButton extends ViewModel {
 ```
 
 Want more? Go to **[Overview](#/overview)** section!
-
