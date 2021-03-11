@@ -1,5 +1,5 @@
 import window, {document} from '@qutejs/window';
-// we don't use vars to store computed values like the transitionend event or 
+// we don't use vars to store computed values like the transitionend event or
 // to ensure the rollup tree-shaking is correctly working (otherwise it may include code that is not needed)
 // because of the additional side effects
 // see https://github.com/rollup/rollup/wiki/Troubleshooting#tree-shaking-doesnt-seem-to-be-working
@@ -32,7 +32,7 @@ function whichTransitionend() {
 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         // handle the first transition end event on the given element.
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         // After the event is handled the handler is unregistered.
-function onTransitionEnd(elt, handler) {
+function onTransitionEnd(elt, handler, timeout) {
     var transitionEndEvent = whichTransitionend();
     if (transitionEndEvent) {
         var _handler = function(e) {
@@ -43,7 +43,9 @@ function onTransitionEnd(elt, handler) {
             }
         }
         elt.addEventListener(transitionEndEvent, _handler);
-    }    
+    } else {
+        window.setTimeout(handler, timeout || 20);
+    }
 }
 
 // will run the code in the next repaint
