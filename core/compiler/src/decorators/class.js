@@ -205,7 +205,11 @@ DecoratedClass.prototype = {
             // create the ctor
             let classBody = this.node.body;
             let offset = classBody.start+1; // skip \\ {
-            ms.appendLeft(offset, `\n${tab}constructor(...args) {\n${tab}${tab}super(...args);\n\n${tab}${tab}${stmts.join(tab+tab)}${tab}}` )
+            if (this.superClass) {
+                ms.appendLeft(offset, `\n${tab}constructor(...args) {\n${tab}${tab}super(...args);\n\n${tab}${tab}${stmts.join(tab+tab)}${tab}}` )
+            } else { // no super class - generate a default ctor
+                ms.appendLeft(offset, `\n${tab}constructor() {\n${tab}${tab}${stmts.join(tab+tab)}${tab}}` )
+            }
         }
     },
 
