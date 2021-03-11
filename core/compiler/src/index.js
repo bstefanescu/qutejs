@@ -244,6 +244,8 @@ function _directives(directives, ctx) { // apply custom directives
         const attr = directives[i];
         if (attr.name === 'q:call') {
             out.push('null', _cb(attr.value, ctx));
+		} else if (attr.name === 'q:id') {
+			out.push('"id"', _s(attr.value));
         } else {
             out.push(kebabToCompName(attr.name));
             let val;

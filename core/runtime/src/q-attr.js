@@ -5,8 +5,11 @@ export function applyUserDirectives(rendering, xattrs, el, comp) {
     for (let i=0,l=directives.length; i<l; i+=2) {
         const userDir = directives[i];
         const val = directives[i+1];
-        if (!userDir) { // an q:call
+        if (!userDir) { // a q:call
             xcall = val;
+        } else if (userDir === 'id') { // a q:id
+            rendering.app.publish(val, comp || el);
+            return null;
         } else {
             const fn = userDir.call(rendering, xattrs, val, el, comp);
 			if (fn) fns.push(fn);
@@ -19,4 +22,3 @@ export function applyUserDirectives(rendering, xattrs, el, comp) {
 		}
 	}
 }
-
