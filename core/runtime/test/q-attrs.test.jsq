@@ -20,7 +20,7 @@ const { Template, ViewModel, Property } = Qute;
 
 <q:template name='FuncComp'>
     <div q:attrs='class'>
-        A <a q:attrs='!class'>functional</a> component
+        A <a q:attrs='!class'>template</a> component
     </div>
 </q:template>
 
@@ -73,7 +73,7 @@ describe('q:attrs attribute', function() {
 
 	context('q:attrs works in DOM elements', function() {
 		var test = mountTest(TestFnRoot);
-		it('functional component is injecting q:attrs to nested elements', function() {
+		it('template component is injecting q:attrs to nested elements', function() {
 			assert.equal(test.querySelectorAll('.the_class').length, 2);
 			assert.equal(test.querySelectorAll('.the_changed_class').length, 0);
 			snapshot('q-attrs-dom', test.innerHTML);
@@ -93,10 +93,10 @@ describe('q:attrs attribute', function() {
 
 	});
 
-	context('q:attrs works on functional components', function() {
+	context('q:attrs works on template components', function() {
 		var test = mountTest(TestFuncComp);
 
-		it('functional component is injecting q:attrs to nested elements', function() {
+		it('template component is injecting q:attrs to nested elements', function() {
 			assert.equal(test.querySelectorAll('.the_class').length, 1);
 			assert.equal(test.querySelectorAll('.the_changed_class').length, 0);
 			snapshot('q-attrs-func', test.innerHTML);

@@ -1,5 +1,5 @@
 /*
-functional components
+template components
 */
 
 import Emitter from './emit.js';
@@ -81,7 +81,7 @@ FunComp.prototype = {
 					attrs[key] = val;
 				} else if (key === '$attrs') {
 					if (model.$attrs) {
-						// inject attributes in functional tags
+						// inject attributes in template tags
 						// we need to create an update function to reinject attrs when model changes
 						// otherwise we loose the reactivity on func tags 'q:attrs' attribute
 						rendering.up(SetFuncAttrs(this, model, val))();
@@ -144,4 +144,3 @@ FunComp.prototype = {
 		return el;
 	}
 }
-

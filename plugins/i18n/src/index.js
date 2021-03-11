@@ -51,7 +51,7 @@ let INSTALLED = false;
 
 QuteIntl.prototype = {
     install() {
-        // install translation methods on ViewModel and functional component prototypes
+        // install translation methods on ViewModel and template component prototypes
         if (!INSTALLED) {
             Qute.defineMethod('t', this.t);
             INSTALLED = true;
@@ -96,4 +96,3 @@ QuteIntl.prototype = {
 }
 
 export default QuteIntl;
-

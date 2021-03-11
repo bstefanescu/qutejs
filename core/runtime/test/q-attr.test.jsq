@@ -100,7 +100,7 @@ describe('Custom Attributes', function() {
 		click(test3.querySelector('button'));
 		assert.equal(test3.$vm.clicked, 1);
 	});
-	it('works on functional components', function() {
+	it('works on template components', function() {
 		var test5 = mountTest(TestFn);
 		assert.equal(test5.getElementsByTagName('span')[0].style.color, 'cyan');
 	});

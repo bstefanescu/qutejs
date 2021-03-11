@@ -8,7 +8,7 @@ import {applyUserDirectives} from './q-attr.js';
 import ListFragment from './list-fragment.js';
 import SwitchFragment from './switch-fragment.js';
 import ForFragment from './for-fragment.js';
-import FunComp from './func.js';
+import Template from './template.js';
 
 // q:attrs values are already evaluated - so the injected values are liiterals
 function SetDOMAttrs(el, model, filter) {
@@ -190,7 +190,7 @@ var RenderingProto = {
 			var vm = new XTag(this.model.$app);
 			return vm.$create(this, xattrs, slots);
 		} else if (XTag.$compiled) { // a compiled template
-			return new FunComp().render(this, XTag, xattrs, slots);
+			return new Template().render(this, XTag, xattrs, slots);
         } else { // a hand written function or a lazy component
 			return XTag(this, xattrs, slots);
         }
@@ -324,7 +324,7 @@ var RenderingProto = {
 		return new Rendering(this, model || this.model);
 	},
 
-	// get the closest VM in current rendering, ignore renderings which are not bound to ViewModel objects (functional compjents etc)
+	// get the closest VM in current rendering, ignore renderings which are not bound to ViewModel objects (template components etc)
 	closestVM: function() {
 		var r = this;
 		do {
@@ -374,7 +374,8 @@ function Rendering(parent, model) {
 }
 Rendering.prototype = RenderingProto;
 
-Rendering.FunComp = FunComp;
+// a template component
+Rendering.Template = Template;
 // make the bindings visible to component implementors
 // add more bindigns here if needed
 Rendering.SetAttr = SetAttr;

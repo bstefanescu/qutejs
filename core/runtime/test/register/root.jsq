@@ -7,7 +7,7 @@ import JsItem from './js-item.js';
 <q:template name='RootTemplate'>
 	<ul>
 		<vm-item text='ViewModel' href='#vm'/>
-		<fn-item text='Functional' href='#functional'/>
+		<fn-item text='Template' href='#template'/>
 		<js-item text='Javascript' href='#js'/>
 	</ul>
 </q:template>
