@@ -88,32 +88,30 @@ DecoratedClass.prototype = {
         this.methods.push(method);
     },
     transpile(ms, unit) {
-        if (this.decorators) {
-            this.decorators.forEach(deco => this.transpileDecorator(ms, deco, unit));
-        }
         if (this.fields) {
-            var vmprops = [];
-            var fields = [];
-            var staticFields = [];
+            let req = []; // required props
             this.fields.forEach(field => {
                 if (field.static) {
                     if (field.decorators && field.decorators.length > 0) {
                         throw new Error('Decorators are not supported on static fields: '+ms.original.substring(field.start, field.end));
                     }
-                    staticFields.push(field);
+                    transpileStaticField(ms, field, unit);
                 } else {
                     const meta = unit.getPropMeta(field);
                     if (meta) meta.checkSuperClass(this);
                     if (meta && meta.vmProp) {
-                        vmprops.push(field);
+                        this.transpileVMProp(ms, field, unit, req);
                     } else {
-                        fields.push(field);
+                        this.transpileField(ms, field, unit);
                     }
                 }
-            })
-            if (staticFields.length) this.transpileStaticFields(ms, staticFields, unit);
-            if (fields.length) this.transpileFields(ms, fields, unit);
-            if (vmprops.length) this.transpileVMProps(ms, vmprops, unit);
+            });
+            if (req.length > 0) {
+                this.appendCode(this.name+'.prototype.$require = '+JSON.stringify(req)+';');
+            }
+        }
+        if (this.decorators) {
+            this.decorators.forEach(deco => this.transpileDecorator(ms, deco, unit));
         }
         if (this.methods) {
             this.transpileMethods(ms, this.methods, unit);
@@ -221,68 +219,56 @@ DecoratedClass.prototype = {
       otherwise fields are moved inside the constructor just after super() if opne exists
       otherwise at the begining of the ctor
     */
-    transpileFields(ms, fields, unit) {
+
+    transpileField(ms, field, unit) {
         const text = ms.original;
         const initFields = this.ctorStmts;
-        fields.forEach(field => {
-            const key = field.key.name;
-            let value = 'void(0)';
-            if (field.value) {
-                value = text.substring(field.value.start, field.value.end);
-            }
-            if (!field.decorators.length) {
-                // we define the field if no decorators are present
-                // kif the field is starting with _ we set enumerable to false
-                if (key[0] === '_') {
-                    initFields.push(`Object.defineProperty(this, "${key}", {value: ${value}, writable:true});\n`);
-                } else {
-                    initFields.push(`this.${key} = ${value};\n`);
-                }
+        const key = field.key.name;
+        let value = 'void(0)';
+        if (field.value) {
+            value = text.substring(field.value.start, field.value.end);
+        }
+        if (!field.decorators.length) {
+            // we define the field if no decorators are present
+            // kif the field is starting with _ we set enumerable to false
+            if (key[0] === '_') {
+                initFields.push(`Object.defineProperty(this, "${key}", {value: ${value}, writable:true});\n`);
             } else {
-                field.decorators.forEach(decorator => {
-                    let decoratorCall = text.substring(decorator.start+1, decorator.end); // we removed the leading @
-                    initFields.push(decoratorCall+`(this, "${key}", ${value});\n`);
-                    unit.removeDecorator(ms, decorator);
-                });
+                initFields.push(`this.${key} = ${value};\n`);
             }
-            unit.removeField(ms, field);
-        });
-    },
-    transpileStaticFields(ms, fields, unit) {
-        const text = ms.original;
-        fields.forEach(field => {
-            const key = field.key.name;
-            let value = 'void(0)';
-            if (field.value) {
-                value = text.substring(field.value.start, field.value.end);
-            }
-            this.appendCode(`${this.name}.${key} = ${value};`);
-            unit.removeField(ms, field);
-        });
-    },
-    transpileVMProps(ms, fields, unit) {
-        const text = ms.original;
-        const initFields = this.ctorStmts;
-        let req = [];
-        fields.forEach(field => {
-            field.__qute_meta.checkSuperClass(this);
-
-            initFields.push(getDefinePropCall(text, field, field.__qute_deco));
-
-            if (field.__qute_required) {
-                req.push(field.key.name);
-            }
+        } else {
             field.decorators.forEach(decorator => {
+                let decoratorCall = text.substring(decorator.start+1, decorator.end); // we removed the leading @
+                initFields.push(decoratorCall+`(this, "${key}", ${value});\n`);
                 unit.removeDecorator(ms, decorator);
             });
-            unit.removeField(ms, field);
-        });
-
-        // var tab = '    ';
-        // this.appendCode(this.name+'.prototype.$props = () => ({\n'+tab+props.join(',\n'+tab)+'\n});');
-        if (req.length > 0) {
-            this.appendCode(this.name+'.prototype.$require = '+JSON.stringify(req)+';');
         }
+        unit.removeField(ms, field);
+    },
+    transpileStaticField(ms, field, unit) {
+        const text = ms.original;
+        const key = field.key.name;
+        let value = 'void(0)';
+        if (field.value) {
+            value = text.substring(field.value.start, field.value.end);
+        }
+        this.appendCode(`${this.name}.${key} = ${value};`);
+        unit.removeField(ms, field);
+    },
+    transpileVMProp(ms, field, unit, req) {
+        const text = ms.original;
+        const initFields = this.ctorStmts;
+        field.__qute_meta.checkSuperClass(this);
+
+        initFields.push(getDefinePropCall(text, field, field.__qute_deco));
+
+        if (field.__qute_required) {
+            req.push(field.key.name);
+        }
+        field.decorators.forEach(decorator => {
+            unit.removeDecorator(ms, decorator);
+        });
+        unit.removeField(ms, field);
     }
 
 };
