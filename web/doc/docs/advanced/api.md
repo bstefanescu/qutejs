@@ -16,7 +16,6 @@ Here is a list of all the methods and objects exposed by the `Qute` global objec
 + `View` - a class decorator. Can only be used on `Qute.Application` derived classes.
 + `On` - a class method decorator. Can only be used inside ViewModel dervied classes.
 + `Watch` - a class method decorator. Can only be used inside ViewModel derived classes.
-+ `Channel` - a class method decorator. Can only be used inside ViewModel derived classes.
 + `Property` - a class field decorator. Can only be used inside ViewModel derived classes.
 + `Required` - a class field decorator. Can only be used inside ViewModel derived classes.
 + `Link` - a class field decorator. Can only be used inside ViewModel derived classes or inside classes having a `app` field which points to the current Qute Application (like Qute.Service derived classes).
@@ -36,6 +35,10 @@ Register a callback to be invoked after all the tasks in the update queue are ru
 Because the updates are run asynchronously you cannot know when the update job related to a reactive property change is done. Using this function you can be notified after the current update is done.
 
 This is usefull when writing tests, to make assertions after the DOM changed in response to model change.
+
+### `Qute.get(element)`
+
+Get the component instance corresponding to the given DOM element if any. If the given element is not the root of a component subtree then returns `undefined`.
 
 ### `Qute.render(renderFn, dataModel)`
 

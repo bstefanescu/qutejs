@@ -262,8 +262,13 @@ ViewModel.prototype = {
 		this.$el.parentNode.removeChild(this.$el);
 		this.$el = null;
 	},
+	debugUpdate(debug) {
+		this.$upcnt = debug ? 0 : -1;
+	},
 	$update: function() {
 		if (this.$r) { // TODO only if connected
+			// notify app debugger if any
+			this.$app.debugger && this.$app.debugger('update', this);
 			this.$r.update();
             //TODO fire an update event?
 		}

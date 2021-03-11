@@ -167,12 +167,6 @@ A method decorator which install a DOM event handler given and event name and an
 
 See the **[Working with DOM Events](#/model/events)** section for more details.
 
-#### `@Channel`
-
-A method decorator which defines a message handler for inter-component messaging.
-
-See the **[Messaging](#/model/messaging)** section for more details.
-
 #### `@Property([PropertyType])`
 
 A class field decorator used to define reactive properties. Accepts an optional property type object.
@@ -453,4 +447,3 @@ class MyComponent extends ViewModel {
 
 new MyComponent().mount('app');
 ```
-
