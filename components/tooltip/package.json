@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/tooltip",
-  "version": "2.0.0-beta.7",
+  "version": "2.0.0-beta.8",
   "description": "Qute Tooltip component",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
@@ -27,12 +27,12 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/runtime": "2.0.0-beta.7",
-    "@qutejs/popup": "2.0.0-beta.7",
-    "@qutejs/window": "2.0.0-beta.7"
+    "@qutejs/runtime": "2.0.0-beta.8",
+    "@qutejs/popup": "2.0.0-beta.8",
+    "@qutejs/window": "2.0.0-beta.8"
   },
   "devDependencies": {
-    "@qutejs/rollup-plugin-qute": "2.0.0-beta.7"
+    "@qutejs/rollup-plugin-qute": "2.0.0-beta.8"
   },
   "build": {
     "config": "component",

@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/router",
-  "version": "2.0.0-beta.7",
+  "version": "2.0.0-beta.8",
   "description": "Qute Router",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
@@ -34,7 +34,7 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/window": "2.0.0-beta.7"
+    "@qutejs/window": "2.0.0-beta.8"
   },
   "build": {
     "config": "weblib"
