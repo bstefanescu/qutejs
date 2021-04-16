@@ -1,4 +1,5 @@
 import Router from './router.js';
+import {expandVars} from "./utils.js";
 
 function QuteRouter(quteApp, bindings) {
     Router.call(this, bindings);

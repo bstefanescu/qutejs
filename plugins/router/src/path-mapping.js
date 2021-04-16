@@ -1,7 +1,7 @@
 import {absPath} from "./utils.js";
 
 
-var VARS_RX = /<([^>:]*)(?:\:([^>]*))?>/;
+var PATH_VARS_RX = /<([^>:]*)(?:\:([^>]*))?>/;
 
 function RxMatcher(rx, vars) {
 	return function(segment, params) {
@@ -54,7 +54,7 @@ function PathBinding(pattern, value) {
 		var i = path.indexOf('<');
 		if (i === -1) return TextMatcher(path);
 
-		var m = VARS_RX.exec(path);
+		var m = PATH_VARS_RX.exec(path);
 
 		if (!m) return TextMatcher(path);
 
@@ -87,7 +87,7 @@ function PathBinding(pattern, value) {
 			vars.push({name: m[1].trim(), mod: mod});
 			out += prefix ? prefix+rx : rx;
 			path = path.substring(nextIndex);
-			m = VARS_RX.exec(path);
+			m = PATH_VARS_RX.exec(path);
 		}
 		if (path.length) {
 			out += path.replace(/\.\(\)\$\^\[\]\?\*\+/g, '\\$1');
@@ -143,5 +143,3 @@ PathMapping.prototype = {
 }
 
 export default PathMapping;
-
-

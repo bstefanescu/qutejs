@@ -1,4 +1,4 @@
-import { ERR } from '@qutejs/commons/src';
+import { ERR } from '@qutejs/commons';
 import { _template, _mixin, _watch, _on, _require } from './helpers.js';
 
 /**

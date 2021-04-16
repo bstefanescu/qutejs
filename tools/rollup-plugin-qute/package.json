@@ -27,9 +27,22 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/compiler": "2.0.0-beta.7"
+    "@qutejs/compiler": "2.0.0-beta.7",
+    "autoprefixer": "^10.2.5",
+    "cssnano": "^5.0.1",
+    "magic-string": "^0.25.7",
+    "postcss": "^8.2.10",
+    "postcss-advanced-variables": "^3.0.1",
+    "postcss-extend-rule": "^3.0.0",
+    "postcss-import": "^14.0.1"
   },
   "build": {
-    "config": "lib"
+    "config": "lib",
+    "nodeDeps": [
+      "path",
+      "process",
+      "fs",
+      "os"
+    ]
   }
 }
