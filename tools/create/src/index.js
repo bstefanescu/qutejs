@@ -52,11 +52,7 @@ function installDeps(target) {
       ['-D', '@rollup/plugin-commonjs'],
       ['-D', '@rollup/plugin-node-resolve'],
       ['-D', '@rollup/plugin-buble'],
-      ['-D', '@rollup/plugin-multi-entry'], // for tests
-      ['-D', 'rollup-plugin-uglify'],
-      ['-D', 'rollup-plugin-postcss'],
-      ['-D', 'postcss-qute'],
-      ['-D', 'cssnano'],
+      ['-D', 'rollup-plugin-terser'],
       ['-D', 'rollup-plugin-koa-devserver'],
       ['-D', '@qutejs/rollup-plugin-qute'],
       // test deps

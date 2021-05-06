@@ -2,12 +2,18 @@
   "name": "%%name%%",
   "version": "%%version%%",
   "description": "%%description%%",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
-  "browser": "dist/%%name%%.js",
-  "unpkg": "dist/%%name%%.min.js",
+  "main": "dist/esm/index.js",
+  "module": "dist/esm/index.js",
+  "exports": {
+    ".": "dist/esm/index.js",
+    "./themes/*.css": "./themes/*.css",
+    "./package.json": "./package.json"
+  },
+  "browser": "dist/%%name%%-%%version%%.js",
+  "unpkg": "dist/%%name%%-%%version%%.min.js",
   "files": [
-    "dist"
+    "dist",
+    "themes"
   ],
   "scripts": {
     "start": "npx rollup -c .qute/rollup.config.js -w --environment NODE_ENV:development",
@@ -19,4 +25,3 @@
   "author": "%%author%%",
   "license": "%%license%%"
 }
-
