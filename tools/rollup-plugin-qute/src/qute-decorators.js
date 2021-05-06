@@ -9,16 +9,15 @@ export default function quteDecorators (options = {}) {
     const transpiler = new Compiler.DecoratorTranspiler(comment); // TODO use hires?
 
     return {
-        name: 'qute-decorators',
+        name: 'qutejs-decorators',
         transform (source, path) {
             if (matchExtensions(path, extensions)) {
                 const r = transpiler.transpile(source, true); // {code, map, ast}
                 if (r) {
-                    r.ast = null; // do not return the ast - it may not be compatible with rollup
+                    delete r.ast; // do not return the ast - it may not be compatible with rollup
                     return r;
                 }
             }
         }
     }
 }
-

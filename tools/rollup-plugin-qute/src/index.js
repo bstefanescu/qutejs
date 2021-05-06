@@ -1,12 +1,8 @@
-import quteDecorators from './decorators.js';
-import qute from './templates.js';
-import webBuild from './build/quteWebBuild.js';
-import nodeBuild from './build/quteNodeBuild.js';
+import qute from './qute.js';
+import quteDecorators from './qute-decorators.js';
+import quteTemplates from './qute-templates.js';
 
-//TODO we use templates plugin as the facade for backward compat - need to be fixed to use an plain object.
-qute.templates = qute;
+qute.templates = quteTemplates;
 qute.decorators = quteDecorators;
-qute.lib = nodeBuild;
-qute.web = webBuild;
 
 export default qute;

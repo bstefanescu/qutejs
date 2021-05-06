@@ -1,10 +1,10 @@
 import path from 'path';
-import process from 'process';
 import fs from 'fs';
 
-import toExternalFn from './external.js';
+import walk from 'fs-walker';
 
-import { findPackageDir } from './utils.js';
+import { findPackageDir, externalFn } from './utils.js';
+import InlineStyles from '../istyles.js';
 
 /**
  * The node build plugin is building a Qute app or component as a reusable node nmodule, that can be imported by other Qute apps or components.
@@ -15,68 +15,108 @@ import { findPackageDir } from './utils.js';
  * You can control the `./src` and `./dist` folder folder using the src and dist properties.
  * @param {*} userOpts
  */
-export default function quteNodeBuild(userOpts) {
 
-    const opts = Object.assign({
-        src: './src',
-        dist: './dist'
-    }, userOpts);
+ function makeTargetImportPath(importer, importee, srcDir, targetDir) {
+    const sourceFile = path.resolve(path.dirname(importer), importee);
+    return makeTargetPath(sourceFile, srcDir, targetDir);
+ }
 
-    //TODO use windows safe paths
-    const srcDir = path.resolve(opts.src);
-    const targetDir = path.join(path.resolve(opts.dist), 'esm');
-    const files = new Map();
+function makeTargetPath(sourceFile, srcDir, targetDir) {
+    const relPath = path.relative(srcDir, sourceFile);
+    return path.join(targetDir, relPath);
+}
 
+
+/**
+ * opts: {
+ *   src: 'src',
+ *   dist: 'dist',
+ *   external?
+ * }
+ * @param {*} opts
+ */
+export default function quteNodeBuild(opts = {}, istyles) {
+    const srcDir = path.resolve(opts.src || 'src');
+    let targetDir;
+    const external = externalFn(opts.external);
     const packageRoot = findPackageDir();
-
+    const formats = {
+        'cjs': 'cjs',
+        'es': 'esm',
+        'esm': 'esm',
+        'module': 'esm'
+    }
     return {
-        name: 'quteNodeBuild',
+        name: 'qutejs-node-build',
         options(opts) {
-            const origExternalFn = toExternalFn(opts.external);
-            const pkg = require(path.join(packageRoot, 'package.json'));
-            const deps = Object.assign(pkg.dependencies || {}, pkg.peerDependencies || {});
-            deps['@qutejs/window'] = true; // make sure this package in external (it must always be external)
             opts.external = function(id) {
-                if (id in deps || id.endsWith('.css') || id.endsWith('.pcss')) return true;
-                return origExternalFn.apply(this, arguments);
+                if (external) {
+                    // custom external function
+                    let r = external(id);
+                    if (typeof r != null) {
+                        return !!r;
+                    }
+                }
+                // files inside the packageRoot (but not in node_modules dependencies) are not external
+                if (id === '.' || id === '..' || id.startsWith('./') || id.startsWith('../')
+                    || (id.startsWith(packageRoot) && id.indexOf('/node_modules/') === -1)) {
+                    return false;
+                }
+                // all other ids are external
+                return true;
             };
             return opts;
         },
         outputOptions(opts) {
-            if (!opts.dir) {
+            let format;
+            if (!opts.format) {
+                opts.format = format = 'esm';
+            } else {
+                format = formats[opts.format];
+                if(!format) {
+                    this.error('Invalid "output.format". You should use either esm or cjs when building a Qute library')
+                }
+            }
+            if (opts.dir === 'auto') {
+                targetDir = path.join(path.resolve(opts.dist || 'dist'), format);
                 opts.dir = targetDir;
                 opts.file = void(0);
-            }
-            if (!opts.format) {
-                opts.format = 'esm';
+            } else if (opts.dir) {
+                targetDir = opts.dir;
             }
             opts.preserveModules = true;
             opts.preserveModulesRoot = path.relative(packageRoot, srcDir);
+            return opts;
         },
-        async resolveId(source, importer) {
-            // copy CSS files too when buildiing the library
+        resolveId(source, importer) {
+            // we mark all css files as external and will copy source css in generateBundle
             if (source.endsWith('.css') || source.endsWith('.pcss')) {
-                if (importer && importer.startsWith(srcDir)) {
-                    // copy only owned css files (located in src)
-                    const sourceFile = path.resolve(path.dirname(importer), source);
-                    const relPath = path.relative(srcDir, sourceFile);
-                    let targetFile = files.get(sourceFile);
-                    if (!targetFile) {
-                        targetFile = path.join(targetDir, relPath);
-                        files.set(sourceFile, targetFile);
-                        this.addWatchFile(sourceFile);
-                    }
+                if (InlineStyles.isStyleId(source)) {
+                    source = './'+source;
                 }
-                // mark it as external and use original import path
-                return {id: source, external: true};
+                return { id: source, external: true };
             }
         },
         generateBundle() {
-            files.forEach((targetFile, sourceFile) => {
-                fs.mkdirSync(path.dirname(targetFile), {recursive: true});
+            const filter = {
+                file: function(stats) {
+                  return stats.name.endsWith('.css') || stats.name.endsWith('.pcss');
+                }
+            }
+            // copy css files from src dir to dist dir
+            walk.files(srcDir, filter, stats => {
+                const sourceFile = stats.fullname;
+                const targetFile = makeTargetPath(sourceFile, srcDir, targetDir);
+                fs.mkdirSync(path.dirname(targetFile), { recursive: true }); // from node 10.12.0
                 fs.writeFileSync(targetFile, fs.readFileSync(sourceFile));
-                //console.log('### copy css', sourceFile, '=>', targetFile);
-            })
+            });
+            // extract inline styles
+            istyles && istyles.forEach(style => {
+                const targetFile = makeTargetImportPath(style.importer, style.id, srcDir, targetDir);
+                fs.mkdirSync(path.dirname(targetFile), { recursive: true }); // from node 10.12.0
+                fs.writeFileSync(targetFile, style.css);
+            });
+
         }
     }
 }
