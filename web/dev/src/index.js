@@ -14,9 +14,9 @@ import loadES6Transpiler from './buble-loader.js';
 import {document} from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import * as Importer from '@qutejs/importer';
-import injectStyle from '@qutejs/runtime/lib/inject-style.js';
 import Compiler from '@qutejs/compiler';
 import JSQLoader from './jsq-loader.js';
+import injectStyle from './inject-style.js';
 
 
 Qute.Compiler = Compiler;
