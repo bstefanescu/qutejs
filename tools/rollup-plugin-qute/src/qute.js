@@ -6,7 +6,7 @@ import quteWebBuild from './build/quteWebBuild.js';
 import quteNodeBuild from './build/quteNodeBuild.js';
 import quteTestBuild from './build/quteTestBuild.js';
 import { merge } from './sourcemap/source-map-merge.js';
-import { loadPackage, generateWebFileName } from './build/utils.js';
+import { loadPackage } from './build/utils.js';
 
 function invoke(ctx, plugin, method, args) {
     if (method in plugin) {
