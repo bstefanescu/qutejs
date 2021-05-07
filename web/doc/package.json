@@ -3,12 +3,12 @@
   "version": "2.0.0-beta.8",
   "description": "Qute Popup component",
   "private": true,
-  "main": "lib/index.cjs.js",
-  "module": "lib/index.esm.js",
-  "browser": "lib/qute-doc.js",
-  "unpkg": "lib/qute-doc.min.js",
+  "main": "dist/esm/index.js",
+  "module": "dist/esm/index.js",
+  "browser": "dist/qute-doc.js",
+  "unpkg": "dist/qute-doc.min.js",
   "files": [
-    "lib"
+    "dist"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

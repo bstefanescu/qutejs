@@ -5,10 +5,12 @@
   "author": "Bogdan Stefanescu <bogdan@quandora.com>",
   "license": "MIT",
   "description": "Polyfills required by Qute to run on IE >= 9",
-  "main": "lib/index.cjs.js",
-  "module": "lib/index.esm.js",
+  "main": "dist/esm/index.js",
+  "module": "dist/esm/index.js",
+  "browser": "dist/qute-polyfill.js",
+  "unpkg": "dist/qute-polyfill.min.js",
   "files": [
-    "lib"
+    "dist"
   ],
   "homepage": "https://qutejs.org",
   "repository": {

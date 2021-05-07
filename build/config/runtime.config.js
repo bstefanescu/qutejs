@@ -1,9 +1,9 @@
 // Qute runtime build
 
-const commonjs = require('rollup-plugin-commonjs');
-const nodeResolve = require('rollup-plugin-node-resolve');
+const commonjs = require('@rollup/plugin-commonjs');
+const nodeResolve = require('@rollup/plugin-node-resolve').nodeResolve;
 const buble = require('@rollup/plugin-buble');
-const uglify = require('rollup-plugin-uglify').uglify;
+const terser = require('rollup-plugin-terser').terser;
 
 
 module.exports = function(project, args) {
@@ -21,38 +21,23 @@ module.exports = function(project, args) {
         return {
             input: project.file(index),
             external: [ '@qutejs/window' ],
-            plugins: [
-                ...basePlugins,
-                !!prod && uglify()
-            ],
+            plugins: basePlugins,
             output: {
                 format: 'iife',
-                file: project.file(`lib/qute${ie?'-ie.':'.'}${prod?'min.js':'js'}`),
+                file: project.file(`dist/qute${ie?'-ie.':'.'}${prod?'min.js':'js'}`),
                 sourcemap: true,
                 name: 'Qute',
                 globals: {
                     '@qutejs/window': 'window'
                 },
+                plugins: [
+                    !!prod && terser()
+                ]
             }
         }
     }
 
     return [
-        {
-            input: project.file('src/entries/inject-style.js'),
-            plugins: basePlugins,
-            output: [
-                {
-                    format: 'esm',
-                    file: project.file('lib/inject-style.js'),
-                },
-                {
-                    format: 'cjs',
-                    file: project.file('lib/inject-style.cjs'),
-                    sourcemap: true
-                }
-            ]
-        },
         {
             input: project.file('src/index.js'),
             external: project.runtimeDeps,
@@ -60,13 +45,15 @@ module.exports = function(project, args) {
             output: [
                 {
                     format: 'esm',
-                    file: project.file('lib/index.esm.js'),
+                    file: project.file('dist/esm/index.js'),
                     sourcemap: true
                 },
+                // TODO we don't want to generate a cjs version ?
                 {
                     format: 'cjs',
-                    file: project.file('lib/index.cjs.js'),
-                    sourcemap: true
+                    file: project.file('dist/cjs/index.js'),
+                    sourcemap: true,
+                    exports: 'auto'
                 }
             ]
         },

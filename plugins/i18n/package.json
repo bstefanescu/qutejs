@@ -2,12 +2,12 @@
   "name": "@qutejs/i18n",
   "version": "2.0.0-beta.8",
   "description": "Qute internationalization plugin based on polyglot",
-  "main": "lib/index.cjs.js",
-  "module": "lib/index.esm.js",
-  "browser": "lib/qute-i18n.js",
-  "unpkg": "lib/qute-i18n.min.js",
+  "main": "dist/esm/index.js",
+  "module": "dist/esm/index.js",
+  "browser": "dist/qute-i18n.js",
+  "unpkg": "dist/qute-i18n.min.js",
   "files": [
-    "lib"
+    "dist"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

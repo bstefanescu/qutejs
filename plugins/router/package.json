@@ -2,12 +2,12 @@
   "name": "@qutejs/router",
   "version": "2.0.0-beta.8",
   "description": "Qute Router",
-  "main": "lib/index.cjs.js",
-  "module": "lib/index.esm.js",
-  "browser": "lib/qute-router.js",
-  "unpkg": "lib/qute-router.min.js",
+  "main": "dist/esm/index.js",
+  "module": "dist/esm/index.js",
+  "browser": "dist/qute-router.js",
+  "unpkg": "dist/qute-router.min.js",
   "files": [
-    "lib"
+    "dist"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -1,9 +1,9 @@
 const fs = require('fs');
 
-const commonjs = require('rollup-plugin-commonjs');
-const nodeResolve = require('rollup-plugin-node-resolve');
+const commonjs = require('@rollup/plugin-commonjs');
+const nodeResolve = require('@rollup/plugin-node-resolve').nodeResolve;
 const buble = require('@rollup/plugin-buble');
-const uglify = require('rollup-plugin-uglify').uglify;
+const terser = require('rollup-plugin-terser').terser;
 
 module.exports = function(project, args) {
     const PROD = args.indexOf('prod') > -1;
@@ -26,19 +26,19 @@ module.exports = function(project, args) {
         return {
             input: input,
             external: [ '@qutejs/window', ... external ],
-            plugins: [
-                ...basePlugins,
-                !!prod && uglify()
-            ],
+            plugins: basePlugins,
             output: {
                 format: 'iife',
-                file: project.file(`lib/${webFileName}.${prod?'min.js':'js'}`),
+                file: project.file(`dist/${webFileName}.${prod?'min.js':'js'}`),
                 sourcemap: true,
                 name: project.pascalCaseName.replace('Qutejs', 'Qute'),
                 globals: {
                     '@qutejs/window': 'window',
                     ... globals
-                }
+                },
+                plugins: [
+                    !!prod && terser()
+                ]
             }
         }
     }
@@ -51,14 +51,16 @@ module.exports = function(project, args) {
             output: [
                 {
                     format: 'esm',
-                    file: project.file('lib/index.esm.js'),
+                    file: project.file('dist/esm/index.js'),
                     sourcemap: true
                 },
+                /* we don't need a cjs version
                 {
                     format: 'cjs',
-                    file: project.file('lib/index.cjs.js'),
+                    file: project.file('dist/cjs/index.js'),
                     sourcemap: true
                 }
+                */
             ]
         },
         webConfig(false),

@@ -2,12 +2,12 @@
   "name": "@qutejs/runtime",
   "version": "2.0.0-beta.8",
   "description": "Qute runtime",
-  "main": "lib/index.cjs.js",
-  "module": "lib/index.esm.js",
-  "browser": "lib/qute.js",
-  "unpkg": "lib/qute.min.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "browser": "dist/qute.js",
+  "unpkg": "dist/qute.min.js",
   "files": [
-    "lib"
+    "dist"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

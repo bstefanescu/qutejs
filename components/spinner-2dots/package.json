@@ -2,12 +2,12 @@
   "name": "@qutejs/spinner-2dots",
   "version": "2.0.0-beta.8",
   "description": "Qute Spinner 2dots implementation",
-  "main": "lib/index.cjs.js",
-  "module": "lib/index.esm.js",
-  "browser": "lib/qute-spinner-2dots.js",
-  "unpkg": "lib/qute-spinner-2dots.min.js",
+  "main": "dist/esm/index.js",
+  "module": "dist/esm/index.js",
+  "browser": "dist/qute-spinner-2dots.js",
+  "unpkg": "dist/qute-spinner-2dots.min.js",
   "files": [
-    "lib"
+    "dist"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

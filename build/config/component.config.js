@@ -1,10 +1,11 @@
 const replace = require('@rollup/plugin-replace');
-const commonjs = require('rollup-plugin-commonjs');
-const nodeResolve = require('rollup-plugin-node-resolve');
+const commonjs = require('@rollup/plugin-commonjs');
+const nodeResolve = require('@rollup/plugin-node-resolve').nodeResolve;
 const buble = require('@rollup/plugin-buble');
-const uglify = require('rollup-plugin-uglify').uglify;
+const terser = require('rollup-plugin-terser').terser;
 
 //NOTE: replace and external are only used by i18n
+//TODO: remove globals, external
 
 module.exports = function(project, args) {
     const PROD = args.indexOf('prod') > -1;
@@ -16,48 +17,48 @@ module.exports = function(project, args) {
     // var inputWeb = project.config.webInput ? project.file(project.config.webInput) : input;
     var webFileName = project.kebabCaseName.replace('qutejs-', 'qute-');
 
-    // we need to avoid requiring qute in global section for projects that don't depend on rollup-plugin-qute
-    // since after a clean the rollup-plugin-qute link is removed from node_modules
-    // instead we load qute and postcss only if needed - see hasJSQ below
-    const postcss = require('rollup-plugin-postcss');
     const qute = require('@qutejs/rollup-plugin-qute');
 
-    const basePlugins = [
-        replace({ 'process.env.NODE_ENV': '"production"' }), // used by polyglot
-        nodeResolve( {preferBuiltins: true} ),
-        commonjs({
-            include: ['**/node_modules/**', 'node_modules/**']
-        }),
-        postcss({
-            inject: qute.injectStyle,
-            plugins: [require('cssnano')()]
-        }),
-        qute(),
-        qute.decorators(),
-        buble({
-            exclude: ["node_modules/**", "**/node_modules/**"],
-            include: ["**/*.js", "**/*.jsq"]
-        })
-    ];
+    function basePlugins(quteConfig = {}) {
+        if (quteConfig.web) {
+            quteConfig.type = 'component';
+        }
+        return [
+            replace({
+                values: {'process.env.NODE_ENV': '"production"'},
+                preventAssignment: true
+            }), // used by polyglot
+            qute(quteConfig),
+            nodeResolve( {preferBuiltins: true} ),
+            commonjs({
+                include: ['**/node_modules/**', 'node_modules/**']
+            }),
+            quteConfig.web && buble({
+                objectAssign: 'Object.assign',
+                //exclude: ["node_modules/**", "**/node_modules/**"],
+                include: ["**/*.js", "**/*.jsq"]
+            })
+        ];
+    }
 
     function webConfig(prod) {
         return {
             input: inputWeb,
             external: external,
-            plugins: [
-                ...basePlugins,
-                prod && uglify()
-            ],
+            plugins: basePlugins({web:true}),
             output: {
                 format: 'iife',
-                file: project.file(`lib/${webFileName}.${prod?'min.js':'js'}`),
+                file: project.file(`dist/${webFileName}.${prod?'min.js':'js'}`),
                 sourcemap: true,
                 name: project.pascalCaseName.replace('Qutejs', 'Qute'),
                 globals: {
                     '@qutejs/window': 'window',
                     '@qutejs/runtime': 'Qute',
                     ... globals
-                }
+                },
+                plugins: [
+                    prod && terser()
+                ]
             }
         }
     }
@@ -66,22 +67,14 @@ module.exports = function(project, args) {
         {
             input: input,
             external: external,
-            plugins: basePlugins,
-            output: [
-                {
-                    format: 'esm',
-                    file: project.file('lib/index.esm.js'),
-                    sourcemap: true
-                },
-                {
-                    format: 'cjs',
-                    file: project.file('lib/index.cjs.js'),
-                    sourcemap: true
-                }
-            ]
+            plugins: basePlugins(),
+            output: {
+                format: 'esm',
+                dir: project.file('dist/esm'),
+                sourcemap: true
+            }
         },
         webConfig(false),
         PROD && webConfig(true)
     ];
 }
-

@@ -1,7 +1,7 @@
-const commonjs = require('rollup-plugin-commonjs');
-const nodeResolve = require('rollup-plugin-node-resolve');
+const commonjs = require('@rollup/plugin-commonjs');
+const nodeResolve = require('@rollup/plugin-node-resolve').nodeResolve;
 const buble = require('@rollup/plugin-buble');
-const uglify = require('rollup-plugin-uglify').uglify;
+const terser = require('rollup-plugin-terser').terser;
 
 
 module.exports = function(project, args) {
@@ -26,18 +26,18 @@ module.exports = function(project, args) {
         return {
             input: project.file(index),
             external: [ '@qutejs/window' ],
-            plugins: [
-                ...basePlugins,
-                !!prod && uglify()
-            ],
+            plugins: basePlugins,
             output: {
                 format: 'iife',
-                file: project.file(`lib/${libName}.${prod?'min.js':'js'}`),
+                file: project.file(`dist/${libName}.${prod?'min.js':'js'}`),
                 sourcemap: true,
                 name: 'Qute',
                 globals: {
                     '@qutejs/window': 'window'
                 },
+                plugins: [
+                    !!prod && terser()
+                ]
             }
         }
     }

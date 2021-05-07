@@ -2,10 +2,10 @@
   "name": "@qutejs/dev",
   "version": "2.0.0-beta.8",
   "description": "Qute Development runtime",
-  "browser": "lib/qute-dev.js",
-  "unpkg": "lib/qute-dev.js",
+  "browser": "dist/qute-dev.js",
+  "unpkg": "dist/qute-dev.min.js",
   "files": [
-    "lib"
+    "dist"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
