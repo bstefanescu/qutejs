@@ -145,6 +145,10 @@ function _removeUnorderedMappings(mappings) {
  * @param {*} c1
  */
 function __mergeMappings(source, c0, c1, preserveUnorderedOriginals) {
+    if (!source) {
+        throw new Error('mapping source cannot be empty');
+    }
+
     const gen = new SourceMapGenerator({
         file: source
     });

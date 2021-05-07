@@ -31,6 +31,14 @@ function transformChain(ctx, plugins, code, id) {
         if (plugin) { // allow null plugins
             let r = transformHook(ctx, plugin, code, id);
             if (r) {
+                if (!r.file) {
+                    // the file must be set otherwise merge will fail (mozilla sourcemap will not validate the mapping)
+                    r.file = id;
+                }
+                if (r.map && ! r.map.file) {
+                    // the file must be set otherwise merge will fail (mozilla sourcemap will not validate the mapping)
+                    r.map.file = id;
+                }
                 if (!result) {
                     result = r;
                 } else {

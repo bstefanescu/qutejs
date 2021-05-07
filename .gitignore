@@ -6,12 +6,19 @@ tmp/
 
 # ignore build output
 core/*/lib/
+core/*/dist/
 components/*/lib/
+components/*/dist/
 plugins/*/lib/
+plugins/*/dist/
 tools/*/lib/
+tools/*/dist/
 web/polyfill/lib/
+web/polyfill/dist/
 web/dev/lib/
+web/dev/dist/
 web/doc/lib/
+web/doc/dist/
 web/dist/
 
 ### OSX ###
@@ -92,4 +99,3 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 yarn.lock
-

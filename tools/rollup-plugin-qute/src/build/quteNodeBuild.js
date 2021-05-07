@@ -36,10 +36,10 @@ function makeTargetPath(sourceFile, srcDir, targetDir) {
  * @param {*} opts
  */
 export default function quteNodeBuild(opts = {}, istyles) {
+    const packageRoot = findPackageDir();
     const srcDir = path.resolve(opts.src || 'src');
     let targetDir;
     const external = externalFn(opts.external);
-    const packageRoot = findPackageDir();
     const formats = {
         'cjs': 'cjs',
         'es': 'esm',

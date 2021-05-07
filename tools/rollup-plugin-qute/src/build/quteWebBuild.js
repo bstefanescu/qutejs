@@ -117,6 +117,14 @@ function generateCssFileName(jsFile, minimize, chunkName) {
     return base +(minimize ? '.min.css' : '.css');
 }
 
+function getDefaultThemePackages(pkg) {
+    if ((pkg.dependencies && '@qutejs/material' in pkg.dependencies)
+        || (pkg.peerDependencies && '@qutejs/material' in pkg.peerDependencies)) {
+        return ['@qutejs/material'];
+    }
+    return [];
+}
+
 /**
  * userOpts: {
  *   src: 'src', // the source directory
@@ -173,8 +181,6 @@ export default function quteWebBuild(userOpts, webOpts, istyles) {
         forceTreeshake = new Set(forceTreeshake);
     }
 
-    const themePackages = webOpts.theme.packages || ['@qutejs/material'];
-
     let cssInject = userCssOpts.inject;
     const cssExtract = userCssOpts.extract;
     if (!cssInject && !cssExtract) {
@@ -182,7 +188,7 @@ export default function quteWebBuild(userOpts, webOpts, istyles) {
     }
 
     const themeName = webOpts.theme.name || 'default';
-    const themeResolver = new ThemeResolver(packageRoot, themePackages);
+    const themeResolver = new ThemeResolver(packageRoot, webOpts.theme.packages || getDefaultThemePackages(pkg));
 
     const resolveTheme = (id, basedir, importOptions) => {
         if (id === '%theme') {
