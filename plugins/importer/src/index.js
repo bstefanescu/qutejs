@@ -1,4 +1,4 @@
-import window, { document } from '@qutejs/window';
+import window from '@qutejs/window';
 
 /**
  * Imports remote scripts.
@@ -56,6 +56,7 @@ function insertScript(url, exportName, onload, onerror) {
     if (url in insertedUrls) {
         onload && onload(insertedUrls[url]);
     } else {
+        let document = window.document;
         var script = document.createElement('script');
         script.setAttribute('src', url);
         script.onload = function() {
@@ -170,6 +171,7 @@ function _deleteNodes(from, to) {
 function LazyComponent(location, exportName) {
     // return a render function that will inject the component when loaded
     return function renderLazyComponent(r, xattrs, slots) {
+        let document = window.document;
         var frag = document.createDocumentFragment();
         var start = document.createComment('[lazy '+location+']');
         var end = document.createComment('[/lazy '+location+']');
@@ -211,5 +213,3 @@ export {
     setImporterOptions,
     LazyComponent
 }
-
-

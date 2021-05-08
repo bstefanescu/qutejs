@@ -6,12 +6,6 @@ This package provides an abstraction for the browser window global. Any time you
 import window from '@qutejs/window';
 ```
 
-You can also import other globals (that are properties of the window object):
-
-```
-import {document} from '@qutejs/window';
-```
-
 The package is meant to be used by Qute components.
 
 **[Qute](https://qutejs.org)** is a **reactive component model** designed for **plain old javascript** lovers.
@@ -41,7 +35,7 @@ npm install @qutejs/window
 # Usage
 
 ```
-import window, {document} from '@qutejs/window';
+import window from '@qutejs/window';
 ```
 
 # Building
@@ -56,4 +50,3 @@ See [github](https://github.com/bstefanescu/qutejs).
 # License
 
 [MIT](LICENSE)
-

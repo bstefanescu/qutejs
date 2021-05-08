@@ -1,4 +1,4 @@
-import {document} from '@qutejs/window';
+import window from '@qutejs/window';
 import {kebabToCamel, ERR } from '@qutejs/commons';
 import { stopEvent, filterKeys, chainFnAfter } from './utils.js';
 
@@ -203,7 +203,7 @@ ViewModel.prototype = {
 		this.initialized && this.initialized();
 
 		// must never return null - for non rendering components like popups we return a comment
-		var el = this.render(rendering) || document.createComment('<'+this.toString()+'/>');
+		var el = this.render(rendering) || window.document.createComment('<'+this.toString()+'/>');
 		el.__qute__ = this;
         this.$el = el;
         this.created && this.created(el);
@@ -240,9 +240,9 @@ ViewModel.prototype = {
 		if (this.$r) ERR("VM is already mounted");
 		var target;
 		if (elOrId) {
-			target = typeof elOrId === 'string' ? document.getElementById(elOrId) : elOrId;
+			target = typeof elOrId === 'string' ? window.document.getElementById(elOrId) : elOrId;
 		} else {
-			target = document.body;
+			target = window.document.body;
 		}
 		var el = this.$create();
 		if (insertBefore) {

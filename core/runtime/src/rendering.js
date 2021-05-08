@@ -1,4 +1,4 @@
-import {document} from '@qutejs/window';
+import window from '@qutejs/window';
 import {ERR} from '@qutejs/commons';
 
 import {applyListeners, applyEmitters, SetFixedClass, SetComputedClass, InheritClass, SetQClass, AddClass, SetStyle,
@@ -9,6 +9,8 @@ import ListFragment from './list-fragment.js';
 import SwitchFragment from './switch-fragment.js';
 import ForFragment from './for-fragment.js';
 import Template from './template.js';
+
+const document = window.document;
 
 // q:attrs values are already evaluated - so the injected values are liiterals
 function SetDOMAttrs(el, model, filter) {

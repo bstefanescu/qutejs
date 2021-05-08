@@ -1,4 +1,4 @@
-import window, {document} from '@qutejs/window';
+import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import Modal from './modal.js';
 import './modal.css';
@@ -39,7 +39,7 @@ class qModal extends ViewModel {
 	@Property(String) id;
 
 	render() {
-		return document.createComment('[modal]');
+		return window.document.createComment('[modal]');
 	}
 
 	created() {
@@ -73,11 +73,11 @@ class qModal extends ViewModel {
 	}
 
 	connected() {
-		document.body.appendChild(this.modal.el);
+		window.document.body.appendChild(this.modal.el);
 	}
 
 	disconnected() {
-		document.body.removeChild(this.modal.el);
+		window.document.body.removeChild(this.modal.el);
 	}
 
 	open(now) {

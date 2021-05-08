@@ -27,10 +27,10 @@ The signature of the rendering function is: `DOMElement function(renderingContex
 **Example:**
 
 ```jsq
-import {document} from '@qutejs/window';
+import window from '@qutejs/window';
 
 function MyElement(rendering, attrs, slots) {
-    const span = document.createElement('SPAN');
+    const span = window.document.createElement('SPAN');
 	if (attrs.color) {
         span.style.color = rendering.eval(attrs.color);
     }

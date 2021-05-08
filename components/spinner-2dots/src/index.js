@@ -1,4 +1,4 @@
-import { document } from '@qutejs/window';
+import window from '@qutejs/window';
 import { baseSpinner } from '@qutejs/ui';
 import './2dots.css';
 
@@ -11,7 +11,7 @@ import './2dots.css';
 */
 
 function createDot(className, color) {
-	var div = document.createElement('DIV');
+	var div = window.document.createElement('DIV');
 	if (color) div.style.backgroundColor = color;
 	div.className = className;
 	return div;
@@ -19,7 +19,7 @@ function createDot(className, color) {
 
 
 export default function Spinner(r, xattrs) {
-    const el = document.createElement('DIV');
+    const el = window.document.createElement('DIV');
     var color, color1, color2, size;
 	if (xattrs) {
 		color = xattrs.color;
@@ -45,4 +45,3 @@ export default function Spinner(r, xattrs) {
 	el.appendChild(createDot('dot2', color2));
 	return el;
 }
-

@@ -1,7 +1,7 @@
-import {document} from '@qutejs/window';
+import window from '@qutejs/window';
 
 export default function qFlex(rendering, xattrs, slots) {
-    var el = document.createElement('DIV');
+    var el = window.document.createElement('DIV');
     var style = 'display:flex;';
     if (xattrs) {
         var keys = Object.keys(xattrs);

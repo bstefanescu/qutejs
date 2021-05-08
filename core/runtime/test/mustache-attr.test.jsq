@@ -1,6 +1,4 @@
 import assert from 'assert';
-
-import { document } from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
 const { Template, ViewModel, Property } = Qute;

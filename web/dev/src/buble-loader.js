@@ -1,4 +1,4 @@
-import window, {document, Promise} from '@qutejs/window';
+import window from '@qutejs/window';
 import { loadScripts } from './script-loader.js';
 
 function testES6() {

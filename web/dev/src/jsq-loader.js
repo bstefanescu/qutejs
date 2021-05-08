@@ -1,4 +1,4 @@
-import window, {document} from '@qutejs/window';
+import window from '@qutejs/window';
 import Compiler from '@qutejs/compiler';
 import { serialLoadScripts, IGNORE_PACKAGES } from './script-loader.js';
 
@@ -10,6 +10,7 @@ function identityTransform(code) {
 }
 
 function insertStyle(url) {
+	let document = window.document;
 	console.log('insert style', url);
 	var link = document.createElement('link');
 	link.setAttribute('rel', 'stylesheet');
@@ -124,7 +125,7 @@ function JSQLoader(transpileES6) {
 
 	this.loadAll = function() {
 		var promises = [];
-		var scripts = document.querySelectorAll('script[type="text/jsq"]');
+		var scripts = window.document.querySelectorAll('script[type="text/jsq"]');
 		for (var i=0,l=scripts.length; i<l; i++) {
 			promises.push(this.load(scripts[i]));
 		}

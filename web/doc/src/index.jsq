@@ -1,6 +1,6 @@
 import '@qutejs/polyfill';
 import Spinner from '@qutejs/spinner-ellipsis';
-import window, { document, navigator } from '@qutejs/window';
+import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import Router from '@qutejs/router';
 
@@ -81,14 +81,16 @@ const {ViewModel, Template, Property, On} = Qute;
 
 
 
-var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+var iOS = !!window.navigator.platform && /iPad|iPhone|iPod/.test(window.navigator.platform);
 
 function lockBodyScroll() {
+	let document = window.document;
 	document.body.style.overflow = 'hidden';
 	if (iOS) document.body.style.position = 'fixed';
 }
 
 function unlockBodyScroll() {
+	let document = window.document;
 	document.body.style.overflow = '';
 	if (iOS) document.body.style.position = '';
 }
@@ -230,7 +232,7 @@ class Toc extends ViewModel {
 		//TODO refactor this - do not use a channel but rather a model property
 		const handleMessage = (msg, data) => {
 			if (msg === 'select') {
-				var item = document.getElementById('toc_item:'+data);
+				var item = window.document.getElementById('toc_item:'+data);
 				if (item) {
 					var cl = item.classList;
 					if (!cl.contains('active')) {
@@ -321,7 +323,7 @@ class App extends ViewModel {
 		this.router.navigate(e.detail);
 	}
 	toggleSidebar() {
-		var sidebar = document.getElementById('sidebar');
+		var sidebar = window.document.getElementById('sidebar');
 		if (!sidebar.clientWidth) {
 			showSidebar();
 		} else {
@@ -386,7 +388,7 @@ function highlighJsq(code) {
 }
 
 function createRunSnippets() {
-	var codeEls = document.querySelectorAll('pre > code');
+	var codeEls = window.document.querySelectorAll('pre > code');
 	for (var i=0,l=codeEls.length; i<l; i++) {
 		var codeEl = codeEls[i];
 		if (codeEl.className === 'language-jsq') {
@@ -404,7 +406,7 @@ function createRunSnippetButton(codeEl) {
 	var snippet = codeEl.textContent;
 	var pre = codeEl.parentNode;
 	pre.style.position = 'relative';
-	var btn = document.createElement('button');
+	var btn = window.document.createElement('button');
 	btn.className = 'btn btn-success run-snippet';
 	var btnStyle = btn.style;
 	btnStyle.position = 'absolute';
@@ -419,6 +421,7 @@ function createRunSnippetButton(codeEl) {
 // sidebar toggle
 
 function showSidebar(container) {
+	let document = window.document;
 	(container || document.body).classList.add('show-sidebar');
 	var sidebar = document.getElementById('sidebar');
 	var main = document.getElementById('main');
@@ -429,6 +432,7 @@ function showSidebar(container) {
 }
 
 function hideSidebar(container) {
+	let document = window.document;
 	(container || document.body).classList.remove('show-sidebar');
 	var sidebar = document.getElementById('sidebar');
 	var main = document.getElementById('main');
@@ -448,6 +452,7 @@ function hideSidebar(container) {
  */
 function isInViewport(elem) {
 	var distance = elem.getBoundingClientRect();
+	let document = window.document;
 	return (
 		distance.top >= 0 &&
 		distance.left >= 0 &&

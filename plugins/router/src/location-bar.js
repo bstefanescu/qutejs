@@ -1,4 +1,4 @@
-import window, {document} from '@qutejs/window';
+import window from '@qutejs/window';
 
 /*
 * Extracted from Backbone.js History 1.1.0
@@ -151,7 +151,7 @@ objectAssign(History.prototype, {
       // in a browser where it could be `pushState`-based instead...
       } else if (this._hasPushState && this.atRoot() && loc.hash) {
         this.fragment = this.getHash().replace(routeStripper, '');
-        this.history.replaceState({}, document.title, this.root + this.fragment);
+        this.history.replaceState({}, window.document.title, this.root + this.fragment);
       }
 
     }
@@ -211,7 +211,7 @@ objectAssign(History.prototype, {
 
     // If pushState is available, we use it to set the fragment as a real URL.
     if (this._hasPushState) {
-      this.history[options.replace ? 'replaceState' : 'pushState']({}, document.title, url);
+      this.history[options.replace ? 'replaceState' : 'pushState']({}, window.document.title, url);
 
     // If hash changes haven't been explicitly disabled, update the hash
     // fragment to store history.
@@ -263,4 +263,3 @@ History.prototype.hasPushState = function () {
 };
 
 export default History;
-

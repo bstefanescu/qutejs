@@ -1,4 +1,4 @@
-import {document} from '@qutejs/window';
+import window from '@qutejs/window';
 import Map from './map.js'; // for IE < 11 support we need to use a simple map impl
 
 /*
@@ -6,6 +6,7 @@ import Map from './map.js'; // for IE < 11 support we need to use a simple map i
 	- render - is a cunftion that takes a rendering and a key as argument and return a DOM node or an array of nodes
 */
 export default function SwitchFragment(rendering, name, exprFn, render, changeCb, nocache) {
+	let document = window.document;
 	this.key = null; // the active case key
 	this.caseR = null;
 	this.cache = nocache ? null : new Map(); // key to rendering instance cache if cache is used.
@@ -19,7 +20,7 @@ export default function SwitchFragment(rendering, name, exprFn, render, changeCb
 
 SwitchFragment.prototype = {
 	$create() {
-		var frag = document.createDocumentFragment();
+		var frag = window.document.createDocumentFragment();
 		frag.appendChild(this.start);
 		frag.appendChild(this.end);
 		// add the update function to the parent rendering updaters and trigger an update
@@ -89,5 +90,3 @@ SwitchFragment.prototype = {
 		}
 	}
 }
-
-

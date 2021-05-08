@@ -1,10 +1,10 @@
 import assert from 'assert';
 
-import { document } from '@qutejs/window';
+import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
 const TestMixin = Qute(function() {
-    var h1 = document.createElement('h1');
+    var h1 = window.document.createElement('h1');
     h1.textContent = 'Test Mixins';
     return h1;
 }, {});

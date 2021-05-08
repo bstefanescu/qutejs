@@ -11,7 +11,7 @@ import loadES6Transpiler from './buble-loader.js';
 
 // ----------- Qute runtime
 
-import {document} from '@qutejs/window';
+import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import * as Importer from '@qutejs/importer';
 import Compiler from '@qutejs/compiler';
@@ -46,7 +46,7 @@ Qute.runWithLoader = function(fn) {
 Qute.loadTemplates = function(idOrElement) {
 	var script; // the script element
 	if (typeof idOrElement === 'string') {
-		script = document.getElementById(idOrElement);
+		script = window.document.getElementById(idOrElement);
 	} else {
 		script = idOrElement;
 	}
@@ -59,7 +59,7 @@ Qute.load = function(idOrElement) {
 	if (idOrElement) {
 		var script; // tje script element
 		if (typeof idOrElement === 'string') {
-			script = document.getElementById(idOrElement);
+			script = window.document.getElementById(idOrElement);
 		} else {
 			script = idOrElement;
 		}

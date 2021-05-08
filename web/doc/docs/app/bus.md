@@ -192,10 +192,11 @@ When installing a root component you can share the application instance with ano
 ### Example
 
 ```jsq
-import {document} from '@qutejs/window';
+import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 
 const { ViewModel, Template } = Qute;
+const document = window.document;
 
 <q:template name='ChildOneTemplate'>
 <div>I am child1 from root1</div>

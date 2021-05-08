@@ -1,4 +1,4 @@
-import window, {document} from '@qutejs/window';
+import window from '@qutejs/window';
 // we don't use vars to store computed values like the transitionend event or
 // to ensure the rollup tree-shaking is correctly working (otherwise it may include code that is not needed)
 // because of the additional side effects
@@ -18,7 +18,7 @@ function whichTransitionend() {
             "MozTransition"   : "transitionend",
             "WebkitTransition": "webkitTransitionEnd"
         }
-        var transitionEndEvent, style = document.createElement('DIV').style;
+        var transitionEndEvent, style = window.document.createElement('DIV').style;
         for(var transition in transitions) {
             if (style[transition] != undefined) {
                 transitionEndEvent = transitions[transition];

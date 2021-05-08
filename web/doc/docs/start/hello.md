@@ -218,7 +218,4 @@ Although you can directly use `window` in your code without any import, the reco
 When building your application, the window import will be treated as a browser global (an external dependency) - so nothing will be imported and the generated bundle will use the browser `window` object.  \
 But when running tests the `@qutejs/window` will resolve to the **[jsdom](https://www.npmjs.com/package/jsdom)** `window` object.
 
-**Examples:**
-
-1. Importing the window instance: `import window from '@qutejs/window'`
-2. Importing the window and the document instances: `import window, {document} from '@qutejs/window'`
+**Example** importing the window instance: `import window from '@qutejs/window'`

@@ -1,10 +1,10 @@
-import window, {document} from '@qutejs/window';
+import window from '@qutejs/window';
 import { onTransitionEnd } from '@qutejs/ui';
 
-// cover option: coverup / coverdown 
+// cover option: coverup / coverdown
 
 function toBottomCover(erect, rect, crect, out) {
-	out.top = rect.top;	
+	out.top = rect.top;
 	if (out.top + erect.height > crect.bottom) { // flip to top
 		out.top = rect.bottom - erect.height;
 	}
@@ -152,6 +152,7 @@ function getVisibleClientRect(container, overflowingParents) {
 }
 
 function createPopup(content, modifierClass) {
+	let document = window.document;
 	var el = document.createElement('DIV');
 	var style = el.style;
 	style.visibility = "hidden";
@@ -180,7 +181,7 @@ function createPopup(content, modifierClass) {
  * options: closeOnClick, position, align, effect, modifierClass, open, ready, close
  * the open callback is called before the popup is added to the DOM (it is not yet visible)
  * the ready callback is called when the popup was opened (after it was added to the DOM and it is visible on the screen)
- * 
+ *
  * To control the viewport where the popup is diplayed you can use a .qute-Popup--container class on a parent element to restrict to that element
  */
 function Popup(content, options) {
@@ -220,7 +221,7 @@ Popup.prototype = {
 			if (pos ===  'left' || pos === 'right') {
 				style.height = anchor.offsetHeight+'px';
 			} else {
-				style.width = anchor.offsetWidth+'px';				
+				style.width = anchor.offsetWidth+'px';
 			}
 			align = 'start';
 		} else {
@@ -249,6 +250,7 @@ Popup.prototype = {
 	},
 	open: function(anchor) {
         if (!anchor) throw new Error('Attempting to open a popup without specifying a target element!');
+		let document = window.document;
 		// compute overflowing parents and register scroll listeners
 		if (this.el.parentNode) { // already opened
 			return;

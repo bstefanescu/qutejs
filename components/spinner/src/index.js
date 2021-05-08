@@ -1,4 +1,4 @@
-import { document } from '@qutejs/window';
+import window from '@qutejs/window';
 import { baseSpinner } from '@qutejs/ui';
 import './ring.css';
 
@@ -12,7 +12,7 @@ import './ring.css';
 */
 
 function createPart(color, width) {
-	var div = document.createElement('DIV');
+	var div = window.document.createElement('DIV');
 	if (width) {
 		div.style.borderWidth = width;
 	}
@@ -24,7 +24,7 @@ function createPart(color, width) {
 
 
 export default function Spinner(r, xattrs) {
-    var el = document.createElement('DIV');
+    var el = window.document.createElement('DIV');
 	var color, size, width;
 	if (xattrs) {
 		color = xattrs.color;

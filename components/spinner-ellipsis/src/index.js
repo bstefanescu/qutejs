@@ -1,4 +1,4 @@
-import { document } from '@qutejs/window';
+import window from '@qutejs/window';
 import { baseSpinner } from '@qutejs/ui';
 import './ellipsis.css';
 
@@ -11,7 +11,7 @@ import './ellipsis.css';
 */
 
 function createDot(className, color, size) {
-	var div = document.createElement('DIV');
+	var div = window.document.createElement('DIV');
 	var style = div.style;
 	if (color) style.backgroundColor = color;
 	if (size) {
@@ -23,7 +23,7 @@ function createDot(className, color, size) {
 }
 
 export default function Spinner(r, xattrs) {
-    const el = document.createElement('DIV');
+    const el = window.document.createElement('DIV');
 	let color, size;
 	if (xattrs) {
 		color = xattrs.color;

@@ -1,4 +1,4 @@
-import {document} from '@qutejs/window';
+import window from '@qutejs/window';
 import { onTransitionEnd } from '@qutejs/ui';
 
 /*
@@ -7,7 +7,7 @@ import { onTransitionEnd } from '@qutejs/ui';
 */
 
 function toggleScroll(enable) {
-	var body = document.body;
+	var body = window.document.body;
 	if (enable) {
         Object.assign(body.style, {overflow: 'initial', height: 'initial'})
 	} else {
@@ -16,7 +16,7 @@ function toggleScroll(enable) {
 }
 
 function getFocusableElements(root) {
-	return (root || document).querySelectorAll('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+	return (root || window.document).querySelectorAll('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
 }
 
 function trapFocus() {
@@ -30,6 +30,7 @@ function trapFocus() {
 }
 
 function createModal(id, content, animation) {
+	let document = window.document;
 	var container = document.createElement('DIV');
 	container.id = id;
 	var modal = document.createElement('DIV');
@@ -83,6 +84,7 @@ Modal.prototype = {
 		return this.el.firstChild.classList.contains('is-visible');
 	},
 	open: function() {
+		let document = window.document;
 		var modal = this.el.firstChild;
 		var cl = modal.classList;
 		if (cl.contains('is-visible')) return; // already visible

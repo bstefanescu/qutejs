@@ -1,6 +1,7 @@
-import {document} from '@qutejs/window';
+import window from '@qutejs/window';
 
 export default function ForFragment(rendering, listFn, iterationFn) {
+	let document = window.document;
 	this.r = rendering;
 	this.listFn = listFn;
 	this.iterationFn = iterationFn;
@@ -12,7 +13,7 @@ export default function ForFragment(rendering, listFn, iterationFn) {
 
 ForFragment.prototype = {
 	$create() {
-		var frag = document.createDocumentFragment();
+		var frag = window.document.createDocumentFragment();
 		frag.appendChild(this.start);
 		frag.appendChild(this.end);
 		// add the update function to the parent rendering updaters and trigger an update
@@ -87,5 +88,3 @@ ForFragment.prototype = {
 		}
 	}
 }
-
-

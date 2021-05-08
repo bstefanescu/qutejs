@@ -1,4 +1,4 @@
-import window, { document } from '@qutejs/window';
+import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import Popup from './popup.js';
 import './popup.css';
@@ -53,7 +53,7 @@ class qPopup extends ViewModel {
 	@Property(String) id;
 
 	render() {
-		return document.createComment('[popup]');
+		return window.document.createComment('[popup]');
 	}
 
 	created() {
@@ -64,7 +64,7 @@ class qPopup extends ViewModel {
 			modifierClass: this.$attrs.class || '',
 			open: function () {
 				self.emit("open", self.popup.el);
-			}, 
+			},
 			ready: function () {
 				self.emit("ready", self.popup.el);
 			},

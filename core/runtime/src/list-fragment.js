@@ -1,4 +1,4 @@
-import {document} from '@qutejs/window';
+import window from '@qutejs/window';
 import ArrayDiff from './array-diff.js';
 
 /*
@@ -40,6 +40,7 @@ WARN: If list is not defining an item key then updates will be costly and will r
 */
 
 export default function ListFragment(rendering, listFn, itemFn, key) {
+	let document = window.document;
 	this.r = rendering;
 	this.listFn = listFn;
 	this.itemFn = itemFn;
@@ -51,7 +52,7 @@ export default function ListFragment(rendering, listFn, itemFn, key) {
 
 ListFragment.prototype = {
 	$create() {
-		var frag = document.createDocumentFragment();
+		var frag = window.document.createDocumentFragment();
 		frag.appendChild(this.start);
 		frag.appendChild(this.end);
 		// add the update function to the parent rendering updaters and trigger an update
@@ -194,4 +195,3 @@ ListFragment.prototype = {
         }
     }
 }
-
