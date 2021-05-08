@@ -38,7 +38,10 @@ module.exports = function(project, args) {
                 },
                 plugins: [
                     !!prod && terser()
-                ]
+                ],
+                interop: id => {
+                    return id === '@qutejs/window' || id === '@qutejs/runtime' ? 'default' : 'auto';
+                }
             }
         }
     }

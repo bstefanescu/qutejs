@@ -49,6 +49,7 @@ export default function quteNodeBuild(opts = {}, istyles) {
     return {
         name: 'qutejs-node-build',
         options(opts) {
+            opts = Object.assign({},opts);
             opts.external = function(id) {
                 if (external) {
                     // custom external function
@@ -68,6 +69,7 @@ export default function quteNodeBuild(opts = {}, istyles) {
             return opts;
         },
         outputOptions(opts) {
+            opts = Object.assign({},opts);
             let format;
             if (!opts.format) {
                 opts.format = format = 'esm';

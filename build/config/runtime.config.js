@@ -32,7 +32,10 @@ module.exports = function(project, args) {
                 },
                 plugins: [
                     !!prod && terser()
-                ]
+                ],
+                interop: id => {
+                    return id === '@qutejs/window' ? 'default' : 'auto';
+                }
             }
         }
     }

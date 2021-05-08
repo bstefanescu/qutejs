@@ -66,6 +66,30 @@ export function rollupExternalFn(externalOpt) {
     return fn || function() { return false; };
 }
 
+/**
+ * Create a interop function to handle specific exports which delegates
+ * to the previous value if any for unhandled exports
+ * @param {function} fn
+ * @param {string|boolean|function} interop
+ */
+export function interopFn(fn, interop) {
+    let prevFn;
+    if (interop != null) {
+        if (typeof interop === 'function') {
+            prevFn = interop;
+        } else {
+            prevFn = () => interop;
+        }
+    }
+    return id => {
+        let r = fn(id);
+        if (r == null) { // not handled
+            r = prevFn ? prevFn(id) : 'auto'; // 'auto' or true ? apparently true is deprecated
+        }
+        return r;
+    }
+}
+
 export class PackageCache {
     constructor() {
         this.cache = {};

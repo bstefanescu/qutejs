@@ -16,6 +16,7 @@ export default function quteTestBuild(opts = {}, testOpts, istyles) {
     return {
         name: 'qutejs-test-build',
         options(opts) {
+            opts = Object.assign({},opts);
             opts = multiEntry.options.call(this, opts) || opts;
             // external is the same as in quteNodeBuiild
             opts.external = function(id) {
@@ -39,6 +40,7 @@ export default function quteTestBuild(opts = {}, testOpts, istyles) {
             return opts;
         },
         outputOptions(opts) {
+            opts = Object.assign({},opts);
             opts = multiEntry.outputOptions.call(this, opts) || opts;
             if (!opts.format) {
                 opts.format = 'esm';

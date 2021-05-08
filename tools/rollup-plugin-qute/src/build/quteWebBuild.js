@@ -14,7 +14,7 @@ import cssnano from 'cssnano';
 
 import Processor from './postcss-processor.js';
 import ThemeResolver from './themes.js';
-import { rollupExternalFn, externalFn, PackageCache } from './utils.js';
+import { rollupExternalFn, externalFn, interopFn, PackageCache } from './utils.js';
 
 import InlineStyles from '../istyles.js';
 
@@ -210,6 +210,7 @@ export default function quteWebBuild(userOpts, webOpts, istyles) {
         name: 'qutejs-web-build',
         options(opts) {
             const origExternalFn = rollupExternalFn(opts.external);
+            opts = Object.assign({},opts);
             opts.external = function(id) {
                 if (external) {
                     let r = external(id);
@@ -226,6 +227,7 @@ export default function quteWebBuild(userOpts, webOpts, istyles) {
             return opts;
         },
         outputOptions(opts) {
+            opts = Object.assign({},opts);
             if (!opts.format) {
                 opts.format = 'iife';
             }
@@ -243,6 +245,10 @@ export default function quteWebBuild(userOpts, webOpts, istyles) {
             if (!opts.name) {
                 opts.name = generateWebVarName(pkg);
             }
+            opts.interop = interopFn(id => {
+                // avoid interop helper for window and Qute deps
+                return id === '@qutejs/window' || id === '@qutejs/runtime' ? 'default' : null;
+            }, opts.interop);
             return opts;
         },
         resolveId(id) {
