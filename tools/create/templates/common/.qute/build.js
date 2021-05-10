@@ -164,7 +164,7 @@ export default class BuildConfig {
             input: testFiles || './test/**/*-test.js?(q)',
             output: {
                 file: './.qute/build/test-bundle.js',
-                format: 'cjs',
+                format: 'esm',
                 sourcemap: true
             },
             plugins: plugins({test:true})

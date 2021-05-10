@@ -12,7 +12,7 @@ const rollup = require('rollup');
 // on the command line and will override the format of all outputs
 process.env.NODE_ENV = 'development';
 process.env.DEV_SERVER_PORT = '0'; // disable dev server
-loadConfigFile(path.resolve(__dirname, '../build/rollup.config.js'), {}).then(
+loadConfigFile(path.resolve(__dirname, '../.qute/rollup.config.js'), {}).then(
     async ({options, warnings}) => {
         // "warnings" wraps the default `onwarn` handler passed by the CLI.
         // This prints all warnings up to this point:

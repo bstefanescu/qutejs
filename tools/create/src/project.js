@@ -49,9 +49,8 @@ function _copyTree(src, dst, vars) {
 }
 
 function createProject(type, target, vars) {
-  copyTree(path.normalize(path.join(__dirname, '../templates/common')), target, vars);
-  copyTree(path.normalize(path.join(__dirname, '../templates/'+type)), target, vars);
+  copyTree(path.normalize(path.join(__dirname, '../../templates/common')), target, vars);
+  copyTree(path.normalize(path.join(__dirname, '../../templates/'+type)), target, vars);
 }
 
 export default createProject;
-
