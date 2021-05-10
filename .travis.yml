@@ -1,10 +1,8 @@
 language: node_js
 node_js: '14'
 before_install: npm install -g npm-ws
-install:
-  - ws install
-  - ws rollup-plugin-qute build
-  - ls -1 tools/rollup-plugin-qute/dist
-script:
-  - ls -1 tools/rollup-plugin-qute/dist
+install: ws install
+
+script: // we need to run build before dist to builod the compiler and the rollup plugin
+  - ws build
   - ws dist
