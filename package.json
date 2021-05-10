@@ -17,9 +17,6 @@
     "type": "git"
   },
   "devDependencies": {
-    "@babel/core": "^7.11.6",
-    "@babel/preset-env": "^7.11.5",
-    "@babel/register": "^7.11.5",
     "@qutejs/register": "2.0.0-beta.8",
     "@qutejs/rollup-plugin-qute": "2.0.0-beta.8",
     "@qutejs/test-utils": "2.0.0-beta.8",
@@ -36,13 +33,7 @@
     "scope": "@qutejs",
     "scripts": "build/scripts",
     "sources": "src/**",
-    "test": {
-      "files": [
-        "test/**/*.test.js",
-        "test/**/*.test.jsq"
-      ],
-      "setup": "./build/test/setup.js"
-    },
+    "test": "@tests",
     "configs": {
       "runtime": "build/config/runtime.config.js",
       "lib": "build/config/lib.config.js",

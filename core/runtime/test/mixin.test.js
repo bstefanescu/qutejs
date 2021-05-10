@@ -1,7 +1,7 @@
 import assert from 'assert';
 
 import window from '@qutejs/window';
-import Qute from '@qutejs/runtime';
+import Qute from '..';
 
 const TestMixin = Qute(function() {
     var h1 = window.document.createElement('h1');

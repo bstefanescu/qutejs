@@ -11,7 +11,7 @@ tests:
 import assert from 'assert';
 import {snapshot} from '@qutejs/test-utils';
 import window from '@qutejs/window';
-import Qute from '@qutejs/runtime';
+import Qute from '..';
 import { createMountPoint, runAfter } from './utils.js';
 
 const { Template, ViewModel, Property, Watch } = Qute;

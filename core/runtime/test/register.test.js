@@ -27,7 +27,7 @@
 
 import assert from 'assert';
 import {snapshot} from '@qutejs/test-utils';
-import Qute from '@qutejs/runtime';
+import Qute from '..';
 import { RootComponent, FnItem, VmItem, JsItem } from './register/root.jsq';
 
 import { createMountPoint } from './utils.js';
@@ -67,4 +67,3 @@ describe('Rendering root', function() {
 		snapshot('register', mountPoint.innerHTML, true);
 	});
 });
-

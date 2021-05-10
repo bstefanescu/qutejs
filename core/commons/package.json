@@ -2,6 +2,7 @@
   "name": "@qutejs/commons",
   "version": "2.0.0-beta.8",
   "description": "Qute commons",
+  "type": "commonjs",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "files": [

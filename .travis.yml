@@ -2,4 +2,4 @@ language: node_js
 node_js: '14'
 before_install: npm install -g npm-ws
 install: ws install
-script: ws dist
+script: ws rollup-plugin-qute build && ws dist

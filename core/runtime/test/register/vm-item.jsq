@@ -1,5 +1,5 @@
 
-import Qute from '@qutejs/runtime';
+import Qute from '../..';
 
 <q:template name='VmItem'>
 <li><a href={$attrs.href}>{{$attrs.text}}</a></li>

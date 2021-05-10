@@ -2,6 +2,7 @@
   "name": "%%name%%",
   "version": "%%version%%",
   "description": "%%description%%",
+  "type": "module",
   "main": "dist/esm/index.js",
   "module": "dist/esm/index.js",
   "exports": {

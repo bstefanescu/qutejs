@@ -1,7 +1,7 @@
 
 import assert from 'assert';
 import window from '@qutejs/window';
-import Qute from '@qutejs/runtime';
+import Qute from '..';
 import { createMountPoint } from './utils.js';
 
 const document = window.document;

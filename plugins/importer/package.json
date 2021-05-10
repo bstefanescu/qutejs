@@ -2,6 +2,7 @@
   "name": "@qutejs/importer",
   "version": "2.0.0-beta.8",
   "description": "Qute Importer provides lazy dynamic javascript dependencies import and support for lazy components",
+  "type": "module",
   "main": "dist/esm/index.js",
   "module": "dist/esm/index.js",
   "browser": "dist/qute-importer.js",

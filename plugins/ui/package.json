@@ -2,6 +2,7 @@
   "name": "@qutejs/ui",
   "version": "2.0.0-beta.8",
   "description": "A library providing utility functions to build UI components.",
+  "type": "module",
   "main": "dist/esm/index.js",
   "module": "dist/esm/index.js",
   "browser": "dist/qute-ui.js",

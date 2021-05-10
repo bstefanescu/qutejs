@@ -1,5 +1,5 @@
 
-import Qute from '@qutejs/runtime';
+import Qute from '../..';
 import FnItem from './fn-item.jsq';
 import VmItem from './vm-item.jsq';
 import JsItem from './js-item.js';

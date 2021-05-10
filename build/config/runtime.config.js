@@ -51,13 +51,13 @@ module.exports = function(project, args) {
                     file: project.file('dist/esm/index.js'),
                     sourcemap: true
                 },
-                // TODO we don't want to generate a cjs version ?
+                /*
                 {
                     format: 'cjs',
                     file: project.file('dist/cjs/index.js'),
                     sourcemap: true,
                     exports: 'auto'
-                }
+                }*/
             ]
         },
         webConfig(false),

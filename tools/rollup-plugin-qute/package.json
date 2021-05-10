@@ -21,10 +21,17 @@
     "bundle",
     "jsq"
   ],
+  "type": "commonjs",
+  "engines": {
+    "node": ">=13.2.0"
+  },
   "homepage": "https://qutejs.org",
   "repository": {
     "url": "https://github.com/bstefanescu/qutejs",
     "type": "git"
+  },
+  "peerDependencies": {
+    "rollup": "^2.42.0"
   },
   "dependencies": {
     "@qutejs/compiler": "2.0.0-beta.8",
