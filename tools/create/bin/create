@@ -1,3 +1,3 @@
 #!/usr/bin/env node
 
-require('../lib/index.cjs.js')(process.argv[2], process.argv[3]);
+require('../dist/cjs/index.js')(process.argv[2], process.argv[3]);
