@@ -95,7 +95,7 @@ DecoratedClass.prototype = {
                     if (field.decorators && field.decorators.length > 0) {
                         throw new Error('Decorators are not supported on static fields: '+ms.original.substring(field.start, field.end));
                     }
-                    transpileStaticField(ms, field, unit);
+                    this.transpileStaticField(ms, field, unit);
                 } else {
                     const meta = unit.getPropMeta(field);
                     if (meta) meta.checkSuperClass(this);
@@ -239,6 +239,7 @@ DecoratedClass.prototype = {
         } else {
             field.decorators.forEach(decorator => {
                 let decoratorCall = text.substring(decorator.start+1, decorator.end); // we removed the leading @
+                if (!decoratorCall.endsWith(')')) decoratorCall += '()'; // field decorator is transpiled into Decorator([args])(this, key, value)
                 initFields.push(decoratorCall+`(this, "${key}", ${value});\n`);
                 unit.removeDecorator(ms, decorator);
             });

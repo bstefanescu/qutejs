@@ -39,6 +39,9 @@ class MyViewModel extends Qute.ViewModel {
 
     @Link('thelink') myLink = true;
 
+    @Some(12) xxx;
+    @Some yyy;
+
     @Watch('myString') @log
     watchProp() {
     }
