@@ -103,7 +103,7 @@ Qute.render = function(renderFn, model) {
 Qute.defineMethod = function(name, fn) {
 	//define method on both ViewModel and template components prototype
 	ViewModel.prototype[name] = fn;
-    Rendering.FunComp.prototype[name] = fn;
+    Rendering.Template.prototype[name] = fn;
 }
 Qute.runAfter = function(cb) { UpdateQueue.runAfter(cb); }
 // get a component from its root element
