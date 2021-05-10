@@ -1,8 +1,8 @@
-const binarySearch = require('binary-search');
-const sourceMap = require('source-map');
+import binarySearch from 'binary-search';
+import sourceMap from 'source-map';
 const { SourceMapConsumer, SourceMapGenerator } = sourceMap;
 
-function printMappings(map, rtl) {
+export function printMappings(map, rtl) {
     let c = new SourceMapConsumer(map);
     c.eachMapping(item => {
         const origKey = item.originalLine + ':' + item.originalColumn;
@@ -11,7 +11,7 @@ function printMappings(map, rtl) {
     });
 }
 
-function stringifyMappings(map, rtl) {
+export function stringifyMappings(map, rtl) {
     let r = [];
     let c = new SourceMapConsumer(map);
     let arrow = rtl ? ' <- ' : ' -> ';
@@ -283,42 +283,24 @@ function __mergeMappings(source, c0, c1, preserveUnorderedOriginals) {
     return gen;
 }
 
-function mergeMappingsAsString(map1, map2, preserveUnorderedOriginals) {
+export function mergeMappingsAsString(map1, map2, preserveUnorderedOriginals) {
     return _mergeMappings(map1, map2, preserveUnorderedOriginals).toString();
 }
-function mergeMappings(map1, map2, preserveUnorderedOriginals) {
+export function mergeMappings(map1, map2, preserveUnorderedOriginals) {
     return JSON.parse(mergeMappingsAsString(map1, map2, preserveUnorderedOriginals));
 }
-function _mergeMappings(map1, map2, preserveUnorderedOriginals) {
+export function _mergeMappings(map1, map2, preserveUnorderedOriginals) {
     return __mergeMappings(map2.file,
         new SourceMapConsumer(map1),
         new SourceMapConsumer(map2),
         preserveUnorderedOriginals);
 }
 
-function merge() {
+export function merge() {
     const maps = Array.from(arguments).flat();
     let map = maps[0];
     for (let i=1,l=maps.length; i<l; i++) {
         map = mergeMappings(map, maps[i]);
     }
     return map;
-}
-
-function merge2() {
-    const maps = Array.from(arguments).flat();
-    let map = maps[0];
-    for (let i=1,l=maps.length; i<l; i++) {
-        map = mergeMappings(map, maps[i], true);
-    }
-    return map;
-}
-
-module.exports = {
-    _mergeMappings,
-    mergeMappingsAsString,
-    mergeMappings,
-    printMappings,
-    stringifyMappings,
-    merge
 }

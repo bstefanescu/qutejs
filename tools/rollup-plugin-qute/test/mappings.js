@@ -1,5 +1,5 @@
-const assert = require('assert');
-const MagicString = require('magic-string');
+import assert from 'assert';
+import MagicString from  'magic-string';
 
 const code0 = `import Qute from '@qutejs/runtime';
 import {mButton} from '@qutejs/material/button';
@@ -116,7 +116,7 @@ const tr = {
 
 assert.strictEqual(tr.code, tr3.code);
 
-module.exports = {
+export {
     tr1, tr2, tr3, tr,
-    code: code0
-}
+    code0 as code
+};
