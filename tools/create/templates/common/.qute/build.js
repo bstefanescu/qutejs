@@ -50,7 +50,7 @@ function makeWebFileName(baseName, minimize) {
     if (!baseName) {
         let name = pkg.name;
         if (name.startsWith('@')) name = name.substring(1);
-        baseName = name.replace(/_\//g, '-')+'-'+pkg.version;
+        baseName = name.replace(/[_\/]/g, '-')+'-'+pkg.version;
     }
     return baseName+(minimize?'.min.js':'.js');
 }
