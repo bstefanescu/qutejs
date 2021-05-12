@@ -1,3 +1,4 @@
+import path from 'path';
 import qute from '@qutejs/rollup-plugin-qute'
 import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
@@ -87,7 +88,7 @@ export default class BuildConfig {
             input: './src/index.js',
             output: {
                 name: makeWebComponentName(this.componentName),
-                file: makeWebFileName(this.moduleName, minimize),
+                file: path.join('dist', makeWebFileName(this.moduleName, minimize)),
                 format: 'iife',
                 sourcemap: true,
                 plugins: [

@@ -20,9 +20,16 @@ if (devMode) {
 	// build for production
 	config = [
 		build.lib(),
-		build.web(),
 		build.web({
-			web: {minimize:true}
+			web: {
+				type: 'component'
+			}
+		}),
+		build.web({
+			web: {
+				type: 'component',
+				minimize:true
+			}
 		}),
 	];
 }

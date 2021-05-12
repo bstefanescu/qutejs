@@ -221,7 +221,9 @@ export default function quteWebBuild(userOpts, webOpts, istyles) {
                 // always external
                 if (id === '@qutejs/window') return true;
                 // do not include qute in component builds
-                if (projectType === 'component' && id === '@qutejs/qute') return true;
+                if (projectType === 'component' && id === '@qutejs/runtime') {
+                    return true;
+                }
                 return origExternalFn.apply(this, arguments);
             };
             return opts;
@@ -249,6 +251,7 @@ export default function quteWebBuild(userOpts, webOpts, istyles) {
                 // avoid interop helper for window and Qute deps
                 return id === '@qutejs/window' || id === '@qutejs/runtime' ? 'default' : null;
             }, opts.interop);
+
             return opts;
         },
         resolveId(id) {
