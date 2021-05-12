@@ -63,14 +63,14 @@ When importing user modules (i.e. not `@qutejs/*` modules) the playground only s
 
 Mofule imports are usefull to import third party libraries like [jquery](https://jquery.com/), while default imports are usefull to import Qute components.
 
-**Note** To enable your Qute component to be imported by the playground you must export the component in the `window.__QUTE_IMPORT__` variable. Just write something like this in your main web bundle file:
+**Note** To enable your Qute component to be imported by the playground you must register your component using `Qute.import(component)` in your web index file:
 
 ```javascript
-import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
 import MyComponent from './my-components.js';
 
-window.__QUTE_IMPORT__ = MyComponent;
-
+Qute.import(MyComponent);
+// the following line is optional
 export default MyComponent;
 ```
 
@@ -155,4 +155,3 @@ The playground uses the `@qutejs/dev` package to load and transpile JSQ files. Y
 ```
 
 `Qute.load()` is loading all components declared in the page inside `<script type='text/jsq'></script>` tags, and return a promise which is fulfilled when all the components are loaded.
-

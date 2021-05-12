@@ -39,7 +39,8 @@
   "build": {
     "config": "component",
     "external": [
-      "@qutejs/window"
+      "@qutejs/window",
+      "@qutejs/runtime"
     ]
   }
 }

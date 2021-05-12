@@ -1,11 +1,11 @@
 import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
 
 /**
  * Imports remote scripts.
  We are not using Promise to not depend on polyfill
  */
 
-var insertedUrls = {}; // inserted URLs
 var customResolve = null;
 var renderError = null;
 var renderPending = null;
@@ -52,17 +52,26 @@ function resolveScript(nameOrUrl) {
     }
 }
 
-function insertScript(url, exportName, onload, onerror) {
-    if (url in insertedUrls) {
-        onload && onload(insertedUrls[url]);
+function insertScript(url, from, onload, onerror) {
+    const exportMap = Qute.exports;
+    if (!from) from = url;
+    if (from in exportMap) {
+        onload && onload(exportMap[from]);
     } else {
         let document = window.document;
         var script = document.createElement('script');
         script.setAttribute('src', url);
+        if (from != url) {
+            script.setAttribute('data-import-from', from);
+        }
         script.onload = function() {
-            // TODO if !exportName we can try to use window.__QUTE_IMPORT__ if any
-            var scriptObj = exportName ? window[exportName] : window.__QUTE_IMPORT__;
-            insertedUrls[url] = scriptObj;
+            // the script should have been registered by calling Qute.import(component) from the script itself
+            // for non Qute script we cannot get the script output.
+            var scriptObj = exportMap[from];
+            if (scriptObj == null) {
+                // not a qute component - so we don't know how to get the script output.
+                exportMap[from] = scriptObj = true;
+            }
             onload && onload(scriptObj);
         };
         script.onerror = function() {
@@ -72,14 +81,13 @@ function insertScript(url, exportName, onload, onerror) {
             onerror && onerror(error);
         }
         document.head.appendChild(script);
-        window.__QUTE_IMPORT__ = null;
     }
 }
 
-function importScript(script, exportName, onload, onerror) {
+function importScript(script, onload, onerror) {
     var url = resolveScript(script);
     if (url) {
-        insertScript(url, exportName, onload, onerror);
+        insertScript(url, script, onload, onerror);
     }
 }
 
@@ -88,7 +96,6 @@ function _importNext(imports, index, result, onload, onerror) {
     if (index < imports.length) {
         var script = imports[index];
         importScript(script,
-            null,
             function(exportVar) {
                 result[script] = exportVar;
                 _importNext(imports, index+1, result, onload, onerror);
@@ -103,12 +110,14 @@ function _importNext(imports, index, result, onload, onerror) {
 function _importAll(imports, onload, onerror) {
     var cnt = imports.length, errors = [], result = {};
     for (var i=0,l=imports.length; i<l; i++) {
-        var url = resolveScript(imports[i]);
+        var from = imports[i];
+        var url = resolveScript(from);
         if (url) {
             insertScript(url,
+                from,
                 null,
                 function(exportVar) {
-                    result[script] = exportVar;
+                    result[from] = exportVar;
                     cnt--;
                     if (!cnt) {
                         cnt--;
@@ -138,7 +147,7 @@ function serialImport(imports, onload, onerror) {
     if (Array.isArray(imports)) {
         _importNext(imports, 0, {}, onload, onerror);
     } else {
-        importScript(imports, null, onload, onerror);
+        importScript(imports, onload, onerror);
     }
 }
 
@@ -146,7 +155,7 @@ function importAll(imports, onload, onerror) {
     if (Array.isArray(imports)) {
         _importAll(imports, onload, onerror);
     } else {
-        importScript(imports, null, onload, onerror);
+        importScript(imports, onload, onerror);
     }
 }
 
@@ -155,6 +164,7 @@ function setImporterOptions(opts) {
     renderError = opts.renderError || null;
     renderPending = opts.renderPending || null;
 }
+
 
 // --------------- LazyComponent implementation ---------------
 
@@ -168,7 +178,7 @@ function _deleteNodes(from, to) {
     }
 }
 
-function LazyComponent(location, exportName) {
+function LazyComponent(location) {
     // return a render function that will inject the component when loaded
     return function renderLazyComponent(r, xattrs, slots) {
         let document = window.document;
@@ -186,7 +196,6 @@ function LazyComponent(location, exportName) {
         }
 
         importScript(location,
-            exportName,
             function(result) {
                 if(!result) throw new Error("Could not resolve lazy component at '"+ location +"'");
                 var node = r._c(result, xattrs, slots);

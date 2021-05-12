@@ -1,8 +1,7 @@
 function render(rendering, xattrs) {
-    var span = document.createElement('SPAN');
+    var span = window.document.createElement('SPAN');
     if (xattrs.color) span.style.color = rendering.eval(xattrs.color);
     span.textContent = "Hello!";
     return span;
 }
-
-window.__QUTE_IMPORT__ = render;
+Qute.import(render);

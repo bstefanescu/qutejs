@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@qutejs/window": "2.0.0-beta.8",
+    "current-script-polyfill": "^1.0.0",
     "promise-polyfill": "^8.1.3"
   },
   "build": {

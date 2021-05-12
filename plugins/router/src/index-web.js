@@ -1,6 +1,4 @@
-import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
 import Router from './index.js';
 
-window.__QUTE_IMPORT__ = Router; // support playground imports
-
-export default Router;
+Qute.import(Router);

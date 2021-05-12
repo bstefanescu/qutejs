@@ -1,5 +1,4 @@
-import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
 import * as Modal from './index.js';
 
-window.QuteModal = Modal;
-window.__QUTE_IMPORT__ = Modal; // support for playground imports
+Qute.import(Modal);

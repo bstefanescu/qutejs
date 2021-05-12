@@ -94,8 +94,3 @@ The component files are generated into the **lib/** directories in two flavors: 
 The web bundles are generated in the **dist/** directory and **doesn't include** the **Qute Runtime**. If you want to directly use the component in a web page you must include the **Qute Runtime** library prior to the component bundle.
 
 Two web bundles are generated: a regular and a minified bundle ready to be used in production.
-
-### `window.__QUTE_IMPORT__`
-
-The component project will also export your component in the `window.__QUTE_IMPORT__` variable for the web build. This enables your component to be imported as an external module in the [Qute Playground](#/start/playground), or using a [LazyComponent](#/plugins/importer) without knowing the name of the component.
-

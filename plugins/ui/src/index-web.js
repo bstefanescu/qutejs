@@ -1,5 +1,4 @@
-import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
 import * as QuteUI from './index.js';
 
-window.QuteUI = QuteUI;
-window.__QUTE_IMPORT__ = QuteUI; // support for playground imports
+Qute.import(QuteUI);

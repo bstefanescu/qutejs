@@ -1,5 +1,4 @@
-import window from '@qutejs/window';
+import Qute from '@qutejs/runtime';
 import * as Tooltip from './index.js';
 
-window.QuteTooltip = Tooltip;
-window.__QUTE_IMPORT__ = Tooltip; // support for playground imports
+Qute.import(Tooltip);

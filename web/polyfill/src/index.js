@@ -22,3 +22,5 @@ import './requestAnimationFrame.js';
 // Promise: optional polyfill. Not required by the Qute runtime, but nice to have.
 // (it is required by qute-dev.js and qute-i18n.js)
 import './promise.js';
+// document.currentScript polyfill used to dynamically omport components (see Qute.import and @qutejs/importer)
+import 'current-script-polyfill';

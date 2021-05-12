@@ -1,5 +1,6 @@
+import Qute from '@qutejs/runtime';
 import %%componentName%% from './index.js';
 
-window.__QUTE_IMPORT__ = %%componentName%%; // support for playground import
+Qute.import(%%componentName%%);
 
 export default %%componentName%%;
