@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/spinner",
-  "version": "2.0.0-beta.8",
+  "version": "2.0.0-beta.9",
   "description": "Qute Spinner component",
   "main": "dist/esm/index.js",
   "module": "dist/esm/index.js",
@@ -29,9 +29,9 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/runtime": "2.0.0-beta.8",
-    "@qutejs/ui": "2.0.0-beta.8",
-    "@qutejs/window": "2.0.0-beta.8"
+    "@qutejs/runtime": "2.0.0-beta.9",
+    "@qutejs/ui": "2.0.0-beta.9",
+    "@qutejs/window": "2.0.0-beta.9"
   },
   "build": {
     "config": "component",
