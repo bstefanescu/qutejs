@@ -20,23 +20,19 @@ Use the Qute project generator to create a new Qute application or component pro
 ```
 npm init @qutejs
 ```
+**Note** that your nodejs version **must be** >= 13.2.0
 
-or if your **node version** is older than **10.3.0** you must use the `npx` command:
-
-```
-npx @qutejs/create
-```
 
 Go here for the **[Qute documentation](https://qutejs.org)**.
 
 # Installing
 
-Qute is structured as a repository containing multiple inter-dependent packages and is using [ws4npm](https://www.npmjs.com/package/ws4npm) to manage the development process (build, test, publish etc.).
+Qute is structured as a repository containing multiple inter-dependent packages and is using [npm-ws](https://www.npmjs.com/package/npm-ws) to manage the development process (build, test, publish etc.).
 
 This is why you need to install first the `ws` tool:
 
 ```
-npm install -g ws4npm
+npm install -g npm-ws
 ```
 
 Then install dependencies using:
@@ -56,16 +52,16 @@ ws install
 npm run build
 ```
 
-## Runing the distribution build (includes tests and web bundles)
-
-```
-npm run dist
-```
-
 ## Running tests
 
 ```
 npm test
+```
+
+## Runing the distribution build (includes tests and web bundles)
+
+```
+npm run dist
 ```
 
 ## Start local development server
@@ -107,4 +103,3 @@ npm start
 # License
 
 [MIT](LICENSE)
-

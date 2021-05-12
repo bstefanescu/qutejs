@@ -12,3 +12,4 @@ yarn-error.log*
 Thumbs.db
 
 .qute/build/
+dist/
