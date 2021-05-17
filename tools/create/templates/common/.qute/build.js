@@ -87,8 +87,8 @@ export default class BuildConfig {
         return {
             input: './src/index.js',
             output: {
-                name: makeWebComponentName(this.componentName),
-                file: path.join('dist', makeWebFileName(this.moduleName, minimize)),
+                name: makeWebComponentName(this.opts.componentName),
+                file: path.join('dist', makeWebFileName(this.opts.moduleName, minimize)),
                 format: 'iife',
                 sourcemap: true,
                 plugins: [
