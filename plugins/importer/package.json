@@ -1,6 +1,6 @@
 {
   "name": "@qutejs/importer",
-  "version": "2.0.0-beta.9",
+  "version": "2.0.0-beta.10",
   "description": "Qute Importer provides lazy dynamic javascript dependencies import and support for lazy components",
   "type": "module",
   "main": "dist/esm/index.js",
@@ -30,8 +30,8 @@
     "type": "git"
   },
   "dependencies": {
-    "@qutejs/window": "2.0.0-beta.9",
-    "@qutejs/runtime": "2.0.0-beta.9"
+    "@qutejs/window": "2.0.0-beta.10",
+    "@qutejs/runtime": "2.0.0-beta.10"
   },
   "build": {
     "config": "weblib"
