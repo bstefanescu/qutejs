@@ -117,12 +117,8 @@ function generateCssFileName(jsFile, minimize, chunkName) {
     return base +(minimize ? '.min.css' : '.css');
 }
 
-function getDefaultThemePackages(pkg) {
-    if ((pkg.dependencies && '@qutejs/material' in pkg.dependencies)
-        || (pkg.peerDependencies && '@qutejs/material' in pkg.peerDependencies)) {
-        return ['@qutejs/material'];
-    }
-    return [];
+function getRuntimeDependecies(pkg) {
+    return Object.keys(Object.assign({}, pkg.dependencies || {}, pkg.peerDependencies || {}));
 }
 
 /**
@@ -134,7 +130,7 @@ function getDefaultThemePackages(pkg) {
  *     type: 'application', // supported values: 'application' | 'component',
  *     forceTreeshake: false, // boolean | [] - you can use true to force tree shake for all modules or an array of package names to force only for mpdule inside these packages
  *     minimize: false, // whether or not to compress generated js and css files
- *     theme: 'default', string || object {name, packages} - packages where to lookup for themes (in the given order) If @qutejs/material is a depoendency it will be automatically added to the array
+ *     theme: 'default', // the default theme name (may include or not the .css,.pcss extension). The default name is 'default'. Both {theme}.css and {theme}.pcss will be searched in that order if the theme dones't include an extension.
  *     css: {
  *       inject: true, // boolean
  *       extract: null, // boolean | filename | null
@@ -149,6 +145,15 @@ function getDefaultThemePackages(pkg) {
  *     }
  *   }
  * }
+ *
+ * Themes are located inside a 'themes/' directory in the package root. Each package must use an unique name
+ * (the package name or derived from the package name for scoped packages)
+ * A theme path is themes/{themes-package-name}/{theme-name}.p?css. The default theme name is 'defualt'.
+ * To import a theme in a postcss file (.css or .pcss) use the 'theme:' prefix.
+ * To import the active theme, don't specify a file name:
+ * `@import "theme:qute-material";` or `@import "theme:/qute-material";`
+ * You can also import a specific theme file by using the file name (you may ommit the .css or .pcss extensions):
+ * `@import "theme:qute-material/blue.css";` or `@import "theme:qute-material/blue";`
  * @param {*} userOpts
  * @param {*} istyles
  */
@@ -167,12 +172,6 @@ export default function quteWebBuild(userOpts, webOpts, istyles) {
         userCssOpts.minimize = true;
     }
 
-    if (!webOpts.theme) {
-        webOpts.theme = {name: 'default'};
-    } else if (typeof webOpts.theme === 'string') {
-        webOpts.theme = {name: webOpts.theme};
-    }
-
     const external = externalFn(userOpts.external);
 
     const projectType = webOpts.type || 'application';
@@ -187,21 +186,11 @@ export default function quteWebBuild(userOpts, webOpts, istyles) {
         cssInject = true;
     }
 
-    const themeName = webOpts.theme.name || 'default';
-    const themeResolver = new ThemeResolver(packageRoot, webOpts.theme.packages || getDefaultThemePackages(pkg));
+    const themeName = webOpts.theme || 'default';
+    const themeResolver = new ThemeResolver(packageRoot, getRuntimeDependecies(pkg));
 
     const resolveTheme = (id, basedir, importOptions) => {
-        if (id === '%theme') {
-            return  themeResolver.resolve(themeName);
-        } if (id.startsWith('%theme/')) {
-            let file = themeResolver.resolve(themeName);
-            if (file) {
-                const parts = id.split('/');
-                parts[0] = file;
-                return path.join.apply(path, parts);
-            }
-        }
-        return null;
+        return themeResolver.resolve(id, themeName);
     }
 
     const cssPlugins = computePostcssPlugins(userCssOpts, cssInject, resolveTheme);

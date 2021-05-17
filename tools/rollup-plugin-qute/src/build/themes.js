@@ -25,40 +25,101 @@ function findNodeModule(name, cwd) {
     }
 }
 
-function getThemeFile(root, theme) {
-    let themeFile = path.join(root, 'themes', theme+'.css');
-    if (fs.accessSync(themeFile, fs.constants.R_OK)) {
-        return themeFile;
-    } else {
-        themeFile = path.join(root, 'themes', theme+'.pcss');
-        if (fs.accessSync(themeFile, fs.constants.R_OK)) {
-            return themeFile;
+function getThemesDir(root) {
+    let themesDir = path.join(root, 'themes');
+    try {
+        const stats = fs.statSync(themesDir);
+        return stats.isDirectory() ? themesDir : null;
+    } catch (e) {
+        if (e.code === 'ENOENT') {
+            return null;
         }
+        throw e;
+    }
+}
+
+function getThemeFile(root, relPath) {
+    let themeFile = path.join(root, relPath);
+    try {
+        const stats = fs.statSync(themeFile);
+        return stats.isFile() ? themeFile : null;
+    } catch (e) {
+        if (e.code === 'ENOENT') {
+            return null;
+        }
+        throw e;
     }
     return null;
 }
 
 export default function ThemeResolver(root, packages) {
-    this.packages = packages ? packages.reduce((result, pkg) => {
+    this.themesDirs = packages ? packages.reduce((result, pkg) => {
         const dir = findNodeModule(pkg, root);
         if (dir) {
-            result.push(dir);
+            let themesDir = getThemesDir(dir);
+            if (themesDir) {
+                result.push(themesDir);
+            }
         } else {
             console.warn('Package not found: "'+pkg+'"');
         }
+        return result;
     }, []) : [];
-    this.root = root;
+    var localThemesDir = getThemesDir(root);
+    if (localThemesDir) {
+        this.themesDirs.unshift(localThemesDir);
+    }
+    this.cache = {};
 }
 ThemeResolver.prototype = {
-    resolve(theme) {
-        let themeFile = getThemeFile(this.root, theme);
-        if (themeFile) {
-            return themeFile;
+    _resolve(filePath) {
+        for (let root of this.themesDirs) {
+            let file = getThemeFile(root, filePath);
+            if (file) {
+                return file;
+            }
         }
-        const packages = this.packages;
-        for (pkg of packages) {
-            themeFile = getThemeFile(this.root, theme);
-            if (themeFile) return themeFile;
+        return null;
+    },
+
+    resolve(location, activeTheme) {
+        if (!location.startsWith('theme:')) {
+            return null;
+        }
+        let file = this.cache[location];
+        if (file) {
+            return file;
+        }
+        let normalizedLocation =  location[6] === '/' ? location.substring(7) : location.substring(6);
+        const parts = normalizedLocation.split('/');
+        if (parts.length === 1) {
+            parts.push(activeTheme || 'default');
+        }
+        const hasExt = parts[parts.length-1].indexOf('.') > -1;
+        normalizedLocation = path.join.apply(path, parts);
+        file = this.cache[normalizedLocation];
+        if (file) {
+            this.cache[location] = file;
+            return file;
+        }
+        let ext;
+        if (!hasExt) {
+            ext = '.css';
+            file = this._resolve(normalizedLocation+ext);
+            if (!file) {
+                ext = '.pcss';
+                file = this._resolve(normalizedLocation+ext);
+            }
+        } else {
+            file = this._resolve(normalizedLocation);
+        }
+        if (file) {
+            this.cache[location] = file;
+            this.cache[normalizedLocation] = file;
+            if (ext) {
+                this.cache[normalizedLocation+ext] = file;
+            }
+            return file;
         }
         return null;
     }
