@@ -109,22 +109,8 @@ Qute.defineMethod = function(name, fn) {
 Qute.runAfter = function(cb) { UpdateQueue.runAfter(cb); }
 // get a component from its root element
 Qute.get = function(elt) { return elt.__qute__; }
-// An object which maps package names to the package exported object that were registered in Qute using Qute.export();
-// These are used when importing remote (i.e. lazy) components to check if the import is already available.
-Qute.exports = {};
-Qute.export = function(name, component) {
-    if (component === void(0)) {
-        Object.assign(Qute.exports, name); // name is an object
-    } else {
-        Qute.exports[name] = component;
-    }
-}
-Qute.import = function(component) {
-    const script = window.document.currentScript;
-    if (!script) throw new Error('Qute.import must only be called while a component imported trough a script tag is intiializaing.');
-    const importName = script.getAttribute('data-import-from') || script.src;
-    return (Qute.exports[importName] = component);
-}
+// Qute.import is added by @qutejs/importer
+
 // store Qute instance in window - this is important so that imported components use the same Qute instance
 window.Qute = Qute;
 

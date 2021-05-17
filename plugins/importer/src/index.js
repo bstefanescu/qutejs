@@ -9,6 +9,7 @@ import Qute from '@qutejs/runtime';
 var customResolve = null;
 var renderError = null;
 var renderPending = null;
+const exportMap = {};
 
 function resolvePath(base, path) {
     base = base.substring(1); // remove the leading /
@@ -53,7 +54,6 @@ function resolveScript(nameOrUrl) {
 }
 
 function insertScript(url, from, onload, onerror) {
-    const exportMap = Qute.exports;
     if (!from) from = url;
     if (from in exportMap) {
         onload && onload(exportMap[from]);
@@ -216,9 +216,41 @@ function LazyComponent(location) {
     }
 }
 
+// ----------- import API -------------
+
+function registerComponent(component) {
+    const script = window.document.currentScript;
+    if (!script) throw new Error('Qute.import must only be called while a component imported trough a script tag is intiializaing.');
+    const importName = script.getAttribute('data-import-from') || script.src;
+    return (exportMap[importName] = component);
+}
+
+function importComponent(componentOrFactory) {
+    if (arguments.length > 1) {
+        serialImport(Array.prototype.slice.call(arguments, 1),
+        result => {
+            const Comp = componentOrFactory.apply(null, result);
+            if (Comp == null) {
+                throw new Error('A Component factory must return a non null object');
+            }
+            registerComponent(Comp);
+        },
+        error => {
+            throw error;
+        });
+    } else {
+        registerComponent(componentOrFactory);
+    }
+}
+
+// we augment the Qute api with an import function and exports property
+Qute.import = importComponent;
+
 export {
     insertScript, importScript,
     serialImport, importAll,
     setImporterOptions,
+    importComponent,
+    exportMap as exports,
     LazyComponent
 }
