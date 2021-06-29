@@ -34,7 +34,7 @@ var PropProto = {
 		this.app.unsubscribe('model:'+this.key, fn);
 	},
 
-	link(target, name) {
+	inject(target, name) {
 		Object.defineProperty(target, name, createProp(this));
 		return this;
 	},
@@ -87,8 +87,8 @@ function AsyncProp(app, key, defValue) {
 	this.key = key;
 	this.value = defValue;
 	app.data[key] = this;
-	new Prop(app, key+'/pending').link(this, 'pending');
-	new Prop(app, key+'/error').link(this, 'error');
+	new Prop(app, key+'/pending').inject(this, 'pending');
+	new Prop(app, key+'/error').inject(this, 'error');
 }
 AsyncProp.prototype = AsyncPropProto;
 

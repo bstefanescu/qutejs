@@ -179,9 +179,9 @@ Can be used to mark a reactive property as required.
 
 See the **[Component Properties](#/model/properties)** section for more details.
 
-#### `@Link(dataModelKey)`
+#### `@Inject(dataModelKey)`
 
-A class field decorator used to define a `ViewModel` reactive property linked to an **Application Data Model** property given the application property key.
+A class field decorator used to define a `ViewModel` reactive property linked to an **Application Data Model** property given the application property key. You can use this decorator on Qute.Service derived classes too (or on any class defining an `app` property which points to the qute app instance).
 
 See the **[Component Properties](#/model/properties)** section for more details.
 

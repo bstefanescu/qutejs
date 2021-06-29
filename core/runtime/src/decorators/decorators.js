@@ -57,7 +57,7 @@ function DataModel(id) {
         } else {
             ERR('The @DataModel decorator is meant to be used on Qute.Application or Qute.Service classes, or on any class providig a `app` field of type Qute.Application!');
         }
-        app.defineProp(id, value).link(target, key);
+        app.defineProp(id, value).inject(target, key);
     }
 }
 
@@ -71,7 +71,7 @@ function AsyncDataModel(id) {
         } else {
             ERR('The @DataModel decorator is meant to be used on Qute.Application or Qute.Service classes, or on any class providig a `app` field of type Qute.Application!');
         }
-        app.defineAsyncProp(id, value).link(target, key);
+        app.defineAsyncProp(id, value).inject(target, key);
     }
 }
 

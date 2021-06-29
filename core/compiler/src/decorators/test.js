@@ -3,7 +3,7 @@ import Transpiler from './index.js';
 
 const code = `
 import Qute from '@qutejs/runtime';
-const { Render, Template, Prop, Watch, Mixin, Required, DataModel, AsyncDataModel, View} = Qute;
+const { Render, Template, Prop, Watch, Mixin, Required, DataModel, AsyncDataModel, View, Link, Inject} = Qute;
 
 @View(MyViewModel)
 class MyApp extends Qute.Application {
@@ -37,7 +37,7 @@ class MyViewModel extends Qute.ViewModel {
     @Property(List, 'id') items = [];
     @Property(Link, 'UserSession/user') user;
 
-    @Link('thelink') myLink = true;
+    @Inject('thelink') myLink = true;
 
     @Some(12) xxx;
     @Some yyy;

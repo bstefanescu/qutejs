@@ -19,7 +19,7 @@ In the following example we define a custom application, an `UserManager` servic
 ```javascript
 import Qute from '@qutejs/runtime';
 
-const { Application, View, Service, DataModel, AsyncDataModel } = Qute;
+const { Application, View, Service, DataModel, AsyncDataModel, Inject } = Qute;
 
 
 class UserManager extends Service {
@@ -45,10 +45,10 @@ class UserManager extends Service {
 @Template(RootTemplate)
 class Root extends ViewModel {
     // link the data model property 'Session/user' to a reactive property
-    @Link('Session/user') user;
+    @Inject('Session/user') user;
 
     // link the login service instance published as the 'Session' data model property to a reactive property
-    @Link('Session') session;
+    @Inject('Session') session;
 
 }
 
@@ -76,7 +76,7 @@ import Qute from '@qutejs/runtime';
 // define a service
 function UserManager(app) {
     // define an user property and publish it as an async data model property (can take Promise as a value)
-    app.defineAsyncProp('Session/user').link(this, 'user');
+    app.defineAsyncProp('Session/user').inject(this, 'user');
 }
 UserManager.prototype = {
     login() {
@@ -94,6 +94,7 @@ UserManager.prototype = {
 // define a root component
 const Root = Qute(RootTemplate, {
     init(app) {
+        // we can use the special `Qute.Link` property to achieve the same as using @Inject
         // define the session an the user reactive properties (which are linked to the app data model properties)
         this.defineProp(Qute.Link, 'user', null, 'Session/user');
         this.defineProp(Qute.Link, 'session', null, 'Session');
@@ -175,14 +176,14 @@ class MyService extends Qute.Service {
 ```
 
 To publish a service property as an application data model property you can use the `@DataModel` and `@AsyncDataModel` decorators.
-To inject a data model property as a service property use the `@Link` decorator:
+To inject a data model property as a service property use the `@Inject` decorator:
 
 ```javascript
 class MyService extends Qute.Service {
     // publish the `user` field as the 'Session/user' data model property
     @AsyncDataModel('Session/user') user;
     // inject the Configuration/loginUrl data model property in the `loginUrl` field
-    @Link('Configuration/loginUrl') loginUrl;
+    @Inject('Configuration/loginUrl') loginUrl;
 }
 ```
 

@@ -4,7 +4,6 @@ import { ERR } from '@qutejs/commons';
 import List from '../list.js';
 import Link from './link.js';
 
-
 function toString(val) {
     return val == null ? val : String(val);
 }
@@ -87,10 +86,10 @@ registerType(List, {
         if(!arg) ERR('Reactive List properties must sepcify the list key as an argument!');
     }
 });
+//a link to the app data model (which is doing the same as @Inject)
 registerType(Link, {
     createProp(vm, key, value, arg) {
         if (!arg) ERR('Link properties must specify the application data model key as an argument!');
         return vm.$app.prop(arg).bindVM(vm, key);
     }
 });
-

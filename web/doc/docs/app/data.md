@@ -35,7 +35,7 @@ prop.set({name: 'foo', email: 'foo@bar.com'});
 
 To get an existing property object you can use the `prop(name)` method.
 
-Another useful method is the property `link(target, name)` method which will create a **mirror property** on another object. Any modification on the mirror property will be reflected on the source application property. This is the method used internally by the `@Link` decorator.
+Another useful method is the property `inject(target, name)` method which will create a **mirror property** on another object. Any modification on the mirror property will be reflected on the source application property. This is the method used internally by the `@Inject` decorator.
 
 ### Aynchronous properties
 
@@ -57,7 +57,7 @@ If the promise is rejected then the **error** property is set to the rejection v
 
 This is considerably helping to implement asynchronous actions in UI components, where the **pending** property can be used to display a progress indicator.
 
-Using the  `@DataModel`, `@AsyncDataModel` and `@Link` decorators you can wire services and components toghether through the application data model.
+Using the  `@DataModel`, `@AsyncDataModel` and `@Inject` decorators you can wire services and components toghether through the application data model.
 
 ### The `@DataModel(key)` decorator.
 
@@ -65,7 +65,7 @@ This is a field decorator that will publish the field as a Data Model property g
 
 The decorator can be used either on a custom application class, either on a Qute service class (i.e. extending Qute.Service or exposing an `app` field).
 
-When applied on a service field, the decorator is equivalent on calling the following code in the servcie constructor: `this.app.createProp(key, fieldValue).link(this, fieldName)`.
+When applied on a service field, the decorator is equivalent on calling the following code in the servcie constructor: `this.app.createProp(key, fieldValue).inject(this, fieldName)`.
 
 ### The `@AsyncDataModel(key)` decorator.
 
@@ -73,9 +73,9 @@ This is a field decorator that will publish the field as a Data Model asynchrnou
 
 The decorator can be used either on a custom application class, either on a Qute service class (i.e. extending Qute.Service or exposing an `app` field).
 
-When applied on a service field, the decorator is equivalent on calling the following code in the servcie constructor: `this.app.createAsyncProp(key, fieldValue).link(this, fieldName)`.
+When applied on a service field, the decorator is equivalent on calling the following code in the servcie constructor: `this.app.createAsyncProp(key, fieldValue).inject(this, fieldName)`.
 
-### The `@Link(key)` decorator.
+### The `@Inject(key)` decorator.
 
 This is a field decorator that will link the data model property identified by the key argument to the target field.
 The field will behave like a proxy to the data model property. When the decorated field is set the data model property will change accordingly, and vice versa, when the data model property is set the decorated field will change accordingly.
@@ -89,18 +89,18 @@ When used on a `ViewModel` component class, the field will be reactive: when the
 To bind a reactive component property to an application property you should use the application property as the initial value of the reactive property.  \
 Application properties which are bound to component properties will trigger a component update each time the property changes.
 
-You can link an application data model property to a component property either using a property of type `Link`, either using the `Link` decorator.
+You can link an application data model property to a component property either using a property of type `Link`, either using the `Inject` decorator.
 
 ```javascript
 import Qute} from '@qutejs/runtime';
-const {ViewModel, Template, Link} = Qute;
+const {ViewModel, Template, Inject} = Qute;
 
 class MyComponent extends ViewModel {
-    @Link('MyApplicationProperty') myReactiveProperty;
+    @Inject('MyApplicationProperty') myReactiveProperty;
 }
 ```
 
-**Note** that `@Link('MyApplicationProperty') myReactiveProperty;` is equivalent with `@Property(Link, 'MyApplicationProperty') myReactiveProperty;`. Both statements are creating reactive data model links.
+**Note** that `@Inject('MyApplicationProperty') myReactiveProperty;` is equivalent with `@Property(Qute.Link, 'MyApplicationProperty') myReactiveProperty;`. Both statements are creating reactive data model links.
 
 
 ## Example
@@ -110,7 +110,7 @@ import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import qSpinner from '@qutejs/spinner';
 
-const {ViewModel, Template, Link, Service, AsyncDataModel, DataModel, View, Application} = Qute;
+const {ViewModel, Template, Inject, Service, AsyncDataModel, DataModel, View, Application} = Qute;
 
 <q:template name='RootTemplate'>
 	<if value='user'>
@@ -124,9 +124,9 @@ const {ViewModel, Template, Link, Service, AsyncDataModel, DataModel, View, Appl
 
 @Template(RootTemplate)
 class RootComponent extends ViewModel {
-    @Link('Session/user') user;
-    @Link('Session/user/pending') loginPending;
-    @Link('Session') session;
+    @Inject('Session/user') user;
+    @Inject('Session/user/pending') loginPending;
+    @Inject('Session') session;
 }
 
 class SessionManager extends Service {
@@ -195,7 +195,7 @@ The listener function signature is: `function(newValue, oldValue)`.
 
 Remove an already registered change listener. The `listener` argument must be the same function which was used at registration time.
 
-### `link(target, name)`
+### `inject(target, name)`
 
 Link the property to an object property.
 

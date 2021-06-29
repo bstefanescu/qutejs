@@ -1,5 +1,5 @@
 /**
-Generate sym l;inks to web libs in web/dist
+Generate sym links to web libs in web/dist
 */
 
 const fs = require('fs');
@@ -14,7 +14,6 @@ module.exports = function(ws, project, args) {
 			if (file.endsWith('.js') || file.endsWith('.js.map')) {
 				var i = file.indexOf('.');
 				var target = file.substring(0, i)+'-'+project.version+file.substring(i);
-				//console.log('Linking:', project.file(file), ws.file('dist', target));
 				fs.symlinkSync(project.file('lib', file), ws.file('web', 'dist', target));
 			}
 		});

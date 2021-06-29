@@ -8,7 +8,7 @@ import Application from './app.js';
 import Service from './service.js';
 
 import { _mixin, _watch, _on, _require } from './decorators/helpers.js';
-import { View, Template, Mixin, On, Watch, Required, DataModel, AsyncDataModel, Property, Link } from './decorators/index.js';
+import { View, Template, Mixin, On, Watch, Required, DataModel, AsyncDataModel, Property, Inject, Link } from './decorators/index.js';
 import List from './list.js';
 
 
@@ -94,7 +94,8 @@ Qute.Required = Required;
 Qute.DataModel = DataModel;
 Qute.AsyncDataModel = AsyncDataModel;
 Qute.Property = Property;
-Qute.Link = Link;
+Qute.Inject = Inject;
+Qute.Link = Link; // a custom property type to create links similar to @Inject
 Qute.List = List;
 
 // render a template component given its render function name and a model

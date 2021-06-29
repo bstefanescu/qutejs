@@ -67,7 +67,7 @@ Here is an example that change the content of a view from a **Qute Application**
 ```jsq
 import Qute from '@qutejs/runtime';
 
-const { ViewModel, Template, Link } = Qute;
+const { ViewModel, Template, Inject } = Qute;
 
 <q:template name='RootTemplate'>
     <div>
@@ -98,7 +98,7 @@ var app = new Qute.Application();
 
 // create the router
 function Router(app) {
-  app.defineProp('Pages/current', null).link(this, 'currentPage');
+  app.defineProp('Pages/current', null).inject(this, 'currentPage');
   this.route = function(key) {
     console.log('Route to', key);
     // here -> manage browser history state
@@ -114,7 +114,7 @@ app.subscribe('route', function(key) {
 
 @Template(RootTemplate)
 class Root extends ViewModel {
-    @Link('Pages/current') currentPage; // bind to app property
+    @Inject('Pages/current') currentPage; // bind to app property
 }
 new Root(app).mount('app');
 ```
@@ -345,4 +345,3 @@ either post a message to the `route` channel:
 this.post("route", "to/path", replace);
 ```
 where the `replace` parameter can be omitted (it defaults to `false`).
-

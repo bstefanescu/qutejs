@@ -203,7 +203,8 @@ The information should stored at the application level. It is part of the applic
 
 The **Application Model** provides the business logic and a data model visible to all components in the presentation layer.
 
-If a component is interested in some application property (like for example the login state) you can reference the application property from a component using `Link` type properties. These component properties acts like a proxy to the application property: if you set the component property the linked application property will be updated, and vice-versa if some other component change the application property, the linked component property will change too and the component DOM updated (since the `Link` property is a reactive property. In fact a `Link` property value is only stored at application level.
+If a component is interested in some application property (like for example the login state) you can reference the application property from a component using a `Link` type property. These component properties acts like a proxy to the application property: if you set the component property the linked application property will be updated, and vice-versa if some other component change the application property, the linked component property will change too and the component DOM updated (since the `Link` property is a reactive property. A `Link` property value is only stored at application level.
+A shortcut to create `Link` properties is to directly use the `@Inject` decorator on a class field.
 
 The application data model and services are all provided by an **application instance** which is a singleton in a Qute application. The application instance is passed as an argument to the root `ViewModel` component constructor, which will pass it to all the children components. Thus, the application instance is accessible from any **`ViewModel` component** through a component property named `$app`.
 
@@ -217,7 +218,7 @@ import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import qSpinner from '@qutejs/spinner';
 
-const {ViewModel, Template, Link, Service, AsyncDataModel, DataModel, View, Application} = Qute;
+const {ViewModel, Template, Inject, Service, AsyncDataModel, DataModel, View, Application} = Qute;
 
 <q:template name='RootTemplate'>
 	<if value='user'>
@@ -231,9 +232,10 @@ const {ViewModel, Template, Link, Service, AsyncDataModel, DataModel, View, Appl
 
 @Template(RootTemplate)
 class RootComponent extends ViewModel {
-    @Link('Session/user') user;
-    @Link('Session/user/pending') loginPending;
-    @Link('Session') session;
+    @Inject('Session/user') user;
+    // the above line is similar to: @Property(Qute.Link, 'Session/user') user;
+    @Inject('Session/user/pending') loginPending;
+    @Inject('Session') session;
 }
 
 class SessionManager extends Service {

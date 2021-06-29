@@ -19,7 +19,7 @@ When specifying default primitive values (i.e. String, Boolean and Number) on a 
 A property type can be used to control the following aspects:
 
 1. Check the input value and transform it (if possible) to the expected type. May thrown an error if the value is not accepted.
-2. Control how the property is bound in the component instance. This can be used to bind external data models as component properties. See *_Link** property type.
+2. Control how the property is bound in the component instance. This can be used to bind external data models as component properties. See **Link** property type.
 
 You can also define your own custom property types. We will see how at the bottom of this page.
 
@@ -252,7 +252,7 @@ See the **[q:for](#/attributes/q-for)** directive for more on the `List` API and
 
 ### `Link`
 
-This is a special property type that can be used to bind the `ViewModel` property to an application model property.
+This is a special property type that can be used to bind the `ViewModel` property to an application model property. It can be used to achieve the same as the `@Inject` decorator but using the @Property decorator.
 
 **Example**
 
@@ -267,14 +267,14 @@ class MyElement extends ViewModel {
 
 In this example the application data model property identified by `UserSession/user` is bound to the `user` property of the `MyElement` component. If the application property changes the reactive user property will change too and component DOM will be updated. Also, if you set the `user` property the application property bound to it will change too.
 
-The `Link` object can also be used as a standalone decorator - that works as a shortcut to `@Property(Link, key)`:
+For simplicity we recommend to directly use the `@Inject` decorator instead of using the `Link` property:
 
 ```javascript
 import Qute from '@qutejs/runtie';
-const { ViewModel, Template, Property, Link } = Qute;
+const { ViewModel, Template, Property, Inject } = Qute;
 
 class MyElement extends ViewModel {
-    @Link('UserSession/user') user;
+    @Inject('UserSession/user') user;
 }
 ```
 

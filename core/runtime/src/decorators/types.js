@@ -72,8 +72,9 @@ AnyType.createProp = function(vm, key, value, arg) {
 
 
 function registerType(Type, def) {
+    const key = typeof Type === 'string' ? Type : Type.name;
     var typeObj = Object.assign(Object.create(BaseType), def || {});
-    TYPES[Type.name] = typeObj;
+    TYPES[key] = typeObj;
     return typeObj;
 }
 

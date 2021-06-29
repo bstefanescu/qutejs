@@ -7,7 +7,7 @@ import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import qSpinner from '@qutejs/spinner';
 
-const { View, Name, Template, Prop, Link, DataModel, AsyncDataModel } = Qute;
+const { View, Name, Template, Prop, Inject, DataModel, AsyncDataModel } = Qute;
 
 <q:style>
 .tbar {
@@ -77,11 +77,11 @@ var pages = {
 
 @Template(RootTemplate)
 class RootView extends Qute.ViewModel {
-    @Link('Session/user') user;
-    @Link('Session/user/pending') loginPending;
-    @Link('Session/user/error') loginError;
-    @Link('Pages/current') currentPage;
-    @Link('Session') session;
+    @Inject('Session/user') user;
+    @Inject('Session/user/pending') loginPending;
+    @Inject('Session/user/error') loginError;
+    @Inject('Pages/current') currentPage;
+    @Inject('Session') session;
 
     login() {
         this.session.login('Foo');
