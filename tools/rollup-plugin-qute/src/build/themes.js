@@ -82,7 +82,7 @@ ThemeResolver.prototype = {
         return null;
     },
 
-    resolve(location, activeTheme) {
+    resolve(location, themes) {
         if (!location.startsWith('theme:')) {
             return null;
         }
@@ -93,7 +93,8 @@ ThemeResolver.prototype = {
         let normalizedLocation =  location[6] === '/' ? location.substring(7) : location.substring(6);
         const parts = normalizedLocation.split('/');
         if (parts.length === 1) {
-            parts.push(activeTheme || 'default');
+            // push the active theme name (or default if none defined)
+            parts.push(themes[parts[0]] || 'default');
         }
         const hasExt = parts[parts.length-1].indexOf('.') > -1;
         normalizedLocation = path.join.apply(path, parts);

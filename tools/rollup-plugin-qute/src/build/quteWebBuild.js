@@ -55,7 +55,7 @@ function getIncludedCssModules(modules) {
     }, new Set());
 }
 
-function computePostcssPlugins(userOpts, inject, resolveTheme) {
+function computePostcssPlugins(userOpts, inject, resolveTheme, globals) {
     // default plugins to use - can be extended using userOpts plugins
     // to remove default plugins use disablePlugins with any combination of
     // 'extend, vars, root, lookup, nested' or 'all' to disable them all
@@ -71,10 +71,17 @@ function computePostcssPlugins(userOpts, inject, resolveTheme) {
         }
     }) ];
     if (userOpts.useExtend !== false) { // if not explictely disabled use it
-        plugins.push(postcssExtendRule(userOpts.cssExtend || void(0)));
+        plugins.push(postcssExtendRule(userOpts.useExtend || void(0)));
     }
     if (userOpts.useVars !== false) { // if not explictely disabled use it
-        plugins.push(postcssVars(userOpts.cssVars || {disable: '@import'}));
+        const cssVars = Object.assign({disable: '@import'}, userOpts.useVars || {});
+        if (cssVars.disable.indexOf('@import') === -1) {
+            cssVars.disable += ',@import';
+        }
+        if (globals) {
+            cssVars.variables = globals;
+        }
+        plugins.push(postcssVars(cssVars));
     }
     if (userOpts.plugins) {
         plugins = plugins.concat(userOpts.plugins);
@@ -130,13 +137,16 @@ function getRuntimeDependecies(pkg) {
  *     type: 'application', // supported values: 'application' | 'component',
  *     forceTreeshake: false, // boolean | [] - you can use true to force tree shake for all modules or an array of package names to force only for mpdule inside these packages
  *     minimize: false, // whether or not to compress generated js and css files
- *     theme: 'default', // the default theme name (may include or not the .css,.pcss extension). The default name is 'default'. Both {theme}.css and {theme}.pcss will be searched in that order if the theme dones't include an extension.
+ *     theme: {
+ *       'globals': { ... }, // global vars to be used by postcss-advanced-variables plugin - same as using `css:{useVars: {variables: { ... }}}`. You may use this to easily override theme variables. Themes must use the `!default` modifier to declare a theme variable overridable by a global var.
+ *       'theme-package': 'theme-name'
+ *     }, // the theme name (may include or not the .css,.pcss extension). The default name is 'default'. Both {theme}.css and {theme}.pcss will be searched in that order if the theme dones't include an extension.*
  *     css: {
  *       inject: true, // boolean
  *       extract: null, // boolean | filename | null
  *       resolve: function, // Optional. A resolve handler to be used by the postcss-import plugin
- *       useExtend: true, // whether or not to use postcss-extend plugin
- *       useVars: true, // whether or not to use postcss-advanced-vars plugin
+ *       useExtend: null, // if false do not use postcss-extend, otherwise you can pass null or an object to configure the postcss-extend plugin
+ *       useVars: null, // if false do not use postcss-advanced-variables, otherwise you can pass null or an object to configure the postcss-advanced-variables plugin
  *       autoprefix: false, // whether or not to use postcss-advanced-vars plugin
  *       minimize: false, // whether or not to use cssnano plugin to minimize the extracted css file
  *     },
@@ -148,9 +158,9 @@ function getRuntimeDependecies(pkg) {
  *
  * Themes are located inside a 'themes/' directory in the package root. Each package must use an unique name
  * (the package name or derived from the package name for scoped packages)
- * A theme path is themes/{themes-package-name}/{theme-name}.p?css. The default theme name is 'defualt'.
+ * A theme path is themes/{theme-package}/{theme-name}.p?css. The default theme name is 'defualt'.
  * To import a theme in a postcss file (.css or .pcss) use the 'theme:' prefix.
- * To import the active theme, don't specify a file name:
+ * To import the active theme, specify the theme package name prefixed with 'theme:':
  * `@import "theme:qute-material";` or `@import "theme:/qute-material";`
  * You can also import a specific theme file by using the file name (you may ommit the .css or .pcss extensions):
  * `@import "theme:qute-material/blue.css";` or `@import "theme:qute-material/blue";`
@@ -186,14 +196,14 @@ export default function quteWebBuild(userOpts, webOpts, istyles) {
         cssInject = true;
     }
 
-    const themeName = webOpts.theme || 'default';
+    const theme = webOpts.theme || {};
     const themeResolver = new ThemeResolver(packageRoot, getRuntimeDependecies(pkg));
 
     const resolveTheme = (id, basedir, importOptions) => {
-        return themeResolver.resolve(id, themeName);
+        return themeResolver.resolve(id, theme);
     }
 
-    const cssPlugins = computePostcssPlugins(userCssOpts, cssInject, resolveTheme);
+    const cssPlugins = computePostcssPlugins(userCssOpts, cssInject, resolveTheme, theme.globals);
 
     return {
         name: 'qutejs-web-build',
