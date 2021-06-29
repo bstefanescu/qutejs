@@ -6,7 +6,7 @@ const D_Watch = 'Watch';
 const D_On = 'On';
 const D_Prop = 'Property';
 const D_Required = 'Required';
-const D_DataModel = 'DataModel';
+const D_Provide = 'Provide';
 
 const QUTE_DECORATORS = {};
 
@@ -66,7 +66,7 @@ registerQuteDecorator({
     void: true
 });
 registerQuteDecorator({
-    name: D_DataModel,
+    name: D_Provide,
     superClass: 'Qute.Service',
     svcProp: true,
     void: true

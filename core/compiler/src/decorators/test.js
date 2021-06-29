@@ -3,7 +3,7 @@ import Transpiler from './index.js';
 
 const code = `
 import Qute from '@qutejs/runtime';
-const { Render, Template, Prop, Watch, Mixin, Required, DataModel, View, Link, Inject} = Qute;
+const { Render, Template, Prop, Watch, Mixin, Required, Provide, View, Link, Inject} = Qute;
 
 @View(MyViewModel)
 class MyApp extends Qute.Application {

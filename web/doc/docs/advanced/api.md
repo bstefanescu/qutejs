@@ -19,7 +19,7 @@ Here is a list of all the methods and objects exposed by the `Qute` global objec
 + `Property` - a class field decorator. Can only be used inside ViewModel derived classes.
 + `Required` - a class field decorator. Can only be used inside ViewModel derived classes.
 + `Inject` - a class field decorator. Can only be used inside ViewModel derived classes or inside classes having a `app` field which points to the current Qute Application (like Qute.Service derived classes).
-+ `DataModel` - a class field decorator. To be used on Qute.Service or Qute.Application derived classes.
++ `Provide` - a class field decorator. To be used on Qute.Service or Qute.Application derived classes.
 + `List` - a reactive list wrapping an array to be used with **[q:for](#/attributes/q-for)** directive.
 + `render(template, model)` - render a template given a model.
 + `runAfter(callback)` - run a function after all queued updates are performed.

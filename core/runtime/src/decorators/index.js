@@ -8,4 +8,4 @@ export {
     On,
     Watch,
     Required,
-    DataModel } from './decorators.js';
+    Provide } from './decorators.js';

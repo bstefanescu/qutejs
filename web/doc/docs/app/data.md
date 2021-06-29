@@ -13,7 +13,7 @@ Anyway, you can still integrate a state management system like **redux** with Qu
 
 Data Model properties are stored inside the `data` property of the application instance.
 
-To define an application property you can use the `defineProp(name, initialValue)` method of the application instance, or the `@DataModel` decorator on the application class or any Qute service class.
+To define an application property you can use the `defineProp(name, initialValue)` method of the application instance, or the `@Provide` decorator on the application class or any Qute service class.
 
 When defining a property you must use a unique property name at the application level. It is recommended to use qualified names like `PropertyGroup/subgroup/localName` names when you want to group related  properties.
 
@@ -38,7 +38,7 @@ To get an existing property object you can use the `prop(name)` method.
 Another useful method is the `inject(target, name)` method which will create a **mirror property** on another object. Any modification on the mirror property will be reflected on the source application property. This is the method used internally by the `@Inject` decorator.
 
 
-### The `@DataModel(key)` decorator.
+### The `@Provide(key)` decorator.
 
 This is a field decorator that will publish the field as a Data Model property given a key.
 
@@ -81,7 +81,7 @@ import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import qSpinner from '@qutejs/spinner';
 
-const {ViewModel, Template, Inject, Service, DataModel, View, Application} = Qute;
+const {ViewModel, Template, Inject, Service, Provide, View, Application} = Qute;
 
 <q:template name='RootTemplate'>
 	<if value='user'>
@@ -101,9 +101,9 @@ class RootComponent extends ViewModel {
 }
 
 class SessionManager extends Service {
-    @DataModel('Session/user') user; // publish the user as an async application property
-    @DataModel('Session/user/pending') pending = false;
-    @DataModel('Session/user/error') error;
+    @Provide('Session/user') user; // publish the user as an async application property
+    @Provide('Session/user/pending') pending = false;
+    @Provide('Session/user/error') error;
 
     login(user) {
         // simulate login
@@ -122,7 +122,7 @@ class SessionManager extends Service {
 
 @View(RootComponent) // bind the application to the root component
 class MyApp extends Application {
-    @DataModel('Session') // publish the session manager inn the application data model as the property 'Session'
+    @Provide('Session') // publish the session manager inn the application data model as the property 'Session'
     session = new SessionManager(this);
 }
 

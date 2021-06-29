@@ -19,13 +19,13 @@ In the following example we define a custom application, an `UserManager` servic
 ```javascript
 import Qute from '@qutejs/runtime';
 
-const { Application, View, Service, DataModel, Inject } = Qute;
+const { Application, View, Service, Provide, Inject } = Qute;
 
 
 class UserManager extends Service {
 
     // publish the user property as an async data model property (can take Promise as a value)
-    @DataModel('Session/user') user;
+    @Provide('Session/user') user;
 
     login() {
         // user will be set to a promise
@@ -55,11 +55,11 @@ class Root extends ViewModel {
 @View(Root) // define the application root component (i.e. the application view)
 class MyApplication extends Application {
 
-    // define a data model property named 'Application/version'
-    @DataModel('Application/version') version = '1.0.0';
+    // define an application property named 'Application/version'
+    @Provide('Application/version') version = '1.0.0';
 
-    // publish the SessionService instance as a DataModel property named 'Session'
-    @DataModel('Session') session = new UserManager(this);
+    // publish the SessionService instance as an application property named 'Session'
+    @Provide('Session') session = new UserManager(this);
 }
 
 // mount the application root component
@@ -75,8 +75,8 @@ import Qute from '@qutejs/runtime';
 
 // define a service
 function UserManager(app) {
-    // define an user property and publish it as an async data model property (can take Promise as a value)
-    app.defineAsyncProp('Session/user').inject(this, 'user');
+    // define an user property and publish it as the 'Session/user' application property
+    app.defineProp('Session/user').inject(this, 'user');
 }
 UserManager.prototype = {
     login() {
@@ -147,7 +147,7 @@ The application layer contains all the code you need to write to implement your 
 The main goal of **Qute** is to let you focus on this part and not on the presentation layer
 logic.
 
-To be able to use the wiring provided by the `@DataModel` decorator a service class must define an `app` property which points to the current application instance:
+To be able to use the wiring provided by the `@Provide` decorator a service class must define an `app` property which points to the current application instance:
 
 ```javascript
 class MyService {
@@ -175,13 +175,13 @@ class MyService extends Qute.Service {
 }
 ```
 
-To publish a service property as an application data model property you can use the `@DataModel` decorator.
+To publish a service property as an application data model property you can use the `@Provide` decorator.
 To inject a data model property as a service property use the `@Inject` decorator:
 
 ```javascript
 class MyService extends Qute.Service {
     // publish the `user` field as the 'Session/user' data model property
-    @DataModel('Session/user') user;
+    @Provide('Session/user') user;
     // inject the Configuration/loginUrl data model property in the `loginUrl` field
     @Inject('Configuration/loginUrl') loginUrl;
 }

@@ -7,7 +7,7 @@ import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import qSpinner from '@qutejs/spinner';
 
-const { View, Name, Template, Prop, Inject, DataModel } = Qute;
+const { View, Name, Template, Prop, Inject, Provide } = Qute;
 
 <q:style>
 .tbar {
@@ -102,9 +102,9 @@ class RootView extends Qute.ViewModel {
 }
 
 class SessionManager extends Qute.Service {
-    @DataModel('Session/user') user;
-    @DataModel('Session/user/pending') pending = false;
-    @DataModel('Session/user/error') error;
+    @Provide('Session/user') user;
+    @Provide('Session/user/pending') pending = false;
+    @Provide('Session/user/error') error;
 
     login(user) {
         // simulate login
@@ -122,7 +122,7 @@ class SessionManager extends Qute.Service {
 }
 
 class PageManager extends Qute.Service {
-    @DataModel('Pages/current') currentPage;
+    @Provide('Pages/current') currentPage;
 
     open(page) {
         this.currentPage = page;
@@ -135,10 +135,10 @@ class PageManager extends Qute.Service {
 
 @View(RootView)
 class MyApp extends Qute.Application {
-  @DataModel('Session')
+  @Provide('Session')
   session = new SessionManager(this);
 
-  @DataModel('Pages')
+  @Provide('Pages')
   pages = new PageManager(this);
 }
 
