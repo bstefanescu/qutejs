@@ -53,26 +53,6 @@ var PropProto = {
     }
 }
 
-var AsyncPropProto = Object.assign({_set: PropProto.set}, PropProto);
-AsyncPropProto.set = function(value) {
-	if (value && value.then) {
-		var self = this;
-		this.pending = true;
-		this.error = null;
-		value.then(function(value) { // resolved
-			self._set(value);
-			self.pending = false;
-		}, function(err) { // rejected
-			this.error = err;
-			this.pending = false;
-		})
-	} else {
-		this.pending = false;
-		this.error = null;
-		this._set(value);
-	}
-}
-
 function Prop(app, key, defValue) {
 	this.app = app;
 	this.key = key;
@@ -80,17 +60,6 @@ function Prop(app, key, defValue) {
 	app.data[key] = this;
 }
 Prop.prototype = PropProto;
-
-
-function AsyncProp(app, key, defValue) {
-	this.app = app;
-	this.key = key;
-	this.value = defValue;
-	app.data[key] = this;
-	new Prop(app, key+'/pending').inject(this, 'pending');
-	new Prop(app, key+'/error').inject(this, 'error');
-}
-AsyncProp.prototype = AsyncPropProto;
 
 export default function Application(data) {
 	this.topics = {};
@@ -183,10 +152,6 @@ Application.prototype = {
 		return new Prop(this, key, value);
     },
 
-	defineAsyncProp(key, value) {
-		return new AsyncProp(this, key, value);
-	},
-
 	defineProps(props) {
 		var data = this.data;
 		for (var key in props) {
@@ -200,4 +165,3 @@ Application.prototype = {
 }
 
 Application.Prop = Prop;
-Application.AsyncProp = AsyncProp;

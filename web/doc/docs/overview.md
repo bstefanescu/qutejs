@@ -218,7 +218,7 @@ import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import qSpinner from '@qutejs/spinner';
 
-const {ViewModel, Template, Inject, Service, AsyncDataModel, DataModel, View, Application} = Qute;
+const {ViewModel, Template, Inject, Service, DataModel, View, Application} = Qute;
 
 <q:template name='RootTemplate'>
 	<if value='user'>
@@ -239,17 +239,21 @@ class RootComponent extends ViewModel {
 }
 
 class SessionManager extends Service {
-    @AsyncDataModel('Session/user') user; // publish the user as an async application property
+    @DataModel('Session/user') user; // publish the user as an async application property
+    @DataModel('Session/user/pending') pending = false;
 
-	login(user) {
-		// simulate an async login action
-		this.user = new Promise((resolve, reject) => {
-			window.setTimeout(() => { resolve(user) }, 1000);
-		});
-	}
+    login(user) {
+        // simulate login
+        this.pending = true;
+        window.setTimeout(() => {
+            this.user = user;
+            this.pending = false;
+        }, 1000);
+    }
 
 	logout() {
 		this.user = null;
+        this.pending = false;
 	}
 }
 

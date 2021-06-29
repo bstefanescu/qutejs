@@ -35,29 +35,8 @@ prop.set({name: 'foo', email: 'foo@bar.com'});
 
 To get an existing property object you can use the `prop(name)` method.
 
-Another useful method is the property `inject(target, name)` method which will create a **mirror property** on another object. Any modification on the mirror property will be reflected on the source application property. This is the method used internally by the `@Inject` decorator.
+Another useful method is the `inject(target, name)` method which will create a **mirror property** on another object. Any modification on the mirror property will be reflected on the source application property. This is the method used internally by the `@Inject` decorator.
 
-### Aynchronous properties
-
-There is a special type of property named **asynchronous property**. This kind of property let's you define properties that are set as a result of an asynchronous operation, like an ajax call.
-
-Asynchronous properties are defined using the `defineAsyncProp(name, value)` application method or using the `@AsyncDataModel` decorator.
-
-Defining an asynchronous property will automatically define two additional regular properties: a **pending** and a n **error** one.  \
-For example, calling: `app.defineAsyncProp('Session/user')` will define:
-
-1. An async property named 'Session/user'
-2. A regular property named 'Session/user/pending'
-3. A regular property named 'Session/user/error'
-
-When setting an asynchronous property you should use a **[Promise (or thenable)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** object. You can also use a regular value, in that case the value will be converted to a resolved promise (i.e. `Promise.resolve(value)`).
-
-If you set to an asynchronous property a promise that is not yet resolved then the **pending** property will be automatically set to `true` and will be set back to `false` when the promise is fulfilled or rejected.  \
-If the promise is rejected then the **error** property is set to the rejection value (usually an `Error` object).
-
-This is considerably helping to implement asynchronous actions in UI components, where the **pending** property can be used to display a progress indicator.
-
-Using the  `@DataModel`, `@AsyncDataModel` and `@Inject` decorators you can wire services and components toghether through the application data model.
 
 ### The `@DataModel(key)` decorator.
 
@@ -66,14 +45,6 @@ This is a field decorator that will publish the field as a Data Model property g
 The decorator can be used either on a custom application class, either on a Qute service class (i.e. extending Qute.Service or exposing an `app` field).
 
 When applied on a service field, the decorator is equivalent on calling the following code in the servcie constructor: `this.app.createProp(key, fieldValue).inject(this, fieldName)`.
-
-### The `@AsyncDataModel(key)` decorator.
-
-This is a field decorator that will publish the field as a Data Model asynchrnous property given a key.
-
-The decorator can be used either on a custom application class, either on a Qute service class (i.e. extending Qute.Service or exposing an `app` field).
-
-When applied on a service field, the decorator is equivalent on calling the following code in the servcie constructor: `this.app.createAsyncProp(key, fieldValue).inject(this, fieldName)`.
 
 ### The `@Inject(key)` decorator.
 
@@ -110,7 +81,7 @@ import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import qSpinner from '@qutejs/spinner';
 
-const {ViewModel, Template, Inject, Service, AsyncDataModel, DataModel, View, Application} = Qute;
+const {ViewModel, Template, Inject, Service, DataModel, View, Application} = Qute;
 
 <q:template name='RootTemplate'>
 	<if value='user'>
@@ -130,17 +101,22 @@ class RootComponent extends ViewModel {
 }
 
 class SessionManager extends Service {
-    @AsyncDataModel('Session/user') user; // publish the user as an async application property
+    @DataModel('Session/user') user; // publish the user as an async application property
+    @DataModel('Session/user/pending') pending = false;
+    @DataModel('Session/user/error') error;
 
-	login(user) {
-		// simulate an async login action
-		this.user = new Promise((resolve, reject) => {
-			window.setTimeout(() => { resolve(user) }, 1000);
-		});
-	}
+    login(user) {
+        // simulate login
+        this.pending = true;
+        window.setTimeout(() => {
+            this.user = user;
+            this.pending = false;
+        }, 1000);
+    }
 
 	logout() {
 		this.user = null;
+		this.pending = false;
 	}
 }
 

@@ -4,11 +4,9 @@ const D_Render = 'Render';
 const D_Mixin = 'Mixin';
 const D_Watch = 'Watch';
 const D_On = 'On';
-const D_Channel = 'Channel';
 const D_Prop = 'Property';
 const D_Required = 'Required';
 const D_DataModel = 'DataModel';
-const D_AsyncDataModel = 'AsyncDataModel';
 
 const QUTE_DECORATORS = {};
 
@@ -57,11 +55,6 @@ registerQuteDecorator({
     void: true
 });
 registerQuteDecorator({
-    name: D_Channel,
-    superClass: 'Qute.ViewModel',
-    void: true
-});
-registerQuteDecorator({
     name: D_Prop,
     superClass: 'Qute.ViewModel',
     vmProp: true,
@@ -76,13 +69,6 @@ registerQuteDecorator({
     name: D_DataModel,
     superClass: 'Qute.Service',
     svcProp: true,
-    void: true
-});
-registerQuteDecorator({
-    name: D_AsyncDataModel,
-    superClass: 'Qute.Service',
-    svcProp: true,
-    async: true,
     void: true
 });
 

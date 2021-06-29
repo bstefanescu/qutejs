@@ -7,7 +7,7 @@ import window from '@qutejs/window';
 import Qute from '@qutejs/runtime';
 import qSpinner from '@qutejs/spinner';
 
-const { View, Name, Template, Prop, Inject, DataModel, AsyncDataModel } = Qute;
+const { View, Name, Template, Prop, Inject, DataModel } = Qute;
 
 <q:style>
 .tbar {
@@ -102,19 +102,22 @@ class RootView extends Qute.ViewModel {
 }
 
 class SessionManager extends Qute.Service {
-    @AsyncDataModel('Session/user') user;
+    @DataModel('Session/user') user;
+    @DataModel('Session/user/pending') pending = false;
+    @DataModel('Session/user/error') error;
 
     login(user) {
-        // simulate an async request
-        // this will update the components depending on 'Session/user' when the promise will be either fulfilled or rejected
-        this.user = new Promise((resolve, reject) => {
-            // simulate login success
-            window.setTimeout(() => { resolve(user); }, 1000);
-        });
+        // simulate login
+        this.pending = true;
+        window.setTimeout(() => {
+            this.user = user;
+            this.pending = false;
+        }, 1000);
     }
 
     logout() {
         this.user = null;
+        this.pending = false;
     }
 }
 

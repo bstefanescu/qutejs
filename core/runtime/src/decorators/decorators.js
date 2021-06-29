@@ -61,21 +61,6 @@ function DataModel(id) {
     }
 }
 
-function AsyncDataModel(id) {
-    return function(target, key, value) {
-        let app;
-        if (target.__QUTE_APP__) {
-            app = target;
-        } else if (target.app) {
-            app = target.app;
-        } else {
-            ERR('The @DataModel decorator is meant to be used on Qute.Application or Qute.Service classes, or on any class providig a `app` field of type Qute.Application!');
-        }
-        app.defineAsyncProp(id, value).inject(target, key);
-    }
-}
-
-
 export {
     // public API
     View,
@@ -84,6 +69,5 @@ export {
     On,
     Watch,
     Required,
-    DataModel,
-    AsyncDataModel
+    DataModel
 }

@@ -19,13 +19,13 @@ In the following example we define a custom application, an `UserManager` servic
 ```javascript
 import Qute from '@qutejs/runtime';
 
-const { Application, View, Service, DataModel, AsyncDataModel, Inject } = Qute;
+const { Application, View, Service, DataModel, Inject } = Qute;
 
 
 class UserManager extends Service {
 
     // publish the user property as an async data model property (can take Promise as a value)
-    @AsyncDataModel('Session/user') user;
+    @DataModel('Session/user') user;
 
     login() {
         // user will be set to a promise
@@ -147,7 +147,7 @@ The application layer contains all the code you need to write to implement your 
 The main goal of **Qute** is to let you focus on this part and not on the presentation layer
 logic.
 
-To be able to use the wiring provided by `@DataModel`, `@AsyncDataModel` and `@DataModel` decorators a service class must define an `app` field which points to the current application instance:
+To be able to use the wiring provided by the `@DataModel` decorator a service class must define an `app` property which points to the current application instance:
 
 ```javascript
 class MyService {
@@ -175,13 +175,13 @@ class MyService extends Qute.Service {
 }
 ```
 
-To publish a service property as an application data model property you can use the `@DataModel` and `@AsyncDataModel` decorators.
+To publish a service property as an application data model property you can use the `@DataModel` decorator.
 To inject a data model property as a service property use the `@Inject` decorator:
 
 ```javascript
 class MyService extends Qute.Service {
     // publish the `user` field as the 'Session/user' data model property
-    @AsyncDataModel('Session/user') user;
+    @DataModel('Session/user') user;
     // inject the Configuration/loginUrl data model property in the `loginUrl` field
     @Inject('Configuration/loginUrl') loginUrl;
 }
@@ -246,21 +246,6 @@ You can also define an application property using the constructor:
 ```javascript
 var app = new Qute.Application();
 new Qute.Application.Prop(app, name, value);
-```
-
-### `defineAsyncProp(name, value)`
-
-Define an async. data property.
-
-* **name** is the property name.
-* **value** is the initial value if any. If set, the initial value must be a resolved value not a
-promise.
-
-You can also define an async application property using the constructor:
-
-```javascript
-var app = new Qute.Application();
-new Qute.Application.AsyncProp(app, name, value);
 ```
 
 ### `prop(name)`
