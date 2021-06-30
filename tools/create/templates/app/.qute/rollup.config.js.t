@@ -21,18 +21,14 @@ if (devMode) {
 	config = [
 		//build.lib(), // web only build web artifacts for applications
 		build.web({
-			web: {
-				css: {
-					extract: true // extract the css in a file
-				}
+			css: {
+				extract: true // extract the css in a file
 			}
 		}),
 		build.web({
-			web: {
-				minimize:true,
-				css: {
-					extract: true // extract the css in a file
-				}
+			minimize:true,
+			css: {
+				extract: true // extract the css in a file
 			}
 		}),
 	];

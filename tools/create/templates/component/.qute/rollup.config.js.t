@@ -21,15 +21,11 @@ if (devMode) {
 	config = [
 		build.lib(),
 		build.web({
-			web: {
-				type: 'component'
-			}
+			type: 'component'
 		}),
 		build.web({
-			web: {
-				type: 'component',
-				minimize:true
-			}
+			type: 'component',
+			minimize:true
 		}),
 	];
 }

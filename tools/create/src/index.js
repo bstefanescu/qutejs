@@ -1,68 +1,15 @@
-/*
-
-This utility will walk you through creating a package.json file.
-It only covers the most common items, and tries to guess sensible defaults.
-
-See `npm help json` for definitive documentation on these fields
-and exactly what they do.
-
-Use `npm install <pkg>` afterwards to install a package and
-save it as a dependency in the package.json file.
-
-Press ^C at any time to quit.
-package name: (jsprompt)
-version: (1.0.0)
-description:
-entry point: (index.js)
-test command:
-git repository:
-keywords:
-author:
-license: (ISC)
-About to write to /Users/bogdan/tmp/jsprompt/package.json:
-
-{
-  "name": "jsprompt",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC"
-}
-
-
-Is this OK? (yes)
-*/
-
 import fs from 'fs';
 import path from 'path';
 import prompts from 'prompts';
 import Progress from 'progress';
 import createProject from './project.js';
+import getDependencies from './deps.js';
 
 import { normalizeName, componentName, npmInstall } from './utils.js';
 
 
-function installDeps(target) {
-      var cmds = [
-      ['-D', 'rollup'],
-      ['-D', '@rollup/plugin-commonjs'],
-      ['-D', '@rollup/plugin-node-resolve'],
-      ['-D', '@rollup/plugin-buble'],
-      ['-D', 'rollup-plugin-terser'],
-      ['-D', 'rollup-plugin-koa-devserver'],
-      ['-D', '@qutejs/rollup-plugin-qute'],
-      // test deps
-      ['-D', 'mocha'],
-      ['-D', 'source-map-support'],
-      //['-D', '@qutejs/test-utils']
-      // runtime deps
-      ['-P', '@qutejs/window'],
-      ['-P', '@qutejs/runtime']
-    ];
+function installDeps(target, type) {
+    var cmds = getDependencies(type);
     var progress = new Progress('Installing dependencies [:bar] :percent > :token', {
       total: cmds.length+1,
       //width: cmds.length
@@ -94,7 +41,9 @@ async function main(target, type) {
       message: 'Which kind of project do you want to create?',
       choices: [
         {title: 'Qute application', value:'app', description: 'Build a web application'},
-        {title: 'Qute component', value:'component', description: 'Build a reusable component'}
+        {title: 'Qute component', value:'component', description: 'Build a reusable component'},
+        //TODO: not yet ready
+        //{title: 'Qute client/server application', value:'sap', description: 'Build a client/server application'} // sap: single application page
       ]});
   }
 
@@ -103,7 +52,7 @@ async function main(target, type) {
   response.name = normalizeName(response.name); // kebab case form
   response.componentName = componentName(response.name);
   createProject(response.type, target, response);
-  installDeps(target);
+  installDeps(target, response.type);
 }
 
 export default main;
