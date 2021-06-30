@@ -32,6 +32,9 @@ function normalizeName(value) {
 }
 
 function componentName(value) {
+	if (value.startsWith('@')) { // a scoped package
+		value = value.substring(1).replace(/\//g, '-');
+	}
 	return capitalizeFirst(kebabToCamel(value));
 }
 
@@ -55,4 +58,3 @@ function npmLink(cwd, dep) {
  export {
  	componentName, normalizeName, npmInstall, npmLink
  }
-
