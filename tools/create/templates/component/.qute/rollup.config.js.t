@@ -21,9 +21,11 @@ if (devMode) {
 	config = [
 		build.lib(),
 		build.web({
+			input: 'src/index.web.js',
 			type: 'component'
 		}),
 		build.web({
+			input: 'src/index.web.js',
 			type: 'component',
 			minimize:true
 		}),

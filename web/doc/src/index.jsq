@@ -106,7 +106,8 @@ function fetchPage(url, cb) {
   	xhttp.send();
 }
 
-Qute.Rendering.markdown = marked;
+var parseMarkdown = marked.parse;
+Qute.Rendering.markdown = parseMarkdown;
 
 var TOC = [
     { title: 'Introduction', href: 'introduction', toplevel:true},
@@ -310,7 +311,7 @@ class App extends ViewModel {
 		if (!(pageKey in this.docPages)) {
 			//console.log('FETCH',pageKey)
 			fetchPage(pageKey, function(data, status) {
-				self.docPages[pageKey] = marked(data);
+				self.docPages[pageKey] = parseMarkdown(data);
 				self.update(); // force an update
 				Qute.UpdateQueue.runAfter(function() {
 					createRunSnippets();

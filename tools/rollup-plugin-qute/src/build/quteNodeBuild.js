@@ -16,10 +16,10 @@ import InlineStyles from '../istyles.js';
  * @param {*} userOpts
  */
 
- function makeTargetImportPath(importer, importee, srcDir, targetDir) {
+function makeTargetImportPath(importer, importee, srcDir, targetDir) {
     const sourceFile = path.resolve(path.dirname(importer), importee);
     return makeTargetPath(sourceFile, srcDir, targetDir);
- }
+}
 
 function makeTargetPath(sourceFile, srcDir, targetDir) {
     const relPath = path.relative(srcDir, sourceFile);
@@ -49,8 +49,8 @@ export default function quteNodeBuild(opts = {}, istyles) {
     return {
         name: 'qutejs-node-build',
         options(opts) {
-            opts = Object.assign({},opts);
-            opts.external = function(id) {
+            opts = Object.assign({}, opts);
+            opts.external = function (id) {
                 if (external) {
                     // custom external function
                     let r = external(id);
@@ -69,20 +69,20 @@ export default function quteNodeBuild(opts = {}, istyles) {
             return opts;
         },
         outputOptions(opts) {
-            opts = Object.assign({},opts);
+            opts = Object.assign({}, opts);
             let format;
             if (!opts.format) {
                 opts.format = format = 'esm';
             } else {
                 format = formats[opts.format];
-                if(!format) {
+                if (!format) {
                     this.error('Invalid "output.format". You should use either esm or cjs when building a Qute library')
                 }
             }
             if (opts.dir === 'auto') {
                 targetDir = path.join(path.resolve(opts.dist || 'dist'), format);
                 opts.dir = targetDir;
-                opts.file = void(0);
+                opts.file = void (0);
             } else if (opts.dir) {
                 targetDir = opts.dir;
             }
@@ -94,15 +94,15 @@ export default function quteNodeBuild(opts = {}, istyles) {
             // we mark all css files as external and will copy source css in generateBundle
             if (source.endsWith('.css') || source.endsWith('.pcss')) {
                 if (InlineStyles.isStyleId(source)) {
-                    source = './'+source;
+                    source = './' + source;
                 }
                 return { id: source, external: true };
             }
         },
         generateBundle() {
             const filter = {
-                file: function(stats) {
-                  return stats.name.endsWith('.css') || stats.name.endsWith('.pcss');
+                file: function (stats) {
+                    return stats.name.endsWith('.css') || stats.name.endsWith('.pcss');
                 }
             }
             // copy css files from src dir to dist dir

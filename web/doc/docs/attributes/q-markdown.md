@@ -1,6 +1,6 @@
 # The `q:markdown` attribute
 
-This is similar to [q:html](#/attributes/q-html) but inject static markdown content into an element.  \
+This is similar to [q:html](#/attributes/q-html) but inject static markdown content into an element. \
 For this to work, you must define a **markdown converter** by using:
 
 ```javascript
@@ -12,7 +12,7 @@ where markdownConverter is a function that takes as argument the markdown conten
 As an example, to use [marked.js](https://github.com/markedjs/marked) you will need include the `marked.js` script and to register it like this:
 
 ```javascript
-Qute.Rendering.markdown = marked;
+Qute.Rendering.markdown = marked.parse;
 ```
 
 It **only works on DOM elements** and cannot be used on component elements.

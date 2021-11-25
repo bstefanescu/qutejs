@@ -115,7 +115,7 @@ export default class BuildConfig {
         opts.web = webOpts;
         const minimize = webOpts.minimize;
         return {
-            input: this.input,
+            input: webOpts.input || this.input,
             output: {
                 name: makeWebComponentName(this.componentName),
                 file: path.join('dist', makeWebFileName(this.moduleName, minimize)),
@@ -140,7 +140,7 @@ export default class BuildConfig {
         opts.web = false;
         const dist = opts.dist || 'dist';
         return {
-            input: this.input,
+            input: libOpts.input || this.input,
             output: {
                 dir: dist+'/esm',
                 format: 'esm',
@@ -166,7 +166,7 @@ export default class BuildConfig {
         // passed to qute config. Ex: qute({external: (id) => ..., web:true})
         // This function must return null or undefined to let qute use the default value for the given id
         return {
-            input: this.input,
+            input: webOpts.input || this.input,
             output: {
                 name: componentName,
                 file: this.devOutputFile,
